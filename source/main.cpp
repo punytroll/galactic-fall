@@ -884,7 +884,7 @@ void OnTimingDialogDestroying(UI::Event & DestroyingEvent)
 	}
 }
 
-void SpawnShip(System * System, const std::string & IdentifierSuffix, std::string ShipSubTypeIdentifier = "")
+void SpawnShip(System * System, std::string ShipSubTypeIdentifier = "")
 {
 	if(ShipSubTypeIdentifier == "")
 	{
@@ -998,11 +998,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 
 void SpawnShipOnTimeout(System * SpawnInSystem)
 {
-	std::stringstream IdentifierSuffix;
-	
-	IdentifierSuffix << "::created_at_game_time(" << std::fixed << GameTime::Get() << ")::in_system(" << SpawnInSystem->GetSubTypeIdentifier() << ")";
-	
-	SpawnShip(SpawnInSystem, IdentifierSuffix.str());
+	SpawnShip(SpawnInSystem);
 	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / SpawnInSystem->GetTrafficDensity()), std::bind(SpawnShipOnTimeout, SpawnInSystem));
 }
 
@@ -1012,11 +1008,7 @@ void PopulateSystem(System * System)
 	
 	for(int ShipNumber = 1; ShipNumber <= NumberOfShips; ++ShipNumber)
 	{
-		std::stringstream IdentifierSuffix;
-		
-		IdentifierSuffix << "::created_at_game_time(" << std::fixed << GameTime::Get() << "[" << ShipNumber << "])::in_system(" << System->GetSubTypeIdentifier() << ")";
-		
-		SpawnShip(System, IdentifierSuffix.str());
+		SpawnShip(System);
 	}
 }
 
@@ -2184,7 +2176,7 @@ void ActionEnableTurnRight(void)
 
 void ActionIncreaseFieldOfView(void)
 {
-	assert(g_MainProjection != 0);
+	assert(g_MainProjection != nullptr);
 	g_MainProjection->SetFieldOfViewY(1.1f * g_MainProjection->GetFieldOfViewY());
 }
 
@@ -2524,20 +2516,14 @@ void ActionSelectNextLinkedSystem(void)
 
 void ActionSpawnFighter(void)
 {
-	std::stringstream IdentifierPrefix;
-	
-	IdentifierPrefix << "::system(" << g_CurrentSystem->GetSubTypeIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
-	SpawnShip(g_CurrentSystem, IdentifierPrefix.str(), "fighter");
+	assert(g_CurrentSystem != nullptr);
+	SpawnShip(g_CurrentSystem, "fighter");
 }
 
 void ActionSpawnRandomShip(void)
 {
 	assert(g_CurrentSystem != nullptr);
-	
-	std::stringstream IdentifierPrefix;
-	
-	IdentifierPrefix << "::system(" << g_CurrentSystem->GetSubTypeIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
-	SpawnShip(g_CurrentSystem, IdentifierPrefix.str());
+	SpawnShip(g_CurrentSystem);
 }
 
 void ActionTakeScreenShot(void)
