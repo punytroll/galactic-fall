@@ -71,7 +71,7 @@ const std::string & BlueprintManager::GetDescription(const std::string & TypeIde
 	
 	assert(Blueprint != nullptr);
 	
-	return Blueprint->GetPropertyAsString("description");
+	return Blueprint->GetValue< std::string >("description");
 }
 
 const std::string & BlueprintManager::GetName(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
@@ -80,7 +80,7 @@ const std::string & BlueprintManager::GetName(const std::string & TypeIdentifier
 	
 	assert(Blueprint != nullptr);
 	
-	return Blueprint->GetPropertyAsString("name");
+	return Blueprint->GetValue< std::string >("name");
 }
 
 std::uint32_t BlueprintManager::GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const

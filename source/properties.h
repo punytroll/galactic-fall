@@ -43,7 +43,6 @@ public:
 	
 	const std::list< Properties > & GetPropertyAsList(const std::string & PropertyIdentifier) const;
 	const SlotClass * GetPropertyAsSlotClass(const std::string & PropertyIdentifier) const;
-	const std::string & GetPropertyAsString(const std::string & PropertyIdentifier) const;
 	const VisualizationPrototype & GetPropertyAsVisualizationPrototype(const std::string & PropertyIdentifier) const;
 	// setters
 	void AddList(const std::string & PropertyIdentifier, const std::list< Properties > & PropertiesList)

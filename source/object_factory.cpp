@@ -76,7 +76,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		// set up aspects
 		// set up name aspect
 		assert(NewAmmunition->GetAspectName() != nullptr);
-		NewAmmunition->GetAspectName()->SetName(AmmunitionBlueprint->GetPropertyAsString("name"));
+		NewAmmunition->GetAspectName()->SetName(AmmunitionBlueprint->GetValue< std::string >("name"));
 		// set up physical aspect
 		assert(NewAmmunition->GetAspectPhysical() != nullptr);
 		NewAmmunition->GetAspectPhysical()->SetRadialSize(AmmunitionBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
@@ -101,10 +101,10 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		// set up aspects
 		// set up accessory aspect
 		assert(NewBattery->GetAspectAccessory() != nullptr);
-		NewBattery->GetAspectAccessory()->SetSlotClassIdentifier(BatteryBlueprint->GetPropertyAsString("slot-class-identifier"));
+		NewBattery->GetAspectAccessory()->SetSlotClassIdentifier(BatteryBlueprint->GetValue< std::string >("slot-class-identifier"));
 		// set up name aspect
 		assert(NewBattery->GetAspectName() != nullptr);
-		NewBattery->GetAspectName()->SetName(BatteryBlueprint->GetPropertyAsString("name"));
+		NewBattery->GetAspectName()->SetName(BatteryBlueprint->GetValue< std::string >("name"));
 		// set up physical aspect
 		assert(NewBattery->GetAspectPhysical() != nullptr);
 		NewBattery->GetAspectPhysical()->SetSpaceRequirement(BatteryBlueprint->GetValue< std::uint32_t >("space-requirement"));
@@ -127,7 +127,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		
 		// set up name aspect
 		assert(NewCommodity->GetAspectName() != nullptr);
-		NewCommodity->GetAspectName()->SetName(CommodityBlueprint->GetPropertyAsString("name"));
+		NewCommodity->GetAspectName()->SetName(CommodityBlueprint->GetValue< std::string >("name"));
 		// set up physical aspect
 		assert(NewCommodity->GetAspectPhysical() != nullptr);
 		NewCommodity->GetAspectPhysical()->SetRadialSize(CommodityBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
@@ -162,10 +162,10 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		// set up aspects
 		// set up accessory aspect
 		assert(NewGenerator->GetAspectAccessory() != nullptr);
-		NewGenerator->GetAspectAccessory()->SetSlotClassIdentifier(GeneratorBlueprint->GetPropertyAsString("slot-class-identifier"));
+		NewGenerator->GetAspectAccessory()->SetSlotClassIdentifier(GeneratorBlueprint->GetValue< std::string >("slot-class-identifier"));
 		// set up name aspect
 		assert(NewGenerator->GetAspectName() != nullptr);
-		NewGenerator->GetAspectName()->SetName(GeneratorBlueprint->GetPropertyAsString("name"));
+		NewGenerator->GetAspectName()->SetName(GeneratorBlueprint->GetValue< std::string >("name"));
 		// set up physical aspect
 		assert(NewGenerator->GetAspectPhysical() != nullptr);
 		NewGenerator->GetAspectPhysical()->SetSpaceRequirement(GeneratorBlueprint->GetValue< std::uint32_t >("space-requirement"));
@@ -216,8 +216,8 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewShip->SetFaction(g_Galaxy->GetFaction("neutral"));
 		
 		auto & VisualizationPrototype{ShipBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype")};
-		auto & ExhaustMarkerPartIdentifier{ShipBlueprint->GetPropertyAsString("exhaust-marker-part-identifier")};
-		auto & ExhaustMarkerIdentifier{ShipBlueprint->GetPropertyAsString("exhaust-marker-identifier")};
+		auto & ExhaustMarkerPartIdentifier{ShipBlueprint->GetValue< std::string >("exhaust-marker-part-identifier")};
+		auto & ExhaustMarkerIdentifier{ShipBlueprint->GetValue< std::string >("exhaust-marker-identifier")};
 		auto ExhaustRadius{VisualizationPrototype.GetMarkerLength(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
 		
 		assert(ExhaustRadius != nullptr);
@@ -240,14 +240,14 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		// set up aspects
 		// set up name aspect
 		assert(NewShip->GetAspectName() != nullptr);
-		NewShip->GetAspectName()->SetName(ShipBlueprint->GetPropertyAsString("name"));
+		NewShip->GetAspectName()->SetName(ShipBlueprint->GetValue< std::string >("name"));
 		// set up outfitting aspect
 		assert(NewShip->GetAspectOutfitting() != nullptr);
 		for(auto SlotProperties : ShipBlueprint->GetPropertyAsList("slots"))
 		{
-			auto NewSlot{new Slot{SlotProperties.GetPropertyAsSlotClass("class"), SlotProperties.GetPropertyAsString("identifier")}};
+			auto NewSlot{new Slot{SlotProperties.GetPropertyAsSlotClass("class"), SlotProperties.GetValue< std::string >("identifier")}};
 			
-			NewSlot->SetName(SlotProperties.GetPropertyAsString("name"));
+			NewSlot->SetName(SlotProperties.GetValue< std::string >("name"));
 			NewSlot->SetPosition(SlotProperties.GetValue< Vector3f >("position"));
 			NewSlot->SetOrientation(SlotProperties.GetValue< Quaternion >("orientation"));
 			NewSlot->SetVisualizeAccessory(SlotProperties.GetValue< bool >("visualize-accessory"));
@@ -317,10 +317,10 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewTurret->SetMaximumPowerInput(TurretBlueprint->GetValue< float >("maximum-power-input"));
 		// set up accessory aspect
 		assert(NewTurret->GetAspectAccessory() != nullptr);
-		NewTurret->GetAspectAccessory()->SetSlotClassIdentifier(TurretBlueprint->GetPropertyAsString("slot-class-identifier"));
+		NewTurret->GetAspectAccessory()->SetSlotClassIdentifier(TurretBlueprint->GetValue< std::string >("slot-class-identifier"));
 		// set up name aspect
 		assert(NewTurret->GetAspectName() != nullptr);
-		NewTurret->GetAspectName()->SetName(TurretBlueprint->GetPropertyAsString("name"));
+		NewTurret->GetAspectName()->SetName(TurretBlueprint->GetValue< std::string >("name"));
 		// set up physical aspect
 		assert(NewTurret->GetAspectPhysical() != nullptr);
 		NewTurret->GetAspectPhysical()->SetSpaceRequirement(TurretBlueprint->GetValue< std::uint32_t >("space-requirement"));
@@ -351,10 +351,10 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewWeapon->SetMaximumPowerInput(WeaponBlueprint->GetValue< float >("maximum-power-input"));
 		// set up accessory aspect
 		assert(NewWeapon->GetAspectAccessory() != nullptr);
-		NewWeapon->GetAspectAccessory()->SetSlotClassIdentifier(WeaponBlueprint->GetPropertyAsString("slot-class-identifier"));
+		NewWeapon->GetAspectAccessory()->SetSlotClassIdentifier(WeaponBlueprint->GetValue< std::string >("slot-class-identifier"));
 		// set up name aspect
 		assert(NewWeapon->GetAspectName() != nullptr);
-		NewWeapon->GetAspectName()->SetName(WeaponBlueprint->GetPropertyAsString("name"));
+		NewWeapon->GetAspectName()->SetName(WeaponBlueprint->GetValue< std::string >("name"));
 		// set up physical aspect
 		assert(NewWeapon->GetAspectPhysical() != nullptr);
 		NewWeapon->GetAspectPhysical()->SetSpaceRequirement(WeaponBlueprint->GetValue< std::uint32_t >("space-requirement"));
