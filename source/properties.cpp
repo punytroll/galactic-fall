@@ -28,16 +28,6 @@ Properties::~Properties(void)
 {
 }
 
-bool Properties::GetPropertyAsBoolean(const std::string & PropertyIdentifier) const
-{
-	return std::experimental::any_cast< bool >(_Properties.at(PropertyIdentifier));
-}
-
-float Properties::GetPropertyAsFloat(const std::string & PropertyIdentifier) const
-{
-	return std::experimental::any_cast< float >(_Properties.at(PropertyIdentifier));
-}
-
 const std::list< Properties > & Properties::GetPropertyAsList(const std::string & PropertyIdentifier) const
 {
 	return std::experimental::any_cast< const std::list< Properties > & >(_Properties.at(PropertyIdentifier));
@@ -56,11 +46,6 @@ const SlotClass * Properties::GetPropertyAsSlotClass(const std::string & Propert
 const std::string & Properties::GetPropertyAsString(const std::string & PropertyIdentifier) const
 {
 	return std::experimental::any_cast< const std::string & >(_Properties.at(PropertyIdentifier));
-}
-
-std::uint32_t Properties::GetPropertyAsUnsignedInteger32Bit(const std::string & PropertyIdentifier) const
-{
-	return std::experimental::any_cast< std::uint32_t >(_Properties.at(PropertyIdentifier));
 }
 
 const Vector3f & Properties::GetPropertyAsVector3f(const std::string & PropertyIdentifier) const
