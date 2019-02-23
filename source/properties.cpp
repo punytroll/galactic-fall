@@ -18,7 +18,6 @@
 **/
 
 #include "properties.h"
-#include "visualization_prototype.h"
 
 Properties::Properties(void)
 {
@@ -31,9 +30,4 @@ Properties::~Properties(void)
 const std::list< Properties > & Properties::GetPropertyAsList(const std::string & PropertyIdentifier) const
 {
 	return std::experimental::any_cast< const std::list< Properties > & >(_Properties.at(PropertyIdentifier));
-}
-
-const VisualizationPrototype & Properties::GetPropertyAsVisualizationPrototype(const std::string & PropertyIdentifier) const
-{
-	return std::experimental::any_cast< const VisualizationPrototype & >(_Properties.at(PropertyIdentifier));
 }
