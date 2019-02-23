@@ -21,6 +21,7 @@
 
 #include "blueprint.h"
 #include "blueprint_manager.h"
+#include "visualization_prototype.h"
 
 BlueprintManager::~BlueprintManager(void)
 {
@@ -98,7 +99,7 @@ const VisualizationPrototype * BlueprintManager::GetVisualizationPrototype(const
 	
 	assert(Blueprint != nullptr);
 	
-	return &(Blueprint->GetPropertyAsVisualizationPrototype("visualization-prototype"));
+	return &(Blueprint->GetValue< VisualizationPrototype >("visualization-prototype"));
 }
 
 bool BlueprintManager::Has(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const

@@ -25,8 +25,6 @@
 #include <string>
 #include <unordered_map>
 
-class VisualizationPrototype;
-
 class Properties
 {
 public:
@@ -41,7 +39,6 @@ public:
 	}
 	
 	const std::list< Properties > & GetPropertyAsList(const std::string & PropertyIdentifier) const;
-	const VisualizationPrototype & GetPropertyAsVisualizationPrototype(const std::string & PropertyIdentifier) const;
 	// setters
 	void AddList(const std::string & PropertyIdentifier, const std::list< Properties > & PropertiesList)
 	{

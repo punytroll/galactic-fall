@@ -79,7 +79,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewAmmunition->GetAspectName()->SetName(AmmunitionBlueprint->GetValue< std::string >("name"));
 		// set up physical aspect
 		assert(NewAmmunition->GetAspectPhysical() != nullptr);
-		NewAmmunition->GetAspectPhysical()->SetRadialSize(AmmunitionBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
+		NewAmmunition->GetAspectPhysical()->SetRadialSize(AmmunitionBlueprint->GetValue< VisualizationPrototype >("visualization-prototype").GetModel()->GetRadialSize());
 		NewAmmunition->GetAspectPhysical()->SetSpaceRequirement(AmmunitionBlueprint->GetValue< std::uint32_t >("space-requirement"));
 		Result = NewAmmunition;
 	}
@@ -130,11 +130,11 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewCommodity->GetAspectName()->SetName(CommodityBlueprint->GetValue< std::string >("name"));
 		// set up physical aspect
 		assert(NewCommodity->GetAspectPhysical() != nullptr);
-		NewCommodity->GetAspectPhysical()->SetRadialSize(CommodityBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
+		NewCommodity->GetAspectPhysical()->SetRadialSize(CommodityBlueprint->GetValue< VisualizationPrototype >("visualization-prototype").GetModel()->GetRadialSize());
 		NewCommodity->GetAspectPhysical()->SetSpaceRequirement(CommodityBlueprint->GetValue< std::uint32_t >("space-requirement"));
 		// set up visualization aspect
 		assert(NewCommodity->GetAspectVisualization() != nullptr);
-		NewCommodity->GetAspectVisualization()->SetVisualizationPrototype(CommodityBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype"));
+		NewCommodity->GetAspectVisualization()->SetVisualizationPrototype(CommodityBlueprint->GetValue< VisualizationPrototype >("visualization-prototype"));
 		Result = NewCommodity;
 	}
 	else if(TypeIdentifier == "faction")
@@ -215,20 +215,20 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		assert(g_Galaxy != nullptr);
 		NewShip->SetFaction(g_Galaxy->GetFaction("neutral"));
 		
-		auto & VisualizationPrototype{ShipBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype")};
+		auto & ShipVisualizationPrototype{ShipBlueprint->GetValue< VisualizationPrototype >("visualization-prototype")};
 		auto & ExhaustMarkerPartIdentifier{ShipBlueprint->GetValue< std::string >("exhaust-marker-part-identifier")};
 		auto & ExhaustMarkerIdentifier{ShipBlueprint->GetValue< std::string >("exhaust-marker-identifier")};
-		auto ExhaustRadius{VisualizationPrototype.GetMarkerLength(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
+		auto ExhaustRadius{ShipVisualizationPrototype.GetMarkerLength(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
 		
 		assert(ExhaustRadius != nullptr);
 		NewShip->SetExhaustRadius(*ExhaustRadius);
 		
-		auto ExhaustPosition{VisualizationPrototype.GetMarkerPosition(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
+		auto ExhaustPosition{ShipVisualizationPrototype.GetMarkerPosition(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
 		
 		assert(ExhaustPosition != nullptr);
 		NewShip->SetExhaustPosition(*ExhaustPosition);
 		
-		auto ExhaustOrientation{VisualizationPrototype.GetMarkerOrientation(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
+		auto ExhaustOrientation{ShipVisualizationPrototype.GetMarkerOrientation(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
 		
 		assert(ExhaustOrientation != nullptr);
 		NewShip->SetExhaustOrientation(*ExhaustOrientation);
@@ -255,11 +255,11 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		}
 		// set up physical aspect
 		assert(NewShip->GetAspectPhysical() != nullptr);
-		NewShip->GetAspectPhysical()->SetRadialSize(VisualizationPrototype.GetModel()->GetRadialSize());
+		NewShip->GetAspectPhysical()->SetRadialSize(ShipVisualizationPrototype.GetModel()->GetRadialSize());
 		NewShip->GetAspectPhysical()->SetSpaceRequirement(ShipBlueprint->GetValue< std::uint32_t >("space-requirement"));
 		// set up visualization aspect
 		assert(NewShip->GetAspectVisualization() != nullptr);
-		NewShip->GetAspectVisualization()->SetVisualizationPrototype(VisualizationPrototype);
+		NewShip->GetAspectVisualization()->SetVisualizationPrototype(ShipVisualizationPrototype);
 		
 		auto & PartStyles{NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartStyles()};
 		
@@ -313,7 +313,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewTurret->SetShotDamage(TurretBlueprint->GetValue< float >("shot-damage"));
 		NewTurret->SetShotExitSpeed(TurretBlueprint->GetValue< float >("shot-exit-speed"));
 		NewTurret->SetShotLifeTime(TurretBlueprint->GetValue< float >("shot-life-time"));
-		NewTurret->SetShotVisualizationPrototype(TurretBlueprint->GetPropertyAsVisualizationPrototype("shot-visualization-prototype"));
+		NewTurret->SetShotVisualizationPrototype(TurretBlueprint->GetValue< VisualizationPrototype >("shot-visualization-prototype"));
 		NewTurret->SetMaximumPowerInput(TurretBlueprint->GetValue< float >("maximum-power-input"));
 		// set up accessory aspect
 		assert(NewTurret->GetAspectAccessory() != nullptr);
@@ -329,7 +329,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewTurret->GetAspectPosition()->SetOrientation(TurretBlueprint->GetValue< Quaternion >("orientation"));
 		// set up visualization aspect
 		assert(NewTurret->GetAspectVisualization() != nullptr);
-		NewTurret->GetAspectVisualization()->SetVisualizationPrototype(TurretBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype"));
+		NewTurret->GetAspectVisualization()->SetVisualizationPrototype(TurretBlueprint->GetValue< VisualizationPrototype >("visualization-prototype"));
 		Result = NewTurret;
 	}
 	else if(TypeIdentifier == "weapon")
@@ -347,7 +347,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewWeapon->SetShotDamage(WeaponBlueprint->GetValue< float >("shot-damage"));
 		NewWeapon->SetShotExitSpeed(WeaponBlueprint->GetValue< float >("shot-exit-speed"));
 		NewWeapon->SetShotLifeTime(WeaponBlueprint->GetValue< float >("shot-life-time"));
-		NewWeapon->SetShotVisualizationPrototype(WeaponBlueprint->GetPropertyAsVisualizationPrototype("shot-visualization-prototype"));
+		NewWeapon->SetShotVisualizationPrototype(WeaponBlueprint->GetValue< VisualizationPrototype >("shot-visualization-prototype"));
 		NewWeapon->SetMaximumPowerInput(WeaponBlueprint->GetValue< float >("maximum-power-input"));
 		// set up accessory aspect
 		assert(NewWeapon->GetAspectAccessory() != nullptr);
@@ -363,7 +363,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewWeapon->GetAspectPosition()->SetOrientation(WeaponBlueprint->GetValue< Quaternion >("orientation"));
 		// set up visualization aspect
 		assert(NewWeapon->GetAspectVisualization() != nullptr);
-		NewWeapon->GetAspectVisualization()->SetVisualizationPrototype(WeaponBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype"));
+		NewWeapon->GetAspectVisualization()->SetVisualizationPrototype(WeaponBlueprint->GetValue< VisualizationPrototype >("visualization-prototype"));
 		Result = NewWeapon;
 	}
 	else
