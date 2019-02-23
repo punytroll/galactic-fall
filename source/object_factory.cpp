@@ -245,7 +245,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		assert(NewShip->GetAspectOutfitting() != nullptr);
 		for(auto SlotProperties : ShipBlueprint->GetPropertyAsList("slots"))
 		{
-			auto NewSlot{new Slot{SlotProperties.GetPropertyAsSlotClass("class"), SlotProperties.GetValue< std::string >("identifier")}};
+			auto NewSlot{new Slot{SlotProperties.GetValue< const SlotClass * >("class"), SlotProperties.GetValue< std::string >("identifier")}};
 			
 			NewSlot->SetName(SlotProperties.GetValue< std::string >("name"));
 			NewSlot->SetPosition(SlotProperties.GetValue< Vector3f >("position"));
