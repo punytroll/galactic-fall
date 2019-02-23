@@ -38,13 +38,16 @@ public:
 	Properties(void);
 	virtual ~Properties(void);
 	// getters
-	bool GetPropertyAsBoolean(const std::string & PropertyIdentifier) const;
-	float GetPropertyAsFloat(const std::string & PropertyIdentifier) const;
+	template< typename ValueType >
+	const ValueType & GetValue(const std::string & PropertyIdentifier) const
+	{
+		return std::experimental::any_cast< const ValueType & >(_Properties.at(PropertyIdentifier));
+	}
+	
 	const std::list< Properties > & GetPropertyAsList(const std::string & PropertyIdentifier) const;
 	const Quaternion & GetPropertyAsQuaternion(const std::string & PropertyIdentifier) const;
 	const SlotClass * GetPropertyAsSlotClass(const std::string & PropertyIdentifier) const;
 	const std::string & GetPropertyAsString(const std::string & PropertyIdentifier) const;
-	std::uint32_t GetPropertyAsUnsignedInteger32Bit(const std::string & PropertyIdentifier) const;
 	const Vector3f & GetPropertyAsVector3f(const std::string & PropertyIdentifier) const;
 	const VisualizationPrototype & GetPropertyAsVisualizationPrototype(const std::string & PropertyIdentifier) const;
 	// setters

@@ -62,7 +62,7 @@ std::uint32_t BlueprintManager::GetBasePrice(const std::string & TypeIdentifier,
 	
 	assert(Blueprint != nullptr);
 	
-	return Blueprint->GetPropertyAsUnsignedInteger32Bit("base-price");
+	return Blueprint->GetValue< std::uint32_t >("base-price");
 }
 
 const std::string & BlueprintManager::GetDescription(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
@@ -89,7 +89,7 @@ std::uint32_t BlueprintManager::GetSpaceRequirement(const std::string & TypeIden
 	
 	assert(Blueprint != nullptr);
 	
-	return Blueprint->GetPropertyAsUnsignedInteger32Bit("space-requirement");
+	return Blueprint->GetValue< std::uint32_t >("space-requirement");
 }
 
 const VisualizationPrototype * BlueprintManager::GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const

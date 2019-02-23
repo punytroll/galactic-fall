@@ -71,8 +71,8 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewAmmunition{new Ammunition{}};
 		
 		// set up type specific things
-		NewAmmunition->SetAmount(AmmunitionBlueprint->GetPropertyAsUnsignedInteger32Bit("cartridge-size"));
-		NewAmmunition->SetCapacity(AmmunitionBlueprint->GetPropertyAsUnsignedInteger32Bit("cartridge-size"));
+		NewAmmunition->SetAmount(AmmunitionBlueprint->GetValue< std::uint32_t >("cartridge-size"));
+		NewAmmunition->SetCapacity(AmmunitionBlueprint->GetValue< std::uint32_t >("cartridge-size"));
 		// set up aspects
 		// set up name aspect
 		assert(NewAmmunition->GetAspectName() != nullptr);
@@ -80,7 +80,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		// set up physical aspect
 		assert(NewAmmunition->GetAspectPhysical() != nullptr);
 		NewAmmunition->GetAspectPhysical()->SetRadialSize(AmmunitionBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
-		NewAmmunition->GetAspectPhysical()->SetSpaceRequirement(AmmunitionBlueprint->GetPropertyAsUnsignedInteger32Bit("space-requirement"));
+		NewAmmunition->GetAspectPhysical()->SetSpaceRequirement(AmmunitionBlueprint->GetValue< std::uint32_t >("space-requirement"));
 		Result = NewAmmunition;
 	}
 	else if(TypeIdentifier == "battery")
@@ -94,10 +94,10 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewBattery{new Battery{}};
 		
 		// set up type specific things
-		NewBattery->SetEnergyCapacity(BatteryBlueprint->GetPropertyAsFloat("energy-capacity"));
-		NewBattery->SetEnergy(BatteryBlueprint->GetPropertyAsFloat("energy-capacity"));
-		NewBattery->SetMaximumPowerInput(BatteryBlueprint->GetPropertyAsFloat("maximum-power-input"));
-		NewBattery->SetMaximumPowerOutput(BatteryBlueprint->GetPropertyAsFloat("maximum-power-output"));
+		NewBattery->SetEnergyCapacity(BatteryBlueprint->GetValue< float >("energy-capacity"));
+		NewBattery->SetEnergy(BatteryBlueprint->GetValue< float >("energy-capacity"));
+		NewBattery->SetMaximumPowerInput(BatteryBlueprint->GetValue< float >("maximum-power-input"));
+		NewBattery->SetMaximumPowerOutput(BatteryBlueprint->GetValue< float >("maximum-power-output"));
 		// set up aspects
 		// set up accessory aspect
 		assert(NewBattery->GetAspectAccessory() != nullptr);
@@ -107,7 +107,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewBattery->GetAspectName()->SetName(BatteryBlueprint->GetPropertyAsString("name"));
 		// set up physical aspect
 		assert(NewBattery->GetAspectPhysical() != nullptr);
-		NewBattery->GetAspectPhysical()->SetSpaceRequirement(BatteryBlueprint->GetPropertyAsUnsignedInteger32Bit("space-requirement"));
+		NewBattery->GetAspectPhysical()->SetSpaceRequirement(BatteryBlueprint->GetValue< std::uint32_t >("space-requirement"));
 		Result = NewBattery;
 	}
 	else if(TypeIdentifier == "character")
@@ -131,7 +131,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		// set up physical aspect
 		assert(NewCommodity->GetAspectPhysical() != nullptr);
 		NewCommodity->GetAspectPhysical()->SetRadialSize(CommodityBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
-		NewCommodity->GetAspectPhysical()->SetSpaceRequirement(CommodityBlueprint->GetPropertyAsUnsignedInteger32Bit("space-requirement"));
+		NewCommodity->GetAspectPhysical()->SetSpaceRequirement(CommodityBlueprint->GetValue< std::uint32_t >("space-requirement"));
 		// set up visualization aspect
 		assert(NewCommodity->GetAspectVisualization() != nullptr);
 		NewCommodity->GetAspectVisualization()->SetVisualizationPrototype(CommodityBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype"));
@@ -158,7 +158,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewGenerator{new Generator{}};
 		
 		// set up type specific things
-		NewGenerator->SetMaximumPowerOutput(GeneratorBlueprint->GetPropertyAsFloat("maximum-power-output"));
+		NewGenerator->SetMaximumPowerOutput(GeneratorBlueprint->GetValue< float >("maximum-power-output"));
 		// set up aspects
 		// set up accessory aspect
 		assert(NewGenerator->GetAspectAccessory() != nullptr);
@@ -168,7 +168,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewGenerator->GetAspectName()->SetName(GeneratorBlueprint->GetPropertyAsString("name"));
 		// set up physical aspect
 		assert(NewGenerator->GetAspectPhysical() != nullptr);
-		NewGenerator->GetAspectPhysical()->SetSpaceRequirement(GeneratorBlueprint->GetPropertyAsUnsignedInteger32Bit("space-requirement"));
+		NewGenerator->GetAspectPhysical()->SetSpaceRequirement(GeneratorBlueprint->GetValue< std::uint32_t >("space-requirement"));
 		Result = NewGenerator;
 	}
 	else if(TypeIdentifier == "hangar")
@@ -203,15 +203,15 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewShip{new Ship{}};
 		
 		// set up type specific things
-		NewShip->SetFuelCapacity(ShipBlueprint->GetPropertyAsFloat("fuel-capacity"));
-		NewShip->SetFuelNeededToAccelerate(ShipBlueprint->GetPropertyAsFloat("forward-fuel"));
-		NewShip->SetFuelNeededToJump(ShipBlueprint->GetPropertyAsFloat("jump-fuel"));
-		NewShip->SetFuelNeededToTurn(ShipBlueprint->GetPropertyAsFloat("turn-fuel"));
-		NewShip->SetHullCapacity(ShipBlueprint->GetPropertyAsFloat("hull"));
-		NewShip->SetHull(ShipBlueprint->GetPropertyAsFloat("hull"));
-		NewShip->SetMaximumForwardThrust(ShipBlueprint->GetPropertyAsFloat("forward-thrust"));
-		NewShip->SetMaximumSpeed(ShipBlueprint->GetPropertyAsFloat("maximum-speed"));
-		NewShip->SetMaximumTurnSpeed(ShipBlueprint->GetPropertyAsFloat("turn-speed"));
+		NewShip->SetFuelCapacity(ShipBlueprint->GetValue< float >("fuel-capacity"));
+		NewShip->SetFuelNeededToAccelerate(ShipBlueprint->GetValue< float >("forward-fuel"));
+		NewShip->SetFuelNeededToJump(ShipBlueprint->GetValue< float >("jump-fuel"));
+		NewShip->SetFuelNeededToTurn(ShipBlueprint->GetValue< float >("turn-fuel"));
+		NewShip->SetHullCapacity(ShipBlueprint->GetValue< float >("hull"));
+		NewShip->SetHull(ShipBlueprint->GetValue< float >("hull"));
+		NewShip->SetMaximumForwardThrust(ShipBlueprint->GetValue< float >("forward-thrust"));
+		NewShip->SetMaximumSpeed(ShipBlueprint->GetValue< float >("maximum-speed"));
+		NewShip->SetMaximumTurnSpeed(ShipBlueprint->GetValue< float >("turn-speed"));
 		assert(g_Galaxy != nullptr);
 		NewShip->SetFaction(g_Galaxy->GetFaction("neutral"));
 		
@@ -250,13 +250,13 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 			NewSlot->SetName(SlotProperties.GetPropertyAsString("name"));
 			NewSlot->SetPosition(SlotProperties.GetPropertyAsVector3f("position"));
 			NewSlot->SetOrientation(SlotProperties.GetPropertyAsQuaternion("orientation"));
-			NewSlot->SetVisualizeAccessory(SlotProperties.GetPropertyAsBoolean("visualize-accessory"));
+			NewSlot->SetVisualizeAccessory(SlotProperties.GetValue< bool >("visualize-accessory"));
 			NewShip->GetAspectOutfitting()->AddSlot(NewSlot);
 		}
 		// set up physical aspect
 		assert(NewShip->GetAspectPhysical() != nullptr);
 		NewShip->GetAspectPhysical()->SetRadialSize(VisualizationPrototype.GetModel()->GetRadialSize());
-		NewShip->GetAspectPhysical()->SetSpaceRequirement(ShipBlueprint->GetPropertyAsUnsignedInteger32Bit("space-requirement"));
+		NewShip->GetAspectPhysical()->SetSpaceRequirement(ShipBlueprint->GetValue< std::uint32_t >("space-requirement"));
 		// set up visualization aspect
 		assert(NewShip->GetAspectVisualization() != nullptr);
 		NewShip->GetAspectVisualization()->SetVisualizationPrototype(VisualizationPrototype);
@@ -272,7 +272,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		{
 			auto NewStorage{dynamic_cast< Storage * >(Create("storage", "", CreateNestedObjects))};
 			
-			NewStorage->SetSpaceCapacity(ShipBlueprint->GetPropertyAsUnsignedInteger32Bit("maximum-available-space"));
+			NewStorage->SetSpaceCapacity(ShipBlueprint->GetValue< std::uint32_t >("maximum-available-space"));
 			assert(NewShip->GetAspectObjectContainer() != nullptr);
 			NewShip->GetAspectObjectContainer()->AddContent(NewStorage);
 		}
@@ -308,13 +308,13 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		
 		auto NewTurret{new Turret{}};
 		
-		NewTurret->SetEnergyUsagePerShot(TurretBlueprint->GetPropertyAsFloat("energy-usage-per-shot"));
+		NewTurret->SetEnergyUsagePerShot(TurretBlueprint->GetValue< float >("energy-usage-per-shot"));
 		NewTurret->SetMuzzlePosition(TurretBlueprint->GetPropertyAsVector3f("muzzle-position"));
-		NewTurret->SetShotDamage(TurretBlueprint->GetPropertyAsFloat("shot-damage"));
-		NewTurret->SetShotExitSpeed(TurretBlueprint->GetPropertyAsFloat("shot-exit-speed"));
-		NewTurret->SetShotLifeTime(TurretBlueprint->GetPropertyAsFloat("shot-life-time"));
+		NewTurret->SetShotDamage(TurretBlueprint->GetValue< float >("shot-damage"));
+		NewTurret->SetShotExitSpeed(TurretBlueprint->GetValue< float >("shot-exit-speed"));
+		NewTurret->SetShotLifeTime(TurretBlueprint->GetValue< float >("shot-life-time"));
 		NewTurret->SetShotVisualizationPrototype(TurretBlueprint->GetPropertyAsVisualizationPrototype("shot-visualization-prototype"));
-		NewTurret->SetMaximumPowerInput(TurretBlueprint->GetPropertyAsFloat("maximum-power-input"));
+		NewTurret->SetMaximumPowerInput(TurretBlueprint->GetValue< float >("maximum-power-input"));
 		// set up accessory aspect
 		assert(NewTurret->GetAspectAccessory() != nullptr);
 		NewTurret->GetAspectAccessory()->SetSlotClassIdentifier(TurretBlueprint->GetPropertyAsString("slot-class-identifier"));
@@ -323,7 +323,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewTurret->GetAspectName()->SetName(TurretBlueprint->GetPropertyAsString("name"));
 		// set up physical aspect
 		assert(NewTurret->GetAspectPhysical() != nullptr);
-		NewTurret->GetAspectPhysical()->SetSpaceRequirement(TurretBlueprint->GetPropertyAsUnsignedInteger32Bit("space-requirement"));
+		NewTurret->GetAspectPhysical()->SetSpaceRequirement(TurretBlueprint->GetValue< std::uint32_t >("space-requirement"));
 		// set up position aspect
 		assert(NewTurret->GetAspectPosition() != nullptr);
 		NewTurret->GetAspectPosition()->SetOrientation(TurretBlueprint->GetPropertyAsQuaternion("orientation"));
@@ -342,13 +342,13 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		
 		auto NewWeapon{new Weapon{}};
 		
-		NewWeapon->SetEnergyUsagePerShot(WeaponBlueprint->GetPropertyAsFloat("energy-usage-per-shot"));
+		NewWeapon->SetEnergyUsagePerShot(WeaponBlueprint->GetValue< float >("energy-usage-per-shot"));
 		NewWeapon->SetMuzzlePosition(WeaponBlueprint->GetPropertyAsVector3f("muzzle-position"));
-		NewWeapon->SetShotDamage(WeaponBlueprint->GetPropertyAsFloat("shot-damage"));
-		NewWeapon->SetShotExitSpeed(WeaponBlueprint->GetPropertyAsFloat("shot-exit-speed"));
-		NewWeapon->SetShotLifeTime(WeaponBlueprint->GetPropertyAsFloat("shot-life-time"));
+		NewWeapon->SetShotDamage(WeaponBlueprint->GetValue< float >("shot-damage"));
+		NewWeapon->SetShotExitSpeed(WeaponBlueprint->GetValue< float >("shot-exit-speed"));
+		NewWeapon->SetShotLifeTime(WeaponBlueprint->GetValue< float >("shot-life-time"));
 		NewWeapon->SetShotVisualizationPrototype(WeaponBlueprint->GetPropertyAsVisualizationPrototype("shot-visualization-prototype"));
-		NewWeapon->SetMaximumPowerInput(WeaponBlueprint->GetPropertyAsFloat("maximum-power-input"));
+		NewWeapon->SetMaximumPowerInput(WeaponBlueprint->GetValue< float >("maximum-power-input"));
 		// set up accessory aspect
 		assert(NewWeapon->GetAspectAccessory() != nullptr);
 		NewWeapon->GetAspectAccessory()->SetSlotClassIdentifier(WeaponBlueprint->GetPropertyAsString("slot-class-identifier"));
@@ -357,7 +357,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewWeapon->GetAspectName()->SetName(WeaponBlueprint->GetPropertyAsString("name"));
 		// set up physical aspect
 		assert(NewWeapon->GetAspectPhysical() != nullptr);
-		NewWeapon->GetAspectPhysical()->SetSpaceRequirement(WeaponBlueprint->GetPropertyAsUnsignedInteger32Bit("space-requirement"));
+		NewWeapon->GetAspectPhysical()->SetSpaceRequirement(WeaponBlueprint->GetValue< std::uint32_t >("space-requirement"));
 		// set up position aspect
 		assert(NewWeapon->GetAspectPosition() != nullptr);
 		NewWeapon->GetAspectPosition()->SetOrientation(WeaponBlueprint->GetPropertyAsQuaternion("orientation"));
