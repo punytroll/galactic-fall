@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2018  Hagen Möbius
+ * Copyright (C) 2018-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,9 +25,6 @@
 #include <string>
 #include <unordered_map>
 
-#include <algebra/quaternion.h>
-#include <algebra/vector3f.h>
-
 class VisualizationPrototype;
 class SlotClass;
 
@@ -45,10 +42,8 @@ public:
 	}
 	
 	const std::list< Properties > & GetPropertyAsList(const std::string & PropertyIdentifier) const;
-	const Quaternion & GetPropertyAsQuaternion(const std::string & PropertyIdentifier) const;
 	const SlotClass * GetPropertyAsSlotClass(const std::string & PropertyIdentifier) const;
 	const std::string & GetPropertyAsString(const std::string & PropertyIdentifier) const;
-	const Vector3f & GetPropertyAsVector3f(const std::string & PropertyIdentifier) const;
 	const VisualizationPrototype & GetPropertyAsVisualizationPrototype(const std::string & PropertyIdentifier) const;
 	// setters
 	void AddList(const std::string & PropertyIdentifier, const std::list< Properties > & PropertiesList)

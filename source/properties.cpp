@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2018  Hagen Möbius
+ * Copyright (C) 2018-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,11 +33,6 @@ const std::list< Properties > & Properties::GetPropertyAsList(const std::string 
 	return std::experimental::any_cast< const std::list< Properties > & >(_Properties.at(PropertyIdentifier));
 }
 
-const Quaternion & Properties::GetPropertyAsQuaternion(const std::string & PropertyIdentifier) const
-{
-	return std::experimental::any_cast< const Quaternion & >(_Properties.at(PropertyIdentifier));
-}
-
 const SlotClass * Properties::GetPropertyAsSlotClass(const std::string & PropertyIdentifier) const
 {
 	return std::experimental::any_cast< const SlotClass * >(_Properties.at(PropertyIdentifier));
@@ -46,11 +41,6 @@ const SlotClass * Properties::GetPropertyAsSlotClass(const std::string & Propert
 const std::string & Properties::GetPropertyAsString(const std::string & PropertyIdentifier) const
 {
 	return std::experimental::any_cast< const std::string & >(_Properties.at(PropertyIdentifier));
-}
-
-const Vector3f & Properties::GetPropertyAsVector3f(const std::string & PropertyIdentifier) const
-{
-	return std::experimental::any_cast< const Vector3f & >(_Properties.at(PropertyIdentifier));
 }
 
 const VisualizationPrototype & Properties::GetPropertyAsVisualizationPrototype(const std::string & PropertyIdentifier) const

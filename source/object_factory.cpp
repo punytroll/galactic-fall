@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007-2018  Hagen Möbius
+ * Copyright (C) 2007-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -248,8 +248,8 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 			auto NewSlot{new Slot{SlotProperties.GetPropertyAsSlotClass("class"), SlotProperties.GetPropertyAsString("identifier")}};
 			
 			NewSlot->SetName(SlotProperties.GetPropertyAsString("name"));
-			NewSlot->SetPosition(SlotProperties.GetPropertyAsVector3f("position"));
-			NewSlot->SetOrientation(SlotProperties.GetPropertyAsQuaternion("orientation"));
+			NewSlot->SetPosition(SlotProperties.GetValue< Vector3f >("position"));
+			NewSlot->SetOrientation(SlotProperties.GetValue< Quaternion >("orientation"));
 			NewSlot->SetVisualizeAccessory(SlotProperties.GetValue< bool >("visualize-accessory"));
 			NewShip->GetAspectOutfitting()->AddSlot(NewSlot);
 		}
@@ -309,7 +309,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewTurret{new Turret{}};
 		
 		NewTurret->SetEnergyUsagePerShot(TurretBlueprint->GetValue< float >("energy-usage-per-shot"));
-		NewTurret->SetMuzzlePosition(TurretBlueprint->GetPropertyAsVector3f("muzzle-position"));
+		NewTurret->SetMuzzlePosition(TurretBlueprint->GetValue< Vector3f >("muzzle-position"));
 		NewTurret->SetShotDamage(TurretBlueprint->GetValue< float >("shot-damage"));
 		NewTurret->SetShotExitSpeed(TurretBlueprint->GetValue< float >("shot-exit-speed"));
 		NewTurret->SetShotLifeTime(TurretBlueprint->GetValue< float >("shot-life-time"));
@@ -326,7 +326,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewTurret->GetAspectPhysical()->SetSpaceRequirement(TurretBlueprint->GetValue< std::uint32_t >("space-requirement"));
 		// set up position aspect
 		assert(NewTurret->GetAspectPosition() != nullptr);
-		NewTurret->GetAspectPosition()->SetOrientation(TurretBlueprint->GetPropertyAsQuaternion("orientation"));
+		NewTurret->GetAspectPosition()->SetOrientation(TurretBlueprint->GetValue< Quaternion >("orientation"));
 		// set up visualization aspect
 		assert(NewTurret->GetAspectVisualization() != nullptr);
 		NewTurret->GetAspectVisualization()->SetVisualizationPrototype(TurretBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype"));
@@ -343,7 +343,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewWeapon{new Weapon{}};
 		
 		NewWeapon->SetEnergyUsagePerShot(WeaponBlueprint->GetValue< float >("energy-usage-per-shot"));
-		NewWeapon->SetMuzzlePosition(WeaponBlueprint->GetPropertyAsVector3f("muzzle-position"));
+		NewWeapon->SetMuzzlePosition(WeaponBlueprint->GetValue< Vector3f >("muzzle-position"));
 		NewWeapon->SetShotDamage(WeaponBlueprint->GetValue< float >("shot-damage"));
 		NewWeapon->SetShotExitSpeed(WeaponBlueprint->GetValue< float >("shot-exit-speed"));
 		NewWeapon->SetShotLifeTime(WeaponBlueprint->GetValue< float >("shot-life-time"));
@@ -360,7 +360,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewWeapon->GetAspectPhysical()->SetSpaceRequirement(WeaponBlueprint->GetValue< std::uint32_t >("space-requirement"));
 		// set up position aspect
 		assert(NewWeapon->GetAspectPosition() != nullptr);
-		NewWeapon->GetAspectPosition()->SetOrientation(WeaponBlueprint->GetPropertyAsQuaternion("orientation"));
+		NewWeapon->GetAspectPosition()->SetOrientation(WeaponBlueprint->GetValue< Quaternion >("orientation"));
 		// set up visualization aspect
 		assert(NewWeapon->GetAspectVisualization() != nullptr);
 		NewWeapon->GetAspectVisualization()->SetVisualizationPrototype(WeaponBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype"));
