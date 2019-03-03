@@ -95,7 +95,6 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		
 		// set up type specific things
 		NewBattery->SetEnergyCapacity(BatteryBlueprint->GetValue< float >("energy-capacity"));
-		NewBattery->SetEnergy(BatteryBlueprint->GetValue< float >("energy-capacity"));
 		NewBattery->SetMaximumPowerInput(BatteryBlueprint->GetValue< float >("maximum-power-input"));
 		NewBattery->SetMaximumPowerOutput(BatteryBlueprint->GetValue< float >("maximum-power-output"));
 		// set up aspects
