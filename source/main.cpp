@@ -884,31 +884,32 @@ void OnTimingDialogDestroying(UI::Event & DestroyingEvent)
 	}
 }
 
-void SpawnShip(System * System, std::string ShipSubTypeIdentifier = "")
+std::string GetRandomShipSubTypeIdentifier(void)
 {
-	if(ShipSubTypeIdentifier == "")
+	double RandomUniform(GetRandomUniform());
+	
+	if(RandomUniform < 0.2f)
 	{
-		double RandomUniform(GetRandomUniform());
-		
-		if(RandomUniform < 0.2f)
-		{
-			ShipSubTypeIdentifier = "shuttle";
-		}
-		else if(RandomUniform < 0.5f)
-		{
-			ShipSubTypeIdentifier = "transporter";
-		}
-		else
-		{
-			ShipSubTypeIdentifier = "fighter";
-		}
+		return "shuttle";
 	}
-	
+	else if(RandomUniform < 0.5f)
+	{
+		return "transporter";
+	}
+	else
+	{
+		return "fighter";
+	}
+}
+
+Ship * CreateShip(const std::string & ShipSubTypeIdentifier, Faction * Faction)
+{
 	auto NewShip{dynamic_cast< Ship * >(g_ObjectFactory->Create("ship", ShipSubTypeIdentifier, true))};
-	auto Faction{System->GetRandomFactionAccordingToInfluences()};
 	
+	assert(NewShip != nullptr);
 	assert(Faction != nullptr);
 	NewShip->SetFaction(Faction);
+	assert(NewShip->GetAspectVisualization() != nullptr);
 	
 	auto & PartStyles(NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartStyles());
 	
@@ -916,6 +917,7 @@ void SpawnShip(System * System, std::string ShipSubTypeIdentifier = "")
 	{
 		PartStyles["faction"]->SetDiffuseColor(Faction->GetColor());
 	}
+	assert(NewShip->GetAspectPosition() != nullptr);
 	NewShip->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
 	NewShip->GetAspectPosition()->SetOrientation(Quaternion::CreateAsRotationZ(GetRandomFloat(0.0f, 2.0f * M_PI)));
 	
@@ -931,7 +933,6 @@ void SpawnShip(System * System, std::string ShipSubTypeIdentifier = "")
 	
 	auto NewCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "", true)));
 	
-	NewCharacter->GetMapKnowledge()->AddExploredSystem(System);
 	if(ShipSubTypeIdentifier == "fighter")
 	{
 		NewCharacter->SetCredits(200 + GetRandomUnsignedInteger32Bit(50, 250));
@@ -993,13 +994,14 @@ void SpawnShip(System * System, std::string ShipSubTypeIdentifier = "")
 		NewCharacter->GetAspectObjectContainer()->AddContent(NewMind);
 	}
 	NewShip->GetAspectObjectContainer()->AddContent(NewCharacter);
-	System->GetAspectObjectContainer()->AddContent(NewShip);
+	
+	return NewShip;
 }
 
-void SpawnShipOnTimeout(System * SpawnInSystem)
+void SpawnShipOnTimeout(System * System)
 {
-	SpawnShip(SpawnInSystem);
-	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / SpawnInSystem->GetTrafficDensity()), std::bind(SpawnShipOnTimeout, SpawnInSystem));
+	System->GetAspectObjectContainer()->AddContent(CreateShip(GetRandomShipSubTypeIdentifier(), System->GetRandomFactionAccordingToInfluences()));
+	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / System->GetTrafficDensity()), std::bind(SpawnShipOnTimeout, System));
 }
 
 void PopulateSystem(System * System)
@@ -1008,7 +1010,7 @@ void PopulateSystem(System * System)
 	
 	for(int ShipNumber = 1; ShipNumber <= NumberOfShips; ++ShipNumber)
 	{
-		SpawnShip(System);
+		System->GetAspectObjectContainer()->AddContent(CreateShip(GetRandomShipSubTypeIdentifier(), System->GetRandomFactionAccordingToInfluences()));
 	}
 }
 
@@ -2517,13 +2519,13 @@ void ActionSelectNextLinkedSystem(void)
 void ActionSpawnFighter(void)
 {
 	assert(g_CurrentSystem != nullptr);
-	SpawnShip(g_CurrentSystem, "fighter");
+	g_CurrentSystem->GetAspectObjectContainer()->AddContent(CreateShip("fighter", g_CurrentSystem->GetRandomFactionAccordingToInfluences()));
 }
 
 void ActionSpawnRandomShip(void)
 {
 	assert(g_CurrentSystem != nullptr);
-	SpawnShip(g_CurrentSystem);
+	g_CurrentSystem->GetAspectObjectContainer()->AddContent(CreateShip(GetRandomShipSubTypeIdentifier(), g_CurrentSystem->GetRandomFactionAccordingToInfluences()));
 }
 
 void ActionTakeScreenShot(void)
