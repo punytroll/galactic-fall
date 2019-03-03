@@ -911,7 +911,7 @@ Ship * CreateShip(const std::string & ShipSubTypeIdentifier, Faction * Faction)
 	NewShip->SetFaction(Faction);
 	assert(NewShip->GetAspectVisualization() != nullptr);
 	
-	auto & PartStyles(NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartStyles());
+	auto & PartStyles{NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartStyles()};
 	
 	if(PartStyles.find("faction") != PartStyles.end())
 	{
@@ -921,17 +921,19 @@ Ship * CreateShip(const std::string & ShipSubTypeIdentifier, Faction * Faction)
 	NewShip->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
 	NewShip->GetAspectPosition()->SetOrientation(Quaternion::CreateAsRotationZ(GetRandomFloat(0.0f, 2.0f * M_PI)));
 	
-	Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, NewShip->GetMaximumSpeed()), GetRandomFloat(0.0f, 2.0f * M_PI)));
+	Vector2f Velocity{Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, NewShip->GetMaximumSpeed()), GetRandomFloat(0.0f, 2.0f * M_PI))};
 	
 	NewShip->SetVelocity(Vector3f::CreateFromComponents(Velocity[0], Velocity[1], 0.0f));
 	NewShip->SetFuel(NewShip->GetFuelCapacity());
 	
-	auto NewBattery(g_ObjectFactory->Create("battery", "light_battery", true));
+	auto NewBattery{dynamic_cast< Battery * >(g_ObjectFactory->Create("battery", "light_battery", true))};
 	
+	assert(NewBattery != nullptr);
+	NewBattery->SetEnergy(NewBattery->GetEnergyCapacity() * GetRandomFloat(0.5f, 1.0f));
 	NewShip->GetAspectObjectContainer()->AddContent(NewBattery);
 	NewShip->GetAspectOutfitting()->GetSlot("battery")->Mount(NewBattery);
 	
-	auto NewCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "", true)));
+	auto NewCharacter{dynamic_cast< Character * >(g_ObjectFactory->Create("character", "", true))};
 	
 	if(ShipSubTypeIdentifier == "fighter")
 	{
