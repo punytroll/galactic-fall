@@ -115,6 +115,20 @@ void System::AddFactionInfluence(Faction * Faction, float Influence)
 	_FactionInfluences.push_back(NewFactionInfluence);
 }
 
+float System::GetFactionInfluence(Faction * Faction) const
+{
+	assert(Faction != nullptr);
+	for(auto FactionInfluence : _FactionInfluences)
+	{
+		if(FactionInfluence->_Faction == Faction)
+		{
+			return FactionInfluence->_Influence;
+		}
+	}
+	
+	return 0.0f;
+}
+
 Faction * System::GetRandomFactionAccordingToInfluences(void)
 {
 	auto TotalInfluence{0.0f};

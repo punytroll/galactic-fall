@@ -43,6 +43,7 @@ public:
 	virtual ~System(void) override;
 	// queries
 	const std::list< Commodity * > & GetCommodities(void) const;
+	float GetFactionInfluence(Faction * Faction) const;
 	const std::list< System * > GetLinkedSystems(void) const;
 	const std::vector< Planet * > & GetPlanets(void) const;
 	Faction * GetRandomFactionAccordingToInfluences(void);
