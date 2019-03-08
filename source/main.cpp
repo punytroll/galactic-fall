@@ -25,6 +25,7 @@
 #include <fstream>
 #include <iostream>
 #include <list>
+#include <random>
 #include <sstream>
 #include <stdexcept>
 #include <unordered_map>
@@ -917,14 +918,7 @@ Ship * CreateShip(const std::string & ShipSubTypeIdentifier, Faction * Faction)
 	{
 		PartStyles["faction"]->SetDiffuseColor(Faction->GetColor());
 	}
-	assert(NewShip->GetAspectPosition() != nullptr);
-	NewShip->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
-	NewShip->GetAspectPosition()->SetOrientation(Quaternion::CreateAsRotationZ(GetRandomFloat(0.0f, 2.0f * M_PI)));
-	
-	Vector2f Velocity{Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, NewShip->GetMaximumSpeed()), GetRandomFloat(0.0f, 2.0f * M_PI))};
-	
-	NewShip->SetVelocity(Vector3f::CreateFromComponents(Velocity[0], Velocity[1], 0.0f));
-	NewShip->SetFuel(NewShip->GetFuelCapacity());
+	NewShip->SetFuel(NewShip->GetFuelCapacity() * GetRandomFloat(0.5f, 0.8f));
 	
 	auto NewBattery{dynamic_cast< Battery * >(g_ObjectFactory->Create("battery", "light_battery", true))};
 	
@@ -1000,9 +994,65 @@ Ship * CreateShip(const std::string & ShipSubTypeIdentifier, Faction * Faction)
 	return NewShip;
 }
 
+void ModifyForInitialPopulation(Ship * Ship)
+{
+	assert(Ship != nullptr);
+	assert(Ship->GetAspectPosition() != nullptr);
+	Ship->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
+	
+	auto Direction{GetRandomRadians()};
+	
+	Ship->GetAspectPosition()->SetOrientation(Quaternion::CreateAsRotationZ(Direction));
+	
+	auto Velocity{Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, Ship->GetMaximumSpeed()), Direction)};
+	
+	Ship->SetVelocity(Vector3f::CreateFromComponents(Velocity[0], Velocity[1], 0.0f));
+}
+
+void ModifyForJumpIn(System * System, Ship * Ship)
+{
+	assert(System != nullptr);
+	assert(Ship != nullptr);
+	assert(Ship->GetFaction() != nullptr);
+	// calculate a possible source system, according to the faction influences of all linked systems
+	std::list< float > Weights;
+	
+	for(auto LinkedSystem : System->GetLinkedSystems())
+	{
+		Weights.push_back(LinkedSystem->GetFactionInfluence(Ship->GetFaction()));
+	}
+	
+    std::random_device RandomDevice;
+    std::mt19937 Generator{RandomDevice()};
+    std::discrete_distribution<> Distribution{Weights.begin(), Weights.end()};
+	auto LinkedSystem{std::next(System->GetLinkedSystems().begin(), Distribution(Generator))};
+	
+	assert(LinkedSystem != System->GetLinkedSystems().end());
+	assert(*LinkedSystem != nullptr);
+	assert((*LinkedSystem)->GetAspectPosition() != nullptr);
+	assert(System->GetAspectPosition() != nullptr);
+	
+	auto JumpInVector{(System->GetAspectPosition()->GetPosition() - (*LinkedSystem)->GetAspectPosition()->GetPosition()).Normalize()};
+	
+	assert(Ship->GetAspectPosition() != nullptr);
+	Ship->GetAspectPosition()->SetPosition(-JumpInVector * 200.0f);
+	Ship->GetAspectPosition()->SetOrientation(Quaternion::CreateAsRotationZ(GetRadians(JumpInVector[0], JumpInVector[1])));
+	Ship->SetVelocity(JumpInVector * Ship->GetMaximumSpeed());
+	
+	// display jump partice system in new system
+	auto NewJumpParticleSystem(CreateParticleSystem("jump"));
+	
+	NewJumpParticleSystem->SetPosition(Ship->GetAspectPosition()->GetPosition());
+	NewJumpParticleSystem->SetVelocity(Vector3f::CreateZero());
+	VisualizeParticleSystem(NewJumpParticleSystem, System);
+}
+
 void SpawnShipOnTimeout(System * System)
 {
-	System->GetAspectObjectContainer()->AddContent(CreateShip(GetRandomShipSubTypeIdentifier(), System->GetRandomFactionAccordingToInfluences()));
+	auto Ship{CreateShip(GetRandomShipSubTypeIdentifier(), System->GetRandomFactionAccordingToInfluences())};
+	
+	ModifyForJumpIn(System, Ship);
+	System->GetAspectObjectContainer()->AddContent(Ship);
 	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / System->GetTrafficDensity()), std::bind(SpawnShipOnTimeout, System));
 }
 
@@ -1012,7 +1062,10 @@ void PopulateSystem(System * System)
 	
 	for(int ShipNumber = 1; ShipNumber <= NumberOfShips; ++ShipNumber)
 	{
-		System->GetAspectObjectContainer()->AddContent(CreateShip(GetRandomShipSubTypeIdentifier(), System->GetRandomFactionAccordingToInfluences()));
+		auto Ship{CreateShip(GetRandomShipSubTypeIdentifier(), System->GetRandomFactionAccordingToInfluences())};
+		
+		ModifyForInitialPopulation(Ship);
+		System->GetAspectObjectContainer()->AddContent(Ship);
 	}
 }
 
@@ -2521,13 +2574,19 @@ void ActionSelectNextLinkedSystem(void)
 void ActionSpawnFighter(void)
 {
 	assert(g_CurrentSystem != nullptr);
-	g_CurrentSystem->GetAspectObjectContainer()->AddContent(CreateShip("fighter", g_CurrentSystem->GetRandomFactionAccordingToInfluences()));
+	auto Ship{CreateShip("fighter", g_CurrentSystem->GetRandomFactionAccordingToInfluences())};
+	
+	ModifyForJumpIn(g_CurrentSystem, Ship);
+	g_CurrentSystem->GetAspectObjectContainer()->AddContent(Ship);
 }
 
 void ActionSpawnRandomShip(void)
 {
 	assert(g_CurrentSystem != nullptr);
-	g_CurrentSystem->GetAspectObjectContainer()->AddContent(CreateShip(GetRandomShipSubTypeIdentifier(), g_CurrentSystem->GetRandomFactionAccordingToInfluences()));
+	auto Ship{CreateShip(GetRandomShipSubTypeIdentifier(), g_CurrentSystem->GetRandomFactionAccordingToInfluences())};
+	
+	ModifyForJumpIn(g_CurrentSystem, Ship);
+	g_CurrentSystem->GetAspectObjectContainer()->AddContent(Ship);
 }
 
 void ActionTakeScreenShot(void)
