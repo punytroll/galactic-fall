@@ -55,11 +55,11 @@ inline float NormalizedRadians(float Radians)
 	return Radians;
 }
 
-inline float GetRadians(const Vector2f & Vector)
+inline float GetRadians(float X, float Y)
 {
-	float Radians(acosf(Vector[0]));
+	float Radians{acosf(X)};
 	
-	if(Vector[1] >= 0)
+	if(Y >= 0)
 	{
 		return Radians;
 	}
@@ -67,6 +67,11 @@ inline float GetRadians(const Vector2f & Vector)
 	{
 		return NormalizedRadians(-Radians);
 	}
+}
+
+inline float GetRadians(const Vector2f & Vector)
+{
+	return GetRadians(Vector[0], Vector[1]);
 }
 
 inline float GetShortestRadians(float Heading1, float Heading2)
