@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007-2018  Hagen Möbius
+ * Copyright (C) 2007-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -125,7 +125,7 @@ bool Weapon::_Update(float Seconds)
 		assert(Container->GetAspectPosition() != nullptr);
 		assert(Container->GetContainer() != nullptr);
 		
-		auto NewShot(dynamic_cast< Shot * >(g_ObjectFactory->Create("shot", "", true)));
+		auto NewShot{dynamic_cast< Shot * >(g_ObjectFactory->Create("shot", "", true))};
 		
 		assert(NewShot != nullptr);
 		// set up type specific things
@@ -142,7 +142,7 @@ bool Weapon::_Update(float Seconds)
 		NewShot->SetShooter(Container);
 		
 		// calculating the shot's position in the world coordinate system
-		Vector3f ShotPosition(_MuzzlePosition);
+		auto ShotPosition{_MuzzlePosition};
 		
 		ShotPosition.Rotate(GetAspectPosition()->GetOrientation());
 		ShotPosition.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
@@ -152,7 +152,7 @@ bool Weapon::_Update(float Seconds)
 		NewShot->GetAspectPosition()->SetPosition(ShotPosition);
 		
 		// calculating the shot's angular position in world coordinate system
-		Quaternion ShotOrientation(Container->GetAspectPosition()->GetOrientation());
+		auto ShotOrientation{Container->GetAspectPosition()->GetOrientation()};
 		
 		ShotOrientation.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
 		ShotOrientation.Rotate(GetAspectPosition()->GetOrientation());
