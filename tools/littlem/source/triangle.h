@@ -18,16 +18,16 @@ public:
 		_SetTrianglePoint(Slot, TrianglePoint);
 	}
 	
-	void vRealignNormal(void);
+	void RealignNormal(void);
 	Vector3f GetTriangleCenter(void) const;
 	Vector3f GetTriangleNormal(void) const;
-	void vInvert(void);
-	Point * pGetPoint(int iPoint);
-	const Point * pGetPoint(int iPoint) const;
-	TrianglePoint * pGetTrianglePoint(int iTrianglePoint);
-	const TrianglePoint * pGetTrianglePoint(int iTrianglePoint) const;
-	TrianglePoint * pGetTrianglePoint(Point * pPoint);
-	const TrianglePoint * pGetTrianglePoint(Point * pPoint) const;
+	void Invert(void);
+	Point * GetPoint(int Point);
+	const Point * GetPoint(int Point) const;
+	TrianglePoint * GetTrianglePoint(int TrianglePoint);
+	const TrianglePoint * GetTrianglePoint(int TrianglePoint) const;
+	TrianglePoint * GetTrianglePoint(Point * Point);
+	const TrianglePoint * GetTrianglePoint(Point * Point) const;
 	TrianglePoint * m_ppTrianglePoints[3];
 private:
 	void _SetTrianglePoint(int Slot, TrianglePoint * TrianglePoint);

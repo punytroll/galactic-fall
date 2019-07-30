@@ -1279,6 +1279,79 @@ bool IsPointDrawable(Point * Point, Camera * Camera)
 	return Result;
 }
 
+Point * CreatePoint(const Vector3f & Position)
+{
+	auto Result{new Point{}};
+	
+	Result->SetPosition(Position);
+	g_Points.push_back(Result);
+	
+	return Result;
+}
+
+TrianglePoint * CreateTrianglePoint(Point * Point)
+{
+	auto Result{new TrianglePoint{}};
+	
+	Result->SetPoint(Point);
+	
+	return Result;
+}
+
+Triangle * CreateTriangle(Point * Point1, Point * Point2, Point * Point3)
+{
+	auto TrianglePoint1{CreateTrianglePoint(Point1)};
+	auto TrianglePoint2{CreateTrianglePoint(Point2)};
+	auto TrianglePoint3{CreateTrianglePoint(Point3)};
+	auto Result{new Triangle{}};
+	
+	Result->SetTrianglePoint<0>(TrianglePoint1);
+	Result->SetTrianglePoint<1>(TrianglePoint2);
+	Result->SetTrianglePoint<2>(TrianglePoint3);
+	Result->RealignNormal();
+	g_Triangles.push_back(Result);
+	
+	return Result;
+}
+
+void CreateRegularIcosahedron(void)
+{
+	auto Phi{(1.0f + sqrt(5.0f)) / 2.0f};
+	auto Point1{CreatePoint(Vector3f::CreateFromComponents(0.0f, 1.0f, Phi))};
+	auto Point2{CreatePoint(Vector3f::CreateFromComponents(0.0f, -1.0f, Phi))};
+	auto Point3{CreatePoint(Vector3f::CreateFromComponents(0.0f, -1.0f, -Phi))};
+	auto Point4{CreatePoint(Vector3f::CreateFromComponents(0.0f, 1.0f, -Phi))};
+	auto Point5{CreatePoint(Vector3f::CreateFromComponents(Phi, 0.0f, 1.0f))};
+	auto Point6{CreatePoint(Vector3f::CreateFromComponents(Phi, 0.0f, -1.0f))};
+	auto Point7{CreatePoint(Vector3f::CreateFromComponents(-Phi, 0.0f, -1.0f))};
+	auto Point8{CreatePoint(Vector3f::CreateFromComponents(-Phi, 0.0f, 1.0f))};
+	auto Point9{CreatePoint(Vector3f::CreateFromComponents(1.0f, Phi, 0.0f))};
+	auto Point10{CreatePoint(Vector3f::CreateFromComponents(-1.0f, Phi, 0.0f))};
+	auto Point11{CreatePoint(Vector3f::CreateFromComponents(-1.0f, -Phi, 0.0f))};
+	auto Point12{CreatePoint(Vector3f::CreateFromComponents(1.0f, -Phi, 0.0f))};
+	
+	CreateTriangle(Point1, Point2, Point5);
+	CreateTriangle(Point1, Point8, Point2);
+	CreateTriangle(Point1, Point10, Point8);
+	CreateTriangle(Point1, Point9, Point10);
+	CreateTriangle(Point1, Point5, Point9);
+	CreateTriangle(Point2, Point12, Point5);
+	CreateTriangle(Point2, Point11, Point12);
+	CreateTriangle(Point2, Point8, Point11);
+	CreateTriangle(Point3, Point4, Point6);
+	CreateTriangle(Point3, Point6, Point12);
+	CreateTriangle(Point3, Point12, Point11);
+	CreateTriangle(Point3, Point11, Point7);
+	CreateTriangle(Point3, Point7, Point4);
+	CreateTriangle(Point4, Point9, Point6);
+	CreateTriangle(Point4, Point10, Point9);
+	CreateTriangle(Point4, Point7, Point10);
+	CreateTriangle(Point5, Point12, Point6);
+	CreateTriangle(Point5, Point6, Point9);
+	CreateTriangle(Point8, Point7, Point11);
+	CreateTriangle(Point8, Point10, Point7);
+}
+
 /**
  * @brief Performs the picking of model elements.
  * 
@@ -1452,30 +1525,30 @@ void vDisplayModel(void)
 			glPopMatrix();
 			glColor3f(0.4f, 0.1f, 0.0f);
 			glPushMatrix();
-			glTranslatef(SelectedTriangle->pGetPoint(1)->GetPosition()[0], SelectedTriangle->pGetPoint(1)->GetPosition()[1], SelectedTriangle->pGetPoint(1)->GetPosition()[2]);
-			Scale = 2.0f * (SelectedTriangle->pGetPoint(1)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+			glTranslatef(SelectedTriangle->GetPoint(1)->GetPosition()[0], SelectedTriangle->GetPoint(1)->GetPosition()[1], SelectedTriangle->GetPoint(1)->GetPosition()[2]);
+			Scale = 2.0f * (SelectedTriangle->GetPoint(1)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
 			glScalef(Scale, Scale, Scale);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(SelectedTriangle->pGetTrianglePoint(1)->_Normal.Scaled(0.05f).GetPointer());
+			glVertex3fv(SelectedTriangle->GetTrianglePoint(1)->_Normal.Scaled(0.05f).GetPointer());
 			glEnd();
 			glPopMatrix();
 			glPushMatrix();
-			glTranslatef(SelectedTriangle->pGetPoint(2)->GetPosition()[0], SelectedTriangle->pGetPoint(2)->GetPosition()[1], SelectedTriangle->pGetPoint(2)->GetPosition()[2]);
-			Scale = 2.0f * (SelectedTriangle->pGetPoint(2)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+			glTranslatef(SelectedTriangle->GetPoint(2)->GetPosition()[0], SelectedTriangle->GetPoint(2)->GetPosition()[1], SelectedTriangle->GetPoint(2)->GetPosition()[2]);
+			Scale = 2.0f * (SelectedTriangle->GetPoint(2)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
 			glScalef(Scale, Scale, Scale);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(SelectedTriangle->pGetTrianglePoint(2)->_Normal.Scaled(0.05f).GetPointer());
+			glVertex3fv(SelectedTriangle->GetTrianglePoint(2)->_Normal.Scaled(0.05f).GetPointer());
 			glEnd();
 			glPopMatrix();
 			glPushMatrix();
-			glTranslatef(SelectedTriangle->pGetPoint(3)->GetPosition()[0], SelectedTriangle->pGetPoint(3)->GetPosition()[1], SelectedTriangle->pGetPoint(3)->GetPosition()[2]);
-			Scale = 2.0f * (SelectedTriangle->pGetPoint(3)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+			glTranslatef(SelectedTriangle->GetPoint(3)->GetPosition()[0], SelectedTriangle->GetPoint(3)->GetPosition()[1], SelectedTriangle->GetPoint(3)->GetPosition()[2]);
+			Scale = 2.0f * (SelectedTriangle->GetPoint(3)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
 			glScalef(Scale, Scale, Scale);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(SelectedTriangle->pGetTrianglePoint(3)->_Normal.Scaled(0.05f).GetPointer());
+			glVertex3fv(SelectedTriangle->GetTrianglePoint(3)->_Normal.Scaled(0.05f).GetPointer());
 			glEnd();
 			glPopMatrix();
 		}
@@ -1680,30 +1753,30 @@ void vDisplayModel(void)
 		glPopMatrix();
 		glColor3f(0.0f, 0.1f, 0.4f);
 		glPushMatrix();
-		glTranslatef(g_HoveredTriangle->pGetPoint(1)->GetPosition()[0], g_HoveredTriangle->pGetPoint(1)->GetPosition()[1], g_HoveredTriangle->pGetPoint(1)->GetPosition()[2]);
-		Scale = 2.0f * (g_HoveredTriangle->pGetPoint(1)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+		glTranslatef(g_HoveredTriangle->GetPoint(1)->GetPosition()[0], g_HoveredTriangle->GetPoint(1)->GetPosition()[1], g_HoveredTriangle->GetPoint(1)->GetPosition()[2]);
+		Scale = 2.0f * (g_HoveredTriangle->GetPoint(1)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
 		glScalef(Scale, Scale, Scale);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_HoveredTriangle->pGetTrianglePoint(1)->_Normal.Scaled(0.05f).GetPointer());
+		glVertex3fv(g_HoveredTriangle->GetTrianglePoint(1)->_Normal.Scaled(0.05f).GetPointer());
 		glEnd();
 		glPopMatrix();
 		glPushMatrix();
-		glTranslatef(g_HoveredTriangle->pGetPoint(2)->GetPosition()[0], g_HoveredTriangle->pGetPoint(2)->GetPosition()[1], g_HoveredTriangle->pGetPoint(2)->GetPosition()[2]);
-		Scale = 2.0f * (g_HoveredTriangle->pGetPoint(2)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+		glTranslatef(g_HoveredTriangle->GetPoint(2)->GetPosition()[0], g_HoveredTriangle->GetPoint(2)->GetPosition()[1], g_HoveredTriangle->GetPoint(2)->GetPosition()[2]);
+		Scale = 2.0f * (g_HoveredTriangle->GetPoint(2)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
 		glScalef(Scale, Scale, Scale);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_HoveredTriangle->pGetTrianglePoint(2)->_Normal.Scaled(0.05f).GetPointer());
+		glVertex3fv(g_HoveredTriangle->GetTrianglePoint(2)->_Normal.Scaled(0.05f).GetPointer());
 		glEnd();
 		glPopMatrix();
 		glPushMatrix();
-		glTranslatef(g_HoveredTriangle->pGetPoint(3)->GetPosition()[0], g_HoveredTriangle->pGetPoint(3)->GetPosition()[1], g_HoveredTriangle->pGetPoint(3)->GetPosition()[2]);
-		Scale = 2.0f * (g_HoveredTriangle->pGetPoint(3)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+		glTranslatef(g_HoveredTriangle->GetPoint(3)->GetPosition()[0], g_HoveredTriangle->GetPoint(3)->GetPosition()[1], g_HoveredTriangle->GetPoint(3)->GetPosition()[2]);
+		Scale = 2.0f * (g_HoveredTriangle->GetPoint(3)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
 		glScalef(Scale, Scale, Scale);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_HoveredTriangle->pGetTrianglePoint(3)->_Normal.Scaled(0.05f).GetPointer());
+		glVertex3fv(g_HoveredTriangle->GetTrianglePoint(3)->_Normal.Scaled(0.05f).GetPointer());
 		glEnd();
 		glPopMatrix();
 	}
@@ -1780,7 +1853,7 @@ void vDisplay(void)
 	vDisplayUserInterface();
 }
 
-void vDeleteTriangle(std::vector< Triangle * >::iterator iTriangle)
+void DeleteTriangle(std::vector< Triangle * >::iterator iTriangle)
 {
 	assert(iTriangle != g_Triangles.end());
 	
@@ -1804,16 +1877,16 @@ void vDeleteTriangle(std::vector< Triangle * >::iterator iTriangle)
 	delete pTriangle;
 }
 
-void vDeleteTriangle(std::vector< Triangle * >::size_type stTriangle)
+void DeleteTriangle(std::vector< Triangle * >::size_type stTriangle)
 {
 	assert(stTriangle < g_Triangles.size());
-	vDeleteTriangle(g_Triangles.begin() + stTriangle);
+	DeleteTriangle(g_Triangles.begin() + stTriangle);
 }
 
-void vDeleteTriangle(Triangle * pTriangle)
+void DeleteTriangle(Triangle * pTriangle)
 {
 	assert(pTriangle != 0);
-	vDeleteTriangle(std::find(g_Triangles.begin(), g_Triangles.end(), pTriangle));
+	DeleteTriangle(std::find(g_Triangles.begin(), g_Triangles.end(), pTriangle));
 }
 
 void DeleteCamera(std::vector< Camera * >::iterator iCamera)
@@ -1861,7 +1934,7 @@ void DeletePoint(std::vector< Point * >::iterator PointIterator)
 		{
 			while(Point->GetTrianglePoints().front()->_Triangles.size() > 0)
 			{
-				vDeleteTriangle(Point->GetTrianglePoints().front()->_Triangles.front());
+				DeleteTriangle(Point->GetTrianglePoints().front()->_Triangles.front());
 			}
 		}
 	}
@@ -1914,7 +1987,7 @@ void vClearScene(void)
 	Light::DeleteLights();
 	while(g_Triangles.size() > 0)
 	{
-		vDeleteTriangle(g_Triangles.begin());
+		DeleteTriangle(g_Triangles.begin());
 	}
 	while(g_Points.size() > 0)
 	{
@@ -2083,25 +2156,8 @@ bool AcceptKeyInPointView(int KeyCode, bool IsDown)
 				// create triangle from three selected points
 				if(g_SelectedPoints.size() == 3)
 				{
-					auto TrianglePoint1(new TrianglePoint());
+					auto NewTriangle{CreateTriangle(g_SelectedPoints[0], g_SelectedPoints[1], g_SelectedPoints[2])};
 					
-					TrianglePoint1->SetPoint(g_SelectedPoints[0]);
-					
-					auto TrianglePoint2(new TrianglePoint());
-					
-					TrianglePoint2->SetPoint(g_SelectedPoints[1]);
-					
-					auto TrianglePoint3(new TrianglePoint());
-					
-					TrianglePoint3->SetPoint(g_SelectedPoints[2]);
-					
-					auto NewTriangle(new Triangle());
-					
-					NewTriangle->SetTrianglePoint<0>(TrianglePoint1);
-					NewTriangle->SetTrianglePoint<1>(TrianglePoint2);
-					NewTriangle->SetTrianglePoint<2>(TrianglePoint3);
-					NewTriangle->vRealignNormal();
-					g_Triangles.push_back(NewTriangle);
 					g_SelectedTriangles.push_back(NewTriangle);
 					g_SelectedPoints.clear();
 				}
@@ -2337,7 +2393,7 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 			{
 				for(auto Triangle : g_SelectedTriangles)
 				{
-					Triangle->vInvert();
+					Triangle->Invert();
 				}
 				bKeyAccepted = true;
 			}
@@ -2353,7 +2409,7 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 				{
 					for(auto Triangle : g_SelectedTriangles)
 					{
-						auto OldTrianglePoint(Triangle->pGetTrianglePoint(Point));
+						auto OldTrianglePoint(Triangle->GetTrianglePoint(Point));
 						
 						if(OldTrianglePoint != nullptr)
 						{
@@ -2361,15 +2417,15 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 							
 							NewTrianglePoint->SetPoint(Point);
 							NewTrianglePoint->_Normal = Triangle->GetTriangleNormal();
-							if(OldTrianglePoint == Triangle->pGetTrianglePoint(1))
+							if(OldTrianglePoint == Triangle->GetTrianglePoint(1))
 							{
 								Triangle->SetTrianglePoint<0>(NewTrianglePoint);
 							}
-							else if(OldTrianglePoint == Triangle->pGetTrianglePoint(2))
+							else if(OldTrianglePoint == Triangle->GetTrianglePoint(2))
 							{
 								Triangle->SetTrianglePoint<1>(NewTrianglePoint);
 							}
-							else if(OldTrianglePoint == Triangle->pGetTrianglePoint(3))
+							else if(OldTrianglePoint == Triangle->GetTrianglePoint(3))
 							{
 								Triangle->SetTrianglePoint<2>(NewTrianglePoint);
 							}
@@ -2392,12 +2448,12 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 				
 				for(auto Triangle : g_SelectedTriangles)
 				{
-					PointsToSelect.push_back(Triangle->pGetPoint(1));
-					PointsToSelect.push_back(Triangle->pGetPoint(2));
-					PointsToSelect.push_back(Triangle->pGetPoint(3));
+					PointsToSelect.push_back(Triangle->GetPoint(1));
+					PointsToSelect.push_back(Triangle->GetPoint(2));
+					PointsToSelect.push_back(Triangle->GetPoint(3));
 				}
 				std::sort(PointsToSelect.begin(), PointsToSelect.end());
-				std::unique_copy(PointsToSelect.begin(), PointsToSelect.end(), back_inserter(g_SelectedPoints));
+				std::unique_copy(PointsToSelect.begin(), PointsToSelect.end(), std::back_inserter(g_SelectedPoints));
 				bKeyAccepted = true;
 			}
 			
@@ -2411,7 +2467,7 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 				
 				for(auto Triangle : g_SelectedTriangles)
 				{
-					auto OldTrianglePoint(Triangle->pGetTrianglePoint(Point));
+					auto OldTrianglePoint(Triangle->GetTrianglePoint(Point));
 					
 					if(OldTrianglePoint != nullptr)
 					{
@@ -2422,15 +2478,15 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 							NewTrianglePoint->_Normal.Set(0.0f, 0.0f, 0.0f);
 						}
 						NewTrianglePoint->_Normal.Translate(OldTrianglePoint->_Normal);
-						if(OldTrianglePoint == Triangle->pGetTrianglePoint(1))
+						if(OldTrianglePoint == Triangle->GetTrianglePoint(1))
 						{
 							Triangle->SetTrianglePoint<0>(NewTrianglePoint);
 						}
-						else if(OldTrianglePoint == Triangle->pGetTrianglePoint(2))
+						else if(OldTrianglePoint == Triangle->GetTrianglePoint(2))
 						{
 							Triangle->SetTrianglePoint<1>(NewTrianglePoint);
 						}
-						else if(OldTrianglePoint == Triangle->pGetTrianglePoint(3))
+						else if(OldTrianglePoint == Triangle->GetTrianglePoint(3))
 						{
 							Triangle->SetTrianglePoint<2>(NewTrianglePoint);
 						}
@@ -2451,8 +2507,35 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 			{
 				for(auto Triangle : g_SelectedTriangles)
 				{
-					Triangle->vRealignNormal();
+					Triangle->RealignNormal();
 				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 58: // M
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedTriangles.empty() == false))
+			{
+				// for each selected triangle, create a mid point
+				// then create three new triangles and remove the selected one
+				std::vector< Triangle * > NewTriangles;
+				
+				while(g_SelectedTriangles.size() > 0)
+				{
+					auto SelectedTriangle{g_SelectedTriangles.front()};
+					auto Point1{SelectedTriangle->GetPoint(1)};
+					auto Point2{SelectedTriangle->GetPoint(2)};
+					auto Point3{SelectedTriangle->GetPoint(3)};
+					auto MidPoint{CreatePoint((Point1->GetPosition() + Point2->GetPosition() + Point3->GetPosition()) / 3.0f)};
+					
+					DeleteTriangle(SelectedTriangle);
+					NewTriangles.push_back(CreateTriangle(Point1, Point2, MidPoint));
+					NewTriangles.push_back(CreateTriangle(Point2, Point3, MidPoint));
+					NewTriangles.push_back(CreateTriangle(Point3, Point1, MidPoint));
+				}
+				std::copy(NewTriangles.begin(), NewTriangles.end(), std::back_inserter(g_SelectedTriangles));
 				bKeyAccepted = true;
 			}
 			
@@ -2464,7 +2547,7 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 			{
 				while(g_SelectedTriangles.size() > 0)
 				{
-					vDeleteTriangle(g_SelectedTriangles.front());
+					DeleteTriangle(g_SelectedTriangles.front());
 				}
 				bKeyAccepted = true;
 			}
@@ -2722,9 +2805,9 @@ XMLStream & mesh(XMLStream & XMLStream)
 	for(auto Triangle : g_Triangles)
 	{
 		XMLStream << element << "triangle" << attribute << "identifier" << value << TriangleIdentifier;
-		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->pGetTrianglePoint(1)] << end;
-		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->pGetTrianglePoint(2)] << end;
-		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->pGetTrianglePoint(3)] << end;
+		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->GetTrianglePoint(1)] << end;
+		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->GetTrianglePoint(2)] << end;
+		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->GetTrianglePoint(3)] << end;
 		XMLStream << end;
 		++TriangleIdentifier;
 	}
@@ -2880,7 +2963,7 @@ bool AcceptKeyInMarkerView(int KeyCode, bool IsDown)
 
 bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 {
-	bool bKeyAccepted(true);
+	bool bKeyAccepted{true};
 	
 	switch(KeyCode)
 	{
@@ -3092,6 +3175,14 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 					XMLStream << mesh << end;
 				}
 			}
+			else
+			{
+				if(IsDown == true)
+				{
+					CreateRegularIcosahedron();
+					bKeyAccepted = true;
+				}
+			}
 			
 			break;
 		}
@@ -3199,17 +3290,17 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 					pPoint = g_SelectedPoints[0];
 				}
 				g_SelectedPoints.clear();
-				if(pPoint == g_SelectedTriangles.front()->pGetPoint(2))
+				if(pPoint == g_SelectedTriangles.front()->GetPoint(2))
 				{
-					g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(1));
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint(1));
 				}
-				else if(pPoint == g_SelectedTriangles.front()->pGetPoint(3))
+				else if(pPoint == g_SelectedTriangles.front()->GetPoint(3))
 				{
-					g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(2));
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint(2));
 				}
 				else
 				{
-					g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(3));
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint(3));
 				}
 			}
 			
@@ -3226,17 +3317,17 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 					pPoint = g_SelectedPoints[0];
 				}
 				g_SelectedPoints.clear();
-				if(pPoint == g_SelectedTriangles.front()->pGetPoint(1))
+				if(pPoint == g_SelectedTriangles.front()->GetPoint(1))
 				{
-					g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(2));
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint(2));
 				}
-				else if(pPoint == g_SelectedTriangles.front()->pGetPoint(2))
+				else if(pPoint == g_SelectedTriangles.front()->GetPoint(2))
 				{
-					g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(3));
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint(3));
 				}
 				else
 				{
-					g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(1));
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint(1));
 				}
 			}
 			
