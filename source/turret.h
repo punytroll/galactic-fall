@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2015-2018  Hagen Möbius
+ * Copyright (C) 2015-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,13 +34,9 @@ public:
 	// Physics::Energy::Device implementation
 	virtual float GetMaximumEnergyInput(float Seconds) const;
 	virtual float GetMaximumEnergyOutput(float Seconds) const;
-	virtual void EnergyDelta(float EnergyDelta);
-	// getters
-	float GetMaximumPowerInput(void) const;
 	// setters
 	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
 	void SetFire(bool Fire);
-	void SetMaximumPowerInput(float MaximumPowerInput);
 	void SetMuzzlePosition(const Vector3f & MuzzlePosition);
 	void SetShotDamage(float ShotDamage);
 	void SetShotExitSpeed(float ShotExitSpeed);
@@ -52,13 +48,10 @@ private:
 	void _UpdateVisualization(Visualization * Visualization);
 	void _CalculateMuzzleProperties(Vector3f & MuzzlePosition, Quaternion & MuzzleOrientation, Vector3f & MuzzleDirection);
 	// variables
-	float _Energy;
-	float _EnergyUsagePerShot;
 	bool _Fire;
 	Quaternion _GunOrientation;
 	Vector3f _GunPosition;
 	bool _GunPropertiesValid;
-	float _MaximumPowerInput;
 	Vector3f _MuzzlePosition;
 	float _ShotDamage;
 	float _ShotExitSpeed;
@@ -67,24 +60,9 @@ private:
 	float _TurretAngle;
 };
 
-inline float Turret::GetMaximumPowerInput(void) const
-{
-	return _MaximumPowerInput;
-}
-
-inline void Turret::SetEnergyUsagePerShot(float EnergyUsagePerShot)
-{
-	_EnergyUsagePerShot = EnergyUsagePerShot;
-}
-
 inline void Turret::SetFire(bool Fire)
 {
 	_Fire = Fire;
-}
-
-inline void Turret::SetMaximumPowerInput(float MaximumPowerInput)
-{
-	_MaximumPowerInput = MaximumPowerInput;
 }
 
 inline void Turret::SetMuzzlePosition(const Vector3f & MuzzlePosition)

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2018  Hagen Möbius
+ * Copyright (C) 2018-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,16 +33,76 @@ namespace Physics
 		public:
 			Device(void);
 			virtual ~Device(void);
+			// dynamic properties for second to second simulation
+			// getters
 			// in Joule
-			virtual float GetMaximumEnergyInput(float Seconds) const = 0;
+			virtual float GetMaximumEnergyInput(float Seconds) const;
 			// in Joule
-			virtual float GetMaximumEnergyOutput(float Seconds) const = 0;
+			virtual float GetMaximumEnergyOutput(float Seconds) const;
+			// setters
 			// in Joule
-			virtual void EnergyDelta(float EnergyDelta) = 0;
+			virtual void EnergyDelta(float EnergyDelta);
+			// static properties as basis for and result of simulation
+			// getters
+			// in Joule
+			float GetEnergy(void) const;
+			// in Joule
+			float GetEnergyCapacity(void) const;
+			// in Watts
+			float GetMaximumPowerInput(void) const;
+			// in Watts
+			float GetMaximumPowerOutput(void) const;
+			// setters
+			// in Joule
+			void SetEnergy(float Energy);
+			// in Joule
+			void SetEnergyCapacity(float EnergyCapacity);
+			// in Watts
+			void SetMaximumPowerInput(float MaximumPowerInput);
+			// in Watts
+			void SetMaximumPowerOutput(float MaximumPowerOutput);
 		private:
+			// in Joule
+			float _Energy;
+			// in Joule
+			float _EnergyCapacity;
+			// in Watts
+			float _MaximumPowerInput;
+			// in Watts
+			float _MaximumPowerOutput;
 			Physics::Energy::Network * _Network;
 		};
 	}
+}
+
+inline float Physics::Energy::Device::GetEnergy(void) const
+{
+	return _Energy;
+}
+
+inline float Physics::Energy::Device::GetEnergyCapacity(void) const
+{
+	return _EnergyCapacity;
+}
+
+inline float Physics::Energy::Device::GetMaximumPowerInput(void) const
+{
+	return _MaximumPowerInput;
+}
+
+inline float Physics::Energy::Device::GetMaximumPowerOutput(void) const
+{
+	return _MaximumPowerOutput;
+}
+
+inline void Physics::Energy::Device::SetMaximumPowerInput(float MaximumPowerInput)
+{
+	_MaximumPowerInput = MaximumPowerInput;
+}
+
+inline void Physics::Energy::Device::SetMaximumPowerOutput(float MaximumPowerOutput)
+{
+	_MaximumPowerOutput = MaximumPowerOutput;
 }
 
 #endif

@@ -294,6 +294,7 @@
 		<string identifier="slot-class-identifier"/>
 		<quaternion identifier="orientation"/>
 		<float identifier="maximum-power-input"/>
+		<float identifier="maximum-power-output"/>
 		<float identifier="energy-usage-per-shot"/>
 		<marker-reference identifier="muzzle-position"/>
 		<shot identifier="shot"/>
@@ -348,6 +349,7 @@
 		<string identifier="slot-class-identifier"/>
 		<quaternion identifier="orientation"/>
 		<float identifier="maximum-power-input"/>
+		<float identifier="maximum-power-output"/>
 		<float identifier="energy-usage-per-shot"/>
 		<marker-reference identifier="muzzle-position"/>
 		<shot identifier="shot"/>

@@ -124,7 +124,10 @@
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
 		<type-specific>
+			<energy value="0.0"/>
+			<energy-capacity value="8.0"/>
 			<maximum-power-input value="9.5"/>
+			<maximum-power-output value="9.5"/>
 		</type-specific>
 	</object>
 	<object type-identifier="weapon" sub-type-identifier="medium_laser" object-identifier="::weapon(medium_laser)::2">
@@ -141,7 +144,10 @@
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
 		<type-specific>
+			<energy value="0.0"/>
+			<energy-capacity value="8.0"/>
 			<maximum-power-input value="9.5"/>
+			<maximum-power-output value="9.5"/>
 		</type-specific>
 	</object>
 	<object type-identifier="weapon" sub-type-identifier="medium_laser" object-identifier="::weapon(medium_laser)::1">
@@ -158,7 +164,10 @@
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
 		<type-specific>
+			<energy value="0.0"/>
+			<energy-capacity value="8.0"/>
 			<maximum-power-input value="9.5"/>
+			<maximum-power-output value="9.5"/>
 		</type-specific>
 	</object>
 	<object type-identifier="weapon" sub-type-identifier="light_laser" object-identifier="::weapon(light_laser)::3">
@@ -175,7 +184,10 @@
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
 		<type-specific>
+			<energy value="0"/>
+			<energy-capacity value="5"/>
 			<maximum-power-input value="8"/>
+			<maximum-power-output value="8"/>
 		</type-specific>
 	</object>
 	<object type-identifier="commodity" sub-type-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::6">
@@ -302,7 +314,10 @@
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
 		<type-specific>
+			<energy value="0"/>
+			<energy-capacity value="5"/>
 			<maximum-power-input value="8"/>
+			<maximum-power-output value="8"/>
 		</type-specific>
 	</object>
 	<object type-identifier="weapon" sub-type-identifier="light_laser" object-identifier="::weapon(light_laser)::1">
@@ -321,7 +336,10 @@
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
 		<type-specific>
+			<energy value="0"/>
+			<energy-capacity value="5"/>
 			<maximum-power-input value="8"/>
+			<maximum-power-output value="8"/>
 		</type-specific>
 	</object>
 	<object type-identifier="planet" sub-type-identifier="earth" object-identifier="::planet(earth)::in_system(sol)">
@@ -413,6 +431,9 @@
 			<space-requirement value="500"/>
 		</aspect-physical>
 		<type-specific>
+			<energy value="0"/>
+			<energy-capacity value="0"/>
+			<maximum-power-input value="0"/>
 			<maximum-power-output value="1.5"/>
 		</type-specific>
 	</object>
@@ -441,7 +462,12 @@
 				<style-program-identifier value="default"/>
 			</part>
 		</aspect-visualization>
-		<type-specific/>
+		<type-specific>
+			<energy value="0"/>
+			<energy-capacity value="8"/>
+			<maximum-power-input value="8.5"/>
+			<maximum-power-output value="8.5"/>
+		</type-specific>
 	</object>
 	<object type-identifier="weapon" sub-type-identifier="medium_laser" object-identifier="::asset(medium_laser)::weapon(medium_laser)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(40.364063)::bought_by(::character::player_character)::created_at_address(0x1422aa0)">
 		<aspect-accessory>
@@ -467,7 +493,10 @@
 			</part>
 		</aspect-visualization>
 		<type-specific>
+			<energy value="0"/>
+			<energy-capacity value="8"/>
 			<maximum-power-input value="9.5"/>
+			<maximum-power-output value="9.5"/>
 		</type-specific>
 	</object>
 	<object type-identifier="storage" sub-type-identifier="" object-identifier="::storage()::0x141df50(1421846795.992)">

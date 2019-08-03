@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2009  Hagen Möbius
+ * Copyright (C) 2009-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,8 +19,7 @@
 
 #include "generator.h"
 
-Generator::Generator(void) :
-	_MaximumPowerOutput{0.0f}
+Generator::Generator(void)
 {
 	// initialize object aspects
 	AddAspectAccessory();
@@ -32,14 +31,9 @@ Generator::~Generator(void)
 {
 }
 
-float Generator::GetMaximumEnergyInput(float Seconds) const
-{
-	return 0.0f;
-}
-
 float Generator::GetMaximumEnergyOutput(float Seconds) const
 {
-	return Seconds * _MaximumPowerOutput;
+	return Seconds * GetMaximumPowerOutput();
 }
 
 void Generator::EnergyDelta(float EnergyDelta)

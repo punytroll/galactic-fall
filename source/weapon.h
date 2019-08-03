@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007-2018  Hagen Möbius
+ * Copyright (C) 2007-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,19 +35,14 @@ public:
 	// Physics::Energy::Device implementation
 	virtual float GetMaximumEnergyInput(float Seconds) const;
 	virtual float GetMaximumEnergyOutput(float Seconds) const;
-	virtual void EnergyDelta(float EnergyDelta);
 	// getters
-	float GetEnergyUsagePerShot(void) const;
-	float GetMaximumPowerInput(void) const;
 	const Vector3f & GetMuzzlePosition(void) const;
 	float GetShotDamage(void) const;
 	float GetShotExitSpeed(void) const;
 	float GetShotLifeTime(void) const;
 	const VisualizationPrototype * GetShotVisualizationPrototype(void) const;
 	// setters
-	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
 	void SetFire(bool Fire);
-	void SetMaximumPowerInput(float MaximumPowerInput);
 	void SetMuzzlePosition(const Vector3f & MuzzlePosition);
 	void SetShotDamage(float ShotDamage);
 	void SetShotExitSpeed(float ShotExitSpeed);
@@ -58,26 +53,13 @@ private:
 	bool _Update(float Seconds);
 	void _UpdateVisualization(Visualization * Visualization);
 	// variables
-	float _Energy;
-	float _EnergyUsagePerShot;
 	bool _Fire;
-	float _MaximumPowerInput;
 	Vector3f _MuzzlePosition;
 	float _ShotDamage;
 	float _ShotExitSpeed;
 	float _ShotLifeTime;
 	VisualizationPrototype * _ShotVisualizationPrototype;
 };
-
-inline float Weapon::GetEnergyUsagePerShot(void) const
-{
-	return _EnergyUsagePerShot;
-}
-
-inline float Weapon::GetMaximumPowerInput(void) const
-{
-	return _MaximumPowerInput;
-}
 
 inline const Vector3f & Weapon::GetMuzzlePosition(void) const
 {
@@ -104,19 +86,9 @@ inline const VisualizationPrototype * Weapon::GetShotVisualizationPrototype(void
 	return _ShotVisualizationPrototype;
 }
 
-inline void Weapon::SetEnergyUsagePerShot(float EnergyUsagePerShot)
-{
-	_EnergyUsagePerShot = EnergyUsagePerShot;
-}
-
 inline void Weapon::SetFire(bool Fire)
 {
 	_Fire = Fire;
-}
-
-inline void Weapon::SetMaximumPowerInput(float MaximumPowerInput)
-{
-	_MaximumPowerInput = MaximumPowerInput;
 }
 
 inline void Weapon::SetMuzzlePosition(const Vector3f & MuzzlePosition)

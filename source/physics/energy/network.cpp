@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2018  Hagen Möbius
+ * Copyright (C) 2018-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -64,7 +64,12 @@ void Physics::Energy::Network::Update(float Seconds)
 	for(auto Device : _Devices)
 	{
 		auto MaximumEnergyInput{Device->GetMaximumEnergyInput(Seconds)};
+		
+		assert(MaximumEnergyInput >= 0.0f);
+		
 		auto MaximumEnergyOutput{Device->GetMaximumEnergyOutput(Seconds)};
+		
+		assert(MaximumEnergyOutput >= 0.0f);
 		
 		Devices.emplace(Device, std::make_pair(MaximumEnergyInput, MaximumEnergyOutput));
 		if((MaximumEnergyInput > 0.0f) && (MaximumEnergyOutput > 0.0f))

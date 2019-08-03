@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2018  Hagen Möbius
+ * Copyright (C) 2018-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,10 @@
 #include "device.h"
 
 Physics::Energy::Device::Device(void) :
+	_Energy{0.0f},
+	_EnergyCapacity{0.0f},
+	_MaximumPowerInput{0.0f},
+	_MaximumPowerOutput{0.0f},
 	_Network(nullptr)
 {
 }
@@ -33,4 +37,42 @@ Physics::Energy::Device::~Device(void)
 
 void Physics::Energy::Device::EnergyDelta(float EnergyDelta)
 {
+	_Energy += EnergyDelta;
+	assert((_Energy >= 0.0f) && (_Energy <= _EnergyCapacity));
+}
+
+float Physics::Energy::Device::GetMaximumEnergyInput(float Seconds) const
+{
+	auto Result{Seconds * _MaximumPowerInput};
+	
+	if(Result + _Energy > _EnergyCapacity)
+	{
+		Result = _EnergyCapacity - _Energy;
+	}
+	
+	return Result;
+}
+
+float Physics::Energy::Device::GetMaximumEnergyOutput(float Seconds) const
+{
+	auto Result{Seconds * _MaximumPowerOutput};
+	
+	if(Result > _Energy)
+	{
+		Result = _Energy;
+	}
+	
+	return Result;
+}
+
+void Physics::Energy::Device::SetEnergy(float Energy)
+{
+	assert(Energy <= _EnergyCapacity);
+	_Energy = Energy;
+}
+
+void Physics::Energy::Device::SetEnergyCapacity(float EnergyCapacity)
+{
+	assert(EnergyCapacity >= _Energy);
+	_EnergyCapacity = EnergyCapacity;
 }

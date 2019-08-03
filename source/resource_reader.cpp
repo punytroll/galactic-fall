@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2015-2018  Hagen Möbius
+ * Copyright (C) 2015-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1214,6 +1214,7 @@ static void ReadTurretClass(Arxx::Reference & Reference, BlueprintManager * Blue
 	std::string SlotClassIdentifier;
 	Quaternion Orientation;
 	float MaximumPowerInput;
+	float MaximumPowerOutput;
 	float EnergyUsagePerShot;
 	std::string MuzzlePositionPartIdentifier;
 	std::string MuzzlePositionMarkerIdentifier;
@@ -1222,7 +1223,7 @@ static void ReadTurretClass(Arxx::Reference & Reference, BlueprintManager * Blue
 	float ShotLifeTime;
 	VisualizationPrototype ShotVisualizationPrototype;
 	
-	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> TurretVisualizationPrototype >> SlotClassIdentifier >> Orientation >> MaximumPowerInput >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
+	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> TurretVisualizationPrototype >> SlotClassIdentifier >> Orientation >> MaximumPowerInput >> MaximumPowerOutput >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
 	NewTurretClass->AddProperty("name", Name);
 	NewTurretClass->AddProperty("description", Description);
 	NewTurretClass->AddProperty("base-price", BasePrice);
@@ -1231,6 +1232,7 @@ static void ReadTurretClass(Arxx::Reference & Reference, BlueprintManager * Blue
 	NewTurretClass->AddProperty("slot-class-identifier", SlotClassIdentifier);
 	NewTurretClass->AddProperty("orientation", Orientation);
 	NewTurretClass->AddProperty("maximum-power-input", MaximumPowerInput);
+	NewTurretClass->AddProperty("maximum-power-output", MaximumPowerOutput);
 	NewTurretClass->AddProperty("energy-usage-per-shot", EnergyUsagePerShot);
 	
 	auto MuzzlePosition{TurretVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier)};
@@ -1279,6 +1281,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference, BlueprintManager * Blue
 	std::string SlotClassIdentifier;
 	Quaternion Orientation;
 	float MaximumPowerInput;
+	float MaximumPowerOutput;
 	float EnergyUsagePerShot;
 	std::string MuzzlePositionPartIdentifier;
 	std::string MuzzlePositionMarkerIdentifier;
@@ -1288,7 +1291,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference, BlueprintManager * Blue
 	VisualizationPrototype ShotVisualizationPrototype;
 	
 	
-	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> WeaponVisualizationPrototype >> SlotClassIdentifier >> Orientation >> MaximumPowerInput >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
+	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> WeaponVisualizationPrototype >> SlotClassIdentifier >> Orientation >> MaximumPowerInput >> MaximumPowerOutput >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
 	NewWeaponClass->AddProperty("name", Name);
 	NewWeaponClass->AddProperty("description", Description);
 	NewWeaponClass->AddProperty("base-price", BasePrice);
@@ -1296,6 +1299,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference, BlueprintManager * Blue
 	NewWeaponClass->AddProperty("slot-class-identifier", SlotClassIdentifier);
 	NewWeaponClass->AddProperty("orientation", Orientation);
 	NewWeaponClass->AddProperty("maximum-power-input", MaximumPowerInput);
+	NewWeaponClass->AddProperty("maximum-power-output", MaximumPowerOutput);
 	NewWeaponClass->AddProperty("space-requirement", SpaceRequirement);
 	NewWeaponClass->AddProperty("energy-usage-per-shot", EnergyUsagePerShot);
 	

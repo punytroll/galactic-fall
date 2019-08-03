@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,11 +19,7 @@
 
 #include "battery.h"
 
-Battery::Battery(void) :
-	_Energy{0.0f},
-	_EnergyCapacity{0.0f},
-	_MaximumPowerInput{0.0f},
-	_MaximumPowerOutput{0.0f}
+Battery::Battery(void)
 {
 	// initialize object aspects
 	AddAspectAccessory();
@@ -33,46 +29,4 @@ Battery::Battery(void) :
 
 Battery::~Battery(void)
 {
-}
-
-float Battery::GetMaximumEnergyInput(float Seconds) const
-{
-	auto Result{Seconds * _MaximumPowerInput};
-	
-	if(Result + _Energy > _EnergyCapacity)
-	{
-		Result = _EnergyCapacity - _Energy;
-	}
-	
-	return Result;
-}
-
-float Battery::GetMaximumEnergyOutput(float Seconds) const
-{
-	auto Result{Seconds * _MaximumPowerOutput};
-	
-	if(Result > _Energy)
-	{
-		Result = _Energy;
-	}
-	
-	return Result;
-}
-
-void Battery::EnergyDelta(float EnergyDelta)
-{
-	_Energy += EnergyDelta;
-	assert((_Energy >= 0.0f) && (_Energy <= _EnergyCapacity));
-}
-
-void Battery::SetEnergy(float Energy)
-{
-	assert(Energy <= _EnergyCapacity);
-	_Energy = Energy;
-}
-
-void Battery::SetEnergyCapacity(float EnergyCapacity)
-{
-	assert(EnergyCapacity >= _Energy);
-	_EnergyCapacity = EnergyCapacity;
 }

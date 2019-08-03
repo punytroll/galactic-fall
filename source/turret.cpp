@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007-2018  Hagen Möbius
+ * Copyright (C) 2007-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -48,11 +48,8 @@
 #include "turret.h"
 
 Turret::Turret(void) :
-	_Energy{0.0f},
-	_EnergyUsagePerShot{0.0f},
 	_Fire{false},
 	_GunPropertiesValid{false},
-	_MaximumPowerInput{0.0f},
 	_MuzzlePosition{Vector3f::CreateZero()},
 	_ShotDamage{0.0f},
 	_ShotExitSpeed{0.0f},
@@ -79,36 +76,26 @@ Turret::~Turret(void)
 
 float Turret::GetMaximumEnergyInput(float Seconds) const
 {
-	auto Result{0.0f};
-	
 	if(_Fire == true)
 	{
-		Result = Seconds * _MaximumPowerInput;
-		if(_Energy + Result > _EnergyUsagePerShot)
-		{
-			Result = _EnergyUsagePerShot - _Energy;
-		}
+		return Physics::Energy::Device::GetMaximumEnergyInput(Seconds);
 	}
-	
-	return Result;
+	else
+	{
+		return 0.0f;
+	}
 }
 
 float Turret::GetMaximumEnergyOutput(float Seconds) const
 {
-	auto Result{0.0f};
-	
-	if((_Fire == false) && (_Energy > 0.0f))
+	if(_Fire == false)
 	{
-		Result = _Energy;
+		return Physics::Energy::Device::GetMaximumEnergyOutput(Seconds);
 	}
-	
-	return Result;
-}
-
-void Turret::EnergyDelta(float EnergyDelta)
-{
-	_Energy += EnergyDelta;
-	assert(_Energy >= 0.0f);
+	else
+	{
+		return 0.0f;
+	}
 }
 
 void Turret::_CalculateMuzzleProperties(Vector3f & MuzzlePosition, Quaternion & MuzzleOrientation, Vector3f & MuzzleDirection)
@@ -207,9 +194,9 @@ bool Turret::_Update(float Seconds)
 				}
 			}
 		}
-		if((_Fire == true) && (_Energy >= _EnergyUsagePerShot))
+		if((_Fire == true) && (GetEnergy() >= GetEnergyCapacity()))
 		{
-			_Energy -= _EnergyUsagePerShot;
+			SetEnergy(0.0f);
 			assert(Container->GetAspectPosition() != nullptr);
 			assert(Container->GetContainer() != nullptr);
 			

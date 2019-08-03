@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006-2018  Hagen Möbius
+ * Copyright (C) 2006-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1724,7 +1724,22 @@ void LoadGameFromElement(const Element * SaveElement)
 						assert(NewGenerator != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if(TypeSpecificChild->GetName() == "maximum-power-output")
+							if(TypeSpecificChild->GetName() == "energy")
+							{
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewGenerator->SetEnergy(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+							}
+							else if(TypeSpecificChild->GetName() == "energy-capacity")
+							{
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewGenerator->SetEnergyCapacity(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+							}
+							else if(TypeSpecificChild->GetName() == "maximum-power-input")
+							{
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewGenerator->SetMaximumPowerInput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+							}
+							else if(TypeSpecificChild->GetName() == "maximum-power-output")
 							{
 								assert(TypeSpecificChild->HasAttribute("value") == true);
 								NewGenerator->SetMaximumPowerOutput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
@@ -1861,10 +1876,25 @@ void LoadGameFromElement(const Element * SaveElement)
 						assert(NewTurret != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if(TypeSpecificChild->GetName() == "maximum-power-input")
+							if(TypeSpecificChild->GetName() == "energy")
+							{
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewTurret->SetEnergy(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+							}
+							else if(TypeSpecificChild->GetName() == "energy-capacity")
+							{
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewTurret->SetEnergyCapacity(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+							}
+							else if(TypeSpecificChild->GetName() == "maximum-power-input")
 							{
 								assert(TypeSpecificChild->HasAttribute("value") == true);
 								NewTurret->SetMaximumPowerInput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+							}
+							else if(TypeSpecificChild->GetName() == "maximum-power-output")
+							{
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewTurret->SetMaximumPowerOutput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
 							else
 							{
@@ -1879,10 +1909,25 @@ void LoadGameFromElement(const Element * SaveElement)
 						assert(NewWeapon != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if(TypeSpecificChild->GetName() == "maximum-power-input")
+							if(TypeSpecificChild->GetName() == "energy")
+							{
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewWeapon->SetEnergy(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+							}
+							else if(TypeSpecificChild->GetName() == "energy-capacity")
+							{
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewWeapon->SetEnergyCapacity(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+							}
+							else if(TypeSpecificChild->GetName() == "maximum-power-input")
 							{
 								assert(TypeSpecificChild->HasAttribute("value") == true);
 								NewWeapon->SetMaximumPowerInput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+							}
+							else if(TypeSpecificChild->GetName() == "maximum-power-output")
+							{
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewWeapon->SetMaximumPowerOutput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
 							else
 							{

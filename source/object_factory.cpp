@@ -307,13 +307,14 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		
 		auto NewTurret{new Turret{}};
 		
-		NewTurret->SetEnergyUsagePerShot(TurretBlueprint->GetValue< float >("energy-usage-per-shot"));
+		NewTurret->SetEnergyCapacity(TurretBlueprint->GetValue< float >("energy-usage-per-shot"));
 		NewTurret->SetMuzzlePosition(TurretBlueprint->GetValue< Vector3f >("muzzle-position"));
 		NewTurret->SetShotDamage(TurretBlueprint->GetValue< float >("shot-damage"));
 		NewTurret->SetShotExitSpeed(TurretBlueprint->GetValue< float >("shot-exit-speed"));
 		NewTurret->SetShotLifeTime(TurretBlueprint->GetValue< float >("shot-life-time"));
 		NewTurret->SetShotVisualizationPrototype(TurretBlueprint->GetValue< VisualizationPrototype >("shot-visualization-prototype"));
 		NewTurret->SetMaximumPowerInput(TurretBlueprint->GetValue< float >("maximum-power-input"));
+		NewTurret->SetMaximumPowerOutput(TurretBlueprint->GetValue< float >("maximum-power-output"));
 		// set up accessory aspect
 		assert(NewTurret->GetAspectAccessory() != nullptr);
 		NewTurret->GetAspectAccessory()->SetSlotClassIdentifier(TurretBlueprint->GetValue< std::string >("slot-class-identifier"));
@@ -341,13 +342,14 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		
 		auto NewWeapon{new Weapon{}};
 		
-		NewWeapon->SetEnergyUsagePerShot(WeaponBlueprint->GetValue< float >("energy-usage-per-shot"));
+		NewWeapon->SetEnergyCapacity(WeaponBlueprint->GetValue< float >("energy-usage-per-shot"));
 		NewWeapon->SetMuzzlePosition(WeaponBlueprint->GetValue< Vector3f >("muzzle-position"));
 		NewWeapon->SetShotDamage(WeaponBlueprint->GetValue< float >("shot-damage"));
 		NewWeapon->SetShotExitSpeed(WeaponBlueprint->GetValue< float >("shot-exit-speed"));
 		NewWeapon->SetShotLifeTime(WeaponBlueprint->GetValue< float >("shot-life-time"));
 		NewWeapon->SetShotVisualizationPrototype(WeaponBlueprint->GetValue< VisualizationPrototype >("shot-visualization-prototype"));
 		NewWeapon->SetMaximumPowerInput(WeaponBlueprint->GetValue< float >("maximum-power-input"));
+		NewWeapon->SetMaximumPowerOutput(WeaponBlueprint->GetValue< float >("maximum-power-output"));
 		// set up accessory aspect
 		assert(NewWeapon->GetAspectAccessory() != nullptr);
 		NewWeapon->GetAspectAccessory()->SetSlotClassIdentifier(WeaponBlueprint->GetValue< std::string >("slot-class-identifier"));

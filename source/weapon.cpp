@@ -46,10 +46,7 @@
 #include "weapon.h"
 
 Weapon::Weapon(void) :
-	_Energy{0.0f},
-	_EnergyUsagePerShot{0.0f},
 	_Fire{false},
-	_MaximumPowerInput{0.0f},
 	_MuzzlePosition{Vector3f::CreateZero()},
 	_ShotDamage{0.0f},
 	_ShotExitSpeed{0.0f},
@@ -79,11 +76,7 @@ float Weapon::GetMaximumEnergyInput(float Seconds) const
 	
 	if(_Fire == true)
 	{
-		Result = Seconds * _MaximumPowerInput;
-		if(_Energy + Result > _EnergyUsagePerShot)
-		{
-			Result = _EnergyUsagePerShot - _Energy;
-		}
+		Result = Physics::Energy::Device::GetMaximumEnergyInput(Seconds);
 	}
 	
 	return Result;
@@ -93,18 +86,12 @@ float Weapon::GetMaximumEnergyOutput(float Seconds) const
 {
 	auto Result{0.0f};
 	
-	if((_Fire == false) && (_Energy > 0.0f))
+	if(_Fire == false)
 	{
-		Result = _Energy;
+		Result = Physics::Energy::Device::GetMaximumEnergyOutput(Seconds);
 	}
 	
 	return Result;
-}
-
-void Weapon::EnergyDelta(float EnergyDelta)
-{
-	_Energy += EnergyDelta;
-	assert(_Energy >= 0.0f);
 }
 
 void Weapon::SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype)
@@ -115,9 +102,9 @@ void Weapon::SetShotVisualizationPrototype(const VisualizationPrototype & ShotVi
 
 bool Weapon::_Update(float Seconds)
 {
-	if((_Fire == true) && (_Energy >= _EnergyUsagePerShot))
+	if((_Fire == true) && (GetEnergy() >= GetEnergyCapacity()))
 	{
-		_Energy -= _EnergyUsagePerShot;
+		SetEnergy(0.0f);
 		
 		auto Container{GetContainer()};
 		
