@@ -42,6 +42,7 @@
 		<z>0</z>
 	</orientation>
 	<maximum-power-input>9.5</maximum-power-input>
+	<maximum-power-output>9.5</maximum-power-output>
 	<energy-usage-per-shot>8</energy-usage-per-shot>
 	<muzzle-position>
 		<part-identifier>light_laser</part-identifier>

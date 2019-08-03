@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2009  Hagen Möbius
+ * Copyright (C) 2009-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,26 +29,8 @@ public:
 	Generator(void);
 	virtual ~Generator(void);
 	// Physics::Energy::Device implementation
-	virtual float GetMaximumEnergyInput(float Seconds) const;
 	virtual float GetMaximumEnergyOutput(float Seconds) const;
 	virtual void EnergyDelta(float EnergyDelta);
-	// getters
-	float GetMaximumPowerOutput(void) const;
-	// setters
-	void SetMaximumPowerOutput(float MaximumPowerOutput);
-private:
-	// in Watts
-	float _MaximumPowerOutput;
 };
-
-inline float Generator::GetMaximumPowerOutput(void) const
-{
-	return _MaximumPowerOutput;
-}
-
-inline void Generator::SetMaximumPowerOutput(float MaximumPowerOutput)
-{
-	_MaximumPowerOutput = MaximumPowerOutput;
-}
 
 #endif

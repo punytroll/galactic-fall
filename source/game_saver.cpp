@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2018  Hagen Möbius
+ * Copyright (C) 2018-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -186,6 +186,9 @@ void GameSaver::_WriteCommodity(Commodity * Commodity)
 void GameSaver::_WriteGenerator(Generator * Generator)
 {
 	assert(Generator != nullptr);
+	_XMLStream << element << "energy" << attribute << "value" << value << Generator->GetEnergy() << end;
+	_XMLStream << element << "energy-capacity" << attribute << "value" << value << Generator->GetEnergyCapacity() << end;
+	_XMLStream << element << "maximum-power-input" << attribute << "value" << value << Generator->GetMaximumPowerInput() << end;
 	_XMLStream << element << "maximum-power-output" << attribute << "value" << value << Generator->GetMaximumPowerOutput() << end;
 }
 
@@ -369,11 +372,17 @@ void GameSaver::_WriteStorage(Storage * Storage)
 void GameSaver::_WriteTurret(Turret * Turret)
 {
 	assert(Turret != nullptr);
+	_XMLStream << element << "energy" << attribute << "value" << value << Turret->GetEnergy() << end;
+	_XMLStream << element << "energy-capacity" << attribute << "value" << value << Turret->GetEnergyCapacity() << end;
 	_XMLStream << element << "maximum-power-input" << attribute << "value" << value << Turret->GetMaximumPowerInput() << end;
+	_XMLStream << element << "maximum-power-output" << attribute << "value" << value << Turret->GetMaximumPowerOutput() << end;
 }
 
 void GameSaver::_WriteWeapon(Weapon * Weapon)
 {
 	assert(Weapon != nullptr);
+	_XMLStream << element << "energy" << attribute << "value" << value << Weapon->GetEnergy() << end;
+	_XMLStream << element << "energy-capacity" << attribute << "value" << value << Weapon->GetEnergyCapacity() << end;
 	_XMLStream << element << "maximum-power-input" << attribute << "value" << value << Weapon->GetMaximumPowerInput() << end;
+	_XMLStream << element << "maximum-power-output" << attribute << "value" << value << Weapon->GetMaximumPowerOutput() << end;
 }

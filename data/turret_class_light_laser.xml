@@ -67,6 +67,7 @@
 		<z>0</z>
 	</orientation>
 	<maximum-power-input>8.5</maximum-power-input>
+	<maximum-power-output>8.5</maximum-power-output>
 	<energy-usage-per-shot>8</energy-usage-per-shot>
 	<muzzle-position>
 		<part-identifier>gun</part-identifier>
