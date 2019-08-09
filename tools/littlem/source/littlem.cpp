@@ -1369,9 +1369,9 @@ void vPerformPicking(void)
 	{
 		glLoadName(stI);
 		glBegin(GL_TRIANGLES);
-		glVertex3fv(g_Triangles[stI]->m_ppTrianglePoints[0]->GetPoint()->GetPosition().GetPointer());
-		glVertex3fv(g_Triangles[stI]->m_ppTrianglePoints[1]->GetPoint()->GetPosition().GetPointer());
-		glVertex3fv(g_Triangles[stI]->m_ppTrianglePoints[2]->GetPoint()->GetPosition().GetPointer());
+		glVertex3fv(g_Triangles[stI]->GetPoint<0>()->GetPosition().GetPointer());
+		glVertex3fv(g_Triangles[stI]->GetPoint<1>()->GetPosition().GetPointer());
+		glVertex3fv(g_Triangles[stI]->GetPoint<2>()->GetPosition().GetPointer());
 		glEnd();
 	}
 	glPopName();
@@ -1444,12 +1444,12 @@ void vDisplayModel(void)
 	glColor3f(0.3f, 0.3f, 0.5f);
 	for(auto Triangle : g_Triangles)
 	{
-		glNormal3fv(Triangle->m_ppTrianglePoints[0]->GetNormal().GetPointer());
-		glVertex3fv(Triangle->m_ppTrianglePoints[0]->GetPoint()->GetPosition().GetPointer());
-		glNormal3fv(Triangle->m_ppTrianglePoints[1]->GetNormal().GetPointer());
-		glVertex3fv(Triangle->m_ppTrianglePoints[1]->GetPoint()->GetPosition().GetPointer());
-		glNormal3fv(Triangle->m_ppTrianglePoints[2]->GetNormal().GetPointer());
-		glVertex3fv(Triangle->m_ppTrianglePoints[2]->GetPoint()->GetPosition().GetPointer());
+		glNormal3fv(Triangle->GetTrianglePoint<0>()->GetNormal().GetPointer());
+		glVertex3fv(Triangle->GetPoint<0>()->GetPosition().GetPointer());
+		glNormal3fv(Triangle->GetTrianglePoint<1>()->GetNormal().GetPointer());
+		glVertex3fv(Triangle->GetPoint<1>()->GetPosition().GetPointer());
+		glNormal3fv(Triangle->GetTrianglePoint<2>()->GetNormal().GetPointer());
+		glVertex3fv(Triangle->GetPoint<2>()->GetPosition().GetPointer());
 	}
 	glEnd();
 	
@@ -1501,12 +1501,12 @@ void vDisplayModel(void)
 		{
 			glColor3f(0.5f, 0.8f, 0.2f);
 			glBegin(GL_TRIANGLES);
-			glNormal3fv(SelectedTriangle->m_ppTrianglePoints[0]->GetNormal().GetPointer());
-			glVertex3fv(SelectedTriangle->m_ppTrianglePoints[0]->GetPoint()->GetPosition().GetPointer());
-			glNormal3fv(SelectedTriangle->m_ppTrianglePoints[1]->GetNormal().GetPointer());
-			glVertex3fv(SelectedTriangle->m_ppTrianglePoints[1]->GetPoint()->GetPosition().GetPointer());
-			glNormal3fv(SelectedTriangle->m_ppTrianglePoints[2]->GetNormal().GetPointer());
-			glVertex3fv(SelectedTriangle->m_ppTrianglePoints[2]->GetPoint()->GetPosition().GetPointer());
+			glNormal3fv(SelectedTriangle->GetTrianglePoint<0>()->GetNormal().GetPointer());
+			glVertex3fv(SelectedTriangle->GetPoint<0>()->GetPosition().GetPointer());
+			glNormal3fv(SelectedTriangle->GetTrianglePoint<1>()->GetNormal().GetPointer());
+			glVertex3fv(SelectedTriangle->GetPoint<1>()->GetPosition().GetPointer());
+			glNormal3fv(SelectedTriangle->GetTrianglePoint<2>()->GetNormal().GetPointer());
+			glVertex3fv(SelectedTriangle->GetPoint<2>()->GetPosition().GetPointer());
 			glEnd();
 			glColor3f(0.6f, 0.6f, 0.0f);
 			glPushMatrix();
@@ -1525,30 +1525,30 @@ void vDisplayModel(void)
 			glPopMatrix();
 			glColor3f(0.4f, 0.1f, 0.0f);
 			glPushMatrix();
-			glTranslatef(SelectedTriangle->GetPoint(1)->GetPosition()[0], SelectedTriangle->GetPoint(1)->GetPosition()[1], SelectedTriangle->GetPoint(1)->GetPosition()[2]);
-			Scale = 2.0f * (SelectedTriangle->GetPoint(1)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+			glTranslatef(SelectedTriangle->GetPoint<0>()->GetPosition()[0], SelectedTriangle->GetPoint<0>()->GetPosition()[1], SelectedTriangle->GetPoint<0>()->GetPosition()[2]);
+			Scale = 2.0f * (SelectedTriangle->GetPoint<0>()->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
 			glScalef(Scale, Scale, Scale);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(SelectedTriangle->GetTrianglePoint(1)->GetNormal().Scaled(0.05f).GetPointer());
+			glVertex3fv(SelectedTriangle->GetTrianglePoint<0>()->GetNormal().Scaled(0.05f).GetPointer());
 			glEnd();
 			glPopMatrix();
 			glPushMatrix();
-			glTranslatef(SelectedTriangle->GetPoint(2)->GetPosition()[0], SelectedTriangle->GetPoint(2)->GetPosition()[1], SelectedTriangle->GetPoint(2)->GetPosition()[2]);
-			Scale = 2.0f * (SelectedTriangle->GetPoint(2)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+			glTranslatef(SelectedTriangle->GetPoint<1>()->GetPosition()[0], SelectedTriangle->GetPoint<1>()->GetPosition()[1], SelectedTriangle->GetPoint<1>()->GetPosition()[2]);
+			Scale = 2.0f * (SelectedTriangle->GetPoint<1>()->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
 			glScalef(Scale, Scale, Scale);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(SelectedTriangle->GetTrianglePoint(2)->GetNormal().Scaled(0.05f).GetPointer());
+			glVertex3fv(SelectedTriangle->GetTrianglePoint<1>()->GetNormal().Scaled(0.05f).GetPointer());
 			glEnd();
 			glPopMatrix();
 			glPushMatrix();
-			glTranslatef(SelectedTriangle->GetPoint(3)->GetPosition()[0], SelectedTriangle->GetPoint(3)->GetPosition()[1], SelectedTriangle->GetPoint(3)->GetPosition()[2]);
-			Scale = 2.0f * (SelectedTriangle->GetPoint(3)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+			glTranslatef(SelectedTriangle->GetPoint<2>()->GetPosition()[0], SelectedTriangle->GetPoint<2>()->GetPosition()[1], SelectedTriangle->GetPoint<2>()->GetPosition()[2]);
+			Scale = 2.0f * (SelectedTriangle->GetPoint<2>()->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
 			glScalef(Scale, Scale, Scale);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(SelectedTriangle->GetTrianglePoint(3)->GetNormal().Scaled(0.05f).GetPointer());
+			glVertex3fv(SelectedTriangle->GetTrianglePoint<2>()->GetNormal().Scaled(0.05f).GetPointer());
 			glEnd();
 			glPopMatrix();
 		}
@@ -1729,12 +1729,12 @@ void vDisplayModel(void)
 	{
 		glColor3f(1.0f, 0.7f, 0.3f);
 		glBegin(GL_TRIANGLES);
-		glNormal3fv(g_HoveredTriangle->m_ppTrianglePoints[0]->GetNormal().GetPointer());
-		glVertex3fv(g_HoveredTriangle->m_ppTrianglePoints[0]->GetPoint()->GetPosition().GetPointer());
-		glNormal3fv(g_HoveredTriangle->m_ppTrianglePoints[1]->GetNormal().GetPointer());
-		glVertex3fv(g_HoveredTriangle->m_ppTrianglePoints[1]->GetPoint()->GetPosition().GetPointer());
-		glNormal3fv(g_HoveredTriangle->m_ppTrianglePoints[2]->GetNormal().GetPointer());
-		glVertex3fv(g_HoveredTriangle->m_ppTrianglePoints[2]->GetPoint()->GetPosition().GetPointer());
+		glNormal3fv(g_HoveredTriangle->GetTrianglePoint<0>()->GetNormal().GetPointer());
+		glVertex3fv(g_HoveredTriangle->GetPoint<0>()->GetPosition().GetPointer());
+		glNormal3fv(g_HoveredTriangle->GetTrianglePoint<0>()->GetNormal().GetPointer());
+		glVertex3fv(g_HoveredTriangle->GetPoint<1>()->GetPosition().GetPointer());
+		glNormal3fv(g_HoveredTriangle->GetTrianglePoint<0>()->GetNormal().GetPointer());
+		glVertex3fv(g_HoveredTriangle->GetPoint<2>()->GetPosition().GetPointer());
 		glEnd();
 		glColor3f(0.3f, 0.1f, 0.3f);
 		glPushMatrix();
@@ -1753,30 +1753,30 @@ void vDisplayModel(void)
 		glPopMatrix();
 		glColor3f(0.0f, 0.1f, 0.4f);
 		glPushMatrix();
-		glTranslatef(g_HoveredTriangle->GetPoint(1)->GetPosition()[0], g_HoveredTriangle->GetPoint(1)->GetPosition()[1], g_HoveredTriangle->GetPoint(1)->GetPosition()[2]);
-		Scale = 2.0f * (g_HoveredTriangle->GetPoint(1)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+		glTranslatef(g_HoveredTriangle->GetPoint<0>()->GetPosition()[0], g_HoveredTriangle->GetPoint<0>()->GetPosition()[1], g_HoveredTriangle->GetPoint<0>()->GetPosition()[2]);
+		Scale = 2.0f * (g_HoveredTriangle->GetPoint<0>()->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
 		glScalef(Scale, Scale, Scale);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_HoveredTriangle->GetTrianglePoint(1)->GetNormal().Scaled(0.05f).GetPointer());
+		glVertex3fv(g_HoveredTriangle->GetTrianglePoint<0>()->GetNormal().Scaled(0.05f).GetPointer());
 		glEnd();
 		glPopMatrix();
 		glPushMatrix();
-		glTranslatef(g_HoveredTriangle->GetPoint(2)->GetPosition()[0], g_HoveredTriangle->GetPoint(2)->GetPosition()[1], g_HoveredTriangle->GetPoint(2)->GetPosition()[2]);
-		Scale = 2.0f * (g_HoveredTriangle->GetPoint(2)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+		glTranslatef(g_HoveredTriangle->GetPoint<1>()->GetPosition()[0], g_HoveredTriangle->GetPoint<1>()->GetPosition()[1], g_HoveredTriangle->GetPoint<1>()->GetPosition()[2]);
+		Scale = 2.0f * (g_HoveredTriangle->GetPoint<1>()->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
 		glScalef(Scale, Scale, Scale);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_HoveredTriangle->GetTrianglePoint(2)->GetNormal().Scaled(0.05f).GetPointer());
+		glVertex3fv(g_HoveredTriangle->GetTrianglePoint<1>()->GetNormal().Scaled(0.05f).GetPointer());
 		glEnd();
 		glPopMatrix();
 		glPushMatrix();
-		glTranslatef(g_HoveredTriangle->GetPoint(3)->GetPosition()[0], g_HoveredTriangle->GetPoint(3)->GetPosition()[1], g_HoveredTriangle->GetPoint(3)->GetPosition()[2]);
-		Scale = 2.0f * (g_HoveredTriangle->GetPoint(3)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+		glTranslatef(g_HoveredTriangle->GetPoint<2>()->GetPosition()[0], g_HoveredTriangle->GetPoint<2>()->GetPosition()[1], g_HoveredTriangle->GetPoint<2>()->GetPosition()[2]);
+		Scale = 2.0f * (g_HoveredTriangle->GetPoint<2>()->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
 		glScalef(Scale, Scale, Scale);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_HoveredTriangle->GetTrianglePoint(3)->GetNormal().Scaled(0.05f).GetPointer());
+		glVertex3fv(g_HoveredTriangle->GetTrianglePoint<2>()->GetNormal().Scaled(0.05f).GetPointer());
 		glEnd();
 		glPopMatrix();
 	}
@@ -2417,15 +2417,15 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 							
 							NewTrianglePoint->SetPoint(Point);
 							NewTrianglePoint->SetNormal(Triangle->GetTriangleNormal());
-							if(OldTrianglePoint == Triangle->GetTrianglePoint(1))
+							if(OldTrianglePoint == Triangle->GetTrianglePoint<0>())
 							{
 								Triangle->SetTrianglePoint<0>(NewTrianglePoint);
 							}
-							else if(OldTrianglePoint == Triangle->GetTrianglePoint(2))
+							else if(OldTrianglePoint == Triangle->GetTrianglePoint<1>())
 							{
 								Triangle->SetTrianglePoint<1>(NewTrianglePoint);
 							}
-							else if(OldTrianglePoint == Triangle->GetTrianglePoint(3))
+							else if(OldTrianglePoint == Triangle->GetTrianglePoint<2>())
 							{
 								Triangle->SetTrianglePoint<2>(NewTrianglePoint);
 							}
@@ -2448,9 +2448,9 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 				
 				for(auto Triangle : g_SelectedTriangles)
 				{
-					PointsToSelect.push_back(Triangle->GetPoint(1));
-					PointsToSelect.push_back(Triangle->GetPoint(2));
-					PointsToSelect.push_back(Triangle->GetPoint(3));
+					PointsToSelect.push_back(Triangle->GetPoint<0>());
+					PointsToSelect.push_back(Triangle->GetPoint<1>());
+					PointsToSelect.push_back(Triangle->GetPoint<2>());
 				}
 				std::sort(PointsToSelect.begin(), PointsToSelect.end());
 				std::unique_copy(PointsToSelect.begin(), PointsToSelect.end(), std::back_inserter(g_SelectedPoints));
@@ -2477,15 +2477,15 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 							NewTrianglePoint = CreateTrianglePoint(Point);
 						}
 						NewTrianglePointNormal.Translate(OldTrianglePoint->GetNormal());
-						if(OldTrianglePoint == Triangle->GetTrianglePoint(1))
+						if(OldTrianglePoint == Triangle->GetTrianglePoint<0>())
 						{
 							Triangle->SetTrianglePoint<0>(NewTrianglePoint);
 						}
-						else if(OldTrianglePoint == Triangle->GetTrianglePoint(2))
+						else if(OldTrianglePoint == Triangle->GetTrianglePoint<1>())
 						{
 							Triangle->SetTrianglePoint<1>(NewTrianglePoint);
 						}
-						else if(OldTrianglePoint == Triangle->GetTrianglePoint(3))
+						else if(OldTrianglePoint == Triangle->GetTrianglePoint<2>())
 						{
 							Triangle->SetTrianglePoint<2>(NewTrianglePoint);
 						}
@@ -2536,9 +2536,9 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 				while(g_SelectedTriangles.size() > 0)
 				{
 					auto SelectedTriangle{g_SelectedTriangles.front()};
-					auto Point1{SelectedTriangle->GetPoint(1)};
-					auto Point2{SelectedTriangle->GetPoint(2)};
-					auto Point3{SelectedTriangle->GetPoint(3)};
+					auto Point1{SelectedTriangle->GetPoint<0>()};
+					auto Point2{SelectedTriangle->GetPoint<1>()};
+					auto Point3{SelectedTriangle->GetPoint<2>()};
 					auto MidPoint1{CreatePoint((Point1->GetPosition() + Point2->GetPosition()) / 2.0f)};
 					auto MidPoint2{CreatePoint((Point2->GetPosition() + Point3->GetPosition()) / 2.0f)};
 					auto MidPoint3{CreatePoint((Point3->GetPosition() + Point1->GetPosition()) / 2.0f)};
@@ -2825,9 +2825,9 @@ XMLStream & mesh(XMLStream & XMLStream)
 	for(auto Triangle : g_Triangles)
 	{
 		XMLStream << element << "triangle" << attribute << "identifier" << value << TriangleIdentifier;
-		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->GetTrianglePoint(1)] << end;
-		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->GetTrianglePoint(2)] << end;
-		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->GetTrianglePoint(3)] << end;
+		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->GetTrianglePoint<0>()] << end;
+		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->GetTrianglePoint<1>()] << end;
+		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->GetTrianglePoint<2>()] << end;
 		XMLStream << end;
 		++TriangleIdentifier;
 	}
@@ -3310,17 +3310,17 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 					pPoint = g_SelectedPoints[0];
 				}
 				g_SelectedPoints.clear();
-				if(pPoint == g_SelectedTriangles.front()->GetPoint(2))
+				if(pPoint == g_SelectedTriangles.front()->GetPoint<1>())
 				{
-					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint(1));
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint<0>());
 				}
-				else if(pPoint == g_SelectedTriangles.front()->GetPoint(3))
+				else if(pPoint == g_SelectedTriangles.front()->GetPoint<2>())
 				{
-					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint(2));
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint<1>());
 				}
 				else
 				{
-					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint(3));
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint<2>());
 				}
 			}
 			
@@ -3330,24 +3330,24 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 		{
 			if(g_SelectedTriangles.size() == 1)
 			{
-				Point * pPoint(0);
+				Point * pPoint{nullptr};
 				
 				if(g_SelectedPoints.size() > 0)
 				{
 					pPoint = g_SelectedPoints[0];
 				}
 				g_SelectedPoints.clear();
-				if(pPoint == g_SelectedTriangles.front()->GetPoint(1))
+				if(pPoint == g_SelectedTriangles.front()->GetPoint<0>())
 				{
-					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint(2));
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint<1>());
 				}
-				else if(pPoint == g_SelectedTriangles.front()->GetPoint(2))
+				else if(pPoint == g_SelectedTriangles.front()->GetPoint<1>())
 				{
-					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint(3));
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint<2>());
 				}
 				else
 				{
-					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint(1));
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->GetPoint<0>());
 				}
 			}
 			
