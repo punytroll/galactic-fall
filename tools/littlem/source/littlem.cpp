@@ -1317,18 +1317,18 @@ Triangle * CreateTriangle(Point * Point1, Point * Point2, Point * Point3)
 void CreateRegularIcosahedron(void)
 {
 	auto Phi{(1.0f + sqrt(5.0f)) / 2.0f};
-	auto Point1{CreatePoint(Vector3f::CreateFromComponents(0.0f, 1.0f, Phi))};
-	auto Point2{CreatePoint(Vector3f::CreateFromComponents(0.0f, -1.0f, Phi))};
-	auto Point3{CreatePoint(Vector3f::CreateFromComponents(0.0f, -1.0f, -Phi))};
-	auto Point4{CreatePoint(Vector3f::CreateFromComponents(0.0f, 1.0f, -Phi))};
-	auto Point5{CreatePoint(Vector3f::CreateFromComponents(Phi, 0.0f, 1.0f))};
-	auto Point6{CreatePoint(Vector3f::CreateFromComponents(Phi, 0.0f, -1.0f))};
-	auto Point7{CreatePoint(Vector3f::CreateFromComponents(-Phi, 0.0f, -1.0f))};
-	auto Point8{CreatePoint(Vector3f::CreateFromComponents(-Phi, 0.0f, 1.0f))};
-	auto Point9{CreatePoint(Vector3f::CreateFromComponents(1.0f, Phi, 0.0f))};
-	auto Point10{CreatePoint(Vector3f::CreateFromComponents(-1.0f, Phi, 0.0f))};
-	auto Point11{CreatePoint(Vector3f::CreateFromComponents(-1.0f, -Phi, 0.0f))};
-	auto Point12{CreatePoint(Vector3f::CreateFromComponents(1.0f, -Phi, 0.0f))};
+	auto Point1{CreatePoint(Vector3f::CreateFromComponents(0.0f, 1.0f, Phi).Normalize())};
+	auto Point2{CreatePoint(Vector3f::CreateFromComponents(0.0f, -1.0f, Phi).Normalize())};
+	auto Point3{CreatePoint(Vector3f::CreateFromComponents(0.0f, -1.0f, -Phi).Normalize())};
+	auto Point4{CreatePoint(Vector3f::CreateFromComponents(0.0f, 1.0f, -Phi).Normalize())};
+	auto Point5{CreatePoint(Vector3f::CreateFromComponents(Phi, 0.0f, 1.0f).Normalize())};
+	auto Point6{CreatePoint(Vector3f::CreateFromComponents(Phi, 0.0f, -1.0f).Normalize())};
+	auto Point7{CreatePoint(Vector3f::CreateFromComponents(-Phi, 0.0f, -1.0f).Normalize())};
+	auto Point8{CreatePoint(Vector3f::CreateFromComponents(-Phi, 0.0f, 1.0f).Normalize())};
+	auto Point9{CreatePoint(Vector3f::CreateFromComponents(1.0f, Phi, 0.0f).Normalize())};
+	auto Point10{CreatePoint(Vector3f::CreateFromComponents(-1.0f, Phi, 0.0f).Normalize())};
+	auto Point11{CreatePoint(Vector3f::CreateFromComponents(-1.0f, -Phi, 0.0f).Normalize())};
+	auto Point12{CreatePoint(Vector3f::CreateFromComponents(1.0f, -Phi, 0.0f).Normalize())};
 	
 	CreateTriangle(Point1, Point2, Point5);
 	CreateTriangle(Point1, Point8, Point2);
@@ -2514,12 +2514,24 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 			
 			break;
 		}
+	case 38: // A
+		{
+			if((IsDown == true) && (g_Keyboard.IsAnyControlActive() == true))
+			{
+				// select all triangles in the scene
+				g_SelectedTriangles.clear();
+				std::copy(std::begin(g_Triangles), std::end(g_Triangles), std::back_inserter(g_SelectedTriangles));
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
 	case 58: // M
 		{
 			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedTriangles.empty() == false))
 			{
-				// for each selected triangle, create a mid point
-				// then create three new triangles and remove the selected one
+				// for each selected triangle, create mid points along the edges
+				// then create four new triangles and remove the selected one
 				std::vector< Triangle * > NewTriangles;
 				
 				while(g_SelectedTriangles.size() > 0)
@@ -2528,12 +2540,21 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 					auto Point1{SelectedTriangle->GetPoint(1)};
 					auto Point2{SelectedTriangle->GetPoint(2)};
 					auto Point3{SelectedTriangle->GetPoint(3)};
-					auto MidPoint{CreatePoint((Point1->GetPosition() + Point2->GetPosition() + Point3->GetPosition()) / 3.0f)};
+					auto MidPoint1{CreatePoint((Point1->GetPosition() + Point2->GetPosition()) / 2.0f)};
+					auto MidPoint2{CreatePoint((Point2->GetPosition() + Point3->GetPosition()) / 2.0f)};
+					auto MidPoint3{CreatePoint((Point3->GetPosition() + Point1->GetPosition()) / 2.0f)};
+					auto Length1{Point1->GetPosition().Length()};
+					auto Length2{Point2->GetPosition().Length()};
+					auto Length3{Point3->GetPosition().Length()};
 					
+					MidPoint1->SetPosition(MidPoint1->GetPosition().Normalized().Scale((Length1 + Length2) / 2.0f));
+					MidPoint2->SetPosition(MidPoint2->GetPosition().Normalized().Scale((Length2 + Length3) / 2.0f));
+					MidPoint3->SetPosition(MidPoint3->GetPosition().Normalized().Scale((Length3 + Length1) / 2.0f));
 					DeleteTriangle(SelectedTriangle);
-					NewTriangles.push_back(CreateTriangle(Point1, Point2, MidPoint));
-					NewTriangles.push_back(CreateTriangle(Point2, Point3, MidPoint));
-					NewTriangles.push_back(CreateTriangle(Point3, Point1, MidPoint));
+					NewTriangles.push_back(CreateTriangle(Point1, MidPoint1, MidPoint3));
+					NewTriangles.push_back(CreateTriangle(MidPoint1, Point2, MidPoint2));
+					NewTriangles.push_back(CreateTriangle(MidPoint3, MidPoint2, Point3));
+					NewTriangles.push_back(CreateTriangle(MidPoint1, MidPoint2, MidPoint3));
 				}
 				std::copy(NewTriangles.begin(), NewTriangles.end(), std::back_inserter(g_SelectedTriangles));
 				bKeyAccepted = true;
