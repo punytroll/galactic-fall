@@ -11,6 +11,8 @@ class TrianglePoint;
 class Point
 {
 public:
+	friend TrianglePoint;
+	
 	const Vector3f & GetPosition(void) const
 	{
 		return _Position;
@@ -27,10 +29,9 @@ public:
 	{
 		_Position = Position;
 	}
-	
-	std::vector< TrianglePoint * > _TrianglePoints;
 private:
 	Vector3f _Position;
+	std::vector< TrianglePoint * > _TrianglePoints;
 };
 
 #endif

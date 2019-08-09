@@ -16,22 +16,22 @@ Triangle::Triangle(void)
 
 void Triangle::RealignNormal(void)
 {
-	Vector3f Delta1(GetPoint(2)->GetPosition() - GetPoint(1)->GetPosition());
-	Vector3f Delta2(GetPoint(3)->GetPosition() - GetPoint(1)->GetPosition());
+	Vector3f Delta1(GetPoint<1>()->GetPosition() - GetPoint<0>()->GetPosition());
+	Vector3f Delta2(GetPoint<2>()->GetPosition() - GetPoint<0>()->GetPosition());
 	Vector3f Normal(Delta1.Cross(Delta2));
 	
 	Normal.Normalize();
-	GetTrianglePoint(1)->_Normal = GetTrianglePoint(2)->_Normal = GetTrianglePoint(3)->_Normal = Normal;
+	GetTrianglePoint<0>()->_Normal = GetTrianglePoint<1>()->_Normal = GetTrianglePoint<2>()->_Normal = Normal;
 }
 
 Vector3f Triangle::GetTriangleCenter(void) const
 {
-	return Vector3f(GetPoint(1)->GetPosition() + GetPoint(2)->GetPosition() + GetPoint(3)->GetPosition()) / 3.0f;
+	return Vector3f(GetPoint<0>()->GetPosition() + GetPoint<1>()->GetPosition() + GetPoint<2>()->GetPosition()) / 3.0f;
 }
 
 Vector3f Triangle::GetTriangleNormal(void) const
 {
-	return Vector3f((GetPoint(2)->GetPosition() - GetPoint(1)->GetPosition()).Cross(GetPoint(3)->GetPosition() - GetPoint(1)->GetPosition())).Normalized();
+	return Vector3f((GetPoint<1>()->GetPosition() - GetPoint<0>()->GetPosition()).Cross(GetPoint<2>()->GetPosition() - GetPoint<0>()->GetPosition())).Normalized();
 }
 
 void Triangle::Invert(void)
@@ -39,51 +39,17 @@ void Triangle::Invert(void)
 	std::swap(m_ppTrianglePoints[1], m_ppTrianglePoints[2]);
 }
 
-Point * Triangle::GetPoint(int Point)
-{
-	if((Point >= 1) && (Point <= 3))
-	{
-		return GetTrianglePoint(Point)->GetPoint();
-	}
-	
-	return 0;
-}
-
-const Point * Triangle::GetPoint(int Point) const
-{
-	if((Point >= 1) && (Point <= 3))
-	{
-		return GetTrianglePoint(Point)->GetPoint();
-	}
-	
-	return 0;
-}
-
-TrianglePoint * Triangle::GetTrianglePoint(int TrianglePoint)
-{
-	assert((TrianglePoint >= 1) && (TrianglePoint <= 3));
-	
-	return m_ppTrianglePoints[TrianglePoint - 1];
-}
-
-const TrianglePoint * Triangle::GetTrianglePoint(int TrianglePoint) const
-{
-	assert((TrianglePoint >= 1) && (TrianglePoint <= 3));
-	
-	return m_ppTrianglePoints[TrianglePoint - 1];
-}
-
 TrianglePoint * Triangle::GetTrianglePoint(Point * Point)
 {
-	if(Point == GetPoint(1))
+	if(Point == GetPoint<0>())
 	{
 		return m_ppTrianglePoints[0];
 	}
-	else if(Point == GetPoint(2))
+	else if(Point == GetPoint<1>())
 	{
 		return m_ppTrianglePoints[1];
 	}
-	else if(Point == GetPoint(3))
+	else if(Point == GetPoint<2>())
 	{
 		return m_ppTrianglePoints[2];
 	}
@@ -93,15 +59,15 @@ TrianglePoint * Triangle::GetTrianglePoint(Point * Point)
 
 const TrianglePoint * Triangle::GetTrianglePoint(Point * Point) const
 {
-	if(Point == GetPoint(1))
+	if(Point == GetPoint<0>())
 	{
 		return m_ppTrianglePoints[0];
 	}
-	else if(Point == GetPoint(2))
+	else if(Point == GetPoint<1>())
 	{
 		return m_ppTrianglePoints[1];
 	}
-	else if(Point == GetPoint(3))
+	else if(Point == GetPoint<2>())
 	{
 		return m_ppTrianglePoints[2];
 	}
