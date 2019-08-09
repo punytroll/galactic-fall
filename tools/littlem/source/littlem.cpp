@@ -365,7 +365,7 @@ public:
 				assert(_CurrentTrianglePoint == nullptr);
 				_CurrentTrianglePoint = new TrianglePoint();
 				_TrianglePoints[from_string_cast< unsigned long >(Attributes.find("identifier")->second)] = _CurrentTrianglePoint;
-				_CurrentTrianglePoint->_Normal.Set(from_string_cast< float >(Attributes.find("normal-x")->second), from_string_cast< float >(Attributes.find("normal-y")->second), from_string_cast< float >(Attributes.find("normal-z")->second));
+				_CurrentTrianglePoint->SetNormal(Vector3f::CreateFromComponents(from_string_cast< float >(Attributes.find("normal-x")->second), from_string_cast< float >(Attributes.find("normal-y")->second), from_string_cast< float >(Attributes.find("normal-z")->second)));
 			}
 			else
 			{
@@ -1444,11 +1444,11 @@ void vDisplayModel(void)
 	glColor3f(0.3f, 0.3f, 0.5f);
 	for(auto Triangle : g_Triangles)
 	{
-		glNormal3fv(Triangle->m_ppTrianglePoints[0]->_Normal.GetPointer());
+		glNormal3fv(Triangle->m_ppTrianglePoints[0]->GetNormal().GetPointer());
 		glVertex3fv(Triangle->m_ppTrianglePoints[0]->GetPoint()->GetPosition().GetPointer());
-		glNormal3fv(Triangle->m_ppTrianglePoints[1]->_Normal.GetPointer());
+		glNormal3fv(Triangle->m_ppTrianglePoints[1]->GetNormal().GetPointer());
 		glVertex3fv(Triangle->m_ppTrianglePoints[1]->GetPoint()->GetPosition().GetPointer());
-		glNormal3fv(Triangle->m_ppTrianglePoints[2]->_Normal.GetPointer());
+		glNormal3fv(Triangle->m_ppTrianglePoints[2]->GetNormal().GetPointer());
 		glVertex3fv(Triangle->m_ppTrianglePoints[2]->GetPoint()->GetPosition().GetPointer());
 	}
 	glEnd();
@@ -1501,11 +1501,11 @@ void vDisplayModel(void)
 		{
 			glColor3f(0.5f, 0.8f, 0.2f);
 			glBegin(GL_TRIANGLES);
-			glNormal3fv(SelectedTriangle->m_ppTrianglePoints[0]->_Normal.GetPointer());
+			glNormal3fv(SelectedTriangle->m_ppTrianglePoints[0]->GetNormal().GetPointer());
 			glVertex3fv(SelectedTriangle->m_ppTrianglePoints[0]->GetPoint()->GetPosition().GetPointer());
-			glNormal3fv(SelectedTriangle->m_ppTrianglePoints[1]->_Normal.GetPointer());
+			glNormal3fv(SelectedTriangle->m_ppTrianglePoints[1]->GetNormal().GetPointer());
 			glVertex3fv(SelectedTriangle->m_ppTrianglePoints[1]->GetPoint()->GetPosition().GetPointer());
-			glNormal3fv(SelectedTriangle->m_ppTrianglePoints[2]->_Normal.GetPointer());
+			glNormal3fv(SelectedTriangle->m_ppTrianglePoints[2]->GetNormal().GetPointer());
 			glVertex3fv(SelectedTriangle->m_ppTrianglePoints[2]->GetPoint()->GetPosition().GetPointer());
 			glEnd();
 			glColor3f(0.6f, 0.6f, 0.0f);
@@ -1530,7 +1530,7 @@ void vDisplayModel(void)
 			glScalef(Scale, Scale, Scale);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(SelectedTriangle->GetTrianglePoint(1)->_Normal.Scaled(0.05f).GetPointer());
+			glVertex3fv(SelectedTriangle->GetTrianglePoint(1)->GetNormal().Scaled(0.05f).GetPointer());
 			glEnd();
 			glPopMatrix();
 			glPushMatrix();
@@ -1539,7 +1539,7 @@ void vDisplayModel(void)
 			glScalef(Scale, Scale, Scale);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(SelectedTriangle->GetTrianglePoint(2)->_Normal.Scaled(0.05f).GetPointer());
+			glVertex3fv(SelectedTriangle->GetTrianglePoint(2)->GetNormal().Scaled(0.05f).GetPointer());
 			glEnd();
 			glPopMatrix();
 			glPushMatrix();
@@ -1548,7 +1548,7 @@ void vDisplayModel(void)
 			glScalef(Scale, Scale, Scale);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(SelectedTriangle->GetTrianglePoint(3)->_Normal.Scaled(0.05f).GetPointer());
+			glVertex3fv(SelectedTriangle->GetTrianglePoint(3)->GetNormal().Scaled(0.05f).GetPointer());
 			glEnd();
 			glPopMatrix();
 		}
@@ -1729,11 +1729,11 @@ void vDisplayModel(void)
 	{
 		glColor3f(1.0f, 0.7f, 0.3f);
 		glBegin(GL_TRIANGLES);
-		glNormal3fv(g_HoveredTriangle->m_ppTrianglePoints[0]->_Normal.GetPointer());
+		glNormal3fv(g_HoveredTriangle->m_ppTrianglePoints[0]->GetNormal().GetPointer());
 		glVertex3fv(g_HoveredTriangle->m_ppTrianglePoints[0]->GetPoint()->GetPosition().GetPointer());
-		glNormal3fv(g_HoveredTriangle->m_ppTrianglePoints[1]->_Normal.GetPointer());
+		glNormal3fv(g_HoveredTriangle->m_ppTrianglePoints[1]->GetNormal().GetPointer());
 		glVertex3fv(g_HoveredTriangle->m_ppTrianglePoints[1]->GetPoint()->GetPosition().GetPointer());
-		glNormal3fv(g_HoveredTriangle->m_ppTrianglePoints[2]->_Normal.GetPointer());
+		glNormal3fv(g_HoveredTriangle->m_ppTrianglePoints[2]->GetNormal().GetPointer());
 		glVertex3fv(g_HoveredTriangle->m_ppTrianglePoints[2]->GetPoint()->GetPosition().GetPointer());
 		glEnd();
 		glColor3f(0.3f, 0.1f, 0.3f);
@@ -1758,7 +1758,7 @@ void vDisplayModel(void)
 		glScalef(Scale, Scale, Scale);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_HoveredTriangle->GetTrianglePoint(1)->_Normal.Scaled(0.05f).GetPointer());
+		glVertex3fv(g_HoveredTriangle->GetTrianglePoint(1)->GetNormal().Scaled(0.05f).GetPointer());
 		glEnd();
 		glPopMatrix();
 		glPushMatrix();
@@ -1767,7 +1767,7 @@ void vDisplayModel(void)
 		glScalef(Scale, Scale, Scale);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_HoveredTriangle->GetTrianglePoint(2)->_Normal.Scaled(0.05f).GetPointer());
+		glVertex3fv(g_HoveredTriangle->GetTrianglePoint(2)->GetNormal().Scaled(0.05f).GetPointer());
 		glEnd();
 		glPopMatrix();
 		glPushMatrix();
@@ -1776,7 +1776,7 @@ void vDisplayModel(void)
 		glScalef(Scale, Scale, Scale);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_HoveredTriangle->GetTrianglePoint(3)->_Normal.Scaled(0.05f).GetPointer());
+		glVertex3fv(g_HoveredTriangle->GetTrianglePoint(3)->GetNormal().Scaled(0.05f).GetPointer());
 		glEnd();
 		glPopMatrix();
 	}
@@ -1920,21 +1920,21 @@ void DeletePoint(std::vector< Point * >::iterator PointIterator)
 {
 	assert(PointIterator != g_Points.end());
 	
-	auto Point(*PointIterator);
+	auto Point{*PointIterator};
 	
 	while(Point->GetTrianglePoints().size() > 0)
 	{
 		assert(Point->GetTrianglePoints().front()->GetPoint() == Point);
-		if(Point->GetTrianglePoints().front()->_Triangles.size() == 0)
+		if(Point->GetTrianglePoints().front()->GetTriangles().size() == 0)
 		{
 			std::cout << "encountered a triangle point without a triangle!" << std::endl;
 			delete Point->GetTrianglePoints().front();
 		}
 		else
 		{
-			while(Point->GetTrianglePoints().front()->_Triangles.size() > 0)
+			while(Point->GetTrianglePoints().front()->GetTriangles().size() > 0)
 			{
-				DeleteTriangle(Point->GetTrianglePoints().front()->_Triangles.front());
+				DeleteTriangle(Point->GetTrianglePoints().front()->GetTriangles().front());
 			}
 		}
 	}
@@ -2416,7 +2416,7 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 							auto NewTrianglePoint(new TrianglePoint());
 							
 							NewTrianglePoint->SetPoint(Point);
-							NewTrianglePoint->_Normal = Triangle->GetTriangleNormal();
+							NewTrianglePoint->SetNormal(Triangle->GetTriangleNormal());
 							if(OldTrianglePoint == Triangle->GetTrianglePoint(1))
 							{
 								Triangle->SetTrianglePoint<0>(NewTrianglePoint);
@@ -2463,21 +2463,20 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 		{
 			for(auto Point : g_SelectedPoints)
 			{
-				TrianglePoint * NewTrianglePoint(nullptr);
+				TrianglePoint * NewTrianglePoint{nullptr};
+				Vector3f NewTrianglePointNormal{Vector3f::CreateFromComponents(0.0f, 0.0f, 0.0f)};
 				
 				for(auto Triangle : g_SelectedTriangles)
 				{
-					auto OldTrianglePoint(Triangle->GetTrianglePoint(Point));
+					auto OldTrianglePoint{Triangle->GetTrianglePoint(Point)};
 					
 					if(OldTrianglePoint != nullptr)
 					{
 						if(NewTrianglePoint == nullptr)
 						{
-							NewTrianglePoint = new TrianglePoint();
-							NewTrianglePoint->SetPoint(Point);
-							NewTrianglePoint->_Normal.Set(0.0f, 0.0f, 0.0f);
+							NewTrianglePoint = CreateTrianglePoint(Point);
 						}
-						NewTrianglePoint->_Normal.Translate(OldTrianglePoint->_Normal);
+						NewTrianglePointNormal.Translate(OldTrianglePoint->GetNormal());
 						if(OldTrianglePoint == Triangle->GetTrianglePoint(1))
 						{
 							Triangle->SetTrianglePoint<0>(NewTrianglePoint);
@@ -2494,7 +2493,7 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 				}
 				if(NewTrianglePoint != nullptr)
 				{
-					NewTrianglePoint->_Normal.Normalize();
+					NewTrianglePoint->SetNormal(NewTrianglePointNormal.Normalize());
 				}
 			}
 			bKeyAccepted = true;
@@ -2812,7 +2811,7 @@ XMLStream & mesh(XMLStream & XMLStream)
 	{
 		for(auto TrianglePoint : Point->GetTrianglePoints())
 		{
-			XMLStream << element << "triangle-point" << attribute << "identifier" << value << TrianglePointIdentifier << attribute << "normal-x" << value << TrianglePoint->_Normal[0] << attribute << "normal-y" << value << TrianglePoint->_Normal[1] << attribute << "normal-z" << value << TrianglePoint->_Normal[2];
+			XMLStream << element << "triangle-point" << attribute << "identifier" << value << TrianglePointIdentifier << attribute << "normal-x" << value << TrianglePoint->GetNormal()[0] << attribute << "normal-y" << value << TrianglePoint->GetNormal()[1] << attribute << "normal-z" << value << TrianglePoint->GetNormal()[2];
 			XMLStream << element << "point" << attribute << "point-identifier" << value << PointMap[TrianglePoint->GetPoint()] << end;
 			XMLStream << end;
 			TrianglePointMap[TrianglePoint] = TrianglePointIdentifier;
