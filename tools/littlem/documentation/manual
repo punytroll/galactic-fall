@@ -86,12 +86,14 @@ Point View:
 · PAGE_DOWN  --  move all selected points along the -z axis (using snapping)
 
 Triangle View commands:
+· CTRL + A  --  select all triangles in the scene
 · I  --  invert selected triangles
+· M  --  create new triangles from edge mid points
 · S  --  separate triangle points
 · T  --  select all triangles connected to the selected points
 · U  --  unify triangle points
 · ENTER  --  realign triangle point normals
-· DELETE --  delete triangle (leave the points)
+· DELETE  --  delete triangle (leave the points)
 
 
 Command reference:
