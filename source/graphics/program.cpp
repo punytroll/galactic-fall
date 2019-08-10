@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2015  Hagen Möbius
+ * Copyright (C) 2015-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,9 +24,9 @@
 #include <algebra/vector3f.h>
 #include <algebra/vector4f.h>
 
-#include "../globals.h"
 #include "color_rgb.h"
 #include "color_rgbo.h"
+#include "debug.h"
 #include "gl.h"
 #include "program.h"
 #include "shader.h"

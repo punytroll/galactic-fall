@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2013-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,8 +19,6 @@
 
 #include <list>
 
-#include "../globals.h"
-#include "../system_statistics.h"
 #include "engine.h"
 #include "gl.h"
 #include "particle_system.h"
@@ -76,7 +74,6 @@ void Graphics::ParticleSystemNode::Begin(Graphics::RenderContext * RenderContext
 
 void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 {
-	g_SystemStatistics->SetParticleSystemsDrawnThisFrame(g_SystemStatistics->GetParticleSystemsDrawnThisFrame() + 1);
 	assert(_ParticleSystem != nullptr);
 	
 	if(_ParticleSystem->GetParticles().empty() == false)
@@ -97,7 +94,6 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 		
 		for(auto Particle : _ParticleSystem->GetParticles())
 		{
-			g_SystemStatistics->SetParticlesDrawnThisFrame(g_SystemStatistics->GetParticlesDrawnThisFrame() + 1);
 			if(IndexIndex > 0)
 			{
 				Indices[IndexIndex++] = 0xFFFF;

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008, 2013  Aram Altschudjian, Hagen Möbius
+ * Copyright (C) 2008-2019  Aram Altschudjian, Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,16 +29,10 @@ public:
 	float GetAISecondsThisFrame(void) const;
 	std::uint32_t GetCommoditiesInCurrentSystemThisFrame(void) const;
 	std::uint32_t GetDispatchedMessagesThisFrame(void) const;
-	float GetFontSecondsLastFrame(void) const;
-	float GetFontSecondsThisFrame(void) const;
 	float GetFramesPerSecond(void) const;
 	float GetFrameToFrameSecondsThisFrame(void) const;
 	float GetGraphicsSecondsThisFrame(void) const;
 	float GetMessagingSecondsThisFrame(void) const;
-	std::uint32_t GetParticleSystemsDrawnThisFrame(void) const;
-	std::uint32_t GetParticleSystemsUpdatedThisFrame(void) const;
-	std::uint32_t GetParticlesDrawnThisFrame(void) const;
-	std::uint32_t GetParticlesUpdatedThisFrame(void) const;
 	float GetPhysicsSecondsThisFrame(void) const;
 	float GetProcessingSecondsThisFrame(void) const;
 	std::uint32_t GetShipsInCurrentSystemThisFrame(void) const;
@@ -47,14 +41,9 @@ public:
 	void SetAISecondsThisFrame(float AISecondsThisFrame);
 	void SetCommoditiesInCurrentSystemThisFrame(std::uint32_t CommoditiesInCurrentSystemThisFrame);
 	void SetDispatchedMessagesThisFrame(std::uint32_t DispatchedMessagesThisFrame);
-	void SetFontSecondsThisFrame(float FontSecondsThisFrame);
 	void SetFrameToFrameSecondsThisFrame(float FrameToFrameSecondsThisFrame);
 	void SetGraphicsSecondsThisFrame(float GraphicsSecondsThisFrame);
 	void SetMessagingSecondsThisFrame(float MessagingSecondsThisFrame);
-	void SetParticleSystemsDrawnThisFrame(std::uint32_t ParticleSystemsDrawnThisFrame);
-	void SetParticleSystemsUpdatedThisFrame(std::uint32_t ParticleSystemsUpdatedThisFrame);
-	void SetParticlesDrawnThisFrame(std::uint32_t ParticlesDrawnThisFrame);
-	void SetParticlesUpdatedThisFrame(std::uint32_t ParticlesUpdatedThisFrame);
 	void SetPhysicsSecondsThisFrame(float PhysicsSecondsThisFrame);
 	void SetProcessingSecondsThisFrame(float ProcessingSecondsThisFrame);
 	void SetShipsInCurrentSystemThisFrame(std::uint32_t ShipsInCurrentSystemThisFrame);
@@ -65,16 +54,10 @@ private:
 	float _AISecondsThisFrame;
 	std::uint32_t _CommoditiesInCurrentSystemThisFrame;
 	std::uint32_t _DispatchedMessagesThisFrame;
-	float _FontSecondsLastFrame;
-	float _FontSecondsThisFrame;
 	float _FramesPerSecond;
 	float _FrameToFrameSecondsThisFrame;
 	float _GraphicsSecondsThisFrame;
 	float _MessageSecondsThisFrame;
-	std::uint32_t _ParticleSystemsDrawnThisFrame;
-	std::uint32_t _ParticleSystemsUpdatedThisFrame;
-	std::uint32_t _ParticlesDrawnThisFrame;
-	std::uint32_t _ParticlesUpdatedThisFrame;
 	float _PhysicsSecondsThisFrame;
 	float _ProcessingSecondsThisFrame;
 	std::uint32_t _ShipsInCurrentSystemThisFrame;
@@ -96,16 +79,6 @@ inline std::uint32_t SystemStatistics::GetDispatchedMessagesThisFrame(void) cons
 	return _DispatchedMessagesThisFrame;
 }
 
-inline float SystemStatistics::GetFontSecondsLastFrame(void) const
-{
-	return _FontSecondsLastFrame;
-}
-
-inline float SystemStatistics::GetFontSecondsThisFrame(void) const
-{
-	return _FontSecondsThisFrame;
-}
-
 inline float SystemStatistics::GetFramesPerSecond(void) const
 {
 	return _FramesPerSecond;
@@ -124,26 +97,6 @@ inline float SystemStatistics::GetGraphicsSecondsThisFrame(void) const
 inline float SystemStatistics::GetMessagingSecondsThisFrame(void) const
 {
 	return _MessageSecondsThisFrame;
-}
-
-inline std::uint32_t SystemStatistics::GetParticleSystemsDrawnThisFrame(void) const
-{
-	return _ParticleSystemsDrawnThisFrame;
-}
-
-inline std::uint32_t SystemStatistics::GetParticleSystemsUpdatedThisFrame(void) const
-{
-	return _ParticleSystemsUpdatedThisFrame;
-}
-
-inline std::uint32_t SystemStatistics::GetParticlesDrawnThisFrame(void) const
-{
-	return _ParticlesDrawnThisFrame;
-}
-
-inline std::uint32_t SystemStatistics::GetParticlesUpdatedThisFrame(void) const
-{
-	return _ParticlesUpdatedThisFrame;
 }
 
 inline float SystemStatistics::GetPhysicsSecondsThisFrame(void) const
@@ -181,11 +134,6 @@ inline void SystemStatistics::SetDispatchedMessagesThisFrame(std::uint32_t Dispa
 	_DispatchedMessagesThisFrame = DispatchedMessagesThisFrame;
 }
 
-inline void SystemStatistics::SetFontSecondsThisFrame(float FontSecondsThisFrame)
-{
-	_FontSecondsThisFrame = FontSecondsThisFrame;
-}
-
 inline void SystemStatistics::SetFrameToFrameSecondsThisFrame(float FrameToFrameSecondsThisFrame)
 {
 	_FrameToFrameSecondsThisFrame = FrameToFrameSecondsThisFrame;
@@ -200,26 +148,6 @@ inline void SystemStatistics::SetGraphicsSecondsThisFrame(float GraphicsSecondsT
 inline void SystemStatistics::SetMessagingSecondsThisFrame(float MessagingSecondsThisFrame)
 {
 	_MessageSecondsThisFrame = MessagingSecondsThisFrame;
-}
-
-inline void SystemStatistics::SetParticleSystemsDrawnThisFrame(std::uint32_t ParticleSystemsDrawnThisFrame)
-{
-	_ParticleSystemsDrawnThisFrame = ParticleSystemsDrawnThisFrame;
-}
-
-inline void SystemStatistics::SetParticleSystemsUpdatedThisFrame(std::uint32_t ParticleSystemsUpdatedThisFrame)
-{
-	_ParticleSystemsUpdatedThisFrame = ParticleSystemsUpdatedThisFrame;
-}
-
-inline void SystemStatistics::SetParticlesDrawnThisFrame(std::uint32_t ParticlesDrawnThisFrame)
-{
-	_ParticlesDrawnThisFrame = ParticlesDrawnThisFrame;
-}
-
-inline void SystemStatistics::SetParticlesUpdatedThisFrame(std::uint32_t ParticlesUpdatedThisFrame)
-{
-	_ParticlesUpdatedThisFrame = ParticlesUpdatedThisFrame;
 }
 
 inline void SystemStatistics::SetPhysicsSecondsThisFrame(float PhysicsSecondsThisFrame)

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007-2018  Hagen Möbius
+ * Copyright (C) 2007-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,15 +40,10 @@ namespace UI
 		UI::Label * _AISecondsThisFrameLabel;
 		UI::Label * _CommoditiesInCurrentSystemThisFrameLabel;
 		UI::Label * _DispatchedMessagesThisFrameLabel;
-		UI::Label * _FontSecondsLastFrameLabel;
 		UI::Label * _FramesPerSecondLabel;
 		UI::Label * _FrameToFrameSecondsThisFrameLabel;
 		UI::Label * _GraphicsSecondsThisFrameLabel;
 		UI::Label * _MessagingSecondsThisFrameLabel;
-		UI::Label * _ParticleSystemsDrawnThisFrameLabel;
-		UI::Label * _ParticleSystemsUpdatedThisFrameLabel;
-		UI::Label * _ParticlesDrawnThisFrameLabel;
-		UI::Label * _ParticlesUpdatedThisFrameLabel;
 		UI::Label * _PhysicsSecondsThisFrameLabel;
 		UI::Label * _ProcessingSecondsThisFrameLabel;
 		UI::Label * _ShipsInCurrentSystemThisFrameLabel;

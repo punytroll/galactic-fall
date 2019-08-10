@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2015  Hagen Möbius
+ * Copyright (C) 2015-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,10 +26,6 @@
 #include "render_context.h"
 #include "style.h"
 #include "texture_manager.h"
-
-#include "../globals.h"
-#include "../real_time.h"
-#include "../system_statistics.h"
 
 const Graphics::Texture * Graphics::Drawing::_FontTexture{nullptr};
 
@@ -296,9 +292,6 @@ void Graphics::Drawing::_DrawText(Graphics::RenderContext * RenderContext, float
 {
 	if(Text.empty() == false)
 	{
-		RealTime::Invalidate();
-		
-		double Begin(RealTime::Get());
 		const std::uint32_t CHARACTERS{95};
 		const std::uint32_t CHARACTEROFFSET{32};
 		GLuint VertexArray{0};
@@ -395,12 +388,6 @@ void Graphics::Drawing::_DrawText(Graphics::RenderContext * RenderContext, float
 		RenderContext->SetTexture(nullptr);
 		RenderContext->UnsetProgramIdentifier();
 		RenderContext->DeactivateProgram();
-		RealTime::Invalidate();
-		
-		double End(RealTime::Get());
-		double Delta(End - Begin);
-		
-		g_SystemStatistics->SetFontSecondsThisFrame(g_SystemStatistics->GetFontSecondsThisFrame() + Delta);
 	}
 }
 
@@ -455,11 +442,11 @@ void Graphics::Drawing::DrawTexture(Graphics::RenderContext * RenderContext, flo
 	GLDeleteVertexArrays(1, &VertexArray);
 }
 
-void Graphics::Drawing::InitializeFont(void)
+void Graphics::Drawing::InitializeFont(Graphics::Engine * Engine)
 {
-	assert(g_GraphicsEngine != nullptr);
-	assert(g_GraphicsEngine->GetTextureManager() != nullptr);
-	_FontTexture = g_GraphicsEngine->GetTextureManager()->Get("font");
+	assert(Engine != nullptr);
+	assert(Engine->GetTextureManager() != nullptr);
+	_FontTexture = Engine->GetTextureManager()->Get("font");
 	assert(_FontTexture != nullptr);
 }
 

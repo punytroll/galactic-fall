@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2013-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,8 +42,8 @@ namespace Graphics
 			Vector3f _Position;
 			Vector3f _Velocity;
 			Graphics::ColorRGBO _Color;
-			double _TimeOfCreation;
-			double _TimeOfDeath;
+			double _Lifetime;
+			double _TimeUntilDeath;
 			float _Opacity;
 			float _Size;
 		};
@@ -57,7 +57,7 @@ namespace Graphics
 		// setters
 		void SetPosition(const Vector3f & Position);
 		void SetVelocity(const Vector3f & Velocity);
-		void SetTimeOfDeath(double TimeOfDeath);
+		void SetTimeUntilDeath(double TimeUntilDeath);
 		// modifiers
 		void AddParticle(const Graphics::ParticleSystem::Particle & Particle);
 		void AddSystemScriptLine(const std::string & SystemScriptLine);
@@ -67,7 +67,7 @@ namespace Graphics
 		bool _IsDone;
 		Vector3f _Position;
 		Vector3f _Velocity;
-		double _TimeOfDeath;
+		double _TimeUntilDeath;
 		std::list< Graphics::ParticleSystem::Particle > _Particles;
 		std::vector< std::string > _SystemScript;
 		std::vector< std::string > _ParticleScript;
@@ -99,9 +99,9 @@ namespace Graphics
 		_Velocity = Velocity;
 	}
 	
-	inline void ParticleSystem::SetTimeOfDeath(double TimeOfDeath)
+	inline void ParticleSystem::SetTimeUntilDeath(double TimeUntilDeath)
 	{
-		_TimeOfDeath = TimeOfDeath;
+		_TimeUntilDeath = TimeUntilDeath;
 	}
 }
 

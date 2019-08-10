@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2015  Hagen Möbius
+ * Copyright (C) 2015-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,6 +28,7 @@
 namespace Graphics
 {
 	class ColorRGBO;
+	class Engine;
 	class RenderContext;
 	class Texture;
 	
@@ -43,7 +44,7 @@ namespace Graphics
 		static void DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, const std::string & Text);
 		static void DrawTextWithoutClippingRightHanded(Graphics::RenderContext * RenderContext, float Left, float Top, float Height, const std::string & Text);
 		static void DrawTexture(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right, Graphics::Texture * Texture);
-		static void InitializeFont(void);
+		static void InitializeFont(Graphics::Engine * Engine);
 		static void DeinitializeFont(void);
 	private:
 		static void _DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, float Height, const std::string & Text, const std::string & ProgamName, bool LeftHanded);
