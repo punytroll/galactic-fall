@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006-2018  Hagen Möbius
+ * Copyright (C) 2006-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -327,8 +327,7 @@ bool Ship::Update(float Seconds)
 					
 					Graphics::ParticleSystem::Particle Particle;
 					
-					Particle._TimeOfCreation = GameTime::Get();
-					Particle._TimeOfDeath = GameTime::Get() + GetRandomFloat(0.1f, 0.2f);
+					Particle._Lifetime = Particle._TimeUntilDeath = GetRandomFloat(0.1f, 0.2f);
 					Particle._Color = Graphics::ColorRGBO(GetRandomFloat(0.8f, 1.0f), GetRandomFloat(0.7f, 0.8f), 0.5f, 0.08f);
 					
 					auto Distance{sqrt(GetRandomUniform())};

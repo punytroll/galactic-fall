@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2015  Hagen Möbius
+ * Copyright (C) 2015-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,7 @@
 #include <cassert>
 #include <iostream>
 
-#include "../globals.h"
+#include "debug.h"
 #include "gl.h"
 #include "shader.h"
 

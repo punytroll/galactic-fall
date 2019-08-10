@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2013-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,9 +19,6 @@
 
 #include <stdexcept>
 
-#include "../game_time.h"
-#include "../globals.h"
-#include "../system_statistics.h"
 #include "particle_system.h"
 #include "particle_system_node.h"
 
@@ -40,12 +37,15 @@ Graphics::ParticleSystem::~ParticleSystem(void)
 
 void Graphics::ParticleSystem::Update(float Seconds)
 {
-	g_SystemStatistics->SetParticleSystemsUpdatedThisFrame(g_SystemStatistics->GetParticleSystemsUpdatedThisFrame() + 1);
 	for(std::vector< std::string >::const_iterator ScriptLine = _SystemScript.begin(); ScriptLine != _SystemScript.end(); ++ScriptLine)
 	{
-		if(*ScriptLine == "kill-old")
+		if(*ScriptLine == "countdown")
 		{
-			if(GameTime::Get() >= _TimeOfDeath)
+			_TimeUntilDeath -= Seconds;
+		}
+		else if(*ScriptLine == "kill-old")
+		{
+			if(_TimeUntilDeath < 0.0)
 			{
 				_IsDone = true;
 				
@@ -58,8 +58,6 @@ void Graphics::ParticleSystem::Update(float Seconds)
 		}
 		else if(*ScriptLine == "update-particles")
 		{
-			g_SystemStatistics->SetParticlesUpdatedThisFrame(g_SystemStatistics->GetParticlesUpdatedThisFrame() + _Particles.size());
-			
 			std::list< Graphics::ParticleSystem::Particle >::iterator ParticleIterator(_Particles.begin());
 			
 			while(ParticleIterator != _Particles.end())
@@ -68,9 +66,13 @@ void Graphics::ParticleSystem::Update(float Seconds)
 				
 				for(std::vector< std::string >::const_iterator ScriptLine = _ParticleScript.begin(); ScriptLine != _ParticleScript.end(); ++ScriptLine)
 				{
-					if(*ScriptLine == "kill-old")
+					if(*ScriptLine == "countdown")
 					{
-						if(GameTime::Get() >= ParticleIterator->_TimeOfDeath)
+						ParticleIterator->_TimeUntilDeath -= Seconds;
+					}
+					else if(*ScriptLine == "kill-old")
+					{
+						if(ParticleIterator->_TimeUntilDeath < 0.0)
 						{
 							ParticleIterator = _Particles.erase(ParticleIterator);
 							Forward = false;
@@ -84,7 +86,7 @@ void Graphics::ParticleSystem::Update(float Seconds)
 					}
 					else if(*ScriptLine == "fade")
 					{
-						ParticleIterator->_Opacity = 1.0f - (GameTime::Get() - ParticleIterator->_TimeOfCreation) / (ParticleIterator->_TimeOfDeath - ParticleIterator->_TimeOfCreation);
+						ParticleIterator->_Opacity = ParticleIterator->_TimeUntilDeath / ParticleIterator->_Lifetime;
 					}
 					else
 					{

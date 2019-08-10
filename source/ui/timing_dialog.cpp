@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007-2018  Hagen Möbius
+ * Copyright (C) 2007-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,15 +33,10 @@ UI::TimingDialog::TimingDialog(void) :
 	_AISecondsThisFrameLabel(nullptr),
 	_CommoditiesInCurrentSystemThisFrameLabel(nullptr),
 	_DispatchedMessagesThisFrameLabel(nullptr),
-	_FontSecondsLastFrameLabel(nullptr),
 	_FramesPerSecondLabel(nullptr),
 	_FrameToFrameSecondsThisFrameLabel(nullptr),
 	_GraphicsSecondsThisFrameLabel(nullptr),
 	_MessagingSecondsThisFrameLabel(nullptr),
-	_ParticleSystemsDrawnThisFrameLabel(nullptr),
-	_ParticleSystemsUpdatedThisFrameLabel(nullptr),
-	_ParticlesDrawnThisFrameLabel(nullptr),
-	_ParticlesUpdatedThisFrameLabel(nullptr),
 	_PhysicsSecondsThisFrameLabel(nullptr),
 	_ProcessingSecondsThisFrameLabel(nullptr),
 	_ShipsInCurrentSystemThisFrameLabel(nullptr),
@@ -64,11 +59,6 @@ UI::TimingDialog::TimingDialog(void) :
 	Top += _AddMeasure(Top, "Commodities in current System this Frame:", _CommoditiesInCurrentSystemThisFrameLabel);
 	Top += _AddMeasure(Top, "Ships in current System this Frame:", _ShipsInCurrentSystemThisFrameLabel);
 	Top += _AddMeasure(Top, "Shots in current System this Frame:", _ShotsInCurrentSystemThisFrameLabel);
-	Top += _AddMeasure(Top, "Particle systems updated this Frame:", _ParticleSystemsUpdatedThisFrameLabel);
-	Top += _AddMeasure(Top, "Particle systems drawn this Frame:", _ParticleSystemsDrawnThisFrameLabel);
-	Top += _AddMeasure(Top, "Particles updated this Frame:", _ParticlesUpdatedThisFrameLabel);
-	Top += _AddMeasure(Top, "Particles drawn this Frame:", _ParticlesDrawnThisFrameLabel);
-	Top += _AddMeasure(Top, "Font Seconds last Frame:", _FontSecondsLastFrameLabel);
 }
 
 float UI::TimingDialog::_AddMeasure(float Top, const std::string & Label, UI::Label *& ValueLabel)
@@ -110,15 +100,10 @@ void UI::TimingDialog::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
 	_AISecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetAISecondsThisFrame() * 1000, 2) + " ms");
 	_CommoditiesInCurrentSystemThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetCommoditiesInCurrentSystemThisFrame()));
 	_DispatchedMessagesThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetDispatchedMessagesThisFrame()));
-	_FontSecondsLastFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetFontSecondsLastFrame() * 1000, 2) + " ms");
 	_FramesPerSecondLabel->SetText(to_string_cast(g_SystemStatistics->GetFramesPerSecond(), 2));
 	_FrameToFrameSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetFrameToFrameSecondsThisFrame() * 1000, 2) + " ms");
 	_GraphicsSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetGraphicsSecondsThisFrame() * 1000, 2) + " ms");
 	_MessagingSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetMessagingSecondsThisFrame() * 1000, 2) + " ms");
-	_ParticleSystemsDrawnThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetParticleSystemsDrawnThisFrame()));
-	_ParticleSystemsUpdatedThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetParticleSystemsUpdatedThisFrame()));
-	_ParticlesDrawnThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetParticlesDrawnThisFrame()));
-	_ParticlesUpdatedThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetParticlesUpdatedThisFrame()));
 	_PhysicsSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetPhysicsSecondsThisFrame() * 1000, 2) + " ms");
 	_ProcessingSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetProcessingSecondsThisFrame() * 1000, 2) + " ms");
 	_ShipsInCurrentSystemThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetShipsInCurrentSystemThisFrame()));

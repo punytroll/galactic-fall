@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013-2019  Hagen Möbius
+ * Copyright (C) 2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,11 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "system_statistics.h"
+#ifndef GRAPHICS_DEBUG_H
+#define GRAPHICS_DEBUG_H
 
-void SystemStatistics::NextFrame(void)
-{
-	_ShipsInCurrentSystemThisFrame = 0;
-	_CommoditiesInCurrentSystemThisFrame = 0;
-	_ShotsInCurrentSystemThisFrame = 0;
-}
+#ifndef NDEBUG
+#define ON_DEBUG(A) (A)
+#else
+#define ON_DEBUG(A)
+#endif
+
+#endif

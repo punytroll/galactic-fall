@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@
 #include <cassert>
 #include <iostream>
 
-#include "../globals.h"
+#include "debug.h"
 #include "engine.h"
 #include "gl.h"
 #include "mesh_manager.h"
