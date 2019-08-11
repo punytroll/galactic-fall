@@ -25,6 +25,18 @@
 #include <Archive.h>
 #include <Item.h>
 
+#include <graphics/engine.h>
+#include <graphics/mesh.h>
+#include <graphics/mesh_manager.h>
+#include <graphics/model.h>
+#include <graphics/model_manager.h>
+#include <graphics/program.h>
+#include <graphics/shader.h>
+#include <graphics/shading_manager.h>
+#include <graphics/style.h>
+#include <graphics/texture.h>
+#include <graphics/texture_manager.h>
+
 #include <string_cast/string_cast.h>
 
 #include "arx_types.h"
@@ -35,17 +47,6 @@
 #include "faction.h"
 #include "galaxy.h"
 #include "globals.h"
-#include "graphics/engine.h"
-#include "graphics/mesh.h"
-#include "graphics/mesh_manager.h"
-#include "graphics/model.h"
-#include "graphics/model_manager.h"
-#include "graphics/program.h"
-#include "graphics/shader.h"
-#include "graphics/shading_manager.h"
-#include "graphics/style.h"
-#include "graphics/texture.h"
-#include "graphics/texture_manager.h"
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
 #include "object_aspect_position.h"

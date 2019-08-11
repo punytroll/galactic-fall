@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,13 +23,14 @@
 #include <algebra/vector2f.h>
 #include <algebra/vector3f.h>
 
+#include <graphics/color_rgb.h>
+#include <graphics/color_rgbo.h>
+#include <graphics/engine.h>
+#include <graphics/model_manager.h>
+#include <graphics/style.h>
+
 #include "buffer_reading.h"
 #include "globals.h"
-#include "graphics/color_rgb.h"
-#include "graphics/color_rgbo.h"
-#include "graphics/engine.h"
-#include "graphics/model_manager.h"
-#include "graphics/style.h"
 #include "visualization_prototype.h"
 
 Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Graphics::ColorRGB & Color)

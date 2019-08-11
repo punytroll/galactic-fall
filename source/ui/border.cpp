@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007, 2014  Hagen Möbius
+ * Copyright (C) 2007-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,9 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../graphics/color_rgbo.h"
-#include "../graphics/drawing.h"
-#include "../graphics/render_context.h"
+#include <graphics/color_rgbo.h>
+#include <graphics/drawing.h>
+#include <graphics/render_context.h>
+
 #include "border.h"
 
 UI::Border::Border(void) :

@@ -1,0 +1,5 @@
+GRAPHICS_INCLUDE = \
+	-I$(root)/libraries/graphics/include
+
+GRAPHICS_LIBRARY = \
+	$(root)/libraries/graphics/libgraphics.a

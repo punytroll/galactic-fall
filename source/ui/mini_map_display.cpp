@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,21 +19,22 @@
 
 #include <algebra/matrix4f.h>
 
+#include <graphics/callback_node.h>
+#include <graphics/camera.h>
+#include <graphics/color_rgbo.h>
+#include <graphics/drawing.h>
+#include <graphics/engine.h>
+#include <graphics/orthogonal_2d_projection.h>
+#include <graphics/render_context.h>
+#include <graphics/scene.h>
+#include <graphics/texture.h>
+#include <graphics/texture_manager.h>
+#include <graphics/texture_render_target.h>
+#include <graphics/view.h>
+
 #include "../character.h"
 #include "../commodity.h"
 #include "../globals.h"
-#include "../graphics/callback_node.h"
-#include "../graphics/camera.h"
-#include "../graphics/color_rgbo.h"
-#include "../graphics/drawing.h"
-#include "../graphics/engine.h"
-#include "../graphics/orthogonal_2d_projection.h"
-#include "../graphics/render_context.h"
-#include "../graphics/scene.h"
-#include "../graphics/texture.h"
-#include "../graphics/texture_manager.h"
-#include "../graphics/texture_render_target.h"
-#include "../graphics/view.h"
 #include "../object_aspect_position.h"
 #include "../planet.h"
 #include "../ship.h"

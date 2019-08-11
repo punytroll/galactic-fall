@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,12 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <assert.h>
-
+#include <cassert>
 #include <vector>
 
-#include "../graphics/gl.h"
-#include "../graphics/render_context.h"
+#include <graphics/gl.h>
+#include <graphics/render_context.h>
+
 #include "key_event.h"
 #include "mouse_button_event.h"
 #include "mouse_move_event.h"

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,20 +19,21 @@
 
 #include <map>
 
+#include <graphics/callback_node.h>
+#include <graphics/camera.h>
+#include <graphics/color_rgbo.h>
+#include <graphics/drawing.h>
+#include <graphics/engine.h>
+#include <graphics/orthogonal_2d_projection.h>
+#include <graphics/render_context.h>
+#include <graphics/scene.h>
+#include <graphics/texture.h>
+#include <graphics/texture_render_target.h>
+#include <graphics/view.h>
+
 #include "../character.h"
 #include "../galaxy.h"
 #include "../globals.h"
-#include "../graphics/callback_node.h"
-#include "../graphics/camera.h"
-#include "../graphics/color_rgbo.h"
-#include "../graphics/drawing.h"
-#include "../graphics/engine.h"
-#include "../graphics/orthogonal_2d_projection.h"
-#include "../graphics/render_context.h"
-#include "../graphics/scene.h"
-#include "../graphics/texture.h"
-#include "../graphics/texture_render_target.h"
-#include "../graphics/view.h"
 #include "../map_knowledge.h"
 #include "../object_aspect_name.h"
 #include "../object_aspect_position.h"

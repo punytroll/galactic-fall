@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2014-2018  Hagen Möbius
+ * Copyright (C) 2014-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,8 @@
 
 #include <expressions/operators.h>
 
-#include "../graphics/color_rgbo.h"
+#include <graphics/color_rgbo.h>
+
 #include "border.h"
 #include "event.h"
 #include "label.h"

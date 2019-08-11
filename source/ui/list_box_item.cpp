@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Hagen Möbius
+ * Copyright (C) 2014-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,8 +16,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <graphics/color_rgbo.h>
+
 #include "event.h"
-#include "../graphics/color_rgbo.h"
 #include "list_box_item.h"
 
 UI::ListBoxItem::ListBoxItem(void) :
