@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,17 +17,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <graphics/camera.h>
+#include <graphics/color_rgbo.h>
+#include <graphics/engine.h>
+#include <graphics/light.h>
+#include <graphics/node.h>
+#include <graphics/perspective_projection.h>
+#include <graphics/scene.h>
+#include <graphics/texture.h>
+#include <graphics/texture_render_target.h>
+#include <graphics/view.h>
+
 #include "../globals.h"
-#include "../graphics/camera.h"
-#include "../graphics/color_rgbo.h"
-#include "../graphics/engine.h"
-#include "../graphics/light.h"
-#include "../graphics/node.h"
-#include "../graphics/perspective_projection.h"
-#include "../graphics/scene.h"
-#include "../graphics/texture.h"
-#include "../graphics/texture_render_target.h"
-#include "../graphics/view.h"
 #include "../object.h"
 #include "../object_aspect_physical.h"
 #include "../object_aspect_position.h"

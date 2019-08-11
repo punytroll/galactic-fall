@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,8 +19,9 @@
 
 #include <algebra/vector4f.h>
 
+#include <graphics/node.h>
+
 #include "commodity.h"
-#include "graphics/node.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
 #include "object_aspect_visualization.h"

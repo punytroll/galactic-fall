@@ -23,15 +23,16 @@
 
 #include <algebra/quaternion.h>
 
+#include <graphics/mesh.h>
+#include <graphics/mesh_node.h>
+#include <graphics/model.h>
+#include <graphics/node.h>
+
 #include <string_cast/string_cast.h>
 
 #include "battery.h"
 #include "game_time.h"
 #include "globals.h"
-#include "graphics/mesh.h"
-#include "graphics/mesh_node.h"
-#include "graphics/model.h"
-#include "graphics/node.h"
 #include "math.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_object_container.h"

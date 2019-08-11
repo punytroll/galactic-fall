@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,15 +19,16 @@
 
 #include <iostream>
 
+#include <graphics/engine.h>
+#include <graphics/gl.h>
+#include <graphics/mesh_node.h>
+#include <graphics/model.h>
+#include <graphics/model_manager.h>
+#include <graphics/particle_system_node.h>
+#include <graphics/style.h>
+
 #include "commodity.h"
 #include "globals.h"
-#include "graphics/engine.h"
-#include "graphics/gl.h"
-#include "graphics/mesh_node.h"
-#include "graphics/model.h"
-#include "graphics/model_manager.h"
-#include "graphics/particle_system_node.h"
-#include "graphics/style.h"
 #include "graphics/system_node.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_outfitting.h"

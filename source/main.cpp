@@ -35,6 +35,25 @@
 
 #include <algebra/matrix4f.h>
 
+#include <graphics/camera.h>
+#include <graphics/default_render_target.h>
+#include <graphics/drawing.h>
+#include <graphics/engine.h>
+#include <graphics/gl.h>
+#include <graphics/light.h>
+#include <graphics/mesh_manager.h>
+#include <graphics/model.h>
+#include <graphics/model_manager.h>
+#include <graphics/orthogonal_2d_projection.h>
+#include <graphics/particle_system.h>
+#include <graphics/perspective_projection.h>
+#include <graphics/scene.h>
+#include <graphics/shading_manager.h>
+#include <graphics/style.h>
+#include <graphics/texture.h>
+#include <graphics/texture_manager.h>
+#include <graphics/view.h>
+
 #include <expressions/operators.h>
 
 #include <string_cast/string_cast.h>
@@ -59,25 +78,7 @@
 #include "globals.h"
 #include "goal_mind.h"
 #include "goals.h"
-#include "graphics/camera.h"
-#include "graphics/default_render_target.h"
-#include "graphics/drawing.h"
-#include "graphics/engine.h"
-#include "graphics/gl.h"
-#include "graphics/light.h"
-#include "graphics/mesh_manager.h"
-#include "graphics/model.h"
-#include "graphics/model_manager.h"
-#include "graphics/orthogonal_2d_projection.h"
-#include "graphics/particle_system.h"
-#include "graphics/perspective_projection.h"
-#include "graphics/scene.h"
-#include "graphics/shading_manager.h"
-#include "graphics/style.h"
 #include "graphics/system_node.h"
-#include "graphics/texture.h"
-#include "graphics/texture_manager.h"
-#include "graphics/view.h"
 #include "hangar.h"
 #include "map_knowledge.h"
 #include "math.h"

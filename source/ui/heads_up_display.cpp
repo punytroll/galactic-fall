@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2015  Hagen Möbius
+ * Copyright (C) 2015-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,13 +19,14 @@
 
 #include <expressions/operators.h>
 
+#include <graphics/color_rgbo.h>
+
 #include <string_cast/string_cast.h>
 
 #include "../battery.h"
 #include "../character.h"
 #include "../game_time.h"
 #include "../globals.h"
-#include "../graphics/color_rgbo.h"
 #include "../map_knowledge.h"
 #include "../object_aspect_name.h"
 #include "../object_aspect_object_container.h"

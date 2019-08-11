@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2013-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,11 +19,12 @@
 
 #include <algorithm>
 
+#include <graphics/drawing.h>
+#include <graphics/texture.h>
+#include <graphics/texture_render_target.h>
+#include <graphics/view.h>
+
 #include "../globals.h"
-#include "../graphics/drawing.h"
-#include "../graphics/texture.h"
-#include "../graphics/texture_render_target.h"
-#include "../graphics/view.h"
 #include "view_display.h"
 
 UI::ViewDisplay::ViewDisplay(void) :

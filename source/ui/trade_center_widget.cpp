@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006-2018  Hagen Möbius
+ * Copyright (C) 2006-2019  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,6 +21,19 @@
 
 #include <expressions/operators.h>
 
+#include <graphics/camera.h>
+#include <graphics/color_rgbo.h>
+#include <graphics/engine.h>
+#include <graphics/light.h>
+#include <graphics/model.h>
+#include <graphics/node.h>
+#include <graphics/scene.h>
+#include <graphics/perspective_projection.h>
+#include <graphics/texture.h>
+#include <graphics/texture_manager.h>
+#include <graphics/texture_render_target.h>
+#include <graphics/view.h>
+
 #include <string_cast/string_cast.h>
 
 #include "../blueprint_manager.h"
@@ -28,18 +41,6 @@
 #include "../commodity.h"
 #include "../game_time.h"
 #include "../globals.h"
-#include "../graphics/camera.h"
-#include "../graphics/color_rgbo.h"
-#include "../graphics/engine.h"
-#include "../graphics/light.h"
-#include "../graphics/model.h"
-#include "../graphics/node.h"
-#include "../graphics/scene.h"
-#include "../graphics/perspective_projection.h"
-#include "../graphics/texture.h"
-#include "../graphics/texture_manager.h"
-#include "../graphics/texture_render_target.h"
-#include "../graphics/view.h"
 #include "../hangar.h"
 #include "../object_aspect_accessory.h"
 #include "../object_aspect_name.h"
