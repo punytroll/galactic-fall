@@ -79,6 +79,7 @@
 #include "goal_mind.h"
 #include "goals.h"
 #include "graphics/system_node.h"
+#include "graphics/ui_node.h"
 #include "hangar.h"
 #include "map_knowledge.h"
 #include "math.h"
@@ -180,18 +181,6 @@ bool g_TakeScreenShot(false);
 ResourceReader * g_ResourceReader(nullptr);
 Settings * g_Settings(nullptr);
 void (*g_KeyboardLookupTable[128][2])(void);
-
-namespace Graphics
-{
-	class UIRootNode : public Graphics::Node
-	{
-	public:
-		virtual void Draw(Graphics::RenderContext * RenderContext) override
-		{
-			g_UserInterface->Draw(RenderContext);
-		}
-	};
-}
 
 std::vector< std::string > SplitString(const std::string & String, char Delimiter)
 {
@@ -3403,7 +3392,7 @@ int main(int argc, char ** argv)
 	
 	// create managers and global objects
 	ON_DEBUG(std::cout << "Creating global managers and objects." << std::endl);
-	ON_DEBUG(std::cout << "    Creating an initializing graphics engine." << std::endl);
+	ON_DEBUG(std::cout << "    Creating and initializing graphics engine." << std::endl);
 	g_GraphicsEngine = new Graphics::Engine();
 	g_GraphicsEngine->Initialize();
 	// UI view
@@ -3423,13 +3412,13 @@ int main(int argc, char ** argv)
 	UIScene->SetDestroyCallback(OnUISceneNodeDestroy);
 	g_UIView->SetScene(UIScene);
 	
-	auto UIRootNode{new Graphics::UIRootNode()};
+	auto UINode{new Graphics::UINode{}};
 	
-	UIRootNode->SetClearColorBuffer(true);
-	UIRootNode->SetUseDepthTest(false);
-	UIRootNode->SetUseBlending(true);
-	UIRootNode->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	UIScene->SetRootNode(UIRootNode);
+	UINode->SetClearColorBuffer(true);
+	UINode->SetUseDepthTest(false);
+	UINode->SetUseBlending(true);
+	UINode->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	UIScene->SetRootNode(UINode);
 	// main view
 	g_MainProjection = new Graphics::PerspectiveProjection();
 	g_MainProjection->SetNearClippingPlane(1.0f);
@@ -3444,6 +3433,7 @@ int main(int argc, char ** argv)
 	g_MainView->SetRenderTarget(MainViewRenderTarget);
 	g_GraphicsEngine->AddView(g_MainView);
 	
+	ON_DEBUG(std::cout << "    Creating user interface." << std::endl);
 	// set first timeout for widget collector, it will reinsert itself on callback
 	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, CollectWidgetsRecurrent);
 	// user interface
@@ -3455,6 +3445,7 @@ int main(int argc, char ** argv)
 	g_UserInterface->GetRootWidget()->ConnectKeyCallback(MainViewKeyEvent);
 	g_UserInterface->GetRootWidget()->ConnectMouseButtonCallback(MainViewMouseButtonEvent);
 	g_UserInterface->GetRootWidget()->ConnectMouseMoveCallback(MainViewMouseMove);
+	UINode->SetUserInterface(g_UserInterface);
 	// resize here after the graphics have been set up
 	Resize();
 	g_BlueprintManager = new BlueprintManager{};
