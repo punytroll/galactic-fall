@@ -35,7 +35,6 @@ public:
 	virtual float GetMaximumEnergyInput(float Seconds) const;
 	virtual float GetMaximumEnergyOutput(float Seconds) const;
 	// setters
-	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
 	void SetFire(bool Fire);
 	void SetMuzzlePosition(const Vector3f & MuzzlePosition);
 	void SetShotDamage(float ShotDamage);
