@@ -35,12 +35,6 @@ public:
 	// Physics::Energy::Device implementation
 	virtual float GetMaximumEnergyInput(float Seconds) const;
 	virtual float GetMaximumEnergyOutput(float Seconds) const;
-	// getters
-	const Vector3f & GetMuzzlePosition(void) const;
-	float GetShotDamage(void) const;
-	float GetShotExitSpeed(void) const;
-	float GetShotLifeTime(void) const;
-	const VisualizationPrototype * GetShotVisualizationPrototype(void) const;
 	// setters
 	void SetFire(bool Fire);
 	void SetMuzzlePosition(const Vector3f & MuzzlePosition);
@@ -60,31 +54,6 @@ private:
 	float _ShotLifeTime;
 	VisualizationPrototype * _ShotVisualizationPrototype;
 };
-
-inline const Vector3f & Weapon::GetMuzzlePosition(void) const
-{
-	return _MuzzlePosition;
-}
-
-inline float Weapon::GetShotDamage(void) const
-{
-	return _ShotDamage;
-}
-
-inline float Weapon::GetShotExitSpeed(void) const
-{
-	return _ShotExitSpeed;
-}
-
-inline float Weapon::GetShotLifeTime(void) const
-{
-	return _ShotLifeTime;
-}
-
-inline const VisualizationPrototype * Weapon::GetShotVisualizationPrototype(void) const
-{
-	return _ShotVisualizationPrototype;
-}
 
 inline void Weapon::SetFire(bool Fire)
 {
