@@ -56,7 +56,7 @@ binary: $(OBJECT_FILES) $(STRING_CAST_LIBRARY) $(XML_PARSER_LIBRARY) $(XML_STREA
 
 $(DEPENDENCY_DIRECTORY)/%.dep: %
 	@test -d $(@D) || mkdir $(@D)
-	$(CXX) $(CXXFLAGS) $(ALGEBRA_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PARSER_INCLUDE) $(XML_STREAM_INCLUDE) -MM $< | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
+	$(CXX) $(CXXFLAGS) -MM -MP $< $(ALGEBRA_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PARSER_INCLUDE) $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
 
 $(OBJECT_DIRECTORY)/%.o: %.cpp
 	@test -d $(@D) || mkdir $(@D)

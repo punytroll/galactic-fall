@@ -70,7 +70,7 @@ $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 $(DEPENDENCY_DIRECTORY)/%.dep: % $(GENERATED_FILES)
 	@test -d $(@D) || mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -MM $< $(ALGEBRA_INCLUDE) $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(EXPRESSIONS_INCLUDE) $(GRAPHICS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PUNY_DOM_INCLUDE) $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
+	$(CXX) $(CXXFLAGS) -MM -MP $< $(ALGEBRA_INCLUDE) $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(EXPRESSIONS_INCLUDE) $(GRAPHICS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PUNY_DOM_INCLUDE) $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
 
 $(OBJECT_DIRECTORY)/%.o: %.cpp
 	@test -d $(@D) || mkdir -p $(@D)
