@@ -21,6 +21,9 @@ all_data = \
 	.data/commodity_class_luxury_goods.data \
 	.data/commodity_class_medical_supplies.data \
 	.data/commodity_class_metal.data \
+	.data/energy_projectile_weapon_class_light_gauss_cannon.data \
+	.data/energy_projectile_weapon_class_light_laser.data \
+	.data/energy_projectile_weapon_class_medium_laser.data \
 	.data/fragment_shader_default.data \
 	.data/fragment_shader_flat.data \
 	.data/fragment_shader_font.data \
@@ -111,10 +114,7 @@ all_data = \
 	.data/vertex_shader_no_lighting.data \
 	.data/vertex_shader_particle.data \
 	.data/vertex_shader_ui_texture.data \
-	.data/vertex_shader_widget.data \
-	.data/weapon_class_light_gauss_cannon.data \
-	.data/weapon_class_light_laser.data \
-	.data/weapon_class_medium_laser.data
+	.data/vertex_shader_widget.data
 
 declarations_xml = \
 	tools/declarations.xml
@@ -164,7 +164,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="User Interface" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Meshes" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Ship Classes" --type=0 --sub-type=0 --relation="::child"
-	$(command_arxadd) $@ --name="Weapon Classes" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Energy Projectile Weapon Classes" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Turret Classes" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Commodity Classes" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Slot Classes" --type=0 --sub-type=0 --relation="::child"
@@ -187,10 +187,10 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Light Weapon" --type=9 --sub-type=0 --relation="/Slot Classes::child" --data-file=.data/slot_class_light_weapon.data
 	$(command_arxadd) $@ --name="Medium Weapon" --type=9 --sub-type=0 --relation="/Slot Classes::child" --data-file=.data/slot_class_medium_weapon.data
 	$(command_arxadd) $@ --name="Small Generator" --type=9 --sub-type=0 --relation="/Slot Classes::child" --data-file=.data/slot_class_small_generator.data
-	@echo "\n\nAdding weapon classes ...\n"
-	$(command_arxadd) $@ --name="Light Gauss Cannon" --type=7 --sub-type=0 --relation="/Weapon Classes::child" --data-file=.data/weapon_class_light_gauss_cannon.data
-	$(command_arxadd) $@ --name="Light Laser" --type=7 --sub-type=0 --relation="/Weapon Classes::child" --data-file=.data/weapon_class_light_laser.data
-	$(command_arxadd) $@ --name="Medium Laser" --type=7 --sub-type=0 --relation="/Weapon Classes::child" --data-file=.data/weapon_class_medium_laser.data
+	@echo "\n\nAdding energy projectile weapon classes ...\n"
+	$(command_arxadd) $@ --name="Light Gauss Cannon" --type=7 --sub-type=0 --relation="/Energy Projectile Weapon Classes::child" --data-file=.data/energy_projectile_weapon_class_light_gauss_cannon.data
+	$(command_arxadd) $@ --name="Light Laser" --type=7 --sub-type=0 --relation="/Energy Projectile Weapon Classes::child" --data-file=.data/energy_projectile_weapon_class_light_laser.data
+	$(command_arxadd) $@ --name="Medium Laser" --type=7 --sub-type=0 --relation="/Energy Projectile Weapon Classes::child" --data-file=.data/energy_projectile_weapon_class_medium_laser.data
 	@echo "\n\nAdding turret classes ...\n"
 	$(command_arxadd) $@ --name="Light Laser Turret" --type=16 --sub-type=0 --relation="/Turret Classes::child" --data-file=.data/turret_class_light_laser.data
 	@echo "\n\nAdding battery classes ...\n"

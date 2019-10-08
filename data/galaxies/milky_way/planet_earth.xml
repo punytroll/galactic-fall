@@ -84,17 +84,17 @@
 			<base-price-modifier>0.9</base-price-modifier>
 		</assets>
 		<assets>
-			<type-identifier>weapon</type-identifier>
+			<type-identifier>energy-projectile-weapon</type-identifier>
 			<sub-type-identifier>light_gauss_cannon</sub-type-identifier>
 			<base-price-modifier>1.2</base-price-modifier>
 		</assets>
 		<assets>
-			<type-identifier>weapon</type-identifier>
+			<type-identifier>energy-projectile-weapon</type-identifier>
 			<sub-type-identifier>light_laser</sub-type-identifier>
 			<base-price-modifier>0.89</base-price-modifier>
 		</assets>
 		<assets>
-			<type-identifier>weapon</type-identifier>
+			<type-identifier>energy-projectile-weapon</type-identifier>
 			<sub-type-identifier>medium_laser</sub-type-identifier>
 			<base-price-modifier>0.91</base-price-modifier>
 		</assets>

@@ -52,7 +52,6 @@
 #include "../slot.h"
 #include "../visualization_prototype.h"
 #include "../visualizations.h"
-#include "../weapon.h"
 #include "key_event.h"
 #include "label.h"
 #include "list_box.h"

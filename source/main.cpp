@@ -69,6 +69,7 @@
 #include "class_manager.h"
 #include "command_mind.h"
 #include "commodity.h"
+#include "energy_projectile_weapon.h"
 #include "faction.h"
 #include "file_handling.h"
 #include "galaxy.h"
@@ -132,9 +133,9 @@
 #include "visualization.h"
 #include "visualization_prototype.h"
 #include "visualizations.h"
-#include "weapon.h"
 
 using namespace Expressions::Operators;
+using namespace std::string_literals;
 
 // these objects are exported via globals.h
 BlueprintManager * g_BlueprintManager{nullptr};
@@ -918,7 +919,7 @@ Ship * CreateShip(const std::string & ShipSubTypeIdentifier, Faction * Faction)
 	{
 		NewCharacter->SetCredits(200 + GetRandomUnsignedInteger32Bit(50, 250));
 		
-		auto NewWeapon{g_ObjectFactory->Create("weapon", "light_laser", true)};
+		auto NewWeapon{g_ObjectFactory->Create("energy-projectile-weapon", "light_laser", true)};
 		
 		NewShip->GetAspectObjectContainer()->AddContent(NewWeapon);
 		NewShip->GetAspectOutfitting()->GetSlot("front_gun")->Mount(NewWeapon);
@@ -1350,7 +1351,14 @@ void LoadGameFromElement(const Element * SaveElement)
 	{
 		if(SaveChild->GetName() == "galaxy")
 		{
-			g_Galaxy = g_ResourceReader->ReadGalaxy(SaveChild->GetAttribute("identifier"));
+			try
+			{
+				g_Galaxy = g_ResourceReader->ReadGalaxy(SaveChild->GetAttribute("identifier"));
+			}
+			catch(std::runtime_error & Exception)
+			{
+				throw std::runtime_error("The referenced galaxy contains an error: \""s + Exception.what() + "\".");
+			}
 		}
 		else if(SaveChild->GetName() == "game-time")
 		{
@@ -1887,32 +1895,32 @@ void LoadGameFromElement(const Element * SaveElement)
 							}
 						}
 					}
-					else if(SaveChild->GetAttribute("type-identifier") == "weapon")
+					else if(SaveChild->GetAttribute("type-identifier") == "energy-projectile-weapon")
 					{
-						auto NewWeapon(dynamic_cast< Weapon * >(NewObject));
+						auto NewEnergyProjectileWeapon(dynamic_cast< EnergyProjectileWeapon * >(NewObject));
 						
-						assert(NewWeapon != nullptr);
+						assert(NewEnergyProjectileWeapon != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
 							if(TypeSpecificChild->GetName() == "energy")
 							{
 								assert(TypeSpecificChild->HasAttribute("value") == true);
-								NewWeapon->SetEnergy(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+								NewEnergyProjectileWeapon->SetEnergy(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
 							else if(TypeSpecificChild->GetName() == "energy-capacity")
 							{
 								assert(TypeSpecificChild->HasAttribute("value") == true);
-								NewWeapon->SetEnergyCapacity(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+								NewEnergyProjectileWeapon->SetEnergyCapacity(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
 							else if(TypeSpecificChild->GetName() == "maximum-power-input")
 							{
 								assert(TypeSpecificChild->HasAttribute("value") == true);
-								NewWeapon->SetMaximumPowerInput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+								NewEnergyProjectileWeapon->SetMaximumPowerInput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
 							else if(TypeSpecificChild->GetName() == "maximum-power-output")
 							{
 								assert(TypeSpecificChild->HasAttribute("value") == true);
-								NewWeapon->SetMaximumPowerOutput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+								NewEnergyProjectileWeapon->SetMaximumPowerOutput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
 							else
 							{
@@ -3463,11 +3471,11 @@ int main(int argc, char ** argv)
 	g_ResourceReader->ReadAmmunitionClasses(g_BlueprintManager);
 	g_ResourceReader->ReadBatteryClasses(g_BlueprintManager);
 	g_ResourceReader->ReadCommodityClasses(g_BlueprintManager);
+	g_ResourceReader->ReadEnergyProjectileWeaponClasses(g_BlueprintManager);
 	g_ResourceReader->ReadGeneratorClasses(g_BlueprintManager);
 	g_ResourceReader->ReadSlotClasses(g_SlotClassManager);
 	g_ResourceReader->ReadShipClasses(g_BlueprintManager, g_SlotClassManager);
 	g_ResourceReader->ReadTurretClasses(g_BlueprintManager);
-	g_ResourceReader->ReadWeaponClasses(g_BlueprintManager);
 	g_ResourceReader->ReadScenarios(g_ScenarioManager);
 	// reading shaders and programs could be done earlier and without OpenGL, but initializing them requires OpenGL
 	g_ResourceReader->ReadShadersAndPrograms(g_GraphicsEngine->GetShadingManager());

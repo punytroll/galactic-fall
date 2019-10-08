@@ -62,6 +62,22 @@
 		<float identifier="height"/>
 	</dimensions2f>
 	
+	<energy-projectile-weapon-class type="7">
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<string identifier="description"/>
+		<unsigned-integer-32bit identifier="base-price"/>
+		<unsigned-integer-32bit identifier="space-requirement"/>
+		<visualization identifier="visualization"/>
+		<string identifier="slot-class-identifier"/>
+		<quaternion identifier="orientation"/>
+		<float identifier="maximum-power-input"/>
+		<float identifier="maximum-power-output"/>
+		<float identifier="energy-usage-per-shot"/>
+		<marker-reference identifier="muzzle-position"/>
+		<shot identifier="shot"/>
+	</energy-projectile-weapon-class>
+	
 	<faction type="14">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
@@ -338,21 +354,5 @@
 		<string identifier="part-identifier"/>
 		<style identifier="style"/>
 	</visualization-part>
-	
-	<weapon-class type="7">
-		<string identifier="identifier"/>
-		<string identifier="name"/>
-		<string identifier="description"/>
-		<unsigned-integer-32bit identifier="base-price"/>
-		<unsigned-integer-32bit identifier="space-requirement"/>
-		<visualization identifier="visualization"/>
-		<string identifier="slot-class-identifier"/>
-		<quaternion identifier="orientation"/>
-		<float identifier="maximum-power-input"/>
-		<float identifier="maximum-power-output"/>
-		<float identifier="energy-usage-per-shot"/>
-		<marker-reference identifier="muzzle-position"/>
-		<shot identifier="shot"/>
-	</weapon-class>
 	
 </declarations>
