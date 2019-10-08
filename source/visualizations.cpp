@@ -28,6 +28,7 @@
 #include <graphics/style.h>
 
 #include "commodity.h"
+#include "energy_projectile_weapon.h"
 #include "globals.h"
 #include "graphics/system_node.h"
 #include "object_aspect_accessory.h"
@@ -43,18 +44,17 @@
 #include "visualization.h"
 #include "visualization_prototype.h"
 #include "visualizations.h"
-#include "weapon.h"
 
 // This maps from all the Graphics::Nodes to their respective objects.
 std::map< Graphics::Node *, Object * > g_ObjectPerVisualization;
 
 static Visualization * VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container);
+static Visualization * VisualizeEnergyProjectileWeapon(EnergyProjectileWeapon * EnergyProjectileWeapon, Graphics::Node * Container);
 static Visualization * VisualizePlanet(Planet * Planet, Graphics::Node * Container);
 static Visualization * VisualizeShip(Ship * Ship, Graphics::Node * Container);
 static Visualization * VisualizeShot(Shot * Shot, Graphics::Node * Container);
 static Visualization * VisualizeSystem(System * System, Graphics::Node * Container);
 static Visualization * VisualizeTurret(Turret * Turret, Graphics::Node * Container);
-static Visualization * VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container);
 
 void InvalidateVisualizationReference(Graphics::Node * Node)
 {
@@ -95,9 +95,9 @@ Visualization * VisualizeObject(Object * Object, Graphics::Node * Container)
 	{
 		return VisualizeTurret(static_cast< Turret * >(Object), Container);
 	}
-	else if(Object->GetTypeIdentifier() == "weapon")
+	else if(Object->GetTypeIdentifier() == "energy-projectile-weapon")
 	{
-		return VisualizeWeapon(static_cast< Weapon * >(Object), Container);
+		return VisualizeEnergyProjectileWeapon(static_cast< EnergyProjectileWeapon * >(Object), Container);
 	}
 	else
 	{
@@ -277,18 +277,18 @@ Visualization * VisualizeTurret(Turret * Turret, Graphics::Node * Container)
 	return Visualization;
 }
 
-Visualization * VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
+Visualization * VisualizeEnergyProjectileWeapon(EnergyProjectileWeapon * EnergyProjectileWeapon, Graphics::Node * Container)
 {
-	assert(Weapon != nullptr);
-	assert(Weapon->GetAspectVisualization() != nullptr);
-	assert(Weapon->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
+	assert(EnergyProjectileWeapon != nullptr);
+	assert(EnergyProjectileWeapon->GetAspectVisualization() != nullptr);
+	assert(EnergyProjectileWeapon->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
 	
-	auto Graphics{VisualizePrototype(Weapon->GetAspectVisualization()->GetVisualizationPrototype())};
+	auto Graphics{VisualizePrototype(EnergyProjectileWeapon->GetAspectVisualization()->GetVisualizationPrototype())};
 	
-	g_ObjectPerVisualization[Graphics] = Weapon;
+	g_ObjectPerVisualization[Graphics] = EnergyProjectileWeapon;
 	
 	// set as the object's visualization
-	auto Visualization{Weapon->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
+	auto Visualization{EnergyProjectileWeapon->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
 	
 	// add to the container node
 	assert(Container != nullptr);

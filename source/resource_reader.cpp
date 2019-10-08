@@ -69,6 +69,7 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference);
 static void ReadAmmunitionClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager);
 static void ReadBatteryClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager);
 static void ReadCommodityClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager);
+static void ReadEnergyProjectileWeaponClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager);
 static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list< std::tuple< std::string, std::string, float > > & FactionStandings);
 static void ReadGeneratorClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager);
 static void ReadMesh(Arxx::Reference & Reference);
@@ -83,7 +84,6 @@ static void ReadStar(Arxx::Reference & Reference, System * System);
 static void ReadSystemLink(Arxx::Reference & Reference, System * System, std::multimap< std::string, std::string > & SystemLinks);
 static void ReadTexture(Arxx::Reference & Reference);
 static void ReadTurretClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager);
-static void ReadWeaponClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager);
 
 static void MakeItemAvailable(Arxx::Item * Item)
 {
@@ -185,6 +185,11 @@ void ResourceReader::ReadBatteryClasses(BlueprintManager * BlueprintManager)
 void ResourceReader::ReadCommodityClasses(BlueprintManager * BlueprintManager)
 {
 	_ReadItems("/Commodity Classes", std::bind(ReadCommodityClass, std::placeholders::_1, BlueprintManager));
+}
+
+void ResourceReader::ReadEnergyProjectileWeaponClasses(BlueprintManager * BlueprintManager)
+{
+	_ReadItems("/Energy Projectile Weapon Classes", std::bind(ReadEnergyProjectileWeaponClass, std::placeholders::_1, BlueprintManager));
 }
 
 Galaxy * ResourceReader::ReadGalaxy(const std::string & GalaxyIdentifier)
@@ -376,11 +381,6 @@ void ResourceReader::ReadTurretClasses(BlueprintManager * BlueprintManager)
 	_ReadItems("/Turret Classes", std::bind(ReadTurretClass, std::placeholders::_1, BlueprintManager));
 }
 
-void ResourceReader::ReadWeaponClasses(BlueprintManager * BlueprintManager)
-{
-	_ReadItems("/Weapon Classes", std::bind(ReadWeaponClass, std::placeholders::_1, BlueprintManager));
-}
-
 std::string ResourceReader::ReadSavegameFromScenarioPath(const std::string & ScenarioPath)
 {
 	auto Item(_Archive->GetItem(ScenarioPath));
@@ -528,6 +528,74 @@ static void ReadCommodityClass(Arxx::Reference & Reference, BlueprintManager * B
 	NewCommodityClass->AddProperty("base-price", BasePrice);
 	NewCommodityClass->AddProperty("space-requirement", SpaceRequirement);
 	NewCommodityClass->AddProperty("visualization-prototype", VisualizationPrototype);
+}
+
+static void ReadEnergyProjectileWeaponClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager)
+{
+	auto Item(Resolve(Reference));
+	
+	if(Item->GetType() != DATA_TYPE_ENERGY_PROJECTILE_WEAPON_CLASS)
+	{
+		throw std::runtime_error("Item type for energy projectile weapon class '" + Item->GetName() + "' should be '" + to_string_cast(DATA_TYPE_ENERGY_PROJECTILE_WEAPON_CLASS) + "' not '" + to_string_cast(Item->GetType()) + "'.");
+	}
+	if(Item->GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for energy projectile weapon class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	auto NewEnergyProjectileWeaponBlueprint(BlueprintManager->Create("energy-projectile-weapon", Identifier));
+	
+	if(NewEnergyProjectileWeaponBlueprint == nullptr)
+	{
+		throw std::runtime_error("Could not create energy projectile weapon blueprint '" + Identifier + "'.");
+	}
+	
+	std::string Name;
+	std::string Description;
+	std::uint32_t BasePrice;
+	std::uint32_t SpaceRequirement;
+	VisualizationPrototype EnergyProjectileWeaponVisualizationPrototype;
+	std::string SlotClassIdentifier;
+	Quaternion Orientation;
+	float MaximumPowerInput;
+	float MaximumPowerOutput;
+	float EnergyUsagePerShot;
+	std::string MuzzlePositionPartIdentifier;
+	std::string MuzzlePositionMarkerIdentifier;
+	float ShotExitSpeed;
+	float ShotDamage;
+	float ShotLifeTime;
+	VisualizationPrototype ShotVisualizationPrototype;
+	
+	
+	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> EnergyProjectileWeaponVisualizationPrototype >> SlotClassIdentifier >> Orientation >> MaximumPowerInput >> MaximumPowerOutput >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
+	NewEnergyProjectileWeaponBlueprint->AddProperty("name", Name);
+	NewEnergyProjectileWeaponBlueprint->AddProperty("description", Description);
+	NewEnergyProjectileWeaponBlueprint->AddProperty("base-price", BasePrice);
+	NewEnergyProjectileWeaponBlueprint->AddProperty("visualization-prototype", EnergyProjectileWeaponVisualizationPrototype);
+	NewEnergyProjectileWeaponBlueprint->AddProperty("slot-class-identifier", SlotClassIdentifier);
+	NewEnergyProjectileWeaponBlueprint->AddProperty("orientation", Orientation);
+	NewEnergyProjectileWeaponBlueprint->AddProperty("maximum-power-input", MaximumPowerInput);
+	NewEnergyProjectileWeaponBlueprint->AddProperty("maximum-power-output", MaximumPowerOutput);
+	NewEnergyProjectileWeaponBlueprint->AddProperty("space-requirement", SpaceRequirement);
+	NewEnergyProjectileWeaponBlueprint->AddProperty("energy-usage-per-shot", EnergyUsagePerShot);
+	
+	auto MuzzlePosition{EnergyProjectileWeaponVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier)};
+	
+	if(MuzzlePosition == nullptr)
+	{
+		throw std::runtime_error("For the energy projectile weapon '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
+	}
+	NewEnergyProjectileWeaponBlueprint->AddProperty("muzzle-position", *MuzzlePosition);
+	NewEnergyProjectileWeaponBlueprint->AddProperty("shot-exit-speed", ShotExitSpeed);
+	NewEnergyProjectileWeaponBlueprint->AddProperty("shot-damage", ShotDamage);
+	NewEnergyProjectileWeaponBlueprint->AddProperty("shot-life-time", ShotLifeTime);
+	NewEnergyProjectileWeaponBlueprint->AddProperty("shot-visualization-prototype", ShotVisualizationPrototype);
 }
 
 static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list< std::tuple< std::string, std::string, float > > & FactionStandings)
@@ -819,7 +887,7 @@ static void ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * Sy
 		}
 		else
 		{
-			throw std::runtime_error("Don't know a class of type '" + AssetsTypeIdentifier + "' and sub type '" + AssetsSubTypeIdentifier + "'.");
+			throw std::runtime_error("For the assets of planet \"" + Name + "\", don't know a class of type '" + AssetsTypeIdentifier + "' and sub type '" + AssetsSubTypeIdentifier + "'.");
 		}
 	}
 	
@@ -1240,79 +1308,11 @@ static void ReadTurretClass(Arxx::Reference & Reference, BlueprintManager * Blue
 	
 	if(MuzzlePosition == nullptr)
 	{
-		throw std::runtime_error("For the weapon '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
+		throw std::runtime_error("For the turret '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
 	}
 	NewTurretClass->AddProperty("muzzle-position", *MuzzlePosition);
 	NewTurretClass->AddProperty("shot-exit-speed", ShotExitSpeed);
 	NewTurretClass->AddProperty("shot-damage", ShotDamage);
 	NewTurretClass->AddProperty("shot-life-time", ShotLifeTime);
 	NewTurretClass->AddProperty("shot-visualization-prototype", ShotVisualizationPrototype);
-}
-
-static void ReadWeaponClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager)
-{
-	auto Item(Resolve(Reference));
-	
-	if(Item->GetType() != DATA_TYPE_WEAPON_CLASS)
-	{
-		throw std::runtime_error("Item type for weapon class '" + Item->GetName() + "' should be '" + to_string_cast(DATA_TYPE_WEAPON_CLASS) + "' not '" + to_string_cast(Item->GetType()) + "'.");
-	}
-	if(Item->GetSubType() != 0)
-	{
-		throw std::runtime_error("Item sub type for weapon class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
-	}
-	
-	Arxx::BufferReader Reader(*Item);
-	std::string Identifier;
-	
-	Reader >> Identifier;
-	
-	auto NewWeaponClass(BlueprintManager->Create("weapon", Identifier));
-	
-	if(NewWeaponClass == nullptr)
-	{
-		throw std::runtime_error("Could not create weapon class '" + Identifier + "'.");
-	}
-	
-	std::string Name;
-	std::string Description;
-	std::uint32_t BasePrice;
-	std::uint32_t SpaceRequirement;
-	VisualizationPrototype WeaponVisualizationPrototype;
-	std::string SlotClassIdentifier;
-	Quaternion Orientation;
-	float MaximumPowerInput;
-	float MaximumPowerOutput;
-	float EnergyUsagePerShot;
-	std::string MuzzlePositionPartIdentifier;
-	std::string MuzzlePositionMarkerIdentifier;
-	float ShotExitSpeed;
-	float ShotDamage;
-	float ShotLifeTime;
-	VisualizationPrototype ShotVisualizationPrototype;
-	
-	
-	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> WeaponVisualizationPrototype >> SlotClassIdentifier >> Orientation >> MaximumPowerInput >> MaximumPowerOutput >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
-	NewWeaponClass->AddProperty("name", Name);
-	NewWeaponClass->AddProperty("description", Description);
-	NewWeaponClass->AddProperty("base-price", BasePrice);
-	NewWeaponClass->AddProperty("visualization-prototype", WeaponVisualizationPrototype);
-	NewWeaponClass->AddProperty("slot-class-identifier", SlotClassIdentifier);
-	NewWeaponClass->AddProperty("orientation", Orientation);
-	NewWeaponClass->AddProperty("maximum-power-input", MaximumPowerInput);
-	NewWeaponClass->AddProperty("maximum-power-output", MaximumPowerOutput);
-	NewWeaponClass->AddProperty("space-requirement", SpaceRequirement);
-	NewWeaponClass->AddProperty("energy-usage-per-shot", EnergyUsagePerShot);
-	
-	auto MuzzlePosition{WeaponVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier)};
-	
-	if(MuzzlePosition == nullptr)
-	{
-		throw std::runtime_error("For the weapon '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
-	}
-	NewWeaponClass->AddProperty("muzzle-position", *MuzzlePosition);
-	NewWeaponClass->AddProperty("shot-exit-speed", ShotExitSpeed);
-	NewWeaponClass->AddProperty("shot-damage", ShotDamage);
-	NewWeaponClass->AddProperty("shot-life-time", ShotLifeTime);
-	NewWeaponClass->AddProperty("shot-visualization-prototype", ShotVisualizationPrototype);
 }

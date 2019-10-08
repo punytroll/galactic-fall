@@ -32,7 +32,6 @@
 #include "../slot.h"
 #include "../slot_class.h"
 #include "../storage.h"
-#include "../weapon.h"
 #include "key_event.h"
 #include "label.h"
 #include "list_box.h"

@@ -19,8 +19,8 @@
 		</aspect-name>
 		<aspect-object-container>
 			<content object-identifier="::character::player_character"/>
-			<content object-identifier="::weapon(light_laser)::1"/>
-			<content object-identifier="::weapon(light_laser)::2"/>
+			<content object-identifier="::energy-projectile-weapon(light_laser)::1"/>
+			<content object-identifier="::energy-projectile-weapon(light_laser)::2"/>
 			<content object-identifier="::storage(::ship(shuttle)::player_ship)"/>
 			<content object-identifier="::battery(::ship(shuttle)::player_ship)"/>
 			<content object-identifier="::generator(::ship(shuttle)::player_ship)"/>
@@ -101,16 +101,16 @@
 			<content object-identifier="::commodity(luxury_goods)::4"/>
 			<content object-identifier="::commodity(luxury_goods)::5"/>
 			<content object-identifier="::commodity(luxury_goods)::6"/>
-			<content object-identifier="::weapon(light_laser)::3"/>
-			<content object-identifier="::weapon(medium_laser)::1"/>
-			<content object-identifier="::weapon(medium_laser)::2"/>
-			<content object-identifier="::weapon(medium_laser)::3"/>
+			<content object-identifier="::energy-projectile-weapon(light_laser)::3"/>
+			<content object-identifier="::energy-projectile-weapon(medium_laser)::1"/>
+			<content object-identifier="::energy-projectile-weapon(medium_laser)::2"/>
+			<content object-identifier="::energy-projectile-weapon(medium_laser)::3"/>
 		</aspect-object-container>
 		<type-specific>
 			<space-capacity value="12000"/>
 		</type-specific>
 	</object>
-	<object type-identifier="weapon" sub-type-identifier="medium_laser" object-identifier="::weapon(medium_laser)::3">
+	<object type-identifier="energy-projectile-weapon" sub-type-identifier="medium_laser" object-identifier="::energy-projectile-weapon(medium_laser)::3">
 		<aspect-accessory/>
 		<aspect-name>
 			<name value="Medium Laser"/>
@@ -130,7 +130,7 @@
 			<maximum-power-output value="9.5"/>
 		</type-specific>
 	</object>
-	<object type-identifier="weapon" sub-type-identifier="medium_laser" object-identifier="::weapon(medium_laser)::2">
+	<object type-identifier="energy-projectile-weapon" sub-type-identifier="medium_laser" object-identifier="::energy-projectile-weapon(medium_laser)::2">
 		<aspect-accessory/>
 		<aspect-name>
 			<name value="Medium Laser"/>
@@ -150,7 +150,7 @@
 			<maximum-power-output value="9.5"/>
 		</type-specific>
 	</object>
-	<object type-identifier="weapon" sub-type-identifier="medium_laser" object-identifier="::weapon(medium_laser)::1">
+	<object type-identifier="energy-projectile-weapon" sub-type-identifier="medium_laser" object-identifier="::energy-projectile-weapon(medium_laser)::1">
 		<aspect-accessory/>
 		<aspect-name>
 			<name value="Medium Laser"/>
@@ -170,7 +170,7 @@
 			<maximum-power-output value="9.5"/>
 		</type-specific>
 	</object>
-	<object type-identifier="weapon" sub-type-identifier="light_laser" object-identifier="::weapon(light_laser)::3">
+	<object type-identifier="energy-projectile-weapon" sub-type-identifier="light_laser" object-identifier="::energy-projectile-weapon(light_laser)::3">
 		<aspect-accessory/>
 		<aspect-name>
 			<name value="Light Laser"/>
@@ -298,7 +298,7 @@
 			<velocity x="0" y="0" z="0"/>
 		</type-specific>
 	</object>
-	<object type-identifier="weapon" sub-type-identifier="light_laser" object-identifier="::weapon(light_laser)::2">
+	<object type-identifier="energy-projectile-weapon" sub-type-identifier="light_laser" object-identifier="::energy-projectile-weapon(light_laser)::2">
 		<aspect-accessory>
 			<slot slot-identifier="starboard_gun"/>
 		</aspect-accessory>
@@ -320,7 +320,7 @@
 			<maximum-power-output value="8"/>
 		</type-specific>
 	</object>
-	<object type-identifier="weapon" sub-type-identifier="light_laser" object-identifier="::weapon(light_laser)::1">
+	<object type-identifier="energy-projectile-weapon" sub-type-identifier="light_laser" object-identifier="::energy-projectile-weapon(light_laser)::1">
 		<aspect-accessory>
 			<slot slot-identifier="backboard_gun"/>
 		</aspect-accessory>
@@ -361,7 +361,7 @@
 		</aspect-name>
 		<aspect-object-container>
 			<content object-identifier="::storage()::0x141df50(1421846795.992)"/>
-			<content object-identifier="::asset(medium_laser)::weapon(medium_laser)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(40.364063)::bought_by(::character::player_character)::created_at_address(0x1422aa0)"/>
+			<content object-identifier="::asset(medium_laser)::energy-projectile-weapon(medium_laser)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(40.364063)::bought_by(::character::player_character)::created_at_address(0x1422aa0)"/>
 			<content object-identifier="::asset(light_laser_turret)::turret(light_laser_turret)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(37.680931)::bought_by(::character::player_character)::created_at_address(0x1479f90)"/>
 			<content object-identifier="::asset(small_generator)::generator(small_generator)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(36.681007)::bought_by(::character::player_character)::created_at_address(0x149e7d0)"/>
 			<content object-identifier="::asset(light_battery)::battery(light_battery)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(41.947288)::bought_by(::character::player_character)::created_at_address(0x14a6470)"/>
@@ -469,7 +469,7 @@
 			<maximum-power-output value="8.5"/>
 		</type-specific>
 	</object>
-	<object type-identifier="weapon" sub-type-identifier="medium_laser" object-identifier="::asset(medium_laser)::weapon(medium_laser)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(40.364063)::bought_by(::character::player_character)::created_at_address(0x1422aa0)">
+	<object type-identifier="energy-projectile-weapon" sub-type-identifier="medium_laser" object-identifier="::asset(medium_laser)::energy-projectile-weapon(medium_laser)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(40.364063)::bought_by(::character::player_character)::created_at_address(0x1422aa0)">
 		<aspect-accessory>
 			<slot slot-identifier="front_gun"/>
 		</aspect-accessory>

@@ -17,14 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <graphics/engine.h>
+#include <graphics/node.h>
+#include <graphics/particle_system.h>
+
 #include "character.h"
 #include "commodity.h"
+#include "energy_projectile_weapon.h"
 #include "faction.h"
 #include "game_time.h"
 #include "globals.h"
-#include "graphics/engine.h"
-#include "graphics/node.h"
-#include "graphics/particle_system.h"
 #include "map_knowledge.h"
 #include "math.h"
 #include "message.h"
@@ -46,7 +48,6 @@
 #include "turret.h"
 #include "visualization.h"
 #include "visualizations.h"
-#include "weapon.h"
 
 const float g_ExhaustNextParticle{0.0005f};
 
@@ -142,9 +143,9 @@ void Ship::SetFire(bool Fire)
 		
 		if(MountedObject != nullptr)
 		{
-			if(MountedObject->GetTypeIdentifier() == "weapon")
+			if(MountedObject->GetTypeIdentifier() == "energy-projectile-weapon")
 			{
-				dynamic_cast< Weapon * >(MountedObject)->SetFire(Fire);
+				dynamic_cast< EnergyProjectileWeapon * >(MountedObject)->SetFire(Fire);
 			}
 			else if(MountedObject->GetTypeIdentifier() == "turret")
 			{

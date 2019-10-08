@@ -79,7 +79,7 @@
 			<base-price-modifier>0.97</base-price-modifier>
 		</assets>
 		<assets>
-			<type-identifier>weapon</type-identifier>
+			<type-identifier>energy-projectile-weapon</type-identifier>
 			<sub-type-identifier>light_laser</sub-type-identifier>
 			<base-price-modifier>0.95</base-price-modifier>
 		</assets>

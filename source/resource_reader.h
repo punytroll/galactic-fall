@@ -51,6 +51,7 @@ public:
 	void ReadAmmunitionClasses(BlueprintManager * BlueprintManager);
 	void ReadBatteryClasses(BlueprintManager * BlueprintManager);
 	void ReadCommodityClasses(BlueprintManager * BlueprintManager);
+	void ReadEnergyProjectileWeaponClasses(BlueprintManager * BlueprintManager);
 	Galaxy * ReadGalaxy(const std::string & GalaxyIdentifier);
 	void ReadGeneratorClasses(BlueprintManager * BlueprintManager);
 	void ReadMeshes(void);
@@ -62,7 +63,6 @@ public:
 	void ReadSlotClasses(ClassManager< SlotClass > * SlotClassManager);
 	void ReadTurretClasses(BlueprintManager * BlueprintManager);
 	void ReadTextures(void);
-	void ReadWeaponClasses(BlueprintManager * BlueprintManager);
 	std::string ReadSavegameFromScenarioPath(const std::string & ScenarioPath);
 private:
 	void _ReadItems(const std::string & Path, std::function< void (Arxx::Reference &) > ReaderFunction);
