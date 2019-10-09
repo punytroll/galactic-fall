@@ -1,4 +1,4 @@
-<weapon-class>
+<energy-projectile-weapon-class>
 	<identifier>medium_laser</identifier>
 	<name>Medium Laser</name>
 	<description>The medium laser is either used as heavy armament on small space crafts or as light armament on large space crafts.</description>
@@ -83,4 +83,4 @@
 			</visualization-parts>
 		</visualization>
 	</shot>
-</weapon-class>
+</energy-projectile-weapon-class>

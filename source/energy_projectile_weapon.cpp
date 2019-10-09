@@ -26,6 +26,7 @@
 #include <string_cast/string_cast.h>
 
 #include "battery.h"
+#include "energy_projectile_weapon.h"
 #include "game_time.h"
 #include "globals.h"
 #include "graphics/model.h"
@@ -43,9 +44,8 @@
 #include "slot.h"
 #include "visualization.h"
 #include "visualization_prototype.h"
-#include "weapon.h"
 
-Weapon::Weapon(void) :
+EnergyProjectileWeapon::EnergyProjectileWeapon(void) :
 	_Fire{false},
 	_MuzzlePosition{Vector3f::CreateZero()},
 	_ShotDamage{0.0f},
@@ -59,18 +59,18 @@ Weapon::Weapon(void) :
 	AddAspectPhysical();
 	AddAspectPosition();
 	AddAspectUpdate();
-	GetAspectUpdate()->SetCallback(std::bind(&Weapon::_Update, this, std::placeholders::_1));
+	GetAspectUpdate()->SetCallback(std::bind(&EnergyProjectileWeapon::_Update, this, std::placeholders::_1));
 	AddAspectVisualization();
-	GetAspectVisualization()->SetUpdateVisualizationCallback(std::bind(&Weapon::_UpdateVisualization, this, std::placeholders::_1));
+	GetAspectVisualization()->SetUpdateVisualizationCallback(std::bind(&EnergyProjectileWeapon::_UpdateVisualization, this, std::placeholders::_1));
 }
 
-Weapon::~Weapon(void)
+EnergyProjectileWeapon::~EnergyProjectileWeapon(void)
 {
 	delete _ShotVisualizationPrototype;
 	_ShotVisualizationPrototype = nullptr;
 }
 
-float Weapon::GetMaximumEnergyInput(float Seconds) const
+float EnergyProjectileWeapon::GetMaximumEnergyInput(float Seconds) const
 {
 	auto Result{0.0f};
 	
@@ -82,7 +82,7 @@ float Weapon::GetMaximumEnergyInput(float Seconds) const
 	return Result;
 }
 
-float Weapon::GetMaximumEnergyOutput(float Seconds) const
+float EnergyProjectileWeapon::GetMaximumEnergyOutput(float Seconds) const
 {
 	auto Result{0.0f};
 	
@@ -94,13 +94,13 @@ float Weapon::GetMaximumEnergyOutput(float Seconds) const
 	return Result;
 }
 
-void Weapon::SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype)
+void EnergyProjectileWeapon::SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype)
 {
 	delete _ShotVisualizationPrototype;
 	_ShotVisualizationPrototype = new VisualizationPrototype(ShotVisualizationPrototype);
 }
 
-bool Weapon::_Update(float Seconds)
+bool EnergyProjectileWeapon::_Update(float Seconds)
 {
 	if((_Fire == true) && (GetEnergy() >= GetEnergyCapacity()))
 	{
@@ -161,7 +161,7 @@ bool Weapon::_Update(float Seconds)
 	return true;
 }
 
-void Weapon::_UpdateVisualization(Visualization * Visualization)
+void EnergyProjectileWeapon::_UpdateVisualization(Visualization * Visualization)
 {
 	assert(GetAspectAccessory() != nullptr);
 	if(GetAspectAccessory()->GetSlot() != nullptr)
