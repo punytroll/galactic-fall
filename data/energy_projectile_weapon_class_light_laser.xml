@@ -1,4 +1,4 @@
-<weapon-class>
+<energy-projectile-weapon-class>
 	<identifier>light_laser</identifier>
 	<name>Light Laser</name>
 	<description>The light laser is a standard armament for most civilian and small military space crafts.</description>
@@ -83,4 +83,4 @@
 			</visualization-parts>
 		</visualization>
 	</shot>
-</weapon-class>
+</energy-projectile-weapon-class>

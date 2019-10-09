@@ -17,21 +17,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef WEAPON_H
-#define WEAPON_H
+#ifndef ENERGY_PROJECTILE_WEAPON_H
+#define ENERGY_PROJECTILE_WEAPON_H
 
 #include "object.h"
 #include "physics/energy/device.h"
 
 class Visualization;
 class VisualizationPrototype;
-class WeaponClass;
 
-class Weapon : public Object, public Physics::Energy::Device
+class EnergyProjectileWeapon : public Object, public Physics::Energy::Device
 {
 public:
-	Weapon(void);
-	virtual ~Weapon(void) override;
+	EnergyProjectileWeapon(void);
+	virtual ~EnergyProjectileWeapon(void) override;
 	// Physics::Energy::Device implementation
 	virtual float GetMaximumEnergyInput(float Seconds) const;
 	virtual float GetMaximumEnergyOutput(float Seconds) const;
@@ -55,27 +54,27 @@ private:
 	VisualizationPrototype * _ShotVisualizationPrototype;
 };
 
-inline void Weapon::SetFire(bool Fire)
+inline void EnergyProjectileWeapon::SetFire(bool Fire)
 {
 	_Fire = Fire;
 }
 
-inline void Weapon::SetMuzzlePosition(const Vector3f & MuzzlePosition)
+inline void EnergyProjectileWeapon::SetMuzzlePosition(const Vector3f & MuzzlePosition)
 {
 	_MuzzlePosition = MuzzlePosition;
 }
 
-inline void Weapon::SetShotDamage(float ShotDamage)
+inline void EnergyProjectileWeapon::SetShotDamage(float ShotDamage)
 {
 	_ShotDamage = ShotDamage;
 }
 
-inline void Weapon::SetShotExitSpeed(float ShotExitSpeed)
+inline void EnergyProjectileWeapon::SetShotExitSpeed(float ShotExitSpeed)
 {
 	_ShotExitSpeed = ShotExitSpeed;
 }
 
-inline void Weapon::SetShotLifeTime(float ShotLifeTime)
+inline void EnergyProjectileWeapon::SetShotLifeTime(float ShotLifeTime)
 {
 	_ShotLifeTime = ShotLifeTime;
 }
