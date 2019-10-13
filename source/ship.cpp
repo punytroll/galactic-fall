@@ -23,7 +23,6 @@
 
 #include "character.h"
 #include "commodity.h"
-#include "energy_projectile_weapon.h"
 #include "faction.h"
 #include "game_time.h"
 #include "globals.h"
@@ -45,7 +44,7 @@
 #include "slot_class.h"
 #include "storage.h"
 #include "system.h"
-#include "turret.h"
+#include "weapon.h"
 #include "visualization.h"
 #include "visualizations.h"
 
@@ -143,13 +142,11 @@ void Ship::SetFire(bool Fire)
 		
 		if(MountedObject != nullptr)
 		{
-			if(MountedObject->GetTypeIdentifier() == "energy-projectile-weapon")
+			auto MountedWeapon{dynamic_cast< Weapon * >(MountedObject)};
+			
+			if(MountedWeapon != nullptr)
 			{
-				dynamic_cast< EnergyProjectileWeapon * >(MountedObject)->SetFire(Fire);
-			}
-			else if(MountedObject->GetTypeIdentifier() == "turret")
-			{
-				dynamic_cast< Turret * >(MountedObject)->SetFire(Fire);
+				MountedWeapon->SetFire(Fire);
 			}
 		}
 	}

@@ -20,63 +20,21 @@
 #ifndef ENERGY_PROJECTILE_WEAPON_H
 #define ENERGY_PROJECTILE_WEAPON_H
 
-#include "object.h"
-#include "physics/energy/device.h"
+#include "weapon.h"
 
 class Visualization;
-class VisualizationPrototype;
 
-class EnergyProjectileWeapon : public Object, public Physics::Energy::Device
+class EnergyProjectileWeapon : public Weapon
 {
 public:
 	EnergyProjectileWeapon(void);
-	virtual ~EnergyProjectileWeapon(void) override;
 	// Physics::Energy::Device implementation
 	virtual float GetMaximumEnergyInput(float Seconds) const;
 	virtual float GetMaximumEnergyOutput(float Seconds) const;
-	// setters
-	void SetFire(bool Fire);
-	void SetMuzzlePosition(const Vector3f & MuzzlePosition);
-	void SetShotDamage(float ShotDamage);
-	void SetShotExitSpeed(float ShotExitSpeed);
-	void SetShotLifeTime(float ShotLifeTime);
-	void SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype);
 private:
 	// modifiers
 	bool _Update(float Seconds);
 	void _UpdateVisualization(Visualization * Visualization);
-	// variables
-	bool _Fire;
-	Vector3f _MuzzlePosition;
-	float _ShotDamage;
-	float _ShotExitSpeed;
-	float _ShotLifeTime;
-	VisualizationPrototype * _ShotVisualizationPrototype;
 };
-
-inline void EnergyProjectileWeapon::SetFire(bool Fire)
-{
-	_Fire = Fire;
-}
-
-inline void EnergyProjectileWeapon::SetMuzzlePosition(const Vector3f & MuzzlePosition)
-{
-	_MuzzlePosition = MuzzlePosition;
-}
-
-inline void EnergyProjectileWeapon::SetShotDamage(float ShotDamage)
-{
-	_ShotDamage = ShotDamage;
-}
-
-inline void EnergyProjectileWeapon::SetShotExitSpeed(float ShotExitSpeed)
-{
-	_ShotExitSpeed = ShotExitSpeed;
-}
-
-inline void EnergyProjectileWeapon::SetShotLifeTime(float ShotLifeTime)
-{
-	_ShotLifeTime = ShotLifeTime;
-}
 
 #endif

@@ -49,30 +49,12 @@
 #include "turret.h"
 
 Turret::Turret(void) :
-	_Fire{false},
 	_GunPropertiesValid{false},
-	_MuzzlePosition{Vector3f::CreateZero()},
-	_ShotDamage{0.0f},
-	_ShotExitSpeed{0.0f},
-	_ShotLifeTime{0.0f},
-	_ShotVisualizationPrototype{nullptr},
 	_TurretAngle{0.0f}
 {
 	// initialize object aspects
-	AddAspectAccessory();
-	AddAspectName();
-	AddAspectPhysical();
-	AddAspectPosition();
-	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(std::bind(&Turret::_Update, this, std::placeholders::_1));
-	AddAspectVisualization();
 	GetAspectVisualization()->SetUpdateVisualizationCallback(std::bind(&Turret::_UpdateVisualization, this, std::placeholders::_1));
-}
-
-Turret::~Turret(void)
-{
-	delete _ShotVisualizationPrototype;
-	_ShotVisualizationPrototype = nullptr;
 }
 
 float Turret::GetMaximumEnergyInput(float Seconds) const
@@ -123,12 +105,6 @@ void Turret::_CalculateMuzzleProperties(Vector3f & MuzzlePosition, Quaternion & 
 	MuzzleOrientation.RotateZ(_TurretAngle);
 	MuzzleDirection = Vector3f::CreateTranslationX(1.0f);
 	MuzzleDirection.Rotate(MuzzleOrientation);
-}
-
-void Turret::SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype)
-{
-	delete _ShotVisualizationPrototype;
-	_ShotVisualizationPrototype = new VisualizationPrototype(ShotVisualizationPrototype);
 }
 
 bool Turret::_Update(float Seconds)
