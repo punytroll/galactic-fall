@@ -20,68 +20,28 @@
 #ifndef TURRET_H
 #define TURRET_H
 
-#include "object.h"
-#include "physics/energy/device.h"
+#include "weapon.h"
 
 class Visualization;
-class TurretClass;
 
-class Turret : public Object, public Physics::Energy::Device
+class Turret : public Weapon
 {
 public:
 	Turret(void);
-	virtual ~Turret(void) override;
 	// Physics::Energy::Device implementation
 	virtual float GetMaximumEnergyInput(float Seconds) const;
 	virtual float GetMaximumEnergyOutput(float Seconds) const;
 	// setters
-	void SetFire(bool Fire);
-	void SetMuzzlePosition(const Vector3f & MuzzlePosition);
-	void SetShotDamage(float ShotDamage);
-	void SetShotExitSpeed(float ShotExitSpeed);
-	void SetShotLifeTime(float ShotLifeTime);
-	void SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype);
 private:
 	// modifiers
 	bool _Update(float Seconds);
 	void _UpdateVisualization(Visualization * Visualization);
 	void _CalculateMuzzleProperties(Vector3f & MuzzlePosition, Quaternion & MuzzleOrientation, Vector3f & MuzzleDirection);
 	// variables
-	bool _Fire;
 	Quaternion _GunOrientation;
 	Vector3f _GunPosition;
 	bool _GunPropertiesValid;
-	Vector3f _MuzzlePosition;
-	float _ShotDamage;
-	float _ShotExitSpeed;
-	float _ShotLifeTime;
-	VisualizationPrototype * _ShotVisualizationPrototype;
 	float _TurretAngle;
 };
-
-inline void Turret::SetFire(bool Fire)
-{
-	_Fire = Fire;
-}
-
-inline void Turret::SetMuzzlePosition(const Vector3f & MuzzlePosition)
-{
-	_MuzzlePosition = MuzzlePosition;
-}
-
-inline void Turret::SetShotDamage(float ShotDamage)
-{
-	_ShotDamage = ShotDamage;
-}
-
-inline void Turret::SetShotExitSpeed(float ShotExitSpeed)
-{
-	_ShotExitSpeed = ShotExitSpeed;
-}
-
-inline void Turret::SetShotLifeTime(float ShotLifeTime)
-{
-	_ShotLifeTime = ShotLifeTime;
-}
 
 #endif

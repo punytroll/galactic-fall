@@ -45,29 +45,11 @@
 #include "visualization.h"
 #include "visualization_prototype.h"
 
-EnergyProjectileWeapon::EnergyProjectileWeapon(void) :
-	_Fire{false},
-	_MuzzlePosition{Vector3f::CreateZero()},
-	_ShotDamage{0.0f},
-	_ShotExitSpeed{0.0f},
-	_ShotLifeTime{0.0f},
-	_ShotVisualizationPrototype{nullptr}
+EnergyProjectileWeapon::EnergyProjectileWeapon(void)
 {
 	// initialize object aspects
-	AddAspectAccessory();
-	AddAspectName();
-	AddAspectPhysical();
-	AddAspectPosition();
-	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(std::bind(&EnergyProjectileWeapon::_Update, this, std::placeholders::_1));
-	AddAspectVisualization();
 	GetAspectVisualization()->SetUpdateVisualizationCallback(std::bind(&EnergyProjectileWeapon::_UpdateVisualization, this, std::placeholders::_1));
-}
-
-EnergyProjectileWeapon::~EnergyProjectileWeapon(void)
-{
-	delete _ShotVisualizationPrototype;
-	_ShotVisualizationPrototype = nullptr;
 }
 
 float EnergyProjectileWeapon::GetMaximumEnergyInput(float Seconds) const
@@ -92,12 +74,6 @@ float EnergyProjectileWeapon::GetMaximumEnergyOutput(float Seconds) const
 	}
 	
 	return Result;
-}
-
-void EnergyProjectileWeapon::SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype)
-{
-	delete _ShotVisualizationPrototype;
-	_ShotVisualizationPrototype = new VisualizationPrototype(ShotVisualizationPrototype);
 }
 
 bool EnergyProjectileWeapon::_Update(float Seconds)
