@@ -28,9 +28,6 @@ class EnergyProjectileWeapon : public Weapon
 {
 public:
 	EnergyProjectileWeapon(void);
-	// Physics::Energy::Device implementation
-	virtual float GetMaximumEnergyInput(float Seconds) const;
-	virtual float GetMaximumEnergyOutput(float Seconds) const;
 private:
 	// modifiers
 	bool _Update(float Seconds);

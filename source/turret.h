@@ -28,10 +28,6 @@ class Turret : public Weapon
 {
 public:
 	Turret(void);
-	// Physics::Energy::Device implementation
-	virtual float GetMaximumEnergyInput(float Seconds) const;
-	virtual float GetMaximumEnergyOutput(float Seconds) const;
-	// setters
 private:
 	// modifiers
 	bool _Update(float Seconds);
