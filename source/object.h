@@ -70,7 +70,6 @@ public:
 	const ObjectAspectVisualization * GetAspectVisualization(void) const;
 	Object * GetContainer(void);
 	const Object * GetContainer(void) const;
-	const std::string & GetObjectIdentifier(void) const;
 	const std::string & GetSubTypeIdentifier(void) const;
 	const std::string & GetTypeIdentifier(void) const;
 	// setters
@@ -105,7 +104,6 @@ private:
 	// other
 	Object * _Container;
 	Event< void > _DestroyingEvent;
-	std::string _ObjectIdentifier;
 	std::string _SubTypeIdentifier;
 	std::string _TypeIdentifier;
 };
@@ -213,11 +211,6 @@ inline Object * Object::GetContainer(void)
 inline const Object * Object::GetContainer(void) const
 {
 	return _Container;
-}
-
-inline const std::string & Object::GetObjectIdentifier(void) const
-{
-	return _ObjectIdentifier;
 }
 
 inline const std::string & Object::GetTypeIdentifier(void) const
