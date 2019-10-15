@@ -31,6 +31,9 @@ class Weapon : public Object, public Physics::Energy::Device
 public:
 	Weapon(void);
 	virtual ~Weapon(void) override;
+	// Physics::Energy::Device implementation
+	virtual float GetMaximumEnergyInput(float Seconds) const override;
+	virtual float GetMaximumEnergyOutput(float Seconds) const override;
 	// setters
 	void SetFire(bool Fire);
 	void SetMuzzlePosition(const Vector3f & MuzzlePosition);

@@ -57,30 +57,6 @@ Turret::Turret(void) :
 	GetAspectVisualization()->SetUpdateVisualizationCallback(std::bind(&Turret::_UpdateVisualization, this, std::placeholders::_1));
 }
 
-float Turret::GetMaximumEnergyInput(float Seconds) const
-{
-	if(_Fire == true)
-	{
-		return Physics::Energy::Device::GetMaximumEnergyInput(Seconds);
-	}
-	else
-	{
-		return 0.0f;
-	}
-}
-
-float Turret::GetMaximumEnergyOutput(float Seconds) const
-{
-	if(_Fire == false)
-	{
-		return Physics::Energy::Device::GetMaximumEnergyOutput(Seconds);
-	}
-	else
-	{
-		return 0.0f;
-	}
-}
-
 void Turret::_CalculateMuzzleProperties(Vector3f & MuzzlePosition, Quaternion & MuzzleOrientation, Vector3f & MuzzleDirection)
 {
 	assert(_GunPropertiesValid == true);

@@ -52,30 +52,6 @@ EnergyProjectileWeapon::EnergyProjectileWeapon(void)
 	GetAspectVisualization()->SetUpdateVisualizationCallback(std::bind(&EnergyProjectileWeapon::_UpdateVisualization, this, std::placeholders::_1));
 }
 
-float EnergyProjectileWeapon::GetMaximumEnergyInput(float Seconds) const
-{
-	auto Result{0.0f};
-	
-	if(_Fire == true)
-	{
-		Result = Physics::Energy::Device::GetMaximumEnergyInput(Seconds);
-	}
-	
-	return Result;
-}
-
-float EnergyProjectileWeapon::GetMaximumEnergyOutput(float Seconds) const
-{
-	auto Result{0.0f};
-	
-	if(_Fire == false)
-	{
-		Result = Physics::Energy::Device::GetMaximumEnergyOutput(Seconds);
-	}
-	
-	return Result;
-}
-
 bool EnergyProjectileWeapon::_Update(float Seconds)
 {
 	if((_Fire == true) && (GetEnergy() >= GetEnergyCapacity()))
