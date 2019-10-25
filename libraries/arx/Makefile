@@ -25,8 +25,7 @@ all-here: libarx.a
 
 all-recursive: all-here
 
-check: test/test
-	./test/test > /dev/null
+check:
 
 clean: clean-recursive
 

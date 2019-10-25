@@ -25,6 +25,8 @@ all-here: libexpressions.a
 
 all-recursive: all-here
 
+check:
+
 clean: clean-recursive
 
 clean-here:

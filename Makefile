@@ -11,7 +11,6 @@ all-recursive: all-here libraries-all-recursive tools-all-recursive data-all-rec
 check:
 	@$(MAKE) -C libraries check
 	@$(MAKE) -C tools check
-	@$(MAKE) -C test check
 
 clean: clean-recursive
 
@@ -21,7 +20,6 @@ clean-recursive: clean-here
 	@$(MAKE) -C data clean-recursive
 	@$(MAKE) -C libraries clean-recursive
 	@$(MAKE) -C source clean-recursive
-	@$(MAKE) -C test clean-recursive
 	@$(MAKE) -C tools clean-recursive
 
 clean-repository: clean
@@ -34,8 +32,6 @@ libraries: libraries-all-recursive
 
 source: source-all-recursive
 
-test: test-all-recursive
-
 tools: tools-all-recursive
 
 data-all-recursive:
@@ -47,13 +43,10 @@ libraries-all-recursive:
 source-all-recursive:
 	@$(MAKE) -C source all-recursive
 
-test-all-recursive:
-	@$(MAKE) -C test all-recursive
-
 tools-all-recursive:
 	@$(MAKE) -C tools all-recursive
 
 install: all
 	@echo -e "This project is not installable yet. Please run \"./galactic-fall\" from the top directory."
 
-.PHONY: all all-here all-recursive clean clean-here clean-recursive data data-all-recursive default install libraries libraries-all-recursive source source-all-recursive test test-all-recursive tools tools-all-recursive
+.PHONY: all all-here all-recursive clean clean-here clean-recursive data data-all-recursive default install libraries libraries-all-recursive source source-all-recursive tools tools-all-recursive
