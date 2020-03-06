@@ -582,9 +582,11 @@ void PurgeUnsimulatedSystems(Galaxy * Galaxy)
 	assert(Galaxy->GetAspectObjectContainer() != nullptr);
 	for(auto Object : Galaxy->GetAspectObjectContainer()->GetContent())
 	{
-		if((Object->GetTypeIdentifier() == "system") && (Object != g_CurrentSystem))
+		auto TheSystem{dynamic_cast< System * >(Object)};
+		
+		if((TheSystem != nullptr) && (TheSystem != g_CurrentSystem))
 		{
-			PurgeSystem(dynamic_cast< System * >(Object));
+			PurgeSystem(TheSystem);
 		}
 	}
 }
