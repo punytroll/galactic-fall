@@ -559,7 +559,7 @@ void UpdateVisualizations(Galaxy * Galaxy)
 	}
 }
 
-void EmptySystem(System * System)
+void PurgeSystem(System * System)
 {
 	assert(System != nullptr);
 	while(System->GetShips().empty() == false)
@@ -576,7 +576,7 @@ void EmptySystem(System * System)
 	}
 }
 
-void EmptyUnwatchedSystems(Galaxy * Galaxy)
+void PurgeUnsimulatedSystems(Galaxy * Galaxy)
 {
 	assert(Galaxy != nullptr);
 	assert(Galaxy->GetAspectObjectContainer() != nullptr);
@@ -584,7 +584,7 @@ void EmptyUnwatchedSystems(Galaxy * Galaxy)
 	{
 		if((Object->GetTypeIdentifier() == "system") && (Object != g_CurrentSystem))
 		{
-			EmptySystem(dynamic_cast< System * >(Object));
+			PurgeSystem(dynamic_cast< System * >(Object));
 		}
 	}
 }
@@ -1255,7 +1255,7 @@ void GameFrame(void)
 			OnOutputEnterSystem(NewObservedSystem);
 			PopulateSystem(NewObservedSystem);
 		}
-		EmptyUnwatchedSystems(g_Galaxy);
+		PurgeUnsimulatedSystems(g_Galaxy);
 		UpdateVisualizations(g_Galaxy);
 	}
 	UpdateMainViewCamera();
