@@ -4,7 +4,7 @@ default: all
 
 all: all-recursive
 
-all-here: 
+all-here: configuration
 
 all-recursive: all-here libraries-all-recursive tools-all-recursive data-all-recursive source-all-recursive
 
@@ -25,6 +25,9 @@ clean-recursive: clean-here
 clean-repository: clean
 	$(RM) -R .configuration.d
 	$(RM) configuration
+
+configuration:
+	./configure
 
 data: data-all-recursive
 
