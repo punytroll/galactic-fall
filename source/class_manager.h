@@ -20,8 +20,7 @@
 #ifndef CLASS_MANAGER_H
 #define CLASS_MANAGER_H
 
-#include <assert.h>
-
+#include <cassert>
 #include <map>
 #include <string>
 

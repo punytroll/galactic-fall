@@ -20,10 +20,12 @@
 #ifndef OBJECT_ASPECT_OBJECT_CONTAINER_H
 #define OBJECT_ASPECT_OBJECT_CONTAINER_H
 
+#include <cstdint>
 #include <functional>
 #include <set>
+#include <string>
 
-#include "event.h"
+#include <events/event.h>
 
 class Object;
 

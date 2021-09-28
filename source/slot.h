@@ -25,8 +25,8 @@
 #include <algebra/quaternion.h>
 #include <algebra/vector3f.h>
 
-#include "event.h"
-#include "connection.h"
+#include <events/event.h>
+#include <events/connection.h>
 
 class Object;
 class SlotClass;

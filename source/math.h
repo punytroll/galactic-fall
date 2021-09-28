@@ -20,8 +20,9 @@
 #ifndef MATH_H
 #define MATH_H
 
-#include <assert.h>
 #include <stdlib.h>
+
+#include <cassert>
 
 #include <algebra/vector2f.h>
 #include <algebra/vector3f.h>
