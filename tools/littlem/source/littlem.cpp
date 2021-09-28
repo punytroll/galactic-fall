@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <math.h>
 #include <stdlib.h>
 
@@ -6,6 +5,7 @@
 #include <GL/glx.h>
 
 #include <algorithm>
+#include <cassert>
 #include <experimental/optional>
 #include <iostream>
 #include <fstream>
