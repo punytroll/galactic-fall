@@ -158,7 +158,6 @@ void UI::Widget::SetHeight(Expressions::Expression && Height)
 void UI::Widget::SetLeft(Expressions::Expression && Left)
 {
 	_Left = std::move(Left);
-	
 }
 
 void UI::Widget::SetTop(Expressions::Expression && Top)
