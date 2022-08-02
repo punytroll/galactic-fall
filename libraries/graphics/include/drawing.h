@@ -43,7 +43,11 @@ namespace Graphics
 		static void DrawText(Graphics::RenderContext * RenderContext, const Vector2f & Position, const std::string & Text);
 		static void DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, const std::string & Text);
 		static void DrawTextWithoutClippingRightHanded(Graphics::RenderContext * RenderContext, float Left, float Top, float Height, const std::string & Text);
-		static void DrawTexture(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right, Graphics::Texture * Texture);
+		
+		/**
+		 * @note Uses the texture set on the render context.
+		 **/
+		static void DrawTexture(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right);
 		static void InitializeFont(Graphics::Engine * Engine);
 		static void DeinitializeFont(void);
 	private:

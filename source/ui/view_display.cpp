@@ -20,6 +20,7 @@
 #include <algorithm>
 
 #include <graphics/drawing.h>
+#include <graphics/render_context.h>
 #include <graphics/texture.h>
 #include <graphics/texture_render_target.h>
 #include <graphics/view.h>
@@ -72,7 +73,13 @@ void UI::ViewDisplay::Draw(Graphics::RenderContext * RenderContext)
 		
 		auto GlobalPosition{GetGlobalPosition()};
 		
-		Graphics::Drawing::DrawTexture(RenderContext, GlobalPosition[0], GlobalPosition[1], GlobalPosition[1] + GetHeight(), GlobalPosition[0] + GetWidth(), TextureRenderTarget->GetTexture());
+		RenderContext->SetProgramIdentifier("ui_texture");
+		RenderContext->SetTexture(TextureRenderTarget->GetTexture());
+		RenderContext->ActivateProgram();
+		Graphics::Drawing::DrawTexture(RenderContext, GlobalPosition[0], GlobalPosition[1], GlobalPosition[1] + GetHeight(), GlobalPosition[0] + GetWidth());
+		RenderContext->DeactivateProgram();
+		RenderContext->SetTexture(nullptr);
+		RenderContext->UnsetProgramIdentifier();
 	}
 }
  

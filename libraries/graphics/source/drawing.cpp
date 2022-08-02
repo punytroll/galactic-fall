@@ -391,7 +391,7 @@ void Graphics::Drawing::_DrawText(Graphics::RenderContext * RenderContext, float
 	}
 }
 
-void Graphics::Drawing::DrawTexture(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right, Graphics::Texture * Texture)
+void Graphics::Drawing::DrawTexture(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right)
 {
 	GLuint VertexArray{0};
 	
@@ -430,13 +430,7 @@ void Graphics::Drawing::DrawTexture(Graphics::RenderContext * RenderContext, flo
 	GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), TextureCoordinates, GL_STREAM_DRAW);
 	GLVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	GLEnableVertexAttribArray(1);
-	RenderContext->SetProgramIdentifier("ui_texture");
-	RenderContext->SetTexture(Texture);
-	RenderContext->ActivateProgram();
 	GLDrawArrays(GL_TRIANGLE_FAN, 0, NumberOfVertices);
-	RenderContext->DeactivateProgram();
-	RenderContext->SetTexture(nullptr);
-	RenderContext->UnsetProgramIdentifier();
 	GLBindVertexArray(0);
 	GLDeleteBuffers(2, Buffers);
 	GLDeleteVertexArrays(1, &VertexArray);
