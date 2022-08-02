@@ -48,11 +48,11 @@ clean-recursive: clean-here
 
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
-$(DEPENDENCY_DIRECTORY)/%.dep: %
+$(DEPENDENCY_DIRECTORY)/%.dep: % $(CXXFLAGS_configuration)
 	@test -d $(@D) || mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -MM -MP $< -Iinclude | sed 's/^\(.*\.o\):/$(subst /,\/,$(OBJECT_DIRECTORY))\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
 
-$(OBJECT_DIRECTORY)/%.o: %.cxx
+$(OBJECT_DIRECTORY)/%.o: %.cxx $(CXXFLAGS_configuration)
 	@test -d $(@D) || mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
 
