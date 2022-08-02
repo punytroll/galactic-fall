@@ -92,7 +92,7 @@ if configuration_CXXFLAGS == None:
 CXXFLAGS = configuration_CXXFLAGS.copy()
 CXXFLAGS.add("-Wall")
 CXXFLAGS.add("-Werror")
-CXXFLAGS.add("-std=c++17")
+CXXFLAGS.add("-std=c++20")
 # LDFLAGS
 if configuration_LDFLAGS == None:
 	configuration_LDFLAGS = set()
