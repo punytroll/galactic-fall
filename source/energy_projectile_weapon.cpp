@@ -22,8 +22,6 @@
 
 #include <algebra/quaternion.h>
 
-#include <string_cast/string_cast.h>
-
 #include "battery.h"
 #include "energy_projectile_weapon.h"
 #include "game_time.h"

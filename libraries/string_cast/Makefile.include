@@ -1,5 +1,0 @@
-STRING_CAST_INCLUDE = \
-	-I$(root)/libraries/string_cast/include
-
-STRING_CAST_LIBRARY = \
-	$(root)/libraries/string_cast/libstringcast.a

@@ -5,7 +5,6 @@ root = ../../..
 default: all
 
 include $(root)/libraries/algebra/Makefile.include
-include $(root)/libraries/string_cast/Makefile.include
 include $(root)/libraries/xml_parser/Makefile.include
 include $(root)/libraries/xml_stream/Makefile.include
 
@@ -51,15 +50,15 @@ clean-recursive: clean-here
 
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
-binary: $(OBJECT_FILES) $(STRING_CAST_LIBRARY) $(XML_PARSER_LIBRARY) $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)
-	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(STRING_CAST_LIBRARY) $(XML_PARSER_LIBRARY) $(XML_STREAM_LIBRARY) -lGL -lX11 -o $@
+binary: $(OBJECT_FILES) $(root)/build/subprojects/string_cast/libstring_cast.a $(XML_PARSER_LIBRARY) $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)
+	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(root)/build/subprojects/string_cast/libstring_cast.a $(XML_PARSER_LIBRARY) $(XML_STREAM_LIBRARY) -lGL -lX11 -o $@
 
 $(DEPENDENCY_DIRECTORY)/%.dep: %
 	@test -d $(@D) || mkdir $(@D)
-	$(CXX) $(CXXFLAGS) -MM -MP $< $(ALGEBRA_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PARSER_INCLUDE) $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
+	$(CXX) $(CXXFLAGS) -MM -MP $< $(ALGEBRA_INCLUDE) -I$(root)/subprojects/string_cast/include $(XML_PARSER_INCLUDE) $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
 
 $(OBJECT_DIRECTORY)/%.o: %.cpp
 	@test -d $(@D) || mkdir $(@D)
-	$(CXX) $(CXXFLAGS) $(ALGEBRA_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PARSER_INCLUDE) $(XML_STREAM_INCLUDE)	-c $< -o $@
+	$(CXX) $(CXXFLAGS) $(ALGEBRA_INCLUDE) -I$(root)/subprojects/string_cast/include $(XML_PARSER_INCLUDE) $(XML_STREAM_INCLUDE)	-c $< -o $@
 
 .PHONY: all all-here all-recursive clean clean-here clean-recursive check-dependencies default

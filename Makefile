@@ -2,19 +2,25 @@ root = .
 
 default: all
 
-all: all-recursive
+all: build all-recursive
 
 all-here: configuration
+	meson compile -C build
 
 all-recursive: all-here libraries-all-recursive tools-all-recursive data-all-recursive source-all-recursive
 
+build:
+	meson setup build
+
 check:
+	meson test -C build
 	@$(MAKE) -C libraries check
 	@$(MAKE) -C tools check
 
 clean: clean-recursive
 
-clean-here: 
+clean-here:
+	@$(RM) -R build
 
 clean-recursive: clean-here
 	@$(MAKE) -C data clean-recursive
