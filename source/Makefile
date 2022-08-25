@@ -9,7 +9,6 @@ include $(root)/libraries/arx/Makefile.include
 include $(root)/libraries/events/Makefile.include
 include $(root)/libraries/expressions/Makefile.include
 include $(root)/libraries/graphics/Makefile.include
-include $(root)/libraries/xml_parser/Makefile.include
 include $(root)/libraries/xml_puny_dom/Makefile.include
 include $(root)/libraries/xml_stream/Makefile.include
 include $(root)/tools/generate_cpp_resource_constants/Makefile.include
@@ -62,8 +61,8 @@ check-dependencies: generate_cpp_resource_constants-check-dependencies
 arx_types.h: $(root)/data/tools/declarations.xml $(generate_cpp_resource_constants_dependencies)
 	$(command_generate_cpp_resource_constants) --declarations=$< > $@
 
-binary: $(OBJECT_FILES) $(EVENTS_LIBRARY) $(EXPRESSIONS_LIBRARY) $(root)/build/subprojects/string_cast/libstring_cast.a $(XML_PUNY_DOM_LIBRARY) $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)
-	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(ARX_LIBRARY) $(EVENTS_LIBRARY) $(EXPRESSIONS_LIBRARY) $(GRAPHICS_LIBRARY) $(root)/build/subprojects/string_cast/libstring_cast.a $(XML_PUNY_DOM_LIBRARY) $(XML_STREAM_LIBRARY) -lGL -lX11 -o $@
+binary: $(OBJECT_FILES) $(EVENTS_LIBRARY) $(EXPRESSIONS_LIBRARY) $(root)/build/subprojects/string_cast/libstring_cast.a $(root)/build/subprojects/xml_parser/libxml_parser.a $(XML_PUNY_DOM_LIBRARY) $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)
+	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(ARX_LIBRARY) $(EVENTS_LIBRARY) $(EXPRESSIONS_LIBRARY) $(GRAPHICS_LIBRARY) $(root)/build/subprojects/string_cast/libstring_cast.a $(XML_PUNY_DOM_LIBRARY) $(root)/build/subprojects/xml_parser/libxml_parser.a $(XML_STREAM_LIBRARY) -lGL -lX11 -o $@
 
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 

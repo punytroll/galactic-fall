@@ -12,3 +12,5 @@ project(
 
 subproject('string_cast')
 string_cast_dependency = dependency('string_cast')
+subproject('xml_parser')
+xml_parser_dependency = dependency('xml_parser')
