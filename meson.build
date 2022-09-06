@@ -10,6 +10,12 @@ project(
   ]
 )
 
+subproject('algebra')
+algebra_dependency = dependency(
+  'algebra',
+  version: '>=2.1.1'
+)
+
 subproject('string_cast')
 string_cast_dependency = dependency(
   'string_cast',

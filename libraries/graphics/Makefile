@@ -4,8 +4,6 @@ root = ../..
 
 default: all
 
-include $(root)/libraries/algebra/Makefile.include
-
 HEADER_DIRECTORIES := $(patsubst %/,%,$(sort $(dir $(shell find . -name '*.h'))))
 HEADER_FILES := $(patsubst ./%,%,$(foreach HEADER_DIRECTORY,$(HEADER_DIRECTORIES),$(wildcard $(HEADER_DIRECTORY)/*.h)))
 SOURCE_DIRECTORIES := $(patsubst %/,%,$(sort $(dir $(shell find . -name '*.cpp'))))
@@ -50,11 +48,11 @@ $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 $(DEPENDENCY_DIRECTORY)/%.dep: %
 	@test -d $(@D) || mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -MM -MP $< $(ALGEBRA_INCLUDE) -Iinclude | sed 's/^\(.*\.o\):/$(subst /,\/,$(OBJECT_DIRECTORY))\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
+	$(CXX) $(CXXFLAGS) -MM -MP $< -I$(root)/subprojects/algebra -Iinclude | sed 's/^\(.*\.o\):/$(subst /,\/,$(OBJECT_DIRECTORY))\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
 
 $(OBJECT_DIRECTORY)/%.o: %.cpp
 	@test -d $(@D) || mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) $(ALGEBRA_INCLUDE) -Iinclude -c $< -o $@
+	$(CXX) $(CXXFLAGS) -I$(root)/subprojects/algebra/include -Iinclude -c $< -o $@
 
 libgraphics.a: $(OBJECT_FILES)
 	ar rcs $@ $(OBJECT_FILES)

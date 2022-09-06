@@ -4,7 +4,6 @@ root = ../../..
 
 default: all
 
-include $(root)/libraries/algebra/Makefile.include
 include $(root)/libraries/xml_stream/Makefile.include
 
 HEADER_DIRECTORIES := $(patsubst %/,%,$(sort $(dir $(shell find . -name '*.h'))))
@@ -54,10 +53,10 @@ binary: $(OBJECT_FILES) $(root)/build/subprojects/string_cast/libstring_cast.a $
 
 $(DEPENDENCY_DIRECTORY)/%.dep: %
 	@test -d $(@D) || mkdir $(@D)
-	$(CXX) $(CXXFLAGS) -MM -MP $< $(ALGEBRA_INCLUDE) -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_parser/include $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
+	$(CXX) $(CXXFLAGS) -MM -MP $< -I$(root)/subprojects/algebra/include -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_parser/include $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
 
 $(OBJECT_DIRECTORY)/%.o: %.cpp
 	@test -d $(@D) || mkdir $(@D)
-	$(CXX) $(CXXFLAGS) $(ALGEBRA_INCLUDE) -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_parser/include $(XML_STREAM_INCLUDE)	-c $< -o $@
+	$(CXX) $(CXXFLAGS) -I$(root)/subprojects/algebra/include -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_parser/include $(XML_STREAM_INCLUDE)	-c $< -o $@
 
 .PHONY: all all-here all-recursive clean clean-here clean-recursive check-dependencies default

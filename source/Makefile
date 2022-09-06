@@ -4,7 +4,6 @@ root = ..
 
 default: all
 
-include $(root)/libraries/algebra/Makefile.include
 include $(root)/libraries/arx/Makefile.include
 include $(root)/libraries/events/Makefile.include
 include $(root)/libraries/expressions/Makefile.include
@@ -67,10 +66,10 @@ $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 $(DEPENDENCY_DIRECTORY)/%.dep: % $(GENERATED_FILES)
 	@test -d $(@D) || mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -MM -MP $< $(ALGEBRA_INCLUDE) $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(EXPRESSIONS_INCLUDE) $(GRAPHICS_INCLUDE) -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_puny_dom/include $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
+	$(CXX) $(CXXFLAGS) -MM -MP $< -I$(root)/subprojects/algebra/include $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(EXPRESSIONS_INCLUDE) $(GRAPHICS_INCLUDE) -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_puny_dom/include $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
 
 $(OBJECT_DIRECTORY)/%.o: %.cpp
 	@test -d $(@D) || mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -c $< $(ALGEBRA_INCLUDE) $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(EXPRESSIONS_INCLUDE) $(GRAPHICS_INCLUDE) -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_puny_dom/include $(XML_STREAM_INCLUDE) -o $@
+	$(CXX) $(CXXFLAGS) -c $< -I$(root)/subprojects/algebra/include $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(EXPRESSIONS_INCLUDE) $(GRAPHICS_INCLUDE) -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_puny_dom/include $(XML_STREAM_INCLUDE) -o $@
 
 .PHONY: all all-here all-recursive clean clean-here clean-recursive check-dependencies default
