@@ -26,6 +26,7 @@
 #include <iostream>
 #include <list>
 #include <random>
+#include <ranges>
 #include <sstream>
 #include <stdexcept>
 #include <unordered_map>
@@ -1331,7 +1332,7 @@ Planet * GetPlanetFromSubTypeIdentifier(const std::string & SubTypeIdentifier)
 	assert(false);
 }
 
-void LoadGameFromElement(const Element * SaveElement)
+void LoadGameFromElement(const XML::Element * SaveElement)
 {
 	if(SaveElement->GetName() != "save")
 	{
@@ -1349,7 +1350,7 @@ void LoadGameFromElement(const Element * SaveElement)
 	PurgeGame();
 	assert(g_Galaxy == nullptr);
 	// first pass: read galaxy and simple data that is not related to objects
-	for(auto SaveChild : SaveElement->GetChilds())
+	for(auto SaveChild : SaveElement->GetChildElements())
 	{
 		if(SaveChild->GetName() == "galaxy")
 		{
@@ -1372,7 +1373,7 @@ void LoadGameFromElement(const Element * SaveElement)
 		}
 		else if(SaveChild->GetName() == "main-camera")
 		{
-			for(auto CameraChild : SaveChild->GetChilds())
+			for(auto CameraChild : SaveChild->GetChildElements())
 			{
 				if(CameraChild->GetName() == "offset")
 				{
@@ -1395,7 +1396,7 @@ void LoadGameFromElement(const Element * SaveElement)
 	}
 	assert(g_Galaxy != nullptr);
 	// second pass: only read the current system and set it, now that the galaxy is loaded
-	for(auto SaveChild : SaveElement->GetChilds())
+	for(auto SaveChild : SaveElement->GetChildElements())
 	{
 		if(SaveChild->GetName() == "current-system")
 		{
@@ -1408,7 +1409,7 @@ void LoadGameFromElement(const Element * SaveElement)
 	std::unordered_map< std::string, Object * > ObjectsByIdentifier;
 	
 	// third pass: read objects
-	for(auto SaveChild : SaveElement->GetChilds())
+	for(auto SaveChild : SaveElement->GetChildElements())
 	{
 		if(SaveChild->GetName() == "object")
 		{
@@ -1432,14 +1433,14 @@ void LoadGameFromElement(const Element * SaveElement)
 			}
 			assert(NewObject != nullptr);
 			ObjectsByIdentifier.emplace(SaveChild->GetAttribute("object-identifier"), NewObject);
-			for(auto ObjectChild : SaveChild->GetChilds())
+			for(auto ObjectChild : SaveChild->GetChildElements())
 			{
 				if(ObjectChild->GetName() == "aspect-accessory")
 				{
 					// assert that the object supports the name aspect
 					assert(NewObject->GetAspectAccessory() != nullptr);
 					// read data related to the name aspect
-					for(auto AspectChild : ObjectChild->GetChilds())
+					for(auto AspectChild : ObjectChild->GetChildElements())
 					{
 						if(AspectChild->GetName() == "slot")
 						{
@@ -1457,7 +1458,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					// assert that the object supports the name aspect
 					assert(NewObject->GetAspectName() != nullptr);
 					// read data related to the name aspect
-					for(auto AspectChild : ObjectChild->GetChilds())
+					for(auto AspectChild : ObjectChild->GetChildElements())
 					{
 						if(AspectChild->GetName() == "name")
 						{
@@ -1475,7 +1476,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					// assert that the object supports the object container aspect
 					assert(NewObject->GetAspectObjectContainer() != nullptr);
 					// read data related to the object container aspect
-					for(auto AspectChild : ObjectChild->GetChilds())
+					for(auto AspectChild : ObjectChild->GetChildElements())
 					{
 						if(AspectChild->GetName() == "content")
 						{
@@ -1493,7 +1494,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					// assert that the object supports the physical aspect
 					assert(NewObject->GetAspectPhysical() != nullptr);
 					// read data related to the physical aspect
-					for(auto AspectChild : ObjectChild->GetChilds())
+					for(auto AspectChild : ObjectChild->GetChildElements())
 					{
 						if(AspectChild->GetName() == "radial-size")
 						{
@@ -1516,7 +1517,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					// assert that the object supports the position aspect
 					assert(NewObject->GetAspectPosition() != nullptr);
 					// read data related to the position aspect
-					for(auto AspectChild : ObjectChild->GetChilds())
+					for(auto AspectChild : ObjectChild->GetChildElements())
 					{
 						if(AspectChild->GetName() == "orientation")
 						{
@@ -1544,7 +1545,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					// assert that the object supports the visualization aspect
 					assert(NewObject->GetAspectVisualization() != nullptr);
 					// read data related to the visualization aspect
-					for(auto AspectChild : ObjectChild->GetChilds())
+					for(auto AspectChild : ObjectChild->GetChildElements())
 					{
 						if(AspectChild->GetName() == "part")
 						{
@@ -1552,7 +1553,7 @@ void LoadGameFromElement(const Element * SaveElement)
 							
 							auto NewPartStyle(new Graphics::Style());
 							
-							for(auto PartChild : AspectChild->GetChilds())
+							for(auto PartChild : AspectChild->GetChildElements())
 							{
 								if(PartChild->GetName() == "style-diffuse-color")
 								{
@@ -1600,7 +1601,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						auto NewAmmunition{dynamic_cast< Ammunition * >(NewObject)};
 						
 						assert(NewAmmunition != nullptr);
-						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						for(auto TypeSpecificChild : ObjectChild->GetChildElements())
 						{
 							if(TypeSpecificChild->GetName() == "amount")
 							{
@@ -1618,7 +1619,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						Battery * NewBattery(dynamic_cast< Battery * >(NewObject));
 						
 						assert(NewBattery != nullptr);
-						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						for(auto TypeSpecificChild : ObjectChild->GetChildElements())
 						{
 							if(TypeSpecificChild->GetName() == "energy")
 							{
@@ -1651,7 +1652,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						Character * NewCharacter(dynamic_cast< Character * >(NewObject));
 						
 						assert(NewCharacter != nullptr);
-						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						for(auto TypeSpecificChild : ObjectChild->GetChildElements())
 						{
 							if(TypeSpecificChild->GetName() == "credits")
 							{
@@ -1660,16 +1661,16 @@ void LoadGameFromElement(const Element * SaveElement)
 							}
 							else if(TypeSpecificChild->GetName() == "map-knowledge")
 							{
-								for(std::vector< Element * >::const_iterator MapKnowledgeChild = TypeSpecificChild->GetChilds().begin(); MapKnowledgeChild != TypeSpecificChild->GetChilds().end(); ++MapKnowledgeChild)
+								for(auto MapKnowledgeChild : TypeSpecificChild->GetChildElements())
 								{
-									if((*MapKnowledgeChild)->GetName() == "explored-system")
+									if(MapKnowledgeChild->GetName() == "explored-system")
 									{
-										assert((*MapKnowledgeChild)->HasAttribute("object-identifier") == true);
-										// red in later pass
+										assert(MapKnowledgeChild->HasAttribute("object-identifier") == true);
+										// read in later pass
 									}
 									else
 									{
-										throw std::runtime_error("The \"" + TypeSpecificChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*MapKnowledgeChild)->GetName() + "\".");
+										throw std::runtime_error("The \"" + TypeSpecificChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + MapKnowledgeChild->GetName() + "\".");
 									}
 								}
 							}
@@ -1684,7 +1685,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						auto NewCommodity(dynamic_cast< Commodity * >(NewObject));
 						
 						assert(NewCommodity != nullptr);
-						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						for(auto TypeSpecificChild : ObjectChild->GetChildElements())
 						{
 							if(TypeSpecificChild->GetName() == "angular-velocity")
 							{
@@ -1717,7 +1718,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						auto NewGenerator(dynamic_cast< Generator * >(NewObject));
 						
 						assert(NewGenerator != nullptr);
-						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						for(auto TypeSpecificChild : ObjectChild->GetChildElements())
 						{
 							if(TypeSpecificChild->GetName() == "energy")
 							{
@@ -1750,7 +1751,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						auto NewHangar(dynamic_cast< Hangar * >(NewObject));
 						
 						assert(NewHangar != nullptr);
-						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						for(auto TypeSpecificChild : ObjectChild->GetChildElements())
 						{
 							if(TypeSpecificChild->GetName() == "character")
 							{
@@ -1768,7 +1769,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						auto NewMind(dynamic_cast< Mind * >(NewObject));
 						
 						assert(NewMind != nullptr);
-						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						for(auto TypeSpecificChild : ObjectChild->GetChildElements())
 						{
 							if(TypeSpecificChild->GetName() == "character")
 							{
@@ -1786,7 +1787,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						auto NewShip(dynamic_cast< Ship * >(NewObject));
 						
 						assert(NewShip != nullptr);
-						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						for(auto TypeSpecificChild : ObjectChild->GetChildElements())
 						{
 							if(TypeSpecificChild->GetName() == "faction")
 							{
@@ -1851,7 +1852,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						auto NewStorage(dynamic_cast< Storage * >(NewObject));
 						
 						assert(NewStorage != nullptr);
-						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						for(auto TypeSpecificChild : ObjectChild->GetChildElements())
 						{
 							if(TypeSpecificChild->GetName() == "space-capacity")
 							{
@@ -1869,7 +1870,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						auto NewTurret(dynamic_cast< Turret * >(NewObject));
 						
 						assert(NewTurret != nullptr);
-						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						for(auto TypeSpecificChild : ObjectChild->GetChildElements())
 						{
 							if(TypeSpecificChild->GetName() == "energy")
 							{
@@ -1902,7 +1903,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						auto NewEnergyProjectileWeapon(dynamic_cast< EnergyProjectileWeapon * >(NewObject));
 						
 						assert(NewEnergyProjectileWeapon != nullptr);
-						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						for(auto TypeSpecificChild : ObjectChild->GetChildElements())
 						{
 							if(TypeSpecificChild->GetName() == "energy")
 							{
@@ -1945,7 +1946,7 @@ void LoadGameFromElement(const Element * SaveElement)
 	// fourth pass: resolve any object references
 	// no errors except resolving errors will be displayed
 	// at the moment this also resolves back references/containments
-	for(auto SaveChild : SaveElement->GetChilds())
+	for(auto SaveChild : SaveElement->GetChildElements())
 	{
 		if(SaveChild->GetName() == "command-mind")
 		{
@@ -1971,11 +1972,11 @@ void LoadGameFromElement(const Element * SaveElement)
 			auto TheObject(ObjectsByIdentifier.at(SaveChild->GetAttribute("object-identifier")));
 			
 			assert(TheObject != nullptr);
-			for(auto ObjectChild : SaveChild->GetChilds())
+			for(auto ObjectChild : SaveChild->GetChildElements())
 			{
 				if(ObjectChild->GetName() == "aspect-object-container")
 				{
-					for(auto AspectChild : ObjectChild->GetChilds())
+					for(auto AspectChild : ObjectChild->GetChildElements())
 					{
 						if(AspectChild->GetName() == "content")
 						{
@@ -1993,11 +1994,11 @@ void LoadGameFromElement(const Element * SaveElement)
 						auto TheCharacter(dynamic_cast< Character * >(TheObject));
 						
 						assert(TheCharacter != nullptr);
-						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						for(auto TypeSpecificChild : ObjectChild->GetChildElements())
 						{
 							if(TypeSpecificChild->GetName() == "map-knowledge")
 							{
-								for(auto MapKnowledgeChild : TypeSpecificChild->GetChilds())
+								for(auto MapKnowledgeChild : TypeSpecificChild->GetChildElements())
 								{
 									if(MapKnowledgeChild->GetName() == "explored-system")
 									{
@@ -2016,7 +2017,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						auto TheHangar(dynamic_cast< Hangar * >(TheObject));
 						
 						assert(TheHangar != nullptr);
-						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						for(auto TypeSpecificChild : ObjectChild->GetChildElements())
 						{
 							if(TypeSpecificChild->GetName() == "character")
 							{
@@ -2033,7 +2034,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						auto TheMind(dynamic_cast< Mind * >(TheObject));
 						
 						assert(TheMind != nullptr);
-						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						for(auto TypeSpecificChild : ObjectChild->GetChildElements())
 						{
 							if(TypeSpecificChild->GetName() == "character")
 							{
@@ -2062,7 +2063,7 @@ void LoadGameFromElement(const Element * SaveElement)
 		}
 	}
 	// fifth pass: mount objects that have an accessory aspect and are mounted
-	for(auto SaveChild : SaveElement->GetChilds())
+	for(auto SaveChild : SaveElement->GetChildElements())
 	{
 		if(SaveChild->GetName() == "object")
 		{
@@ -2071,11 +2072,11 @@ void LoadGameFromElement(const Element * SaveElement)
 			auto TheObject(ObjectsByIdentifier.at(SaveChild->GetAttribute("object-identifier")));
 			
 			assert(TheObject != nullptr);
-			for(auto ObjectChild : SaveChild->GetChilds())
+			for(auto ObjectChild : SaveChild->GetChildElements())
 			{
 				if(ObjectChild->GetName() == "aspect-accessory")
 				{
-					for(auto AspectChild : ObjectChild->GetChilds())
+					for(auto AspectChild : ObjectChild->GetChildElements())
 					{
 						if(AspectChild->GetName() == "slot")
 						{
@@ -2101,7 +2102,7 @@ void LoadGameFromElement(const Element * SaveElement)
 
 bool LoadGameFromInputStream(std::istream & InputStream)
 {
-	Document Document(InputStream);
+	auto Document = XML::Document{InputStream};
 	
 	if(Document.GetDocumentElement() == nullptr)
 	{

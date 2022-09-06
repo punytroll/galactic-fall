@@ -6,7 +6,7 @@ all: all-recursive
 
 all-here: 
 
-all-recursive: all-here algebra-all-recursive arx-all-recursive events-all-recursive expressions-all-recursive graphics-all-recursive xml_puny_dom-all-recursive xml_stream-all-recursive
+all-recursive: all-here algebra-all-recursive arx-all-recursive events-all-recursive expressions-all-recursive graphics-all-recursive xml_stream-all-recursive
 
 check:
 	@$(MAKE) -C algebra check
@@ -14,7 +14,6 @@ check:
 	@$(MAKE) -C events check
 	@$(MAKE) -C expressions check
 	@$(MAKE) -C graphics check
-	@$(MAKE) -C xml_puny_dom check
 	@$(MAKE) -C xml_stream check
 
 clean: clean-recursive
@@ -27,7 +26,6 @@ clean-recursive: clean-here
 	@$(MAKE) -C events clean-recursive
 	@$(MAKE) -C expressions clean-recursive
 	@$(MAKE) -C graphics clean-recursive
-	@$(MAKE) -C xml_puny_dom clean-recursive
 	@$(MAKE) -C xml_stream clean-recursive
 
 algebra: algebra-all-recursive
@@ -39,8 +37,6 @@ events: events-all-recursive
 expressions: expressions-all-recursive
 
 graphics: graphics-all-recursive
-
-xml_puny_dom: xml_parser xml_puny_dom-all-recursive
 
 xml_stream: xml_stream-all-recursive
 
@@ -59,10 +55,7 @@ expressions-all-recursive:
 graphics-all-recursive:
 	@$(MAKE) -C graphics all-recursive
 
-xml_puny_dom-all-recursive:
-	@$(MAKE) -C xml_puny_dom all-recursive
-
 xml_stream-all-recursive:
 	@$(MAKE) -C xml_stream all-recursive
 
-.PHONY: all all-here all-recursive check clean clean-here clean-recursive algebra algebra-all-recursive arx arx-all-recursive events events-all-recursive expressions expressions-all-recursive graphics graphics-all-recursive xml_puny_dom xml_puny_dom-all-recursive xml_stream xml_stream-all-recursive
+.PHONY: all all-here all-recursive check clean clean-here clean-recursive algebra algebra-all-recursive arx arx-all-recursive events events-all-recursive expressions expressions-all-recursive graphics graphics-all-recursive xml_stream xml_stream-all-recursive
