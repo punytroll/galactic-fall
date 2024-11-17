@@ -16,6 +16,9 @@ algebra_dependency = dependency(
   version: '>=2.1.1'
 )
 
+expressions_subproject = subproject('expressions')
+expressions_dependency = expressions_subproject.get_variable('expressions_library_dependency')
+
 subproject('string_cast')
 string_cast_dependency = dependency(
   'string_cast',

@@ -1,0 +1,7 @@
+[wrap-git]
+url = https://github.com/punytroll/expressions.git
+revision = main
+depth = 1
+
+[provide]
+expressions = expressions_library_dependency

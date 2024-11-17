@@ -1,5 +1,0 @@
-EXPRESSIONS_INCLUDE = \
-	-I$(root)/libraries/expressions/include
-
-EXPRESSIONS_LIBRARY = \
-	$(root)/libraries/expressions/libexpressions.a

@@ -6,7 +6,6 @@ default: all
 
 include $(root)/libraries/arx/Makefile.include
 include $(root)/libraries/events/Makefile.include
-include $(root)/libraries/expressions/Makefile.include
 include $(root)/libraries/graphics/Makefile.include
 include $(root)/libraries/xml_stream/Makefile.include
 include $(root)/tools/generate_cpp_resource_constants/Makefile.include
@@ -59,17 +58,17 @@ check-dependencies: generate_cpp_resource_constants-check-dependencies
 arx_types.h: $(root)/data/tools/declarations.xml $(generate_cpp_resource_constants_dependencies)
 	$(command_generate_cpp_resource_constants) --declarations=$< > $@
 
-binary: $(OBJECT_FILES) $(EVENTS_LIBRARY) $(EXPRESSIONS_LIBRARY) $(root)/build/subprojects/string_cast/libstring_cast.a $(root)/build/subprojects/xml_parser/libxml_parser.a $(root)/build/subprojects/xml_puny_dom/libxml_puny_dom.a $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)
-	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(ARX_LIBRARY) $(EVENTS_LIBRARY) $(EXPRESSIONS_LIBRARY) $(GRAPHICS_LIBRARY) $(root)/build/subprojects/string_cast/libstring_cast.a $(root)/build/subprojects/xml_puny_dom/libxml_puny_dom.a $(root)/build/subprojects/xml_parser/libxml_parser.a $(XML_STREAM_LIBRARY) -lGL -lX11 -o $@
+binary: $(OBJECT_FILES) $(EVENTS_LIBRARY) $(root)/build/subprojects/expressions/libexpressions.a $(root)/build/subprojects/string_cast/libstring_cast.a $(root)/build/subprojects/xml_parser/libxml_parser.a $(root)/build/subprojects/xml_puny_dom/libxml_puny_dom.a $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)
+	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(ARX_LIBRARY) $(EVENTS_LIBRARY) $(root)/build/subprojects/expressions/libexpressions.a $(GRAPHICS_LIBRARY) $(root)/build/subprojects/string_cast/libstring_cast.a $(root)/build/subprojects/xml_puny_dom/libxml_puny_dom.a $(root)/build/subprojects/xml_parser/libxml_parser.a $(XML_STREAM_LIBRARY) -lGL -lX11 -o $@
 
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 $(DEPENDENCY_DIRECTORY)/%.dep: % $(GENERATED_FILES)
 	@test -d $(@D) || mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -MM -MP $< -I$(root)/subprojects/algebra/include $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(EXPRESSIONS_INCLUDE) $(GRAPHICS_INCLUDE) -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_puny_dom/include $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
+	$(CXX) $(CXXFLAGS) -MM -MP $< -I$(root)/subprojects/algebra/include $(ARX_INCLUDE) $(EVENTS_INCLUDE) -I$(root)/subprojects/expressions/include $(GRAPHICS_INCLUDE) -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_puny_dom/include $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
 
 $(OBJECT_DIRECTORY)/%.o: %.cpp
 	@test -d $(@D) || mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -c $< -I$(root)/subprojects/algebra/include $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(EXPRESSIONS_INCLUDE) $(GRAPHICS_INCLUDE) -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_puny_dom/include $(XML_STREAM_INCLUDE) -o $@
+	$(CXX) $(CXXFLAGS) -c $< -I$(root)/subprojects/algebra/include $(ARX_INCLUDE) $(EVENTS_INCLUDE) -I$(root)/subprojects/expressions/include $(GRAPHICS_INCLUDE) -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_puny_dom/include $(XML_STREAM_INCLUDE) -o $@
 
 .PHONY: all all-here all-recursive clean clean-here clean-recursive check-dependencies default
