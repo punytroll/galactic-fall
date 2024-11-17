@@ -20,11 +20,12 @@
 #ifndef GRAPHICS_PROGRAM_H
 #define GRAPHICS_PROGRAM_H
 
-#include <GL/gl.h>
-
+#include <cstdint>
 #include <list>
 #include <map>
 #include <string>
+
+#include <GL/gl.h>
 
 class Matrix3f;
 class Matrix4f;

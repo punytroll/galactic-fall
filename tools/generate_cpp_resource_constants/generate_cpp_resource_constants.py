@@ -134,6 +134,8 @@ print(" * ATTENTION: generated source code.")
 print(" * Do not modify - your changes won't be permanent.")
 print(" **/")
 print()
+print("#include <cstdint>")
+print()
 for key in sorted(definitions.keys()):
 	if definitions[key] != None:
 		print("const uint32_t " + key + " = " + str(definitions[key]) + ";")

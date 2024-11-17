@@ -20,6 +20,7 @@
 #ifndef GRAPHICS_TEXTURE_H
 #define GRAPHICS_TEXTURE_H
 
+#include <cstdint>
 #include <string>
 
 #include <GL/gl.h>

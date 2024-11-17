@@ -18,6 +18,7 @@
 **/
 
 #include <cassert>
+#include <cstdint>
 
 #include <algebra/quaternion.h>
 #include <algebra/vector2f.h>

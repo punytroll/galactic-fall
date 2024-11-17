@@ -20,6 +20,7 @@
 #ifndef BLUEPRINT_MANAGER_H
 #define BLUEPRINT_MANAGER_H
 
+#include <cstdint>
 #include <map>
 #include <string>
 

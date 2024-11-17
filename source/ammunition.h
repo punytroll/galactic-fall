@@ -20,6 +20,8 @@
 #ifndef AMMUNITION_H
 #define AMMUNITION_H
 
+#include <cstdint>
+
 #include "object.h"
 
 class Ammunition : public Object

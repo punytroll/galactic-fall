@@ -22,6 +22,7 @@
 
 #include <stdlib.h>
 
+#include <cstdint>
 #include <cassert>
 
 #include <algebra/vector2f.h>

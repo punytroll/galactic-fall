@@ -20,6 +20,7 @@
 #ifndef GRAPHICS_DRAWING_H
 #define GRAPHICS_DRAWING_H
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
