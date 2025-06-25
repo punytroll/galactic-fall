@@ -4,8 +4,6 @@ root = ../../..
 
 default: all
 
-include $(root)/libraries/xml_stream/Makefile.include
-
 HEADER_DIRECTORIES := $(patsubst %/,%,$(sort $(dir $(shell find . -name '*.h'))))
 HEADER_FILES := $(patsubst ./%,%,$(foreach HEADER_DIRECTORY,$(HEADER_DIRECTORIES),$(wildcard $(HEADER_DIRECTORY)/*.h)))
 SOURCE_DIRECTORIES := $(patsubst %/,%,$(sort $(dir $(shell find . -name '*.cpp'))))
@@ -48,15 +46,15 @@ clean-recursive: clean-here
 
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
-binary: $(OBJECT_FILES) $(root)/build/subprojects/string_cast/libstring_cast.a $(root)/build/subprojects/xml_parser/libxml_parser.a $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)
-	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(root)/build/subprojects/string_cast/libstring_cast.a $(root)/build/subprojects/xml_parser/libxml_parser.a $(XML_STREAM_LIBRARY) -lGL -lX11 -o $@
+binary: $(OBJECT_FILES) $(root)/build/subprojects/string_cast/libstring_cast.a $(root)/build/subprojects/xml_parser/libxml_parser.a $(root)/build/subprojects/xml_stream/libxml_stream.a $(LDFLAGS_configuration)
+	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(root)/build/subprojects/string_cast/libstring_cast.a $(root)/build/subprojects/xml_parser/libxml_parser.a $(root)/build/subprojects/xml_stream/libxml_stream.a -lGL -lX11 -o $@
 
 $(DEPENDENCY_DIRECTORY)/%.dep: %
 	@test -d $(@D) || mkdir $(@D)
-	$(CXX) $(CXXFLAGS) -MM -MP $< -I$(root)/subprojects/algebra/include -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_parser/include $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
+	$(CXX) $(CXXFLAGS) -MM -MP $< -I$(root)/subprojects/algebra/include -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_parser/include -I$(root)/subprojects/xml_stream/include | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
 
 $(OBJECT_DIRECTORY)/%.o: %.cpp
 	@test -d $(@D) || mkdir $(@D)
-	$(CXX) $(CXXFLAGS) -I$(root)/subprojects/algebra/include -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_parser/include $(XML_STREAM_INCLUDE)	-c $< -o $@
+	$(CXX) $(CXXFLAGS) -I$(root)/subprojects/algebra/include -I$(root)/subprojects/string_cast/include -I$(root)/subprojects/xml_parser/include -I$(root)/subprojects/xml_stream/include	-c $< -o $@
 
 .PHONY: all all-here all-recursive clean clean-here clean-recursive check-dependencies default

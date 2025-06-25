@@ -2,12 +2,13 @@ project(
   'galactic-fall',
   'cpp',
   version: '0.1',
-  meson_version: '>=0.63.1',
-  default_options: [
-    'cpp_std=c++20',
-    'default_library=static',
-    'werror=true'
-  ]
+  meson_version: '>=1.8.2',
+  default_options: {
+    'cpp_std': 'c++20',
+    'default_library': 'static',
+    'warning_level': '3',
+    'werror': 'true'
+  }
 )
 
 subproject('algebra')
@@ -36,3 +37,6 @@ xml_puny_dom_dependency = dependency(
   'xml_puny_dom',
   version: '>=2.2.1'
 )
+
+xml_stream_subproject = subproject('xml_stream', version: '>=2.0.0')
+xml_stream_dependency = xml_stream_subproject.get_variable('xml_stream_library_dependency')

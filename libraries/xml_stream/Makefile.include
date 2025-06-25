@@ -1,5 +1,0 @@
-XML_STREAM_INCLUDE = \
-	-I$(root)/libraries/xml_stream/include
-
-XML_STREAM_LIBRARY = \
-	$(root)/libraries/xml_stream/libxmlstream.a
