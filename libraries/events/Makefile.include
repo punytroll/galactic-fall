@@ -1,5 +1,0 @@
-EVENTS_INCLUDE = \
-	-I$(root)/libraries/events/include
-
-EVENTS_LIBRARY = \
-	$(root)/libraries/events/libevents.a

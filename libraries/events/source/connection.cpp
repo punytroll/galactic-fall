@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2014  Hagen Möbius
+ * Copyright (C) 2014-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,8 +19,8 @@
 
 #include <cassert>
 
-#include "connection.h"
-#include "event.h"
+#include <events/connection.h>
+#include <events/event.h>
 
 Connection::Core::Core(void) :
 	_Event(nullptr),

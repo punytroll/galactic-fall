@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2014  Hagen Möbius
+ * Copyright (C) 2014-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,14 +17,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef EVENT_H
-#define EVENT_H
+#ifndef GALACTIC_FALL__LIBRARIES__EVENTS__INCLUDE__EVENTS__EVENT_H
+#define GALACTIC_FALL__LIBRARIES__EVENTS__INCLUDE__EVENTS__EVENT_H
 
 #include <cassert>
 #include <functional>
 #include <list>
 
-#include "connection.h"
+#include <events/connection.h>
 
 class EventBase
 {

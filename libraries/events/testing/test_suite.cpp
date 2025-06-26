@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2014  Hagen Möbius
+ * Copyright (C) 2014-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,7 @@
 #include <cassert>
 #include <iostream>
 
-#include "event.h"
+#include <events/event.h>
 
 int g_Global;
 
@@ -49,7 +49,7 @@ private:
 	Connection _Connection;
 };
 
-int main(int argc, char ** argv)
+int main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv)
 {
 	std::cout << "-----------------------------" << std::endl;
 	
