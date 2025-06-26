@@ -31,6 +31,12 @@ clean-recursive: clean-here
 clean-repository: clean
 	$(RM) -R .configuration.d
 	$(RM) configuration
+	$(RM) -R subprojects/algebra
+	$(RM) -R subprojects/expressions
+	$(RM) -R subprojects/string_cast
+	$(RM) -R subprojects/xml_parser
+	$(RM) -R subprojects/xml_puny_dom
+	$(RM) -R subprojects/xml_stream
 
 configuration:
 	./configure
