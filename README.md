@@ -1,4 +1,5 @@
 # galactic-fall
+
 A very simple 2D space shooter designed in the spirit of and as an hommage to "Escape Velocity".
 
 Overall "Galactic Fall" is discontinued. There is no plan to develop this project into a real game, suited for distributing to "players". I simply lack the amount of resources needed to finalize such a project.
