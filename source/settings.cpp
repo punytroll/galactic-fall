@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2009  Hagen Möbius
+ * Copyright (C) 2009-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,9 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <Archive.h>
-#include <BufferReader.h>
-#include <Item.h>
+#include <arxx/Archive.h>
+#include <arxx/BufferReader.h>
+#include <arxx/Item.h>
 
 #include <string_cast/string_cast.h>
 

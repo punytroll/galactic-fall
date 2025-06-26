@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005  Hagen Möbius
+ * Copyright (C) 2005-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,8 +19,8 @@
 
 #include <cassert>
 
-#include <Item.h>
-#include <Archive.h>
+#include <arxx/Item.h>
+#include <arxx/Archive.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

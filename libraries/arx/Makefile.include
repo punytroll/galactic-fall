@@ -1,5 +1,0 @@
-ARX_INCLUDE = \
-	-I$(root)/libraries/arx/include
-
-ARX_LIBRARY = \
-	$(root)/libraries/arx/libarx.a

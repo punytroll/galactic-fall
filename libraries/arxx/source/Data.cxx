@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005  Hagen Möbius
+ * Copyright (C) 2005-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <Data.h>
+#include <arxx/Data.h>
 
 /// optional headers
 #ifdef HAVE_ZLIB_H
@@ -347,7 +347,7 @@ bool Arxx::Data::IsFetched(void) const
 	return _Fetched;
 }
 
-bool Arxx::Data::_Fetch(Arxx::u4byte Offset, Arxx::u4byte Length)
+bool Arxx::Data::_Fetch([[maybe_unused]] Arxx::u4byte Offset, Arxx::u4byte Length)
 {
 	return Length == 0;
 }

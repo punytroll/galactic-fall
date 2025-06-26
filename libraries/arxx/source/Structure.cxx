@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005  Hagen Möbius
+ * Copyright (C) 2005-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,15 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <cassert>
 #include <netinet/in.h>
 
+#include <cassert>
 #include <iostream>
 
-#include <Buffer.h>
-#include <BufferWriter.h>
-#include <Reference.h>
-#include <Structure.h>
+#include <arxx/Buffer.h>
+#include <arxx/BufferWriter.h>
+#include <arxx/Reference.h>
+#include <arxx/Structure.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

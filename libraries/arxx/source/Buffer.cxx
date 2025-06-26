@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005, 2007  Hagen Möbius
+ * Copyright (C) 2005-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +19,7 @@
 
 #include <iostream>
 
-#include  <Buffer.h>
+#include <arxx/Buffer.h>
 
 const Arxx::Buffer::size_type Arxx::Buffer::m_stDataUpdated = 0x01;
 const Arxx::Buffer::size_type Arxx::Buffer::m_stDataDeleted = 0x02;

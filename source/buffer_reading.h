@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,7 @@
 #ifndef BUFFER_READING_H
 #define BUFFER_READING_H
 
-#include <BufferReader.h>
+#include <arxx/BufferReader.h>
 
 namespace Graphics
 {

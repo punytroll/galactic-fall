@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2015-2018  Hagen Möbius
+ * Copyright (C) 2015-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,7 @@
 #ifndef RESOURCE_READER_H
 #define RESOURCE_READER_H
 
-#include <Structure.h>
+#include <arxx/Structure.h>
 
 namespace Arxx
 {

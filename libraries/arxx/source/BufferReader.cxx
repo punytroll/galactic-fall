@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005  Hagen Möbius
+ * Copyright (C) 2005-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <Buffer.h>
-#include <BufferReader.h>
+#include <arxx/Buffer.h>
+#include <arxx/BufferReader.h>
 
 Arxx::BufferReader::BufferReader(const Arxx::Buffer & Buffer, Arxx::Buffer::size_type stPosition) :
 	m_Buffer(Buffer),
