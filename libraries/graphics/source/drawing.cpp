@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2015-2019  Hagen Möbius
+ * Copyright (C) 2015-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,6 +16,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
+
+#include <utility>
 
 #include <algebra/vector2f.h>
 
@@ -34,7 +36,7 @@ void Graphics::Drawing::DrawBoxFromPositionAndSize(Graphics::RenderContext * Ren
 	Graphics::Drawing::DrawBox(RenderContext, Position[0], Position[1], Position[1] + Size[1], Position[0] + Size[0]);
 }
 
-void Graphics::Drawing::DrawBox(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right)
+void Graphics::Drawing::DrawBox([[maybe_unused]] Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right)
 {
 	GLuint VertexArray{0};
 	
@@ -70,7 +72,7 @@ void Graphics::Drawing::DrawCircles(Graphics::RenderContext * RenderContext, con
 {
 	assert(CenterPositions.size() == Colors.size());
 	
-	float QuarterData[2 * NumberOfVerticesPerQuarter];
+	auto QuarterData = std::vector<float>(2 * NumberOfVerticesPerQuarter);
 	auto Step{static_cast< float >(M_PI_2 / NumberOfVerticesPerQuarter)};
 	
 	for(auto QuarterIndex = 0u; QuarterIndex < NumberOfVerticesPerQuarter; ++QuarterIndex)
@@ -80,11 +82,11 @@ void Graphics::Drawing::DrawCircles(Graphics::RenderContext * RenderContext, con
 	}
 	
 	const GLsizei NumberOfVertices{static_cast< GLsizei >(CenterPositions.size() * 4 * NumberOfVerticesPerQuarter)};
-	float VertexData[2 * NumberOfVertices];
+	auto VertexData = std::vector<float>(2 * NumberOfVertices);
 	int VertexDataIndex{0};
-	float ColorData[4 * NumberOfVertices];
+	auto ColorData = std::vector<float>(4 * NumberOfVertices);
 	int ColorDataIndex{0};
-	unsigned short Indices[NumberOfVertices + CenterPositions.size() - 1];
+	auto Indices = std::vector<unsigned short>(NumberOfVertices + CenterPositions.size() - 1);
 	int IndexIndex{0};
 	int VertexIndex{0};
 	
@@ -148,15 +150,15 @@ void Graphics::Drawing::DrawCircles(Graphics::RenderContext * RenderContext, con
 	GLGenBuffers(3, Buffers);
 	// index data
 	GLBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffers[0]);
-	GLBufferData(GL_ELEMENT_ARRAY_BUFFER, (NumberOfVertices + CenterPositions.size() - 1) * sizeof(unsigned short), Indices, GL_STREAM_DRAW);
+	GLBufferData(GL_ELEMENT_ARRAY_BUFFER, (NumberOfVertices + CenterPositions.size() - 1) * sizeof(unsigned short), Indices.data(), GL_STREAM_DRAW);
 	// vertex data
 	GLBindBuffer(GL_ARRAY_BUFFER, Buffers[1]);
-	GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), VertexData, GL_STREAM_DRAW);
+	GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), VertexData.data(), GL_STREAM_DRAW);
 	GLVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	GLEnableVertexAttribArray(0);
 	// color data
 	GLBindBuffer(GL_ARRAY_BUFFER, Buffers[2]);
-	GLBufferData(GL_ARRAY_BUFFER, 4 * NumberOfVertices * sizeof(GLfloat), ColorData, GL_STREAM_DRAW);
+	GLBufferData(GL_ARRAY_BUFFER, 4 * NumberOfVertices * sizeof(GLfloat), ColorData.data(), GL_STREAM_DRAW);
 	GLVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	GLEnableVertexAttribArray(1);
 	// setup
@@ -179,9 +181,9 @@ void Graphics::Drawing::DrawLines(Graphics::RenderContext * RenderContext, const
 	assert(Positions.size() == Colors.size());
 	
 	const GLsizei NumberOfVertices{static_cast< GLsizei >(2 * Positions.size())};
-	float VertexData[2 * NumberOfVertices];
+	auto VertexData = std::vector<float>(2 * NumberOfVertices);
 	int VertexDataIndex{0};
-	float ColorData[4 * NumberOfVertices];
+	auto ColorData = std::vector<float>(4 * NumberOfVertices);
 	int ColorDataIndex{0};
 	
 	for(auto LineIndex = 0u; LineIndex < Positions.size(); ++LineIndex)
@@ -212,12 +214,12 @@ void Graphics::Drawing::DrawLines(Graphics::RenderContext * RenderContext, const
 	GLGenBuffers(2, Buffers);
 	// vertex data
 	GLBindBuffer(GL_ARRAY_BUFFER, Buffers[0]);
-	GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), VertexData, GL_STREAM_DRAW);
+	GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), VertexData.data(), GL_STREAM_DRAW);
 	GLVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	GLEnableVertexAttribArray(0);
 	// color data
 	GLBindBuffer(GL_ARRAY_BUFFER, Buffers[1]);
-	GLBufferData(GL_ARRAY_BUFFER, 4 * NumberOfVertices * sizeof(GLfloat), ColorData, GL_STREAM_DRAW);
+	GLBufferData(GL_ARRAY_BUFFER, 4 * NumberOfVertices * sizeof(GLfloat), ColorData.data(), GL_STREAM_DRAW);
 	GLVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	GLEnableVertexAttribArray(1);
 	// setup
@@ -239,9 +241,9 @@ void Graphics::Drawing::DrawPoints(Graphics::RenderContext * RenderContext, cons
 	GLGenVertexArrays(1, &VertexArray);
 	GLBindVertexArray(VertexArray);
 	
-	auto NumberOfVertices{static_cast< GLsizei >(Positions.size())};
-	float VertexData[2 * NumberOfVertices];
-	float ColorData[4 * NumberOfVertices];
+	auto NumberOfVertices = static_cast<GLsizei>(Positions.size());
+	auto VertexData = std::vector<float>(2 * NumberOfVertices);
+	auto ColorData = std::vector<float>(4 * NumberOfVertices);
 	
 	for(auto Index = 0u; Index < Positions.size(); ++Index)
 	{
@@ -257,11 +259,11 @@ void Graphics::Drawing::DrawPoints(Graphics::RenderContext * RenderContext, cons
 	
 	GLGenBuffers(2, Buffers);
 	GLBindBuffer(GL_ARRAY_BUFFER, Buffers[0]);
-	GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), VertexData, GL_STREAM_DRAW);
+	GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), VertexData.data(), GL_STREAM_DRAW);
 	GLVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	GLEnableVertexAttribArray(0);
 	GLBindBuffer(GL_ARRAY_BUFFER, Buffers[1]);
-	GLBufferData(GL_ARRAY_BUFFER, 4 * NumberOfVertices * sizeof(GLfloat), ColorData, GL_STREAM_DRAW);
+	GLBufferData(GL_ARRAY_BUFFER, 4 * NumberOfVertices * sizeof(GLfloat), ColorData.data(), GL_STREAM_DRAW);
 	GLVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	GLEnableVertexAttribArray(1);
 	assert(RenderContext != nullptr);
@@ -299,10 +301,10 @@ void Graphics::Drawing::_DrawText(Graphics::RenderContext * RenderContext, float
 		GLGenVertexArrays(1, &VertexArray);
 		GLBindVertexArray(VertexArray);
 		
-		const GLsizei NumberOfVertices{static_cast< GLsizei >(4 * Text.length())};
-		float Vertices[2 * NumberOfVertices];
-		float TextureCoordinates[2 * NumberOfVertices];
-		unsigned short Indices[NumberOfVertices + Text.length() - 1];
+		auto NumberOfVertices = static_cast<GLsizei>(4 * Text.length());
+		auto Vertices = std::vector<float>(2 * NumberOfVertices);
+		auto TextureCoordinates = std::vector<float>(2 * NumberOfVertices);
+		auto Indices = std::vector<unsigned short>(NumberOfVertices + Text.length() - 1);
 		const float GlyphWidth{6.0f / 128.0f};
 		const float GlyphHeight{12.0f / 64.0f};
 		float CharacterWidth{CharacterHeight / 2.0f};
@@ -320,7 +322,7 @@ void Graphics::Drawing::_DrawText(Graphics::RenderContext * RenderContext, float
 			
 			auto GlyphIndex{Character - CHARACTEROFFSET};
 			
-			assert((GlyphIndex >= 0) && (GlyphIndex < CHARACTERS));
+			assert((std::cmp_greater_equal(GlyphIndex, 0) == true) && (GlyphIndex < CHARACTERS));
 			Vertices[CharacterIndex * 8 + 0] = TextLeft;
 			Vertices[CharacterIndex * 8 + 1] = Top;
 			TextureCoordinates[CharacterIndex * 8 + 0] = (GlyphIndex % GlyphsPerLine) * GlyphWidth;
@@ -364,15 +366,15 @@ void Graphics::Drawing::_DrawText(Graphics::RenderContext * RenderContext, float
 		GLGenBuffers(3, Buffers);
 		// index buffer
 		GLBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffers[0]);
-		GLBufferData(GL_ELEMENT_ARRAY_BUFFER, (NumberOfVertices + Text.length() - 1) * sizeof(unsigned short), Indices, GL_STREAM_DRAW);
+		GLBufferData(GL_ELEMENT_ARRAY_BUFFER, (NumberOfVertices + Text.length() - 1) * sizeof(unsigned short), Indices.data(), GL_STREAM_DRAW);
 		// vertex coordinates
 		GLBindBuffer(GL_ARRAY_BUFFER, Buffers[1]);
-		GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), Vertices, GL_STREAM_DRAW);
+		GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), Vertices.data(), GL_STREAM_DRAW);
 		GLVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		GLEnableVertexAttribArray(0);
 		// texture coordinates
 		GLBindBuffer(GL_ARRAY_BUFFER, Buffers[2]);
-		GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), TextureCoordinates, GL_STREAM_DRAW);
+		GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), TextureCoordinates.data(), GL_STREAM_DRAW);
 		GLVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		GLEnableVertexAttribArray(1);
 		assert(RenderContext != nullptr);
@@ -391,7 +393,7 @@ void Graphics::Drawing::_DrawText(Graphics::RenderContext * RenderContext, float
 	}
 }
 
-void Graphics::Drawing::DrawTexture(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right)
+void Graphics::Drawing::DrawTexture([[maybe_unused]] Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right)
 {
 	GLuint VertexArray{0};
 	

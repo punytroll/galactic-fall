@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007-2019  Hagen Möbius
+ * Copyright (C) 2007-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,9 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <cassert>
-
 #include <algorithm>
+#include <cassert>
 #include <stack>
 
 #include <algebra/matrix4f.h>
@@ -65,7 +64,7 @@ void Graphics::Node::AddNode(Graphics::Node * Content)
 	_Content.push_back(Content);
 }
 
-void Graphics::Node::Begin(Graphics::RenderContext * RenderContext)
+void Graphics::Node::Begin([[maybe_unused]] Graphics::RenderContext * RenderContext)
 {
 	if(_ClearDepthBuffer == true)
 	{
@@ -116,11 +115,11 @@ void Graphics::Node::Destroy(void)
 	Scene->OnDestroy(this);
 }
 
-void Graphics::Node::Draw(Graphics::RenderContext * RenderContext)
+void Graphics::Node::Draw([[maybe_unused]] Graphics::RenderContext * RenderContext)
 {
 }
 
-void Graphics::Node::End(Graphics::RenderContext * RenderContext)
+void Graphics::Node::End([[maybe_unused]] Graphics::RenderContext * RenderContext)
 {
 }
 

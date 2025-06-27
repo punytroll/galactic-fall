@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2015-2019  Hagen Möbius
+ * Copyright (C) 2015-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <memory>
+
 #include <graphics/color_rgb.h>
 #include <graphics/color_rgbo.h>
 
@@ -24,51 +26,45 @@ Graphics::ColorRGB::ColorRGB(void)
 {
 }
 
-Graphics::ColorRGB::ColorRGB(const Graphics::ColorRGB & Color) :
-	_Red(Color._Red),
-	_Green(Color._Green),
-	_Blue(Color._Blue)
+Graphics::ColorRGB::ColorRGB(const Graphics::ColorRGB & Other) :
+	m_Color{Other.m_Color}
 {
 }
 
-Graphics::ColorRGB::ColorRGB(const Graphics::ColorRGBO & Color) :
-	_Red(Color._Red),
-	_Green(Color._Green),
-	_Blue(Color._Blue)
+Graphics::ColorRGB::ColorRGB(const Graphics::ColorRGBO & Other) :
+	m_Color{Other.m_Color.Red, Other.m_Color.Green, Other.m_Color.Blue}
 {
 }
 
 Graphics::ColorRGB::ColorRGB(float Red, float Green, float Blue) :
-	_Red(Red),
-	_Green(Green),
-	_Blue(Blue)
+	m_Color{Red, Green, Blue}
 {
 }
 
-Graphics::ColorRGB & Graphics::ColorRGB::operator=(const Graphics::ColorRGB & Color)
+Graphics::ColorRGB & Graphics::ColorRGB::operator=(const Graphics::ColorRGB & Other)
 {
-	if(this != &Color)
+	if(this != std::addressof(Other))
 	{
-		_Red = Color._Red;
-		_Green = Color._Green;
-		_Blue = Color._Blue;
+		m_Color.Red = Other.m_Color.Red;
+		m_Color.Green = Other.m_Color.Green;
+		m_Color.Blue = Other.m_Color.Blue;
 	}
 	
 	return *this;
 }
 
-Graphics::ColorRGB & Graphics::ColorRGB::operator=(const Graphics::ColorRGBO & Color)
+Graphics::ColorRGB & Graphics::ColorRGB::operator=(const Graphics::ColorRGBO & Other)
 {
-	_Red = Color._Red;
-	_Green = Color._Green;
-	_Blue = Color._Blue;
+	m_Color.Red = Other.m_Color.Red;
+	m_Color.Green = Other.m_Color.Green;
+	m_Color.Blue = Other.m_Color.Blue;
 	
 	return *this;
 }
 
 void Graphics::ColorRGB::Set(float Red, float Green, float Blue)
 {
-	_Red = Red;
-	_Green = Green;
-	_Blue = Blue;
+	m_Color.Red = Red;
+	m_Color.Green = Green;
+	m_Color.Blue = Blue;
 }

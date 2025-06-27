@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006-2019  Hagen Möbius
+ * Copyright (C) 2006-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -135,7 +135,7 @@ void Graphics::Mesh::BuildVertexArray(void)
 	delete[] Vertices;
 }
 
-void Graphics::Mesh::Draw(Graphics::RenderContext * RenderContext) const
+void Graphics::Mesh::Draw([[maybe_unused]] Graphics::RenderContext * RenderContext) const
 {
 	assert(_VertexArray != 0);
 	assert(_NumberOfIndices != 0);

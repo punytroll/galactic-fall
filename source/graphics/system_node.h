@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2014-2019  Hagen Möbius
+ * Copyright (C) 2014-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,7 @@
 #ifndef GRAPHICS_SYSTEM_NODE_H
 #define GRAPHICS_SYSTEM_NODE_H
 
-#include "node.h"
+#include <graphics/node.h>
 
 namespace Graphics
 {

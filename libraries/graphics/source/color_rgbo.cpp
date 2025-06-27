@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2015-2019  Hagen Möbius
+ * Copyright (C) 2015-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,36 +17,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <memory>
+
 #include <graphics/color_rgbo.h>
 
 Graphics::ColorRGBO::ColorRGBO(void)
 {
 }
 
-Graphics::ColorRGBO::ColorRGBO(const Graphics::ColorRGBO & Color) :
-	_Red(Color._Red),
-	_Green(Color._Green),
-	_Blue(Color._Blue),
-	_Opacity(Color._Opacity)
+Graphics::ColorRGBO::ColorRGBO(const Graphics::ColorRGBO & Other) :
+	m_Color{Other.m_Color}
 {
 }
 
 Graphics::ColorRGBO::ColorRGBO(float Red, float Green, float Blue, float Opacity) :
-	_Red(Red),
-	_Green(Green),
-	_Blue(Blue),
-	_Opacity(Opacity)
+	m_Color{Red, Green, Blue, Opacity}
 {
 }
 
-Graphics::ColorRGBO & Graphics::ColorRGBO::operator=(const Graphics::ColorRGBO & Color)
+Graphics::ColorRGBO & Graphics::ColorRGBO::operator=(const Graphics::ColorRGBO & Other)
 {
-	if(this != &Color)
+	if(this != std::addressof(Other))
 	{
-		_Red = Color._Red;
-		_Green = Color._Green;
-		_Blue = Color._Blue;
-		_Opacity = Color._Opacity;
+		m_Color.Red = Other.m_Color.Red;
+		m_Color.Green = Other.m_Color.Green;
+		m_Color.Blue = Other.m_Color.Blue;
+		m_Color.Opacity = Other.m_Color.Opacity;
 	}
 	
 	return *this;
@@ -54,8 +50,8 @@ Graphics::ColorRGBO & Graphics::ColorRGBO::operator=(const Graphics::ColorRGBO &
 
 void Graphics::ColorRGBO::Set(float Red, float Green, float Blue, float Opacity)
 {
-	_Red = Red;
-	_Green = Green;
-	_Blue = Blue;
-	_Opacity = Opacity;
+	m_Color.Red = Red;
+	m_Color.Green = Green;
+	m_Color.Blue = Blue;
+	m_Color.Opacity = Opacity;
 }

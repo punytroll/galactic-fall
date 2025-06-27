@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013-2019  Hagen Möbius
+ * Copyright (C) 2013-2025  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -84,11 +84,11 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 		GLBindVertexArray(VertexArray);
 		
 		const GLsizei NumberOfVertices{static_cast< GLsizei >(4 * _ParticleSystem->GetParticles().size())};
-		float Colors[4 * NumberOfVertices];
-		float Vertices[3 * NumberOfVertices];
-		float TextureCoordinates[2 * NumberOfVertices];
-		float Opacities[1 * NumberOfVertices];
-		unsigned short Indices[NumberOfVertices + _ParticleSystem->GetParticles().size() - 1];
+		auto Colors = std::vector<float>(4 * NumberOfVertices);
+		auto Vertices = std::vector<float>(3 * NumberOfVertices);
+		auto TextureCoordinates = std::vector<float>(2 * NumberOfVertices);
+		auto Opacities = std::vector<float>(1 * NumberOfVertices);
+		auto Indices = std::vector<unsigned short>(NumberOfVertices + _ParticleSystem->GetParticles().size() - 1);
 		int ParticleIndex{0};
 		int IndexIndex{0};
 		
@@ -150,25 +150,25 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 		GLGenBuffers(5, Buffers);
 		// index buffer
 		GLBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffers[0]);
-		GLBufferData(GL_ELEMENT_ARRAY_BUFFER, (NumberOfVertices + _ParticleSystem->GetParticles().size() - 1) * sizeof(unsigned short), Indices, GL_STREAM_DRAW);
+		GLBufferData(GL_ELEMENT_ARRAY_BUFFER, (NumberOfVertices + _ParticleSystem->GetParticles().size() - 1) * sizeof(unsigned short), Indices.data(), GL_STREAM_DRAW);
 		// vertex coordinates
 		GLBindBuffer(GL_ARRAY_BUFFER, Buffers[1]);
-		GLBufferData(GL_ARRAY_BUFFER, 3 * NumberOfVertices * sizeof(GLfloat), Vertices, GL_STREAM_DRAW);
+		GLBufferData(GL_ARRAY_BUFFER, 3 * NumberOfVertices * sizeof(GLfloat), Vertices.data(), GL_STREAM_DRAW);
 		GLVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		GLEnableVertexAttribArray(0);
 		// texture coordinates
 		GLBindBuffer(GL_ARRAY_BUFFER, Buffers[2]);
-		GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), TextureCoordinates, GL_STREAM_DRAW);
+		GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), TextureCoordinates.data(), GL_STREAM_DRAW);
 		GLVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		GLEnableVertexAttribArray(1);
 		// colors
 		GLBindBuffer(GL_ARRAY_BUFFER, Buffers[3]);
-		GLBufferData(GL_ARRAY_BUFFER, 4 * NumberOfVertices * sizeof(GLfloat), Colors, GL_STREAM_DRAW);
+		GLBufferData(GL_ARRAY_BUFFER, 4 * NumberOfVertices * sizeof(GLfloat), Colors.data(), GL_STREAM_DRAW);
 		GLVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, 0);
 		GLEnableVertexAttribArray(2);
 		// opacities
 		GLBindBuffer(GL_ARRAY_BUFFER, Buffers[4]);
-		GLBufferData(GL_ARRAY_BUFFER, 1 * NumberOfVertices * sizeof(GLfloat), Opacities, GL_STREAM_DRAW);
+		GLBufferData(GL_ARRAY_BUFFER, 1 * NumberOfVertices * sizeof(GLfloat), Opacities.data(), GL_STREAM_DRAW);
 		GLVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 0, 0);
 		GLEnableVertexAttribArray(3);
 		assert(RenderContext != nullptr);
