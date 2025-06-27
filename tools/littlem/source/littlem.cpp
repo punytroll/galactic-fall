@@ -2199,9 +2199,9 @@ bool AcceptKeyInPointView(int KeyCode, bool IsDown)
 				g_SelectedPoints.clear();
 				std::copy(g_Points.begin(), g_Points.end(), std::back_inserter(g_SelectedPoints));
 				bKeyAccepted = true;
-				
-				break;
 			}
+            
+            break;
 		}
 	case 40: // D
 		{
@@ -3614,10 +3614,14 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 				NewLight4->SetDiffuseColor(0.4f, 0.65f, 0.65f);
 				NewLight4->Enable();
 			}
+            
+            break;
 		}
 	default:
 		{
 			bKeyAccepted = false;
+            
+            break;
 		}
 	}
 	
