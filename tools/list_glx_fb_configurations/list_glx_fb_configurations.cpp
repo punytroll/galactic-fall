@@ -176,7 +176,7 @@ std::string GetCSVLine(Display * Display, GLXFBConfig & Configuration)
 	return Result.str();
 }
 
-int main(int argc, char ** argv)
+auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
 {
 	Display * Display = XOpenDisplay(0);
 	

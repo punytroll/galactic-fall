@@ -29,4 +29,8 @@ xml_puny_dom_dependency = xml_puny_dom_subproject.get_variable('xml_puny_dom_lib
 xml_stream_subproject = subproject('xml_stream', version: '>=2.0.0')
 xml_stream_dependency = xml_stream_subproject.get_variable('xml_stream_library_dependency')
 
+opengl_dependency = dependency('gl')
+x11_dependency = dependency('x11')
+
+subdir('tools')
 subdir('libraries')
