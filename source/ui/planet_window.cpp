@@ -168,7 +168,7 @@ void UI::PlanetWindow::_OnTradeCenterButtonClicked(void)
 	_OpenTradeCenter();
 }
 
-void UI::PlanetWindow::_OnUpdateCreditsLabel(UI::Label * CreditsLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::PlanetWindow::_OnUpdateCreditsLabel(UI::Label * CreditsLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	if(_Character != nullptr)
 	{
@@ -176,7 +176,7 @@ void UI::PlanetWindow::_OnUpdateCreditsLabel(UI::Label * CreditsLabel, float Rea
 	}
 }
 
-void UI::PlanetWindow::_OnUpdateCycleProgressBar(UI::ProgressBar * CycleProgressBar, float RealTimeSeconds, float GameTimeSeconds)
+void UI::PlanetWindow::_OnUpdateCycleProgressBar(UI::ProgressBar * CycleProgressBar, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	CycleProgressBar->SetText(to_string_cast(GameTime::GetCycle()));
 	CycleProgressBar->SetFillLevel(GameTime::GetCycleFraction());

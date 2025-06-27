@@ -36,6 +36,6 @@ float Generator::GetMaximumEnergyOutput(float Seconds) const
 	return Seconds * GetMaximumPowerOutput();
 }
 
-void Generator::EnergyDelta(float EnergyDelta)
+void Generator::EnergyDelta([[maybe_unused]] float EnergyDelta)
 {
 }

@@ -44,14 +44,14 @@ namespace UI
 		void _OnHangarDestroying(void);
 		void _OnKey(UI::KeyEvent & KeyEvent);
 		void _OnMoveToHangarButtonClicked(void);
-		void _OnMoveToHangarButtonUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Button * MoveToHangarButton);
+		void _OnMoveToHangarButtonUpdating(UI::Button * MoveToHangarButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnMoveToShipButtonClicked(void);
-		void _OnMoveToShipButtonUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Button * MoveToShipButton);
+		void _OnMoveToShipButtonUpdating(UI::Button * MoveToShipButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnOKButtonClicked(void);
 		void _OnShipContentAdded(Object * Content);
 		void _OnShipContentRemoved(Object * Content);
 		void _OnShipDestroying(void);
-		void _OnShipFreeSpaceLabelUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Label * ShipFreeSpaceLabel);
+		void _OnShipFreeSpaceLabelUpdating(UI::Label * ShipFreeSpaceLabel, float RealTimeSeconds, float GameTimeSeconds);
 		// member variables
 		Hangar * _Hangar;
 		Connection _HangarContentAddedCallbackConnection;

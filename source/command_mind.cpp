@@ -28,7 +28,7 @@
 #include "ship.h"
 #include "system.h"
 
-void CommandMind::HandleMessage(Message * Message)
+void CommandMind::HandleMessage([[maybe_unused]] Message * Message)
 {
 	// intentionally left empty
 }

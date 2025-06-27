@@ -105,7 +105,7 @@ void UI::MapDialog::_OnKey(UI::KeyEvent & KeyEvent)
 	}
 }
 
-void UI::MapDialog::_OnOKButtonUpdating(UI::Button * OKButton, float RealTimeSeconds, float GameTimeSeconds)
+void UI::MapDialog::_OnOKButtonUpdating(UI::Button * OKButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(OKButton != nullptr);
 	assert(_StarMapDisplay != nullptr);

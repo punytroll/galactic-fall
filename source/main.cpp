@@ -2721,7 +2721,7 @@ void ActionToggleTimingDialog(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 void MainViewKeyEvent(UI::KeyEvent & KeyEvent)
 {
-	if((KeyEvent.GetPhase() == UI::Event::Phase::Target) && (KeyEvent.GetKeyCode() >= 0) && (KeyEvent.GetKeyCode() < 127))
+	if((KeyEvent.GetPhase() == UI::Event::Phase::Target) && (KeyEvent.GetKeyCode() < 127))
 	{
 		int EventIndex = -1;
 		

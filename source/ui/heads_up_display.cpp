@@ -235,7 +235,7 @@ void UI::HeadsUpDisplay::SetMessage(const std::string & Message)
 	_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, std::bind(&UI::HeadsUpDisplay::_HideMessage, this));
 }
 
-void UI::HeadsUpDisplay::_UpdateCreditsLabel(UI::Label * CreditsLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HeadsUpDisplay::_UpdateCreditsLabel(UI::Label * CreditsLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(g_CharacterObserver != nullptr);
 	if(g_CharacterObserver->GetObservedCharacter() != nullptr)
@@ -249,7 +249,7 @@ void UI::HeadsUpDisplay::_UpdateCreditsLabel(UI::Label * CreditsLabel, float Rea
 	}
 }
 
-void UI::HeadsUpDisplay::_UpdateCycleProgressBar(UI::ProgressBar * CycleProgressBar, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HeadsUpDisplay::_UpdateCycleProgressBar(UI::ProgressBar * CycleProgressBar, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	if(g_Galaxy != nullptr)
 	{
@@ -263,7 +263,7 @@ void UI::HeadsUpDisplay::_UpdateCycleProgressBar(UI::ProgressBar * CycleProgress
 	}
 }
 
-void UI::HeadsUpDisplay::_UpdateEnergyLabel(UI::Label * EnergyLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HeadsUpDisplay::_UpdateEnergyLabel(UI::Label * EnergyLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(g_CharacterObserver != nullptr);
 	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
@@ -291,7 +291,7 @@ void UI::HeadsUpDisplay::_UpdateEnergyLabel(UI::Label * EnergyLabel, float RealT
 	}
 }
 
-void UI::HeadsUpDisplay::_UpdateFuelLabel(UI::Label * FuelLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HeadsUpDisplay::_UpdateFuelLabel(UI::Label * FuelLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(g_CharacterObserver != nullptr);
 	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
@@ -305,7 +305,7 @@ void UI::HeadsUpDisplay::_UpdateFuelLabel(UI::Label * FuelLabel, float RealTimeS
 	}
 }
 
-void UI::HeadsUpDisplay::_UpdateHullLabel(UI::Label * HullLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HeadsUpDisplay::_UpdateHullLabel(UI::Label * HullLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(g_CharacterObserver != nullptr);
 	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
@@ -319,7 +319,7 @@ void UI::HeadsUpDisplay::_UpdateHullLabel(UI::Label * HullLabel, float RealTimeS
 	}
 }
 
-void UI::HeadsUpDisplay::_UpdateLinkedSystemTargetLabel(UI::Label * LinkedSystemTargetLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HeadsUpDisplay::_UpdateLinkedSystemTargetLabel(UI::Label * LinkedSystemTargetLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(g_CharacterObserver != nullptr);
 	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget() != nullptr))
@@ -352,7 +352,7 @@ void UI::HeadsUpDisplay::_UpdateLinkedSystemTargetLabel(UI::Label * LinkedSystem
 	}
 }
 
-void UI::HeadsUpDisplay::_UpdateMiniMapSystemNameLabel(UI::Label * MiniMapSystemNameLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HeadsUpDisplay::_UpdateMiniMapSystemNameLabel(UI::Label * MiniMapSystemNameLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(g_CharacterObserver != nullptr);
 	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
@@ -368,7 +368,7 @@ void UI::HeadsUpDisplay::_UpdateMiniMapSystemNameLabel(UI::Label * MiniMapSystem
 	}
 }
 
-void UI::HeadsUpDisplay::_UpdateMiniMapDisplay(UI::MiniMapDisplay * MiniMapDisplay, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HeadsUpDisplay::_UpdateMiniMapDisplay(UI::MiniMapDisplay * MiniMapDisplay, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(g_CharacterObserver != nullptr);
 	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
@@ -382,7 +382,7 @@ void UI::HeadsUpDisplay::_UpdateMiniMapDisplay(UI::MiniMapDisplay * MiniMapDispl
 	}
 }
 
-void UI::HeadsUpDisplay::_UpdateMiniMapWidget(UI::Widget * MiniMapWidget, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HeadsUpDisplay::_UpdateMiniMapWidget(UI::Widget * MiniMapWidget, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(g_CharacterObserver != nullptr);
 	if(g_CharacterObserver->GetObservedCharacter() != nullptr)
@@ -395,7 +395,7 @@ void UI::HeadsUpDisplay::_UpdateMiniMapWidget(UI::Widget * MiniMapWidget, float 
 	}
 }
 
-void UI::HeadsUpDisplay::_UpdateScannerDisplay(UI::ScannerDisplay * ScannerDisplay, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HeadsUpDisplay::_UpdateScannerDisplay(UI::ScannerDisplay * ScannerDisplay, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(g_CharacterObserver != nullptr);
 	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
@@ -409,7 +409,7 @@ void UI::HeadsUpDisplay::_UpdateScannerDisplay(UI::ScannerDisplay * ScannerDispl
 	}
 }
 
-void UI::HeadsUpDisplay::_UpdateScannerTargetNameLabel(UI::Label * ScannerTargetNameLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HeadsUpDisplay::_UpdateScannerTargetNameLabel(UI::Label * ScannerTargetNameLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(g_CharacterObserver != nullptr);
 	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
@@ -424,7 +424,7 @@ void UI::HeadsUpDisplay::_UpdateScannerTargetNameLabel(UI::Label * ScannerTarget
 	}
 }
 
-void UI::HeadsUpDisplay::_UpdateScannerWidget(UI::Widget * ScannerWidget, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HeadsUpDisplay::_UpdateScannerWidget(UI::Widget * ScannerWidget, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(g_CharacterObserver != nullptr);
 	if(g_CharacterObserver->GetObservedCharacter() != nullptr)
@@ -437,7 +437,7 @@ void UI::HeadsUpDisplay::_UpdateScannerWidget(UI::Widget * ScannerWidget, float 
 	}
 }
 
-void UI::HeadsUpDisplay::_UpdateTimeWarpLabel(UI::Label * TimeWarpLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HeadsUpDisplay::_UpdateTimeWarpLabel(UI::Label * TimeWarpLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	if(g_Galaxy != nullptr)
 	{

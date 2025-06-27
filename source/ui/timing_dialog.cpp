@@ -95,7 +95,7 @@ void UI::TimingDialog::_OnKey(UI::KeyEvent & KeyEvent)
 	}
 }
 
-void UI::TimingDialog::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
+void UI::TimingDialog::_OnUpdating([[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	_AISecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetAISecondsThisFrame() * 1000, 2) + " ms");
 	_CommoditiesInCurrentSystemThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetCommoditiesInCurrentSystemThisFrame()));

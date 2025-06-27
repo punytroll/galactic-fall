@@ -89,7 +89,7 @@ namespace UI
 			HangarAmountLabel->SetHeight(height(this));
 			HangarAmountLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 			HangarAmountLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-			HangarAmountLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetsListBoxItem::_OnHangarAmountLabelUpdating, this, std::placeholders::_1, std::placeholders::_2, HangarAmountLabel));
+			HangarAmountLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetsListBoxItem::_OnHangarAmountLabelUpdating, this, HangarAmountLabel, std::placeholders::_1, std::placeholders::_2));
 			NameLabel->SetLeft(5.0_c);
 			NameLabel->SetTop(0.0_c);
 			NameLabel->SetWidth(left(HangarAmountLabel) - 5.0_c - left(NameLabel));
@@ -123,7 +123,7 @@ namespace UI
 		}
 	private:
 		// event handlers
-		void _OnHangarAmountLabelUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Label * HangarAmountLabel)
+		void _OnHangarAmountLabelUpdating(UI::Label * HangarAmountLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 		{
 			if(_Hangar != nullptr)
 			{
@@ -377,13 +377,13 @@ void UI::TradeCenterWidget::_ClearAssetClassViewDisplay(void)
 	}
 }
 
-void UI::TradeCenterWidget::_OnAssetClassDescriptionCaptionLabelUpdating(UI::Label * AssetClassDescriptionCaptionLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::TradeCenterWidget::_OnAssetClassDescriptionCaptionLabelUpdating(UI::Label * AssetClassDescriptionCaptionLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(AssetClassDescriptionCaptionLabel != nullptr);
 	AssetClassDescriptionCaptionLabel->SetVisible(_AssetClassListBox->GetSelectedItem() != nullptr);
 }
 
-void UI::TradeCenterWidget::_OnAssetClassDescriptionLabelUpdating(UI::Label * AssetClassDescriptionLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::TradeCenterWidget::_OnAssetClassDescriptionLabelUpdating(UI::Label * AssetClassDescriptionLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetsListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
 	
@@ -455,13 +455,13 @@ void UI::TradeCenterWidget::_OnAssetClassListBoxSelectedItemChanged(void)
 	}
 }
 
-void UI::TradeCenterWidget::_OnAssetClassPriceCaptionLabelUpdating(UI::Label * AssetClassPriceCaptionLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::TradeCenterWidget::_OnAssetClassPriceCaptionLabelUpdating(UI::Label * AssetClassPriceCaptionLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(AssetClassPriceCaptionLabel != nullptr);
 	AssetClassPriceCaptionLabel->SetVisible(_AssetClassListBox->GetSelectedItem() != nullptr);
 }
 
-void UI::TradeCenterWidget::_OnAssetClassPriceLabelUpdating(UI::Label * AssetClassPriceLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::TradeCenterWidget::_OnAssetClassPriceLabelUpdating(UI::Label * AssetClassPriceLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetsListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
 	
@@ -478,13 +478,13 @@ void UI::TradeCenterWidget::_OnAssetClassPriceLabelUpdating(UI::Label * AssetCla
 	}
 }
 
-void UI::TradeCenterWidget::_OnAssetClassSizeCaptionLabelUpdating(UI::Label * AssetClassSizeCaptionLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::TradeCenterWidget::_OnAssetClassSizeCaptionLabelUpdating(UI::Label * AssetClassSizeCaptionLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(AssetClassSizeCaptionLabel != nullptr);
 	AssetClassSizeCaptionLabel->SetVisible(_AssetClassListBox->GetSelectedItem() != nullptr);
 }
 
-void UI::TradeCenterWidget::_OnAssetClassSizeLabelUpdating(UI::Label * AssetClassSizeLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::TradeCenterWidget::_OnAssetClassSizeLabelUpdating(UI::Label * AssetClassSizeLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetsListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
 	
@@ -511,7 +511,7 @@ void UI::TradeCenterWidget::_OnBuyButtonClicked(void)
 	}
 }
 
-void UI::TradeCenterWidget::_OnBuyButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds)
+void UI::TradeCenterWidget::_OnBuyButtonUpdating(UI::Button * BuyButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetsListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
 	
@@ -590,7 +590,7 @@ void UI::TradeCenterWidget::_OnSellButtonClicked(void)
 	}
 }
 
-void UI::TradeCenterWidget::_OnSellButtonUpdating(UI::Button * SellButton, float RealTimeSeconds, float GameTimeSeconds)
+void UI::TradeCenterWidget::_OnSellButtonUpdating(UI::Button * SellButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetsListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
 	bool Enabled(false);
@@ -616,7 +616,7 @@ void UI::TradeCenterWidget::_OnSellButtonUpdating(UI::Button * SellButton, float
 	SellButton->SetEnabled(Enabled);
 }
 
-void UI::TradeCenterWidget::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
+void UI::TradeCenterWidget::_OnUpdating(float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(_AssetClassViewDisplay != nullptr);
 	if(_AssetClassViewDisplay->GetView() != nullptr)

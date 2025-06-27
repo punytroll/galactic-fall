@@ -16,7 +16,7 @@ arxx_library = static_library(
   include_directories: [include_directories('include')]
 )
 
-arxx_library_dependency = declare_dependency(
+arxx_dependency = declare_dependency(
   include_directories: [include_directories('include')],
   link_with: [arxx_library]
 )

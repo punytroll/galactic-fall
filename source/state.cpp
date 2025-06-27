@@ -24,7 +24,7 @@ State::State(StateMachineMind * Mind) :
 {
 }
 
-bool State::HandleMessage(Message * Message)
+bool State::HandleMessage([[maybe_unused]] Message * Message)
 {
 	return false;
 }

@@ -57,7 +57,7 @@ void Goal::Activate(void)
 {
 }
 
-bool Goal::OnMessageReceived(Message * Message)
+bool Goal::OnMessageReceived([[maybe_unused]] Message * Message)
 {
 	return false;
 }

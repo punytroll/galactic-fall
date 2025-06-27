@@ -7,7 +7,7 @@ all: build all-recursive
 all-here: configuration
 	meson compile -C build
 
-all-recursive: all-here tools-all-recursive data-all-recursive source-all-recursive
+all-recursive: all-here tools-all-recursive data-all-recursive
 
 build:
 	meson setup build
@@ -23,7 +23,6 @@ clean-here:
 
 clean-recursive: clean-here
 	@$(MAKE) -C data clean-recursive
-	@$(MAKE) -C source clean-recursive
 	@$(MAKE) -C tools clean-recursive
 
 clean-repository: clean
@@ -41,20 +40,12 @@ configuration:
 
 data: data-all-recursive
 
-source: source-all-recursive
-
 tools: tools-all-recursive
 
 data-all-recursive:
 	@$(MAKE) -C data all-recursive
 
-source-all-recursive:
-	@$(MAKE) -C source all-recursive
-
 tools-all-recursive:
 	@$(MAKE) -C tools all-recursive
 
-install: all
-	@echo -e "This project is not installable yet. Please run \"./galactic-fall\" from the top directory."
-
-.PHONY: all all-here all-recursive clean clean-here clean-recursive data data-all-recursive default install source source-all-recursive tools tools-all-recursive
+.PHONY: all all-here all-recursive clean clean-here clean-recursive data data-all-recursive default tools tools-all-recursive

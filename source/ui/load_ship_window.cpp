@@ -142,14 +142,14 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	MoveToHangarButton->SetHeight(20.0_c);
 	MoveToHangarButton->SetText("<<");
 	MoveToHangarButton->ConnectClickedCallback(std::bind(&UI::LoadShipWindow::_OnMoveToHangarButtonClicked, this));
-	MoveToHangarButton->ConnectUpdatingCallback(std::bind(&UI::LoadShipWindow::_OnMoveToHangarButtonUpdating, this, std::placeholders::_1, std::placeholders::_2, MoveToHangarButton));
+	MoveToHangarButton->ConnectUpdatingCallback(std::bind(&UI::LoadShipWindow::_OnMoveToHangarButtonUpdating, this, MoveToHangarButton, std::placeholders::_1, std::placeholders::_2));
 	MoveToShipButton->SetLeft(0.0_c);
 	MoveToShipButton->SetTop(bottom(MoveToHangarButton) + 10.0_c);
 	MoveToShipButton->SetWidth(width(CenterPane));
 	MoveToShipButton->SetHeight(20.0_c);
 	MoveToShipButton->SetText(">>");
 	MoveToShipButton->ConnectClickedCallback(std::bind(&UI::LoadShipWindow::_OnMoveToShipButtonClicked, this));
-	MoveToShipButton->ConnectUpdatingCallback(std::bind(&UI::LoadShipWindow::_OnMoveToShipButtonUpdating, this, std::placeholders::_1, std::placeholders::_2, MoveToShipButton));
+	MoveToShipButton->ConnectUpdatingCallback(std::bind(&UI::LoadShipWindow::_OnMoveToShipButtonUpdating, this, MoveToShipButton, std::placeholders::_1, std::placeholders::_2));
 	OKButton->SetLeft(0.0_c);
 	OKButton->SetTop(height(CenterPane) - 40.0_c - height(OKButton));
 	OKButton->SetWidth(width(CenterPane));
@@ -173,7 +173,7 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	ShipFreeSpaceLabel->SetHeight(20.0_c);
 	ShipFreeSpaceLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	ShipFreeSpaceLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	ShipFreeSpaceLabel->ConnectUpdatingCallback(std::bind(&UI::LoadShipWindow::_OnShipFreeSpaceLabelUpdating, this, std::placeholders::_1, std::placeholders::_2, ShipFreeSpaceLabel));
+	ShipFreeSpaceLabel->ConnectUpdatingCallback(std::bind(&UI::LoadShipWindow::_OnShipFreeSpaceLabelUpdating, this, ShipFreeSpaceLabel, std::placeholders::_1, std::placeholders::_2));
 	ShipLabel->SetLeft(0.0_c);
 	ShipLabel->SetTop(0.0_c);
 	ShipLabel->SetWidth(width(RightPane));
@@ -310,7 +310,7 @@ void UI::LoadShipWindow::_OnMoveToHangarButtonClicked(void)
 	_Hangar->GetAspectObjectContainer()->AddContent(MovingObject);
 }
 
-void UI::LoadShipWindow::_OnMoveToHangarButtonUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Button * MoveToHangarButton)
+void UI::LoadShipWindow::_OnMoveToHangarButtonUpdating(UI::Button * MoveToHangarButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	MoveToHangarButton->SetEnabled((_Hangar != nullptr) && (dynamic_cast< UI::LoadShipListBoxObjectItem * >(_ShipListBox->GetSelectedItem()) != nullptr));
 }
@@ -333,7 +333,7 @@ void UI::LoadShipWindow::_OnMoveToShipButtonClicked(void)
 	_Ship->GetCargoHold()->GetAspectObjectContainer()->AddContent(MovingObject);
 }
 
-void UI::LoadShipWindow::_OnMoveToShipButtonUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Button * MoveToShipButton)
+void UI::LoadShipWindow::_OnMoveToShipButtonUpdating(UI::Button * MoveToShipButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	auto SelectedHangarItem(dynamic_cast< UI::LoadShipListBoxObjectItem * >(_HangarListBox->GetSelectedItem()));
 	
@@ -365,7 +365,7 @@ void UI::LoadShipWindow::_OnShipDestroying(void)
 	assert(false);
 }
 
-void UI::LoadShipWindow::_OnShipFreeSpaceLabelUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Label * ShipFreeSpaceLabel)
+void UI::LoadShipWindow::_OnShipFreeSpaceLabelUpdating(UI::Label * ShipFreeSpaceLabel, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(_Ship != nullptr);
 	assert(_Ship->GetCargoHold() != nullptr);

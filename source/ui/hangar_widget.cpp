@@ -136,7 +136,7 @@ namespace UI
 			delete Node;
 		}
 		
-		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
+		void _OnUpdating(float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 		{
 			if(IsHovered() == true)
 			{
@@ -459,7 +459,7 @@ void UI::HangarWidget::_OnBoardButtonClicked(void)
 	_SelectedShipListItem->GetShip()->GetAspectObjectContainer()->AddContent(_Character);
 }
 
-void UI::HangarWidget::_OnBoardButtonUpdating(UI::Button * BoardButton, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnBoardButtonUpdating(UI::Button * BoardButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(BoardButton != nullptr);
 	if(_SelectedShipListItem != nullptr)
@@ -506,7 +506,7 @@ void UI::HangarWidget::_OnDestroying(UI::Event & DestroyingEvent)
 	}
 }
 
-void UI::HangarWidget::_OnEnergyStateProgressBarUpdating(UI::ProgressBar * EnergyStateProgressBar, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnEnergyStateProgressBarUpdating(UI::ProgressBar * EnergyStateProgressBar, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(EnergyStateProgressBar != nullptr);
 	
@@ -538,7 +538,7 @@ void UI::HangarWidget::_OnEnergyStateProgressBarUpdating(UI::ProgressBar * Energ
 	EnergyStateProgressBar->SetColor(Graphics::ColorRGBO(1.0f - EnergyPercentage, EnergyPercentage, 0.0f, 1.0f));
 }
 
-void UI::HangarWidget::_OnFuelStateProgressBarUpdating(UI::ProgressBar * FuelStateProgressBar, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnFuelStateProgressBarUpdating(UI::ProgressBar * FuelStateProgressBar, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(FuelStateProgressBar != nullptr);
 	
@@ -591,7 +591,7 @@ void UI::HangarWidget::_OnHangarContentRemoved(Object * Content)
 	}
 }
 
-void UI::HangarWidget::_OnHullStateProgressBarUpdating(UI::ProgressBar * HullStateProgressBar, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnHullStateProgressBarUpdating(UI::ProgressBar * HullStateProgressBar, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(HullStateProgressBar != nullptr);
 	
@@ -633,7 +633,7 @@ void UI::HangarWidget::_OnLoadButtonClicked(void)
 	}
 }
 
-void UI::HangarWidget::_OnLoadButtonUpdating(UI::Button * LoadButton, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnLoadButtonUpdating(UI::Button * LoadButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(LoadButton != nullptr);
 	LoadButton->SetEnabled(_SelectedShipListItem != nullptr);
@@ -668,7 +668,7 @@ void UI::HangarWidget::_OnOutfitButtonClicked(void)
 	}
 }
 
-void UI::HangarWidget::_OnOutfitButtonUpdating(UI::Button * OutfitButton, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnOutfitButtonUpdating(UI::Button * OutfitButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(OutfitButton != nullptr);
 	OutfitButton->SetEnabled(_SelectedShipListItem != nullptr);
@@ -695,7 +695,7 @@ void UI::HangarWidget::_OnRechargeButtonClicked(void)
 	_Planet->Recharge(_SelectedShipListItem->GetShip(), _Character);
 }
 
-void UI::HangarWidget::_OnRechargeButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnRechargeButtonUpdating(UI::Button * RechargeButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(_Planet != nullptr);
 	
@@ -726,7 +726,7 @@ void UI::HangarWidget::_OnRefuelButtonClicked(void)
 	_Planet->Refuel(_SelectedShipListItem->GetShip(), _Character);
 }
 
-void UI::HangarWidget::_OnRefuelButtonUpdating(UI::Button * RefuelButton, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnRefuelButtonUpdating(UI::Button * RefuelButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(_Planet != nullptr);
 	
@@ -747,7 +747,7 @@ void UI::HangarWidget::_OnRepairButtonClicked(void)
 	_Planet->Repair(_SelectedShipListItem->GetShip(), _Character);
 }
 
-void UI::HangarWidget::_OnRepairButtonUpdating(UI::Button * RepairButton, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnRepairButtonUpdating(UI::Button * RepairButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(_Planet != nullptr);
 	if(_SelectedShipListItem != nullptr)
@@ -757,7 +757,7 @@ void UI::HangarWidget::_OnRepairButtonUpdating(UI::Button * RepairButton, float 
 	RepairButton->SetEnabled((_Planet->GetOffersRepairing() == true) && (_SelectedShipListItem != nullptr) && (_SelectedShipListItem->GetShip()->GetHull() < _SelectedShipListItem->GetShip()->GetHullCapacity()));
 }
 
-void UI::HangarWidget::_OnShipListItemMouseButton(UI::MouseButtonEvent & MouseButtonEvent, UI::ShipListItem * ShipListItem)
+void UI::HangarWidget::_OnShipListItemMouseButton(UI::ShipListItem * ShipListItem, UI::MouseButtonEvent & MouseButtonEvent)
 {
 	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
 	{
@@ -770,7 +770,7 @@ void UI::HangarWidget::_OnShipListItemMouseButton(UI::MouseButtonEvent & MouseBu
 	}
 }
 
-void UI::HangarWidget::_OnShipListItemUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::ShipListItem * ShipListItem)
+void UI::HangarWidget::_OnShipListItemUpdating(UI::ShipListItem * ShipListItem, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(_Character != nullptr);
 	assert(ShipListItem != nullptr);
@@ -799,8 +799,8 @@ void UI::HangarWidget::_OnShipScrollBoxSubWidgetAdded(UI::SubWidgetEvent & SubWi
 		NewItem->SetTop(5.0_c);
 		NewItem->SetWidth(100.0_c);
 		NewItem->SetHeight(100.0_c);
-		NewItem->ConnectMouseButtonCallback(std::bind(&UI::HangarWidget::_OnShipListItemMouseButton, this, std::placeholders::_1, NewItem));
-		NewItem->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnShipListItemUpdating, this, std::placeholders::_1, std::placeholders::_2, NewItem));
+		NewItem->ConnectMouseButtonCallback(std::bind(&UI::HangarWidget::_OnShipListItemMouseButton, this, NewItem, std::placeholders::_1));
+		NewItem->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnShipListItemUpdating, this, NewItem, std::placeholders::_1, std::placeholders::_2));
 		_ShipScrollBox->GetContent()->SetWidth(constant(NewItem->GetRight() + 5.0f));
 	}
 }
@@ -860,7 +860,7 @@ void UI::HangarWidget::_OnTakeOffButtonClicked(void)
 	_SelectedShipListItem->GetShip()->SetTakeOff(true);
 }
 
-void UI::HangarWidget::_OnTakeOffButtonUpdating(UI::Button * TakeOffButton, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnTakeOffButtonUpdating(UI::Button * TakeOffButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	assert(TakeOffButton != nullptr);
 	assert(_Character != nullptr);

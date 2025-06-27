@@ -11,6 +11,8 @@ project(
   }
 )
 
+python3_program = find_program('python3')
+
 algebra_subproject = subproject('algebra', version: '>=2.1.1')
 algebra_dependency = algebra_subproject.get_variable('algebra_library_dependency')
 
@@ -33,4 +35,6 @@ opengl_dependency = dependency('gl')
 x11_dependency = dependency('x11')
 
 subdir('tools')
+subdir('data')
 subdir('libraries')
+subdir('source')

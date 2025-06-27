@@ -42,7 +42,7 @@ public:
 	// getters
 	GoalMind * GetMind(void) const;
 	const std::string & GetName(void) const;
-	const int GetState(void) const;
+	int GetState(void) const;
 	std::deque< Goal * > & GetSubGoals(void);
 	const std::deque< Goal * > & GetSubGoals(void) const;
 	bool HasSubGoal(const std::string & Name) const;
@@ -77,7 +77,7 @@ inline const std::string & Goal::GetName(void) const
 	return m_Name;
 }
 
-inline const int Goal::GetState(void) const
+inline int Goal::GetState(void) const
 {
 	return m_State;
 }

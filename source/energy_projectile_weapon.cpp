@@ -49,7 +49,7 @@ EnergyProjectileWeapon::EnergyProjectileWeapon(void)
 	GetAspectVisualization()->SetUpdateVisualizationCallback(std::bind(&EnergyProjectileWeapon::_UpdateVisualization, this, std::placeholders::_1));
 }
 
-bool EnergyProjectileWeapon::_Update(float Seconds)
+bool EnergyProjectileWeapon::_Update([[maybe_unused]] float Seconds)
 {
 	if((_Fire == true) && (GetEnergy() >= GetEnergyCapacity()))
 	{

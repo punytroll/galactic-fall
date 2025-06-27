@@ -4,7 +4,7 @@ events_library = static_library(
   include_directories: [include_directories('include')]
 )
 
-events_library_dependency = declare_dependency(
+events_dependency = declare_dependency(
   include_directories: [include_directories('include')],
   link_with: [events_library]
 )
@@ -15,7 +15,7 @@ events_library_test_suite_executable = executable(
     'testing/test_suite.cpp'
   ],
   dependencies: [
-    events_library_dependency
+    events_dependency
   ]
 )
 

@@ -44,8 +44,8 @@ public:
 	Settings(void);
 	~Settings(void);
 	// getters
-	const std::list< Settings::KeyBinding > * const GetKeyBindings(void) const;
-	const Vector2f * const GetWindowDimensions(void) const;
+	std::list< Settings::KeyBinding > const * GetKeyBindings(void) const;
+	Vector2f const * GetWindowDimensions(void) const;
 	// setters
 	void SetKeyBindings(const std::list< Settings::KeyBinding > & KeyBindings);
 	void SetWindowDimensions(const Vector2f & WindowDimensions);
@@ -56,12 +56,12 @@ private:
 	Vector2f * _WindowDimensions;
 };
 
-inline const std::list< Settings::KeyBinding > * const Settings::GetKeyBindings(void) const
+inline std::list< Settings::KeyBinding > const * Settings::GetKeyBindings(void) const
 {
 	return _KeyBindings;
 }
 
-inline const Vector2f * const Settings::GetWindowDimensions(void) const
+inline Vector2f const * Settings::GetWindowDimensions(void) const
 {
 	return _WindowDimensions;
 }

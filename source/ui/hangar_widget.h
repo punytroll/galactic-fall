@@ -63,8 +63,8 @@ namespace UI
 		void _OnRefuelButtonUpdating(UI::Button * RefuelButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnRepairButtonClicked(void);
 		void _OnRepairButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds);
-		void _OnShipListItemMouseButton(UI::MouseButtonEvent & MouseButtonEvent, UI::ShipListItem * ShipListItem);
-		void _OnShipListItemUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::ShipListItem * ShipListItem);
+		void _OnShipListItemMouseButton(UI::ShipListItem * ShipListItem, UI::MouseButtonEvent & MouseButtonEvent);
+		void _OnShipListItemUpdating(UI::ShipListItem * ShipListItem, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnShipScrollBoxSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent);
 		void _OnShipScrollBoxSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent);
 		void _OnTakeOffButtonClicked(void);

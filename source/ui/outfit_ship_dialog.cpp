@@ -358,7 +358,7 @@ void UI::OutfitShipDialog::_OnDestroying(UI::Event & DestroyingEvent)
 	}
 }
 
-void UI::OutfitShipDialog::_OnMountButtonUpdating(UI::Button * MountButton, float RealTimeSeconds, float GameTimeSeconds)
+void UI::OutfitShipDialog::_OnMountButtonUpdating(UI::Button * MountButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	auto SelectedSlotListItem{dynamic_cast< UI::SlotListItem * >(_SlotListBox->GetSelectedItem())};
 	
@@ -375,7 +375,7 @@ void UI::OutfitShipDialog::_OnMountButtonUpdating(UI::Button * MountButton, floa
 	}
 }
 
-void UI::OutfitShipDialog::_OnUnmountButtonUpdating(UI::Button * UnmountButton, float RealTimeSeconds, float GameTimeSeconds)
+void UI::OutfitShipDialog::_OnUnmountButtonUpdating(UI::Button * UnmountButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
 {
 	auto SelectedSlotListItem{dynamic_cast< UI::SlotListItem * >(_SlotListBox->GetSelectedItem())};
 	

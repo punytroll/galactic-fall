@@ -39,7 +39,7 @@ graphics_library = static_library(
   include_directories: [include_directories('include')]
 )
 
-graphics_library_dependency = declare_dependency(
+graphics_dependency = declare_dependency(
   include_directories: [include_directories('include')],
   link_with: [graphics_library]
 )
