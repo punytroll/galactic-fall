@@ -7,14 +7,13 @@ all: build all-recursive
 all-here: configuration
 	meson compile -C build
 
-all-recursive: all-here tools-all-recursive data-all-recursive
+all-recursive: all-here data-all-recursive
 
 build:
 	meson setup build
 
 check:
 	meson test -C build
-	@$(MAKE) -C tools check
 
 clean: clean-recursive
 
@@ -23,7 +22,6 @@ clean-here:
 
 clean-recursive: clean-here
 	@$(MAKE) -C data clean-recursive
-	@$(MAKE) -C tools clean-recursive
 
 clean-repository: clean
 	$(RM) -R .configuration.d
@@ -40,12 +38,7 @@ configuration:
 
 data: data-all-recursive
 
-tools: tools-all-recursive
-
 data-all-recursive:
 	@$(MAKE) -C data all-recursive
 
-tools-all-recursive:
-	@$(MAKE) -C tools all-recursive
-
-.PHONY: all all-here all-recursive clean clean-here clean-recursive data data-all-recursive default tools tools-all-recursive
+.PHONY: all all-here all-recursive clean clean-here clean-recursive data data-all-recursive default
