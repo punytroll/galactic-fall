@@ -52,8 +52,9 @@ namespace Arxx
 	 **/
 	class Structure
 	{
-		friend class Arxx::Archive;
 	public:
+		friend class Arxx::Archive;
+        
 		/**
 		 * @brief The object that holds references to other items.
 		 * 
@@ -61,8 +62,9 @@ namespace Arxx
 		 **/
 		class Relation
 		{
-			friend class Arxx::Structure;
 		public:
+			friend class Arxx::Structure;
+            
 			typedef std::multimap< Arxx::u4byte, Arxx::Reference >::size_type size_type;
 			
 			class const_iterator;
@@ -74,8 +76,9 @@ namespace Arxx
 			 **/
 			class iterator
 			{
-				friend class Arxx::Structure::Relation::const_iterator;
 			public:
+				friend class Arxx::Structure::Relation::const_iterator;
+                
 				/**
 				 * @brief The constructor of a Reference iterator.
 				 * @param iReference The STL iterator from the Relation's aggregated Reference container. The internal representation of the iterator.
@@ -138,6 +141,7 @@ namespace Arxx
 				 * @param iReference The iterator to check against.
 				 **/
 				bool operator!=(const Arxx::Structure::Relation::const_iterator & iReference) const;
+                
 			private:
 				/**
 				 * @brief The internal STL iterator.
@@ -145,6 +149,7 @@ namespace Arxx
 				 * This is an iterator into the Relation's internal Reference map.
 				 **/
 				std::multimap< Arxx::u4byte, Arxx::Reference >::iterator m_iReference;
+                
 			};
 			
 			/**
@@ -154,8 +159,9 @@ namespace Arxx
 			 **/
 			class const_iterator
 			{
-				friend class Arxx::Structure::Relation::iterator;
 			public:
+				friend class Arxx::Structure::Relation::iterator;
+                
 				/**
 				 * @brief The constructor of a const Reference iterator.
 				 * @param iReference The STL iterator from the Relation's aggregated Reference container. The internal representation of the iterator.
@@ -207,6 +213,7 @@ namespace Arxx
 				 * @param iReference The iterator to check against.
 				 **/
 				bool operator!=(const Arxx::Structure::Relation::const_iterator & iReference) const;
+                
 			private:
 				/**
 				 * @brief The internal STL iterator.
@@ -214,6 +221,7 @@ namespace Arxx
 				 * This is an iterator into a Relation's internal Reference map.
 				 **/
 				std::multimap< Arxx::u4byte, Arxx::Reference >::const_iterator m_iReference;
+                
 			};
 			
 			/**
@@ -274,6 +282,7 @@ namespace Arxx
 			 * @brief Returns the name of the relation.
 			 **/
 			const std::string & sGetName() const;
+            
 		private:
 			/**
 			 * @brief A constructor that links a relation to a specific Arxx::Structure.
@@ -298,6 +307,7 @@ namespace Arxx
 			 * @brief The name of the relation.
 			 **/
 			std::string m_sName;
+            
 		};
 		
 		friend class Arxx::Structure::Relation;
@@ -311,8 +321,9 @@ namespace Arxx
 		 **/
 		class iterator
 		{
-			friend class Arxx::Structure::const_iterator;
 		public:
+			friend class Arxx::Structure::const_iterator;
+            
 			/**
 			 * @brief The constructor of a Relation iterator.
 			 * @param iRelation The STL iterator from the Structure's aggregated Relation container. The internal representation of the iterator.
@@ -375,6 +386,7 @@ namespace Arxx
 			 * @param iRelation The iterator to check against.
 			 **/
 			bool operator!=(const Arxx::Structure::const_iterator & iRelation) const;
+            
 		private:
 			/**
 			 * @brief The internal STL iterator.
@@ -382,6 +394,7 @@ namespace Arxx
 			 * This is an iterator into the Structure's internal Relation map.
 			 **/
 			std::map< std::string, Arxx::Structure::Relation >::iterator m_iRelation;
+            
 		};
 		
 		/**
@@ -391,8 +404,9 @@ namespace Arxx
 		 **/
 		class const_iterator
 		{
-			friend class Arxx::Structure::iterator;
 		public:
+			friend class Arxx::Structure::iterator;
+            
 			/**
 			 * @brief The constructor of a const Relation iterator.
 			 * @param iRelation The STL iterator from the Structure's aggregated Relation container. The internal representation of the iterator.
@@ -444,6 +458,7 @@ namespace Arxx
 			 * @param iRelation The iterator to check against.
 			 **/
 			bool operator!=(const Arxx::Structure::const_iterator & iRelation) const;
+            
 		private:
 			/**
 			 * @brief The internal STL iterator.
@@ -451,6 +466,7 @@ namespace Arxx
 			 * This is an iterator into a Structure's internal Relation map.
 			 **/
 			std::map< std::string, Arxx::Structure::Relation >::const_iterator m_iRelation;
+            
 		};
 		
 		typedef std::map< std::string, Arxx::Structure::Relation >::size_type size_type;
@@ -549,6 +565,7 @@ namespace Arxx
 		 * @brief Returns the end const Relation iterator of the Structure.
 		 **/
 		Arxx::Structure::const_iterator end() const;
+        
 	private:
 		friend Arxx::Buffer & Arxx::operator<<(Arxx::Buffer & Buffer, const Arxx::Structure & Structure);
 		
@@ -562,10 +579,11 @@ namespace Arxx
 		
 		void vReadFromStream(Arxx::u4byte u4StructureDataLength, std::istream & IStream);
 		
-		
 		void vRemoveRelation(Arxx::Structure::Relation * pRelation);
+        
 		Arxx::Item & m_Item;
 		std::map< std::string, Arxx::Structure::Relation > m_Relations;
+        
 	};
 }
 

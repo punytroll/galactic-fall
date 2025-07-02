@@ -38,11 +38,11 @@ Arxx::Data::Compression Arxx::Data::m_DefaultCompression = NONE;
 #endif
 
 Arxx::Data::Data() :
-	_Offset(0),
-	_CompressionType(Arxx::Data::NONE),
-	_DecompressedLength(0),
-	_CompressedLength(0),
-	_Fetched(true)
+	m_Offset(0),
+	m_CompressionType(Arxx::Data::NONE),
+	m_DecompressedLength(0),
+	m_CompressedLength(0),
+	m_Fetched(true)
 {
 }
 
@@ -52,7 +52,7 @@ Arxx::Data::~Data()
 
 void Arxx::Data::Decompress()
 {
-	switch(_CompressionType)
+	switch(m_CompressionType)
 	{
 	case Arxx::Data::NONE:
 		{
@@ -101,10 +101,10 @@ void Arxx::Data::Decompress()
 				throw zlib_error("TODO: specify!");
 			}
 			vSetLength(0);
-			vInsert(0, _DecompressedLength, DecompressedData);
+			vInsert(0, m_DecompressedLength, DecompressedData);
 			delete[] DecompressedData;
-			_CompressionType = Arxx::Data::NONE;
-			_CompressedLength = 0;
+			m_CompressionType = Arxx::Data::NONE;
+			m_CompressedLength = 0;
 #else
 			throw std::runtime_error("Unsupported decompression method.");
 #endif
@@ -150,8 +150,8 @@ void Arxx::Data::Decompress()
 			vSetLength(0);
 			vInsert(0, _DecompressedLength, DecompressedData);
 			delete[] DecompressedData;
-			_CompressionType = Arxx::Data::NONE;
-			_CompressedLength = 0;
+			m_CompressionType = Arxx::Data::NONE;
+			m_CompressedLength = 0;
 #else
 			throw std::runtime_error("Unsupported decompression method.");
 #endif
@@ -215,8 +215,8 @@ void Arxx::Data::Compress(const Arxx::Data::Compression & CompressionType)
 			vSetLength(0);
 			vInsert(0, zStream.total_out, CompressedData);
 			delete[] CompressedData;
-			_CompressionType = CompressionType;
-			_CompressedLength = zStream.total_out;
+			m_CompressionType = CompressionType;
+			m_CompressedLength = zStream.total_out;
 #else
 			throw std::runtime_error("Unsupported compression method.");
 #endif
@@ -261,8 +261,8 @@ void Arxx::Data::Compress(const Arxx::Data::Compression & CompressionType)
 			vSetLength(0);
 			vInsert(0, BZStream.total_out_lo32, CompressedData);
 			delete[] CompressedData;
-			_CompressionType = CompressionType;
-			_CompressedLength = BZStream.total_out_lo32;
+			m_CompressionType = CompressionType;
+			m_CompressedLength = BZStream.total_out_lo32;
 #else
 			throw std::runtime_error("Unsupported compression method.");
 #endif
@@ -273,17 +273,17 @@ void Arxx::Data::Compress(const Arxx::Data::Compression & CompressionType)
 
 bool Arxx::Data::IsCompressed() const
 {
-	return _CompressionType != Arxx::Data::NONE;
+	return m_CompressionType != Arxx::Data::NONE;
 }
 
 bool Arxx::Data::IsDecompressed() const
 {
-	return _CompressionType == Arxx::Data::NONE;
+	return m_CompressionType == Arxx::Data::NONE;
 }
 
 Arxx::Data::Compression Arxx::Data::GetCompression() const
 {
-	return _CompressionType;
+	return m_CompressionType;
 }
 
 Arxx::u4byte Arxx::Data::GetDecompressedLength() const
@@ -294,7 +294,7 @@ Arxx::u4byte Arxx::Data::GetDecompressedLength() const
 	}
 	else
 	{
-		return _DecompressedLength;
+		return m_DecompressedLength;
 	}
 }
 
@@ -306,17 +306,17 @@ Arxx::u4byte Arxx::Data::GetCompressedLength() const
 	}
 	else
 	{
-		return _CompressedLength;
+		return m_CompressedLength;
 	}
 }
 
 bool Arxx::Data::Fetch()
 {
-	if(_Fetched == false)
+	if(m_Fetched == false)
 	{
-		_Fetched = _Fetch(_Offset, ((_CompressionType == Arxx::Data::NONE) ? (_DecompressedLength) : (_CompressedLength)));
+		m_Fetched = m_Fetch(m_Offset, ((m_CompressionType == Arxx::Data::NONE) ? (m_DecompressedLength) : (m_CompressedLength)));
 		
-		return _Fetched;
+		return m_Fetched;
 	}
 	else
 	{
@@ -329,25 +329,25 @@ void Arxx::Data::Unfetch()
 	if(IsFetched() == true)
 	{
 		vDelete(0, stGetLength());
-		_Fetched = false;
+		m_Fetched = false;
 	}
 }
 
 void Arxx::Data::SetFetchInformation(Arxx::u4byte Offset, Arxx::Data::Compression CompressionType, Arxx::u4byte DecompressedLength, Arxx::u4byte CompressedLength)
 {
-	_Offset = Offset;
-	_CompressionType = CompressionType;
-	_DecompressedLength = DecompressedLength;
-	_CompressedLength = CompressedLength;
-	_Fetched = false;
+	m_Offset = Offset;
+	m_CompressionType = CompressionType;
+	m_DecompressedLength = DecompressedLength;
+	m_CompressedLength = CompressedLength;
+	m_Fetched = false;
 }
 
 bool Arxx::Data::IsFetched() const
 {
-	return _Fetched;
+	return m_Fetched;
 }
 
-bool Arxx::Data::_Fetch([[maybe_unused]] Arxx::u4byte Offset, Arxx::u4byte Length)
+bool Arxx::Data::m_Fetch([[maybe_unused]] Arxx::u4byte Offset, Arxx::u4byte Length)
 {
 	return Length == 0;
 }

@@ -72,9 +72,11 @@ namespace Arxx
 		 * @brief Sets the marker's position.
 		 **/
 		void vSetPosition(Arxx::Buffer::size_type stPosition);
+        
 	private:
 		const Arxx::Buffer & m_Buffer;
 		Arxx::Buffer::Marker m_Marker;
+        
 	};
 	
 	/**

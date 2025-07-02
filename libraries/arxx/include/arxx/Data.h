@@ -145,39 +145,42 @@ namespace Arxx
 		 * @brief Returns wether the data is fetched.
 		 **/
 		bool IsFetched() const;
+        
 	protected:
-		virtual bool _Fetch(Arxx::u4byte Offset, Arxx::u4byte Length);
+		virtual bool m_Fetch(Arxx::u4byte Offset, Arxx::u4byte Length);
+        
 	private:
 		/**
 		 * @brief A locator used to further describe the location to the fetcher.
 		 * 
 		 * After creating an Item this value is intentionally invalid.
 		 **/
-		Arxx::u4byte _Offset;
+		Arxx::u4byte m_Offset;
 		
 		/**
 		 * @brief The compressed state the data is currently in.
 		 * 
 		 * Is set to either 0 for to indicate no compression or some value greater than 0 to indicate the compression level of the data as in the zlib library.
 		 **/
-		Arxx::Data::Compression _CompressionType;
+		Arxx::Data::Compression m_CompressionType;
 		
 		/**
 		 * @brief The length of the data if decompressed.
 		 **/
-		Arxx::u4byte _DecompressedLength;
+		Arxx::u4byte m_DecompressedLength;
 		
 		/**
 		 * @brief The length of the data if compressed or 0.
 		 * 
 		 * Since the compressed size is not known as long as the data is decompressed this value is 0 whenever the data is decompressed.
 		 **/
-		Arxx::u4byte _CompressedLength;
+		Arxx::u4byte m_CompressedLength;
 		
 		/**
 		 * @brief A status indicator showing the fetch status of the data.
 		 **/
-		bool _Fetched;
+		bool m_Fetched;
+        
 	};
 }
 

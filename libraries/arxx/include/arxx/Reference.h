@@ -169,6 +169,7 @@ namespace Arxx
 		{
 			return u4GetUniqueID() < Reference.u4GetUniqueID();
 		}
+        
 	private:
 		/**
 		 * @brief Small helper function.
@@ -176,6 +177,7 @@ namespace Arxx
 		void vChangeReference(Arxx::ReferenceImplementation * pReference);
 		
 		Arxx::ReferenceImplementation * m_pReference;
+        
 	};
 }
 

@@ -44,8 +44,9 @@ namespace Arxx
 	 **/
 	class Item : public Arxx::Data
 	{
-		friend class Arxx::Archive;
 	public:
+		friend class Arxx::Archive;
+        
 		static Arxx::Item * Create();
 		static Arxx::Item * Create(Arxx::u4byte Identifier);
 		static Arxx::Item * Create(Arxx::Archive & Archive);
@@ -167,8 +168,10 @@ namespace Arxx
 		 * @brief Returns the const Structure component associated with this Item.
 		 **/
 		const Arxx::Structure & GetStructure() const;
+        
 	protected:
-		virtual bool _Fetch(Arxx::u4byte Offset, Arxx::u4byte Length);
+		virtual bool m_Fetch(Arxx::u4byte Offset, Arxx::u4byte Length);
+        
 	private:
 		/**
 		 * @brief The default constructor is private.
@@ -202,7 +205,7 @@ namespace Arxx
 		 * 
 		 * Depending on the constructor this field is either initialized with 0xFFFFFFFF or with the identifier passed to the constructor.
 		 **/
-		u4byte _Identifier;
+		u4byte m_Identifier;
 		
 		/**
 		 * @brief The item's name in string form.
@@ -223,7 +226,7 @@ namespace Arxx
 		 * 
 		 * After creating an Item this value is intentionally "".
 		 **/
-		std::string _Name;
+		std::string m_Name;
 		
 		/**
 		 * @brief A type identifier for @em this item.
@@ -232,7 +235,7 @@ namespace Arxx
 		 * 
 		 * After creating an Item this value is intentionally 0xFFFFFFFF.
 		 **/
-		Arxx::u4byte _Type;
+		Arxx::u4byte m_Type;
 		
 		/**
 		 * @brief A subtype identifier for @em this item.
@@ -241,27 +244,27 @@ namespace Arxx
 		 * 
 		 * After creating an Item this value is intentionally 0xFFFFFFFF.
 		 **/
-		Arxx::u4byte _SubType;
+		Arxx::u4byte m_SubType;
 		
 		/**
 		 * @brief The major version number of the item.
 		 **/
-		Arxx::u1byte _MajorVersionNumber;
+		Arxx::u1byte m_MajorVersionNumber;
 		
 		/**
 		 * @brief The minor version number of the item.
 		 **/
-		Arxx::u1byte _MinorVersionNumber;
+		Arxx::u1byte m_MinorVersionNumber;
 		
 		/**
 		 * @brief The revision number of the item.
 		 **/
-		Arxx::u1byte _RevisionNumber;
+		Arxx::u1byte m_RevisionNumber;
 		
 		/**
 		 * @brief The candidate number of the item.
 		 **/
-		Arxx::u1byte _CandidateNumber;
+		Arxx::u1byte m_CandidateNumber;
 		
 		/**
 		 * @brief A pointer to the Archive.
@@ -270,12 +273,13 @@ namespace Arxx
 		 * 
 		 * It is changed in conjuction with the Arxx::Archive::vRegisterItem() and Arxx::Archive::vUnregisterItem() functions.
 		 **/
-		Arxx::Archive * _Archive;
+		Arxx::Archive * m_Archive;
 		
 		/**
 		 * @brief The structural information of an item.
 		 **/
-		Arxx::Structure _Structure;
+		Arxx::Structure m_Structure;
+        
 	};
 }
 

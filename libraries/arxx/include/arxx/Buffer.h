@@ -171,7 +171,17 @@ namespace Arxx
 			 * Currently the only occasion when a marker might be invalid is that the associated Arxx::Buffer got destroyed.
 			 **/
 			bool bIsValid() const;
+            
 		private:
+			/**
+			 * @brief Invalidates the marker's associated buffer.
+			 * 
+			 * This function sets m_pBuffer to `0`.
+			 * 
+			 * Calling this function invalidates the marker.
+			 **/
+			void m_InvalidateBuffer();
+            
 			/**
 			 * @brief A pointer to the associated Arxx::Buffer.
 			 * 
@@ -194,15 +204,7 @@ namespace Arxx
 			 * The Alignment property is only of relevance if data is inserted directly at the marker's position.
 			 **/
 			Alignment m_Alignment;
-			
-			/**
-			 * @brief Invalidates the marker's associated buffer.
-			 * 
-			 * This function sets m_pBuffer to `0`.
-			 * 
-			 * Calling this function invalidates the marker.
-			 **/
-			void vInvalidateBuffer();
+                
 		};
 		
 		friend class Arxx::Buffer::Marker;
@@ -301,6 +303,7 @@ namespace Arxx
 		 * There is no public way to access the content of the buffer directly. m_Begin is private so only the Buffers library may access the content directly for read/write access. To fill the gap between no public access and full private access lies the read-only access for derivatives.
 		 **/
 		const_pointer GetBegin() const;
+        
 	protected:
 		/**
 		 * @brief A constant. Its value will be passed to vParentDataChanged() whenever data is to be updated.
@@ -319,6 +322,7 @@ namespace Arxx
 		 * @sa vParentDataChanged() for further details.
 		 **/
 		static const size_type m_stDataInserted;
+        
 	private:
 		/**
 		 * @brief made private to prevent copy creation of a Buffer.
@@ -454,6 +458,7 @@ namespace Arxx
 		 * - The structural changes are very much the same as for Inserts. We just need to pass this change down to all sub buffers by calling vParentDataChanged(m_stDataDeleted, stPosition - m_stPosition, stLength).
 		 **/
 		void vParentDataChanged(size_type stChangeMode, size_type stPosition, size_type stLength);
+        
 	};
 	
 	/**

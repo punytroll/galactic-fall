@@ -109,6 +109,7 @@ namespace Arxx
 			 * @param iItem The iterator to check against.
 			 **/
 			bool operator!=(const Arxx::Archive::iterator & iItem) const;
+            
 		private:
 			/**
 			 * @brief The internal STL iterator.
@@ -116,6 +117,7 @@ namespace Arxx
 			 * This is an iterator into the Arxx::Archive's internal Item map @a Arxx::Archive::m_Items.
 			 **/
 			std::map< Arxx::u4byte, Arxx::Item * >::iterator m_iItem;
+            
 		};
 		
 		/**
@@ -169,6 +171,7 @@ namespace Arxx
 			 * @param iItem The iterator to check against.
 			 **/
 			bool operator!=(const Arxx::Archive::const_iterator & iItem) const;
+            
 		private:
 			/**
 			 * @brief The internal STL iterator.
@@ -176,6 +179,7 @@ namespace Arxx
 			 * This is an iterator into Arxx::Archive's internal Item map @a Arxx::Archive::m_Items.
 			 **/
 			std::map< Arxx::u4byte, Arxx::Item * >::const_iterator m_iItem;
+            
 		};
 		
 		typedef std::map< Arxx::u4byte, Arxx::Item * >::size_type size_type;
@@ -407,16 +411,17 @@ namespace Arxx
 		/**
 		 * @brief The reader function that retrieves Item header information from a channel.
 		 **/
-		void Read_2_1_0_0(Arxx::u4byte u4ItemCount);
+		void m_Read_2_1_0_0(Arxx::u4byte u4ItemCount);
 		
-		std::map< Arxx::u4byte, Arxx::Item * > _Items;
-		std::map< Arxx::u4byte, Arxx::Reference > _References;
-		Arxx::Item * _RootItem;
+		std::map< Arxx::u4byte, Arxx::Item * > m_Items;
+		std::map< Arxx::u4byte, Arxx::Reference > m_References;
+		Arxx::Item * m_RootItem;
 		
 		/**
 		 * @brief The archive file stream.
 		 **/
-		std::istream * _IStream;
+		std::istream * m_IStream;
+        
 	};
 }
 

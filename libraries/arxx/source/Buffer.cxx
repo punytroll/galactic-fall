@@ -661,7 +661,7 @@ bool Arxx::Buffer::Marker::bIsValid() const
 	return m_pBuffer != 0;
 }
 
-void Arxx::Buffer::Marker::vInvalidateBuffer()
+void Arxx::Buffer::Marker::m_InvalidateBuffer()
 {
 	m_pBuffer = 0;
 }
