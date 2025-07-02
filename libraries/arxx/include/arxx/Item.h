@@ -46,7 +46,7 @@ namespace Arxx
 	{
 		friend class Arxx::Archive;
 	public:
-		static Arxx::Item * Create(void);
+		static Arxx::Item * Create();
 		static Arxx::Item * Create(Arxx::u4byte Identifier);
 		static Arxx::Item * Create(Arxx::Archive & Archive);
 		static Arxx::Item * Create(Arxx::Archive & Archive, Arxx::u4byte Identifier);
@@ -59,7 +59,7 @@ namespace Arxx
 		 * 
 		 * Returns the identifier of @em this item. Remember that it is unique inside the associated archive.
 		 **/
-		Arxx::u4byte GetIdentifier(void) const;
+		Arxx::u4byte GetIdentifier() const;
 		
 		/**
 		 * @brief Sets @em this item's unique identifier inside the library.
@@ -76,7 +76,7 @@ namespace Arxx
 		 *
 		 * This function is called for const items and returns a const reference to the item's name.
 		 **/
-		const std::string & GetName(void) const;
+		const std::string & GetName() const;
 		
 		/**
 		 * @brief Set the item's name.
@@ -93,7 +93,7 @@ namespace Arxx
 		 *
 		 * The default value for the type is 0xFFFFFFFF.
 		 **/
-		Arxx::u4byte GetType(void) const;
+		Arxx::u4byte GetType() const;
 		
 		/**
 		 * @brief Returns the sub-type identifier of @em this item.
@@ -102,27 +102,27 @@ namespace Arxx
 		 *
 		 * The default value for the sub type is 0xFFFFFFFF.
 		 **/
-		Arxx::u4byte GetSubType(void) const;
+		Arxx::u4byte GetSubType() const;
 		
 		/**
 		 * @brief Returns the major version number of @em this item.
 		 **/
-		Arxx::u1byte GetMajorVersionNumber(void) const;
+		Arxx::u1byte GetMajorVersionNumber() const;
 		
 		/**
 		 * @brief Returns the minor version number of @em this item.
 		 **/
-		Arxx::u1byte GetMinorVersionNumber(void) const;
+		Arxx::u1byte GetMinorVersionNumber() const;
 		
 		/**
 		 * @brief Returns the revision number of @em this item.
 		 **/
-		Arxx::u1byte GetRevisionNumber(void) const;
+		Arxx::u1byte GetRevisionNumber() const;
 		
 		/**
 		 * @brief Returns the candidate number of @em this item.
 		 **/
-		Arxx::u1byte GetCandidateNumber(void) const;
+		Arxx::u1byte GetCandidateNumber() const;
 		
 		/**
 		 * @brief Enables you to set the type identifier of @em this item.
@@ -156,17 +156,17 @@ namespace Arxx
 		 *
 		 * The function will return `0` if there is no Archive set for the Item.
 		 **/
-		Arxx::Archive * GetArchive(void) const;
+		Arxx::Archive * GetArchive() const;
 		
 		/**
 		 * @brief Returns the Structure component associated with this Item.
 		 **/
-		Arxx::Structure & GetStructure(void);
+		Arxx::Structure & GetStructure();
 		
 		/**
 		 * @brief Returns the const Structure component associated with this Item.
 		 **/
-		const Arxx::Structure & GetStructure(void) const;
+		const Arxx::Structure & GetStructure() const;
 	protected:
 		virtual bool _Fetch(Arxx::u4byte Offset, Arxx::u4byte Length);
 	private:
@@ -174,7 +174,7 @@ namespace Arxx
 		 * @brief The default constructor is private.
 		 * @note Use Arxx::Item::Create() to create new items.
 		 **/
-		Item(void);
+		Item();
 		
 		/**
 		 * @brief The destructor for items.

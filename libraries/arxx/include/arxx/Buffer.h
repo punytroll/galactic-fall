@@ -135,14 +135,14 @@ namespace Arxx
 			 * 
 			 * The destructor will call Arxx::Buffer::vUnregister(this) to unregister the marker at the associated Arxx::Buffer.
 			 **/
-			~Marker(void);
+			~Marker();
 			
 			/**
 			 * @brief Returns the marker's current position inside the buffer.
 			 * 
 			 * The position is guaranteed to be valid inside the buffer.
 			 **/
-			Arxx::Buffer::size_type stGetPosition(void) const;
+			Arxx::Buffer::size_type stGetPosition() const;
 			
 			/**
 			 * @brief Sets the marker's position in the buffer.
@@ -156,7 +156,7 @@ namespace Arxx
 			 * 
 			 * @sa Arxx::Buffer::Marker::m_Alignment
 			 **/
-			Arxx::Buffer::Marker::Alignment GetAlignment(void) const;
+			Arxx::Buffer::Marker::Alignment GetAlignment() const;
 			
 			/**
 			 * @brief Sets the marker's alignment.
@@ -170,7 +170,7 @@ namespace Arxx
 			 * 
 			 * Currently the only occasion when a marker might be invalid is that the associated Arxx::Buffer got destroyed.
 			 **/
-			bool bIsValid(void) const;
+			bool bIsValid() const;
 		private:
 			/**
 			 * @brief A pointer to the associated Arxx::Buffer.
@@ -202,7 +202,7 @@ namespace Arxx
 			 * 
 			 * Calling this function invalidates the marker.
 			 **/
-			void vInvalidateBuffer(void);
+			void vInvalidateBuffer();
 		};
 		
 		friend class Arxx::Buffer::Marker;
@@ -212,7 +212,7 @@ namespace Arxx
 		 * 
 		 * Constructs a buffer of size 0, I/O position is 0, overwrite state is false.
 		 **/
-		Buffer(void);
+		Buffer();
 		
 		/**
 		 * @brief The sub buffer constructor.
@@ -231,14 +231,14 @@ namespace Arxx
 		 *
 		 * @note The destructor of a buffer will not touch its sub buffers (e.g. to delete them). Currently it will not even notify them that their reference buffers are dead. That will be changed later.
 		 **/
-		virtual ~Buffer(void);
+		virtual ~Buffer();
 		
 		/**
 		 * @brief Returns the length of the buffer.
 		 * 
 		 * This length is the length of the data inside the buffer, so the number of bytes actually used by the data.
 		 **/
-		size_type stGetLength(void) const;
+		size_type stGetLength() const;
 		
 		/**
 		 * @brief Sets the length of the data actually in the buffer.
@@ -300,7 +300,7 @@ namespace Arxx
 		 * 
 		 * There is no public way to access the content of the buffer directly. m_Begin is private so only the Buffers library may access the content directly for read/write access. To fill the gap between no public access and full private access lies the read-only access for derivatives.
 		 **/
-		const_pointer GetBegin(void) const;
+		const_pointer GetBegin() const;
 	protected:
 		/**
 		 * @brief A constant. Its value will be passed to vParentDataChanged() whenever data is to be updated.

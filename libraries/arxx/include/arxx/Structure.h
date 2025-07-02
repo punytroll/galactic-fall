@@ -87,33 +87,33 @@ namespace Arxx
 				/**
 				 * @brief The destructor of a Reference iterator.
 				 **/
-				~iterator(void);
+				~iterator();
 				
 				/**
 				 * @brief Advances the iterator.
 				 *
 				 * Advances the Reference iterator. It is not defined which will be the next Reference the iterator points to. It is only assured that every Reference in the Relation will be passed once.
 				 **/
-				iterator & operator++(void);
+				iterator & operator++();
 				
 				/**
 				 * @brief This will return the Reference that this iterator points to.
 				 * 
 				 * This is the non-const version of the operator*() so it returns a non-const Reference.
 				 **/
-				Arxx::Reference & operator*(void);
+				Arxx::Reference & operator*();
 				
 				/**
 				 * @brief This will return the Reference that this iterator points to.
 				 * 
 				 * This is the const version of the operator*() thus the returned Reference is const as well.
 				 **/
-				const Arxx::Reference & operator*(void) const;
+				const Arxx::Reference & operator*() const;
 				
 				/**
 				 * @brief The Reference accessor.
 				 **/
-				Arxx::Reference * operator->(void);
+				Arxx::Reference * operator->();
 				
 				/**
 				 * @brief Tests two iterators for equality.
@@ -175,26 +175,26 @@ namespace Arxx
 				/**
 				 * @brief The destructor of a const Reference iterator.
 				 **/
-				~const_iterator(void);
+				~const_iterator();
 				
 				/**
 				 * @brief Advances the iterator.
 				 *
 				 * Advances the Reference iterator. It is not defined which will be the next Reference the iterator points to. It is only assured that every Reference in the Relation will be passed once.
 				 **/
-				const_iterator & operator++(void);
+				const_iterator & operator++();
 				
 				/**
 				 * @brief This will return the Arxx::Reference that this iterator points to.
 				 * 
 				 * This is the const version of the operator*() thus the returned Reference is const as well.
 				 **/
-				const Arxx::Reference & operator*(void) const;
+				const Arxx::Reference & operator*() const;
 				
 				/**
 				 * @brief The Reference accessor.
 				 **/
-				const Arxx::Reference * operator->(void);
+				const Arxx::Reference * operator->();
 				
 				/**
 				 * @brief Tests two iterators for equality.
@@ -248,32 +248,32 @@ namespace Arxx
 			/**
 			 * @brief Returns the number of references in the relation.
 			 **/
-			size_type size(void) const;
+			size_type size() const;
 			
 			/**
 			 * @brief Returns the first reference iterator of the relation.
 			 **/
-			Arxx::Structure::Relation::iterator begin(void);
+			Arxx::Structure::Relation::iterator begin();
 			
 			/**
 			 * @brief Returns the end reference iterator of the relation.
 			 **/
-			Arxx::Structure::Relation::iterator end(void);
+			Arxx::Structure::Relation::iterator end();
 			
 			/**
 			 * @brief Returns the first reference iterator of the relation.
 			 **/
-			Arxx::Structure::Relation::const_iterator begin(void) const;
+			Arxx::Structure::Relation::const_iterator begin() const;
 			
 			/**
 			 * @brief Returns the end reference iterator of the relation.
 			 **/
-			Arxx::Structure::Relation::const_iterator end(void) const;
+			Arxx::Structure::Relation::const_iterator end() const;
 			
 			/**
 			 * @brief Returns the name of the relation.
 			 **/
-			const std::string & sGetName(void) const;
+			const std::string & sGetName() const;
 		private:
 			/**
 			 * @brief A constructor that links a relation to a specific Arxx::Structure.
@@ -324,33 +324,33 @@ namespace Arxx
 			/**
 			 * @brief The destructor of a Relation iterator.
 			 **/
-			~iterator(void);
+			~iterator();
 			
 			/**
 			 * @brief Advances the iterator.
 			 *
 			 * Advances the Relation iterator. It is not defined which will be the next Relation the iterator points to. It is only assured that every Relation in the Structure will be passed once.
 			 **/
-			iterator & operator++(void);
+			iterator & operator++();
 			
 			/**
 			 * @brief This will return the Relation that this iterator points to.
 			 * 
 			 * This is the non-const version of the operator*() so it returns a non-const Relation.
 			 **/
-			Arxx::Structure::Relation & operator*(void);
+			Arxx::Structure::Relation & operator*();
 			
 			/**
 			 * @brief This will return the Relation that this iterator points to.
 			 * 
 			 * This is the const version of the operator*() thus the returned Relation is const as well.
 			 **/
-			const Arxx::Structure::Relation & operator*(void) const;
+			const Arxx::Structure::Relation & operator*() const;
 			
 			/**
 			 * @brief The Relation accessor.
 			 **/
-			Arxx::Structure::Relation * operator->(void);
+			Arxx::Structure::Relation * operator->();
 			
 			/**
 			 * @brief Tests two iterators for equality.
@@ -412,26 +412,26 @@ namespace Arxx
 			/**
 			 * @brief The destructor of a const Relation iterator.
 			 **/
-			~const_iterator(void);
+			~const_iterator();
 			
 			/**
 			 * @brief Advances the iterator.
 			 *
 			 * Advances the Relation iterator. It is not defined which will be the next Relation the iterator points to. It is only assured that every Relation in the Structure will be passed once.
 			 **/
-			const_iterator & operator++(void);
+			const_iterator & operator++();
 			
 			/**
 			 * @brief This will return the Arxx::Relation that this iterator points to.
 			 * 
 			 * This is the const version of the operator*() thus the returned Relation is const as well.
 			 **/
-			const Arxx::Structure::Relation & operator*(void) const;
+			const Arxx::Structure::Relation & operator*() const;
 			
 			/**
 			 * @brief The Relation accessor.
 			 **/
-			const Arxx::Structure::Relation * operator->(void);
+			const Arxx::Structure::Relation * operator->();
 			
 			/**
 			 * @brief Tests two iterators for equality.
@@ -528,27 +528,27 @@ namespace Arxx
 		/**
 		 * @brief Returns the number of Relations in the Structure.
 		 **/
-		size_type size(void) const;
+		size_type size() const;
 		
 		/**
 		 * @brief Returns the first Relation iterator of the Structure.
 		 **/
-		Arxx::Structure::iterator begin(void);
+		Arxx::Structure::iterator begin();
 		
 		/**
 		 * @brief Returns the end Relation iterator of the Structure.
 		 **/
-		Arxx::Structure::iterator end(void);
+		Arxx::Structure::iterator end();
 		
 		/**
 		 * @brief Returns the first const Relation iterator of the Structure.
 		 **/
-		Arxx::Structure::const_iterator begin(void) const;
+		Arxx::Structure::const_iterator begin() const;
 		
 		/**
 		 * @brief Returns the end const Relation iterator of the Structure.
 		 **/
-		Arxx::Structure::const_iterator end(void) const;
+		Arxx::Structure::const_iterator end() const;
 	private:
 		friend Arxx::Buffer & Arxx::operator<<(Arxx::Buffer & Buffer, const Arxx::Structure & Structure);
 		

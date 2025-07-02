@@ -100,27 +100,27 @@ Arxx::Structure::Relation & Arxx::Structure::GetRelation(const std::string & sRe
 	}
 }
 
-Arxx::Structure::size_type Arxx::Structure::size(void) const
+Arxx::Structure::size_type Arxx::Structure::size() const
 {
 	return m_Relations.size();
 }
 
-Arxx::Structure::iterator Arxx::Structure::begin(void)
+Arxx::Structure::iterator Arxx::Structure::begin()
 {
 	return m_Relations.begin();
 }
 
-Arxx::Structure::iterator Arxx::Structure::end(void)
+Arxx::Structure::iterator Arxx::Structure::end()
 {
 	return m_Relations.end();
 }
 
-Arxx::Structure::const_iterator Arxx::Structure::begin(void) const
+Arxx::Structure::const_iterator Arxx::Structure::begin() const
 {
 	return m_Relations.begin();
 }
 
-Arxx::Structure::const_iterator Arxx::Structure::end(void) const
+Arxx::Structure::const_iterator Arxx::Structure::end() const
 {
 	return m_Relations.end();
 }
@@ -235,28 +235,28 @@ Arxx::Structure::iterator::iterator(std::map< std::string, Arxx::Structure::Rela
 {
 }
 
-Arxx::Structure::iterator::~iterator(void)
+Arxx::Structure::iterator::~iterator()
 {
 }
 
-Arxx::Structure::iterator & Arxx::Structure::iterator::operator++(void)
+Arxx::Structure::iterator & Arxx::Structure::iterator::operator++()
 {
 	++m_iRelation;
 	
 	return *this;
 }
 
-Arxx::Structure::Relation & Arxx::Structure::iterator::operator*(void)
+Arxx::Structure::Relation & Arxx::Structure::iterator::operator*()
 {
 	return m_iRelation->second;
 }
 
-const Arxx::Structure::Relation & Arxx::Structure::iterator::operator*(void) const
+const Arxx::Structure::Relation & Arxx::Structure::iterator::operator*() const
 {
 	return m_iRelation->second;
 }
 
-Arxx::Structure::Relation * Arxx::Structure::iterator::operator->(void)
+Arxx::Structure::Relation * Arxx::Structure::iterator::operator->()
 {
 	return &(m_iRelation->second);
 }
@@ -296,23 +296,23 @@ Arxx::Structure::const_iterator::const_iterator(Arxx::Structure::iterator iRelat
 {
 }
 
-Arxx::Structure::const_iterator::~const_iterator(void)
+Arxx::Structure::const_iterator::~const_iterator()
 {
 }
 
-Arxx::Structure::const_iterator & Arxx::Structure::const_iterator::operator++(void)
+Arxx::Structure::const_iterator & Arxx::Structure::const_iterator::operator++()
 {
 	++m_iRelation;
 	
 	return *this;
 }
 
-const Arxx::Structure::Relation & Arxx::Structure::const_iterator::operator*(void) const
+const Arxx::Structure::Relation & Arxx::Structure::const_iterator::operator*() const
 {
 	return m_iRelation->second;
 }
 
-const Arxx::Structure::Relation * Arxx::Structure::const_iterator::operator->(void)
+const Arxx::Structure::Relation * Arxx::Structure::const_iterator::operator->()
 {
 	return &(m_iRelation->second);
 }

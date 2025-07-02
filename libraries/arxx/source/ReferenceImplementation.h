@@ -73,26 +73,26 @@ namespace Arxx
 		 * 
 		 * It does not matter if the reference is resolved or unresolved, the unique ID is certain to be returned.
 		 **/
-		Arxx::u4byte u4GetUniqueID(void) const;
+		Arxx::u4byte u4GetUniqueID() const;
 		
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
 		 * 
 		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is 0.
 		 **/
-		Arxx::Item * pGetItem(void);
+		Arxx::Item * pGetItem();
 		
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
 		 * 
 		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is 0.
 		 **/
-		const Arxx::Item * pGetItem(void) const;
+		const Arxx::Item * pGetItem() const;
 		
 		/**
 		 * @brief Returns m_u4ReferenceCounter, the number of Arxx::Reference objects that hold @em this ReferenceImplementation object.
 		 **/
-		Arxx::u4byte u4GetReferenceCount(void) const;
+		Arxx::u4byte u4GetReferenceCount() const;
 		
 		/**
 		 * @brief Resolves an unresolved reference with a given item.
@@ -109,26 +109,26 @@ namespace Arxx
 		/**
 		 * @brief Unresolves the resolved reference by setting its Arxx::Item pointer to 0.
 		 **/
-		void vUnresolve(void);
+		void vUnresolve();
 		
 		/**
 		 * @brief This function sets m_pArchive to `0`.
 		 **/
-		void vDecoupleFromArchive(void);
+		void vDecoupleFromArchive();
 	private:
 		/**
 		 * @brief The constructor of a ReferenceImplementation object.
 		 * 
 		 * Instances of this class are only created via the pGetReference() calls.
 		 **/
-		ReferenceImplementation(void);
+		ReferenceImplementation();
 		
 		/**
 		 * @brief The destructor of a ReferenceImplementation object.
 		 * 
 		 * Instances of this class may only be destroyed using the vRelease() call.
 		 **/
-		~ReferenceImplementation(void);
+		~ReferenceImplementation();
 		
 		/**
 		 * @brief No copy semantic for ReferenceImplementation objects.

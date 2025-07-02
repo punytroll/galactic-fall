@@ -70,33 +70,33 @@ namespace Arxx
 			/**
 			 * @brief The destructor of an Item iterator.
 			 **/
-			~iterator(void);
+			~iterator();
 			
 			/**
 			 * @brief Advances the iterator.
 			 *
 			 * Advances the Item iterator. It is not defined which will be the next Arxx::Item the iterator points to. It is only assured that every Item will be passed once.
 			 **/
-			iterator & operator++(void);
+			iterator & operator++();
 			
 			/**
 			 * @brief This will return the Arxx::Item that this iterator points to.
 			 * 
 			 * This is the non-const version of the operator*() so it returns a non const Item reference.
 			 **/
-			Arxx::Item * operator*(void);
+			Arxx::Item * operator*();
 			
 			/**
 			 * @brief This will return the Arxx::Item that this iterator points to.
 			 * 
 			 * This is the const version of the operator*() thus the returned reference is const as well.
 			 **/
-			const Arxx::Item * operator*(void) const;
+			const Arxx::Item * operator*() const;
 			
 			/**
 			 * @brief The Arxx::Item accessor.
 			 **/
-			Arxx::Item * operator->(void);
+			Arxx::Item * operator->();
 			
 			/**
 			 * @brief Tests two iterators for equality.
@@ -137,26 +137,26 @@ namespace Arxx
 			/**
 			 * @brief The destructor of a const Item iterator.
 			 **/
-			~const_iterator(void);
+			~const_iterator();
 			
 			/**
 			 * @brief Advances the iterator.
 			 *
 			 * Advances the Item iterator. It is not defined which will be the next Arxx::Item the iterator points to. It is only assured that every Item will be passed once.
 			 **/
-			const_iterator & operator++(void);
+			const_iterator & operator++();
 			
 			/**
 			 * @brief This will return the Arxx::Item that this iterator points to.
 			 * 
 			 * This is the const version of the operator*() thus the returned Item reference is const as well.
 			 **/
-			const Arxx::Item * operator*(void) const;
+			const Arxx::Item * operator*() const;
 			
 			/**
 			 * @brief The Arxx::Item accessor.
 			 **/
-			const Arxx::Item * operator->(void) const;
+			const Arxx::Item * operator->() const;
 			
 			/**
 			 * @brief Tests two iterators for equality.
@@ -185,14 +185,14 @@ namespace Arxx
 		 *
 		 * This constructor creates and initializes a Arxx::Archive.
 		 **/
-		Archive(void);
+		Archive();
 		
 		/**
 		 * @brief The destructor for a Arxx::Archive.
 		 * 
 		 * The destructor will call Arxx::Archive::vClose().
 		 **/
-		virtual ~Archive(void);
+		virtual ~Archive();
 		
 		/**
 		 * @brief Load the content of an ARX archive into this Arxx::Archive.
@@ -220,7 +220,7 @@ namespace Arxx
 		 * 
 		 * @note Not every ItemFactory, that does not set an Item's ItemFactory member correctly on creation, can be considered 'wrong'. If the ItemFactory still has references to the Items, it is absolutely perfect for having persistent Items inside an Archive.
 		 **/
-		void Close(void);
+		void Close();
 		
 		/**
 		 * @brief Registers an Item to be a part of an Archive.
@@ -318,14 +318,14 @@ namespace Arxx
 		 * 
 		 * This function returns the _RootItem member of the Archive, so if the Archive has no root Item set the function will return 0.
 		 **/
-		Arxx::Item * GetRootItem(void);
+		Arxx::Item * GetRootItem();
 		
 		/**
 		 * @brief Provides const access to the root Item.
 		 * 
 		 * This function returns the _RootItem member of the Archive, so if the Archive has no root Item set the function will return 0.
 		 **/
-		const Arxx::Item * GetRootItem(void) const;
+		const Arxx::Item * GetRootItem() const;
 		
 		/**
 		 * @brief Returns a Arxx::Reference for a given unique ID.
@@ -340,40 +340,40 @@ namespace Arxx
 		 * 
 		 * This function is provided so you can iterate through all the Item objects registered in an Archive. It follows STL standards.
 		 **/
-		Arxx::Archive::iterator begin(void);
+		Arxx::Archive::iterator begin();
 		
 		/**
 		 * @brief Returns a Arxx::Archive::iterator behind the last Item.
 		 * 
 		 * This function is provided so you can iterate through all the Item objects registered in an Archive. It follows STL standards.
 		 **/
-		Arxx::Archive::iterator end(void);
+		Arxx::Archive::iterator end();
 		
 		/**
 		 * @brief Returns a Arxx::Archive::const_iterator to the first Item.
 		 * 
 		 * This function is provided so you can iterate through all the Item objects registered in a const Archive. It follows STL standards.
 		 **/
-		Arxx::Archive::const_iterator begin(void) const;
+		Arxx::Archive::const_iterator begin() const;
 		
 		/**
 		 * @brief Returns a Arxx::Archive::const_iterator behind the last Item.
 		 * 
 		 * This function is provided so you can iterate through all the Item objects registered in a const Archive. It follows STL standards.
 		 **/
-		Arxx::Archive::const_iterator end(void) const;
+		Arxx::Archive::const_iterator end() const;
 		
 		/**
 		 * @brief Returns the number of Item objects.
 		 * 
 		 * This function returns the number of Arxx::Item objects registered in the Archive. It is designed to be STL compatible.
 		 **/
-		Arxx::Archive::size_type size(void) const;
+		Arxx::Archive::size_type size() const;
 		
 		/**
 		 * @brief Returns the number of resolved and unresolved references in the Archive.
 		 **/
-		Arxx::u4byte GetNumberOfReferences(void) const;
+		Arxx::u4byte GetNumberOfReferences() const;
 		
 		/**
 		 * @brief This function releases a Reference inside the Archive.

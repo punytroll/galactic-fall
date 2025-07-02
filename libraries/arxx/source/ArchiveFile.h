@@ -98,7 +98,7 @@ namespace Arxx
 		/**
 		 * @brief Default constructor creating an empty ItemHeader.
 		 **/
-		ItemHeader(void) :
+		ItemHeader() :
 			Identifier(0),
 			Type(0),
 			SubType(0),

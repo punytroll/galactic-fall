@@ -77,32 +77,32 @@ std::list< Arxx::Item * > Arxx::Structure::Relation::GetItems(const std::string 
 	return Result;
 }
 
-Arxx::Structure::Relation::size_type Arxx::Structure::Relation::size(void) const
+Arxx::Structure::Relation::size_type Arxx::Structure::Relation::size() const
 {
 	return m_References.size();
 }
 
-Arxx::Structure::Relation::iterator Arxx::Structure::Relation::begin(void)
+Arxx::Structure::Relation::iterator Arxx::Structure::Relation::begin()
 {
 	return m_References.begin();
 }
 
-Arxx::Structure::Relation::iterator Arxx::Structure::Relation::end(void)
+Arxx::Structure::Relation::iterator Arxx::Structure::Relation::end()
 {
 	return m_References.end();
 }
 
-Arxx::Structure::Relation::const_iterator Arxx::Structure::Relation::begin(void) const
+Arxx::Structure::Relation::const_iterator Arxx::Structure::Relation::begin() const
 {
 	return m_References.begin();
 }
 
-Arxx::Structure::Relation::const_iterator Arxx::Structure::Relation::end(void) const
+Arxx::Structure::Relation::const_iterator Arxx::Structure::Relation::end() const
 {
 	return m_References.end();
 }
 
-const std::string & Arxx::Structure::Relation::sGetName(void) const
+const std::string & Arxx::Structure::Relation::sGetName() const
 {
 	return m_sName;
 }
@@ -116,28 +116,28 @@ Arxx::Structure::Relation::iterator::iterator(std::multimap< Arxx::u4byte, Arxx:
 {
 }
 
-Arxx::Structure::Relation::iterator::~iterator(void)
+Arxx::Structure::Relation::iterator::~iterator()
 {
 }
 
-Arxx::Structure::Relation::iterator & Arxx::Structure::Relation::iterator::operator++(void)
+Arxx::Structure::Relation::iterator & Arxx::Structure::Relation::iterator::operator++()
 {
 	++m_iReference;
 	
 	return *this;
 }
 
-Arxx::Reference & Arxx::Structure::Relation::iterator::operator*(void)
+Arxx::Reference & Arxx::Structure::Relation::iterator::operator*()
 {
 	return m_iReference->second;
 }
 
-const Arxx::Reference & Arxx::Structure::Relation::iterator::operator*(void) const
+const Arxx::Reference & Arxx::Structure::Relation::iterator::operator*() const
 {
 	return m_iReference->second;
 }
 
-Arxx::Reference * Arxx::Structure::Relation::iterator::operator->(void)
+Arxx::Reference * Arxx::Structure::Relation::iterator::operator->()
 {
 	return &(m_iReference->second);
 }
@@ -176,23 +176,23 @@ Arxx::Structure::Relation::const_iterator::const_iterator(Arxx::Structure::Relat
 {
 }
 
-Arxx::Structure::Relation::const_iterator::~const_iterator(void)
+Arxx::Structure::Relation::const_iterator::~const_iterator()
 {
 }
 
-Arxx::Structure::Relation::const_iterator & Arxx::Structure::Relation::const_iterator::operator++(void)
+Arxx::Structure::Relation::const_iterator & Arxx::Structure::Relation::const_iterator::operator++()
 {
 	++m_iReference;
 	
 	return *this;
 }
 
-const Arxx::Reference & Arxx::Structure::Relation::const_iterator::operator*(void) const
+const Arxx::Reference & Arxx::Structure::Relation::const_iterator::operator*() const
 {
 	return m_iReference->second;
 }
 
-const Arxx::Reference * Arxx::Structure::Relation::const_iterator::operator->(void)
+const Arxx::Reference * Arxx::Structure::Relation::const_iterator::operator->()
 {
 	return &(m_iReference->second);
 }

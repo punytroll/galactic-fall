@@ -44,27 +44,27 @@ Arxx::Reference::Reference(const Arxx::Reference & Reference) :
 	vChangeReference(Reference.m_pReference);
 }
 
-Arxx::Reference::~Reference(void)
+Arxx::Reference::~Reference()
 {
 	vChangeReference(0);
 }
 
-Arxx::u4byte Arxx::Reference::u4GetUniqueID(void) const
+Arxx::u4byte Arxx::Reference::u4GetUniqueID() const
 {
 	return m_pReference->u4GetUniqueID();
 }
 
-Arxx::Item * Arxx::Reference::pGetItem(void)
+Arxx::Item * Arxx::Reference::pGetItem()
 {
 	return m_pReference->pGetItem();
 }
 
-const Arxx::Item * Arxx::Reference::pGetItem(void) const
+const Arxx::Item * Arxx::Reference::pGetItem() const
 {
 	return m_pReference->pGetItem();
 }
 
-Arxx::u4byte Arxx::Reference::u4GetReferenceCount(void) const
+Arxx::u4byte Arxx::Reference::u4GetReferenceCount() const
 {
 	return m_pReference->u4GetReferenceCount();
 }
@@ -74,7 +74,7 @@ void Arxx::Reference::vResolve(Arxx::Item & Item)
 	m_pReference->vResolve(Item);
 }
 
-void Arxx::Reference::vUnresolve(void)
+void Arxx::Reference::vUnresolve()
 {
 	m_pReference->vUnresolve();
 }
@@ -90,7 +90,7 @@ bool Arxx::Reference::bAttach(Arxx::Reference & Reference)
 	return true;
 }
 
-bool Arxx::Reference::bDetach(void)
+bool Arxx::Reference::bDetach()
 {
 	Arxx::ReferenceImplementation * pReference(Arxx::ReferenceImplementation::pGetReference(u4GetUniqueID()));
 	
@@ -101,7 +101,7 @@ bool Arxx::Reference::bDetach(void)
 	return true;
 }
 
-void Arxx::Reference::vDecoupleFromArchive(void)
+void Arxx::Reference::vDecoupleFromArchive()
 {
 	m_pReference->vDecoupleFromArchive();
 }

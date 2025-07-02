@@ -37,7 +37,7 @@ Arxx::Data::Compression Arxx::Data::m_DefaultCompression = ZLIB_9;
 Arxx::Data::Compression Arxx::Data::m_DefaultCompression = NONE;
 #endif
 
-Arxx::Data::Data(void) :
+Arxx::Data::Data() :
 	_Offset(0),
 	_CompressionType(Arxx::Data::NONE),
 	_DecompressedLength(0),
@@ -46,11 +46,11 @@ Arxx::Data::Data(void) :
 {
 }
 
-Arxx::Data::~Data(void)
+Arxx::Data::~Data()
 {
 }
 
-void Arxx::Data::Decompress(void)
+void Arxx::Data::Decompress()
 {
 	switch(_CompressionType)
 	{
@@ -271,22 +271,22 @@ void Arxx::Data::Compress(const Arxx::Data::Compression & CompressionType)
 	}
 }
 
-bool Arxx::Data::IsCompressed(void) const
+bool Arxx::Data::IsCompressed() const
 {
 	return _CompressionType != Arxx::Data::NONE;
 }
 
-bool Arxx::Data::IsDecompressed(void) const
+bool Arxx::Data::IsDecompressed() const
 {
 	return _CompressionType == Arxx::Data::NONE;
 }
 
-Arxx::Data::Compression Arxx::Data::GetCompression(void) const
+Arxx::Data::Compression Arxx::Data::GetCompression() const
 {
 	return _CompressionType;
 }
 
-Arxx::u4byte Arxx::Data::GetDecompressedLength(void) const
+Arxx::u4byte Arxx::Data::GetDecompressedLength() const
 {
 	if((IsFetched() == true) && (IsDecompressed() == true))
 	{
@@ -298,7 +298,7 @@ Arxx::u4byte Arxx::Data::GetDecompressedLength(void) const
 	}
 }
 
-Arxx::u4byte Arxx::Data::GetCompressedLength(void) const
+Arxx::u4byte Arxx::Data::GetCompressedLength() const
 {
 	if((IsFetched() == true) && (IsCompressed() == true))
 	{
@@ -310,7 +310,7 @@ Arxx::u4byte Arxx::Data::GetCompressedLength(void) const
 	}
 }
 
-bool Arxx::Data::Fetch(void)
+bool Arxx::Data::Fetch()
 {
 	if(_Fetched == false)
 	{
@@ -324,7 +324,7 @@ bool Arxx::Data::Fetch(void)
 	}
 }
 
-void Arxx::Data::Unfetch(void)
+void Arxx::Data::Unfetch()
 {
 	if(IsFetched() == true)
 	{
@@ -342,7 +342,7 @@ void Arxx::Data::SetFetchInformation(Arxx::u4byte Offset, Arxx::Data::Compressio
 	_Fetched = false;
 }
 
-bool Arxx::Data::IsFetched(void) const
+bool Arxx::Data::IsFetched() const
 {
 	return _Fetched;
 }

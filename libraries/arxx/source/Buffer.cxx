@@ -83,7 +83,7 @@ public:
 	 *
 	 * With this function you can reget the associated sub buffer.
 	 **/
-	Buffer & GetBuffer(void)
+	Buffer & GetBuffer()
 	{
 		return m_Buffer;
 	}
@@ -93,7 +93,7 @@ public:
 	 *
 	 * With this function you can get the associated order.
 	 **/
-	size_type stGetOrder(void)
+	size_type stGetOrder()
 	{
 		return m_stOrder;
 	}
@@ -113,7 +113,7 @@ private:
 	size_type m_stOrder;
 };
 
-Arxx::Buffer::Buffer(void) :
+Arxx::Buffer::Buffer() :
 	m_pSupBuffer(0),
 	m_Begin(0),
 	m_stLength(0),
@@ -146,7 +146,7 @@ Arxx::Buffer::Buffer(Arxx::Buffer & Buffer, size_type stPosition, size_type stLe
 	Buffer.vRegister(*this);
 }
 
-Arxx::Buffer::~Buffer(void)
+Arxx::Buffer::~Buffer()
 {
 	if(m_pSupBuffer == 0)
 	{
@@ -412,7 +412,7 @@ void Arxx::Buffer::vDelete(size_type stPosition, size_type stLength)
 	}
 }
 
-Arxx::Buffer::const_pointer Arxx::Buffer::GetBegin(void) const
+Arxx::Buffer::const_pointer Arxx::Buffer::GetBegin() const
 {
 	return m_Begin;
 }
@@ -631,12 +631,12 @@ Arxx::Buffer::Marker::Marker(const Arxx::Buffer & Buffer, Arxx::Buffer::size_typ
 	m_pBuffer->vRegister(*this);
 }
 
-Arxx::Buffer::Marker::~Marker(void)
+Arxx::Buffer::Marker::~Marker()
 {
 	m_pBuffer->vUnregister(*this);
 }
 
-Arxx::Buffer::size_type Arxx::Buffer::Marker::stGetPosition(void) const
+Arxx::Buffer::size_type Arxx::Buffer::Marker::stGetPosition() const
 {
 	return m_stPosition;
 }
@@ -646,7 +646,7 @@ void Arxx::Buffer::Marker::vSetPosition(Arxx::Buffer::size_type stPosition)
 	m_stPosition = (m_pBuffer->stGetLength() > stPosition) ? (stPosition) : (m_pBuffer->stGetLength());
 }
 
-Arxx::Buffer::Marker::Alignment Arxx::Buffer::Marker::GetAlignment(void) const
+Arxx::Buffer::Marker::Alignment Arxx::Buffer::Marker::GetAlignment() const
 {
 	return m_Alignment;
 }
@@ -656,12 +656,12 @@ void Arxx::Buffer::Marker::vSetAlignment(Arxx::Buffer::Marker::Alignment Alignme
 	m_Alignment = Alignment;
 }
 
-bool Arxx::Buffer::Marker::bIsValid(void) const
+bool Arxx::Buffer::Marker::bIsValid() const
 {
 	return m_pBuffer != 0;
 }
 
-void Arxx::Buffer::Marker::vInvalidateBuffer(void)
+void Arxx::Buffer::Marker::vInvalidateBuffer()
 {
 	m_pBuffer = 0;
 }

@@ -48,12 +48,12 @@ Arxx::Buffer::size_type Arxx::BufferReader::stRead(Arxx::Buffer::size_type stLen
 	return stLength;
 }
 
-const Arxx::Buffer & Arxx::BufferReader::GetBuffer(void) const
+const Arxx::Buffer & Arxx::BufferReader::GetBuffer() const
 {
 	return m_Buffer;
 }
 
-Arxx::Buffer::size_type Arxx::BufferReader::stGetPosition(void) const
+Arxx::Buffer::size_type Arxx::BufferReader::stGetPosition() const
 {
 	return m_Marker.stGetPosition();
 }

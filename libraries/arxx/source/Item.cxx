@@ -26,7 +26,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Arxx::Item                                                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-Arxx::Item * Arxx::Item::Create(void)
+Arxx::Item * Arxx::Item::Create()
 {
 	return Arxx::Item::Create(0, g_u4InvalidID);
 }
@@ -74,7 +74,7 @@ void Arxx::Item::Delete(Arxx::Item * Item)
 	delete Item;
 }
 
-Arxx::Item::Item(void) :
+Arxx::Item::Item() :
 	_Identifier(0xFFFFFFFF),
 	_Type(0xFFFFFFFF),
 	_SubType(0xFFFFFFFF),
@@ -87,12 +87,12 @@ Arxx::Item::Item(void) :
 {
 }
 
-Arxx::Item::~Item(void)
+Arxx::Item::~Item()
 {
 	assert(_Archive == 0);
 }
 
-Arxx::u4byte Arxx::Item::GetIdentifier(void) const
+Arxx::u4byte Arxx::Item::GetIdentifier() const
 {
 	return _Identifier;
 }
@@ -132,7 +132,7 @@ void Arxx::Item::SetIdentifier(Arxx::u4byte Identifier)
 	}
 }
 
-const std::string & Arxx::Item::GetName(void) const
+const std::string & Arxx::Item::GetName() const
 {
 	return _Name;
 }
@@ -142,7 +142,7 @@ void Arxx::Item::SetName(const std::string & Name)
 	_Name = Name;
 }
 
-Arxx::u4byte Arxx::Item::GetType(void) const
+Arxx::u4byte Arxx::Item::GetType() const
 {
 	return _Type;
 }
@@ -152,7 +152,7 @@ void Arxx::Item::SetType(Arxx::u4byte Type)
 	_Type = Type;
 }
 
-Arxx::u4byte Arxx::Item::GetSubType(void) const
+Arxx::u4byte Arxx::Item::GetSubType() const
 {
 	return _SubType;
 }
@@ -162,22 +162,22 @@ void Arxx::Item::SetSubType(Arxx::u4byte SubType)
 	_SubType = SubType;
 }
 
-Arxx::u1byte Arxx::Item::GetMajorVersionNumber(void) const
+Arxx::u1byte Arxx::Item::GetMajorVersionNumber() const
 {
 	return _MajorVersionNumber;
 }
 
-Arxx::u1byte Arxx::Item::GetMinorVersionNumber(void) const
+Arxx::u1byte Arxx::Item::GetMinorVersionNumber() const
 {
 	return _MinorVersionNumber;
 }
 
-Arxx::u1byte Arxx::Item::GetRevisionNumber(void) const
+Arxx::u1byte Arxx::Item::GetRevisionNumber() const
 {
 	return _RevisionNumber;
 }
 
-Arxx::u1byte Arxx::Item::GetCandidateNumber(void) const
+Arxx::u1byte Arxx::Item::GetCandidateNumber() const
 {
 	return _CandidateNumber;
 }
@@ -190,17 +190,17 @@ void Arxx::Item::SetVersionNumbers(Arxx::u1byte MajorVersionNumber, Arxx::u1byte
 	_CandidateNumber = CandidateNumber;
 }
 
-Arxx::Archive * Arxx::Item::GetArchive(void) const
+Arxx::Archive * Arxx::Item::GetArchive() const
 {
 	return _Archive;
 }
 
-Arxx::Structure & Arxx::Item::GetStructure(void)
+Arxx::Structure & Arxx::Item::GetStructure()
 {
 	return _Structure;
 }
 
-const Arxx::Structure & Arxx::Item::GetStructure(void) const
+const Arxx::Structure & Arxx::Item::GetStructure() const
 {
 	return _Structure;
 }

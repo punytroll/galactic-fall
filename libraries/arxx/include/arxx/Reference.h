@@ -76,14 +76,14 @@ namespace Arxx
 		 * 
 		 * This mainly releases the underlying Arxx::ReferenceImplementation object.
 		 **/
-		virtual ~Reference(void);
+		virtual ~Reference();
 		
 		/**
 		 * @brief Returns the unique ID of the reference.
 		 * 
 		 * It does not matter if the reference is resolved or unresolved, the unique ID is certain to be returned.
 		 **/
-		Arxx::u4byte u4GetUniqueID(void) const;
+		Arxx::u4byte u4GetUniqueID() const;
 		
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
@@ -94,7 +94,7 @@ namespace Arxx
 		 * 
 		 * @sa Arxx::ReferenceImplementation::pGetItem().
 		 **/
-		Arxx::Item * pGetItem(void);
+		Arxx::Item * pGetItem();
 		
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
@@ -105,7 +105,7 @@ namespace Arxx
 		 * 
 		 * @sa Arxx::ReferenceImplementation::pGetItem().
 		 **/
-		const Arxx::Item * pGetItem(void) const;
+		const Arxx::Item * pGetItem() const;
 		
 		/**
 		 * @brief Returns m_u4ReferenceCounter, the number of Arxx::Reference objects that hold @em this ReferenceImplementation object.
@@ -114,7 +114,7 @@ namespace Arxx
 		 * 
 		 * @sa Arxx::ReferenceImplementation::u4GetReferenceCount().
 		 **/
-		Arxx::u4byte u4GetReferenceCount(void) const;
+		Arxx::u4byte u4GetReferenceCount() const;
 		
 		/**
 		 * @brief Resolves an unresolved reference with a given item.
@@ -133,7 +133,7 @@ namespace Arxx
 		 * 
 		 * @sa Arxx::ReferenceImplementation::vUnresolve().
 		 **/
-		void vUnresolve(void);
+		void vUnresolve();
 		
 		/**
 		 * @brief This function will attach another Reference object representing the same Item.
@@ -156,14 +156,14 @@ namespace Arxx
 		 * 
 		 * This Reference and its ReferenceImplementation will be unresolved after this, and decoupled from any Archive that it may have been connected to prior to this call.
 		 **/
-		bool bDetach(void);
+		bool bDetach();
 		
 		/**
 		 * @brief This function will reset the Archive pointer to `0`.
 		 * 
 		 * It is only used by the Arxx::Archive and should not be used elsewhere. Probably it should be private.
 		 **/
-		void vDecoupleFromArchive(void);
+		void vDecoupleFromArchive();
 		
 		bool operator<(const Arxx::Reference & Reference) const
 		{

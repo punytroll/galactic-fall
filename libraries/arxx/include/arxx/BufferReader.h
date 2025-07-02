@@ -61,12 +61,12 @@ namespace Arxx
 		/**
 		 * @brief Returns the associated Arxx::Buffer object.
 		 **/
-		const Arxx::Buffer & GetBuffer(void) const;
+		const Arxx::Buffer & GetBuffer() const;
 		
 		/**
 		 * @brief Returns the marker's position.
 		 **/
-		Arxx::Buffer::size_type stGetPosition(void) const;
+		Arxx::Buffer::size_type stGetPosition() const;
 		
 		/**
 		 * @brief Sets the marker's position.

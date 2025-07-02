@@ -51,17 +51,17 @@ void Arxx::BufferWriter::vWrite(Arxx::Buffer::size_type stDataLength, Arxx::Buff
 	m_Marker.vSetAlignment(Arxx::Buffer::Marker::LEFT);
 }
 
-Arxx::Buffer & Arxx::BufferWriter::GetBuffer(void)
+Arxx::Buffer & Arxx::BufferWriter::GetBuffer()
 {
 	return m_Buffer;
 }
 
-const Arxx::Buffer & Arxx::BufferWriter::GetBuffer(void) const
+const Arxx::Buffer & Arxx::BufferWriter::GetBuffer() const
 {
 	return m_Buffer;
 }
 
-Arxx::Buffer::size_type Arxx::BufferWriter::stGetPosition(void) const
+Arxx::Buffer::size_type Arxx::BufferWriter::stGetPosition() const
 {
 	return m_Marker.stGetPosition();
 }

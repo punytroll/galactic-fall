@@ -64,18 +64,18 @@ namespace Arxx
 		 * @brief Returns the associated Arxx::Buffer object.
 		 * @return A non-const Arxx::Buffer reference.
 		 **/
-		Arxx::Buffer & GetBuffer(void);
+		Arxx::Buffer & GetBuffer();
 		
 		/**
 		 * @brief Returns the associated Arxx::Buffer object.
 		 * @return A const Arxx::Buffer reference.
 		 **/
-		const Arxx::Buffer & GetBuffer(void) const;
+		const Arxx::Buffer & GetBuffer() const;
 		
 		/**
 		 * @brief Returns the marker's position.
 		 **/
-		Arxx::Buffer::size_type stGetPosition(void) const;
+		Arxx::Buffer::size_type stGetPosition() const;
 		
 		/**
 		 * @brief Sets the marker's position.
