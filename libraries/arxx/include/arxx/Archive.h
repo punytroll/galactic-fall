@@ -77,38 +77,38 @@ namespace Arxx
 			 *
 			 * Advances the Item iterator. It is not defined which will be the next Arxx::Item the iterator points to. It is only assured that every Item will be passed once.
 			 **/
-			iterator & operator++();
+			auto operator++() -> Arxx::Archive::iterator &;
 			
 			/**
 			 * @brief This will return the Arxx::Item that this iterator points to.
 			 * 
 			 * This is the non-const version of the operator*() so it returns a non const Item reference.
 			 **/
-			Arxx::Item * operator*();
+			auto operator*() -> Arxx::Item *;
 			
 			/**
 			 * @brief This will return the Arxx::Item that this iterator points to.
 			 * 
 			 * This is the const version of the operator*() thus the returned reference is const as well.
 			 **/
-			const Arxx::Item * operator*() const;
+			auto operator*() const -> Arxx::Item const *;
 			
 			/**
 			 * @brief The Arxx::Item accessor.
 			 **/
-			Arxx::Item * operator->();
+			auto operator->() -> Arxx::Item *;
 			
 			/**
 			 * @brief Tests two iterators for equality.
 			 * @param iItem The iterator to check against.
 			 **/
-			bool operator==(const Arxx::Archive::iterator & iItem) const;
+			auto operator==(Arxx::Archive::iterator const & iItem) const -> bool;
 			
 			/**
 			 * @brief Tests two iterators for inequality.
 			 * @param iItem The iterator to check against.
 			 **/
-			bool operator!=(const Arxx::Archive::iterator & iItem) const;
+			auto operator!=(Arxx::Archive::iterator const & iItem) const -> bool;
             
 		private:
 			/**
@@ -146,31 +146,31 @@ namespace Arxx
 			 *
 			 * Advances the Item iterator. It is not defined which will be the next Arxx::Item the iterator points to. It is only assured that every Item will be passed once.
 			 **/
-			const_iterator & operator++();
+			auto operator++() -> Arxx::Archive::const_iterator &;
 			
 			/**
 			 * @brief This will return the Arxx::Item that this iterator points to.
 			 * 
 			 * This is the const version of the operator*() thus the returned Item reference is const as well.
 			 **/
-			const Arxx::Item * operator*() const;
+			auto operator*() const -> Arxx::Item const *;
 			
 			/**
 			 * @brief The Arxx::Item accessor.
 			 **/
-			const Arxx::Item * operator->() const;
+			auto operator->() const -> Arxx::Item const *;
 			
 			/**
 			 * @brief Tests two iterators for equality.
 			 * @param iItem The iterator to check against.
 			 **/
-			bool operator==(const Arxx::Archive::const_iterator & iItem) const;
+			auto operator==(const Arxx::Archive::const_iterator & iItem) const -> bool;
 			
 			/**
 			 * @brief Tests two iterators for inequality.
 			 * @param iItem The iterator to check against.
 			 **/
-			bool operator!=(const Arxx::Archive::const_iterator & iItem) const;
+			auto operator!=(const Arxx::Archive::const_iterator & iItem) const -> bool;
             
 		private:
 			/**
@@ -190,6 +190,11 @@ namespace Arxx
 		 * This constructor creates and initializes a Arxx::Archive.
 		 **/
 		Archive();
+        
+		/**
+		 * @brief No copy semantic.
+		 **/
+		Archive(Arxx::Archive const & Other) = delete;
 		
 		/**
 		 * @brief The destructor for a Arxx::Archive.
@@ -199,13 +204,18 @@ namespace Arxx
 		virtual ~Archive();
 		
 		/**
+		 * @brief No assignment semantic.
+		 **/
+		auto operator=(Arxx::Archive const & Other) -> Arxx::Archive & = delete;
+		
+		/**
 		 * @brief Load the content of an ARX archive into this Arxx::Archive.
 		 * @param FilePath The path to the archive file.
 		 * @return A boolean value indicating whether the ARX archive could be loaded or not. An error can have many reasons (file existance, permissions and content) but there is no facility to report which error occured. If you feel a need for it, please notify me.
 		 * 
 		 * This function tries to load the ARX archive at the location indicated by @a FilePath. If the archive is found and could be opened, the current content of the Arxx::Archive will be closed (via Arxx::Archive::vClose()). Note that if the archive proves to be no valid ARX archive the current content is not available anymore.
 		 **/
-		bool Load(const std::string & FilePath);
+		auto Load(std::string const & FilePath) -> bool;
 		
 		/**
 		 * @brief Saves the content to an ARX archive.
@@ -215,7 +225,7 @@ namespace Arxx
 		 *
 		 * Given the @a FilePath, the content of an Arxx::Archive instance will be saved to the location it indicates. The target will be overwritten if it exists but only after it has been fully assembled in a temporary archive. The temorary archive will be stored under "/tmp/" with the name "ARX" followed by the timestamp. After the saving process to that temporary file it will be moved to the target location, using the command `mv --force PathToTemporaryFile @a FilePath`
 		 */
-		void Save(const std::string & FilePath, bool AutoCompress = false);
+		auto Save(std::string const & FilePath, bool AutoCompress = false) -> void;
 		
 		/**
 		 * @brief Closes the Archive.
@@ -224,7 +234,7 @@ namespace Arxx
 		 * 
 		 * @note Not every ItemFactory, that does not set an Item's ItemFactory member correctly on creation, can be considered 'wrong'. If the ItemFactory still has references to the Items, it is absolutely perfect for having persistent Items inside an Archive.
 		 **/
-		void Close();
+		auto Close() -> void;
 		
 		/**
 		 * @brief Registers an Item to be a part of an Archive.
@@ -239,7 +249,7 @@ namespace Arxx
 		 * - If the unique ID is equal to g_u4InvalidID this function will search for a unique ID not yet used inside this Archive.
 		 * - If the unique ID is any other value, this function will allow the registration if that ID is not yet used by another item in this Archive. Not alowing a registration means to throw an exception of the type Arxx::id_not_unique.
 		 **/
-		void Register(Arxx::Item * Item);
+		auto Register(Arxx::Item * Item) -> void;
 		
 		/**
 		 * @brief Unregisters an Item.
@@ -252,7 +262,7 @@ namespace Arxx
 		 * 
 		 * @note This function will change @a Item! Note that @a Item's Arxx::Item::m_pArchive field will be set to `0` if no errors occure.
 		 **/
-		void Unregister(Arxx::Item * Item);
+		auto Unregister(Arxx::Item * Item) -> void;
 		
 		/**
 		 * @brief Sets a root Item.
@@ -263,7 +273,7 @@ namespace Arxx
 		 * 
 		 * You may pass @a pItem `0` to unset the root Item of the Archive.
 		 **/
-		void SetRootItem(Item * Item);
+		auto SetRootItem(Arxx::Item * Item) -> void;
 		
 		/**
 		 * @brief This function finds the Item associated with a given identifier.
@@ -273,7 +283,7 @@ namespace Arxx
 		 * 
 		 * @note This function guarantees to be of complexity in O(log(n)) where n is the number of Item objects in the Archive.
 		 **/
-		Arxx::Item * GetItem(Arxx::u4byte ItemIdentifier);
+		auto GetItem(Arxx::u4byte ItemIdentifier) -> Arxx::Item *;
 		
 		/**
 		 * @brief This function finds the Item associated with a given identifier.
@@ -283,7 +293,7 @@ namespace Arxx
 		 * 
 		 * @note This function guarantees to be of complexity in O(log(n)) where n is the number of Item objects in the Archive.
 		 **/
-		const Arxx::Item * GetItem(Arxx::u4byte ItemIdentifier) const;
+		auto GetItem(Arxx::u4byte ItemIdentifier) const -> Arxx::Item const *;
 		
 		/**
 		 * @brief Retrieves an item from the archive that is identified by a given path.
@@ -299,7 +309,7 @@ namespace Arxx
 		 * 
 		 * In this path the first item name is "sub" and an item with that name is searched inside the "child" relation of the root item. The second item name is "name" which needs to be located inside the "one" relation of the item "/sub". The third item name is "another" which needs to be located inside the "down" relation.
 		 **/
-		Arxx::Item * GetItem(std::string Path);
+		auto GetItem(std::string Path) -> Arxx::Item *;
 		
 		/**
 		 * @brief Retrieves a const item from the archive that is identified by a given path.
@@ -315,21 +325,21 @@ namespace Arxx
 		 * 
 		 * In this path the first item name is "sub" and an item with that name is searched inside the "child" relation of the root item. The second item name is "name" which needs to be located inside the "one" relation of the item "/sub". The third item name is "another" which needs to be located inside the "down" relation.
 		 **/
-		const Arxx::Item * GetItem(std::string Path) const;
+		auto GetItem(std::string Path) const -> Arxx::Item const *;
 		
 		/**
 		 * @brief Provides access to the root Item.
 		 * 
 		 * This function returns the _RootItem member of the Archive, so if the Archive has no root Item set the function will return 0.
 		 **/
-		Arxx::Item * GetRootItem();
+		auto GetRootItem() -> Arxx::Item *;
 		
 		/**
 		 * @brief Provides const access to the root Item.
 		 * 
 		 * This function returns the _RootItem member of the Archive, so if the Archive has no root Item set the function will return 0.
 		 **/
-		const Arxx::Item * GetRootItem() const;
+		auto GetRootItem() const -> Arxx::Item const *;
 		
 		/**
 		 * @brief Returns a Arxx::Reference for a given unique ID.
@@ -337,47 +347,47 @@ namespace Arxx
 		 * 
 		 * If a Arxx::Item object with the given unique ID is registered in the Archive the Reference will be resolved. If no such Item is registered the Reference will be unresolved, but will be linked to the Archive, so that, once an Item with that unique ID is registered at the Archive, the Reference will be resolved.
 		 **/
-		Arxx::Reference GetReference(Arxx::u4byte u4UniqueID);
+		auto GetReference(Arxx::u4byte u4UniqueID) -> Arxx::Reference;
 		
 		/**
 		 * @brief Returns a Arxx::Archive::iterator to the first Item.
 		 * 
 		 * This function is provided so you can iterate through all the Item objects registered in an Archive. It follows STL standards.
 		 **/
-		Arxx::Archive::iterator begin();
+		auto begin() -> Arxx::Archive::iterator;
 		
 		/**
 		 * @brief Returns a Arxx::Archive::iterator behind the last Item.
 		 * 
 		 * This function is provided so you can iterate through all the Item objects registered in an Archive. It follows STL standards.
 		 **/
-		Arxx::Archive::iterator end();
+		auto end() -> Arxx::Archive::iterator;
 		
 		/**
 		 * @brief Returns a Arxx::Archive::const_iterator to the first Item.
 		 * 
 		 * This function is provided so you can iterate through all the Item objects registered in a const Archive. It follows STL standards.
 		 **/
-		Arxx::Archive::const_iterator begin() const;
+		auto begin() const -> Arxx::Archive::const_iterator;
 		
 		/**
 		 * @brief Returns a Arxx::Archive::const_iterator behind the last Item.
 		 * 
 		 * This function is provided so you can iterate through all the Item objects registered in a const Archive. It follows STL standards.
 		 **/
-		Arxx::Archive::const_iterator end() const;
+		auto end() const -> Arxx::Archive::const_iterator;
 		
 		/**
 		 * @brief Returns the number of Item objects.
 		 * 
 		 * This function returns the number of Arxx::Item objects registered in the Archive. It is designed to be STL compatible.
 		 **/
-		Arxx::Archive::size_type size() const;
+		auto size() const -> Arxx::Archive::size_type;
 		
 		/**
 		 * @brief Returns the number of resolved and unresolved references in the Archive.
 		 **/
-		Arxx::u4byte GetNumberOfReferences() const;
+		auto GetNumberOfReferences() const -> Arxx::u4byte;
 		
 		/**
 		 * @brief This function releases a Reference inside the Archive.
@@ -388,7 +398,7 @@ namespace Arxx
 		 * 
 		 * This function will retrieve the associated Reference object and will remove it from the m_References map thus releasing the ReferenceImplementation object which then is deleted.
 		 **/
-		void ReleaseReference(Arxx::ReferenceImplementation * pReference);
+		auto ReleaseReference(Arxx::ReferenceImplementation * pReference) -> void;
 		
 		/**
 		 * @brief Fetch data from the archive file into the buffer.
@@ -396,22 +406,13 @@ namespace Arxx
 		 * @param Length The amount of data to read from the archive file.
 		 * @param Buffer The buffer to fill with the data.
 		 **/
-		bool Fetch(Arxx::u4byte Offset, Arxx::u4byte Length, Arxx::Buffer * Buffer);
+		auto Fetch(Arxx::u4byte Offset, Arxx::u4byte Length, Arxx::Buffer * Buffer) -> bool;
+        
 	private:
-		/**
-		 * @brief No copy semantic.
-		 **/
-		Archive(const Archive & Archive);
-		
-		/**
-		 * @brief No assignment semantic.
-		 **/
-		Archive & operator=(const Archive & Archive);
-		
 		/**
 		 * @brief The reader function that retrieves Item header information from a channel.
 		 **/
-		void m_Read_2_1_0_0(Arxx::u4byte u4ItemCount);
+		auto m_Read_2_1_0_0(Arxx::u4byte u4ItemCount) -> void;
 		
 		std::map< Arxx::u4byte, Arxx::Item * > m_Items;
 		std::map< Arxx::u4byte, Arxx::Reference > m_References;

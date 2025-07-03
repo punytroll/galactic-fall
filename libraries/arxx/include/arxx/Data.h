@@ -73,37 +73,37 @@ namespace Arxx
 		/**
 		 * @brief Decompresses the data of the buffer.
 		 **/
-		void Decompress();
+		auto Decompress() -> void;
 		
 		/**
 		 * @brief Compresses the data of the buffer.
 		 **/
-		void Compress(const Arxx::Data::Compression & Compression = Arxx::Data::m_DefaultCompression);
+		auto Compress(Arxx::Data::Compression Compression = Arxx::Data::m_DefaultCompression) -> void;
 		
 		/**
 		 * @brief Returns true if the data inside the buffer is compressed.
 		 **/
-		bool IsCompressed() const;
+		auto IsCompressed() const -> bool;
 		
 		/**
 		 * @brief Returns true if the data inside the buffer is decompressed.
 		 **/
-		bool IsDecompressed() const;
+		auto IsDecompressed() const -> bool;
 		
 		/**
 		 * @brief Returns the compression information, which will equal the compression rate of the zlib library.
 		 **/
-		Arxx::Data::Compression GetCompression() const;
+		auto GetCompression() const -> Arxx::Data::Compression;
 		
 		/**
 		 * @brief Gets the length of the decompressed data.
 		 **/
-		Arxx::u4byte GetDecompressedLength() const;
+		auto GetDecompressedLength() const -> Arxx::u4byte;
 		
 		/**
 		 * @brief Gets the length of the compressed data.
 		 **/
-		Arxx::u4byte GetCompressedLength() const;
+		auto GetCompressedLength() const -> Arxx::u4byte;
 		
 		/**
 		 * @brief This function requests the item's data at the appropriate data channel.
@@ -115,7 +115,7 @@ namespace Arxx
 		 * 
 		 * For asynchronous fetches the return value may be true because an Arxx::DataChannel could be found but the actuall fetching may fail. This information may be retrieved via Arxx::Data::GetFetchStatus().
 		 **/
-		bool Fetch();
+		auto Fetch() -> bool;
 		
 		/**
 		 * @brief Unfetching the data generally means deleting the data thus releasing the memory in the buffer.
@@ -128,7 +128,7 @@ namespace Arxx
 		 * 
 		 * This function sets @a m_FetchStatus to Arxx::UNFETCHED.
 		 **/
-		void Unfetch();
+		auto Unfetch() -> void;
 		
 		/**
 		 * @brief Sets fetch information for the data object.
@@ -139,15 +139,15 @@ namespace Arxx
 		 * 
 		 * This function will set @a _Fetched to false.
 		 **/
-		void SetFetchInformation(Arxx::u4byte Offset, Arxx::Data::Compression Compression, Arxx::u4byte DecompressedLength, Arxx::u4byte CompressedLength);
+		auto SetFetchInformation(Arxx::u4byte Offset, Arxx::Data::Compression Compression, Arxx::u4byte DecompressedLength, Arxx::u4byte CompressedLength) -> void;
 		
 		/**
 		 * @brief Returns wether the data is fetched.
 		 **/
-		bool IsFetched() const;
+		auto IsFetched() const -> bool;
         
 	protected:
-		virtual bool m_Fetch(Arxx::u4byte Offset, Arxx::u4byte Length);
+		virtual auto m_Fetch(Arxx::u4byte Offset, Arxx::u4byte Length) -> bool;
         
 	private:
 		/**

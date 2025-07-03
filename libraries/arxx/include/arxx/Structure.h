@@ -43,7 +43,7 @@ namespace Arxx
 	/**
 	 * @brief Convenience function that streams the structural information into a Arxx::Buffer.
 	 **/
-	Arxx::Buffer & operator<<(Arxx::Buffer & Buffer, const Arxx::Structure & Structure);
+	auto operator<<(Arxx::Buffer & Buffer, Arxx::Structure const & Structure) -> Arxx::Buffer &;
 	
 	/**
 	 * @brief The structure of a ARX archive is saved inside these objects.
@@ -97,50 +97,50 @@ namespace Arxx
 				 *
 				 * Advances the Reference iterator. It is not defined which will be the next Reference the iterator points to. It is only assured that every Reference in the Relation will be passed once.
 				 **/
-				iterator & operator++();
+				auto operator++() -> Arxx::Structure::Relation::iterator &;
 				
 				/**
 				 * @brief This will return the Reference that this iterator points to.
 				 * 
 				 * This is the non-const version of the operator*() so it returns a non-const Reference.
 				 **/
-				Arxx::Reference & operator*();
+				auto operator*() -> Arxx::Reference &;
 				
 				/**
 				 * @brief This will return the Reference that this iterator points to.
 				 * 
 				 * This is the const version of the operator*() thus the returned Reference is const as well.
 				 **/
-				const Arxx::Reference & operator*() const;
+				auto operator*() const -> Arxx::Reference const &;
 				
 				/**
 				 * @brief The Reference accessor.
 				 **/
-				Arxx::Reference * operator->();
+				auto operator->() -> Arxx::Reference *;
 				
 				/**
 				 * @brief Tests two iterators for equality.
 				 * @param iReference The iterator to check against.
 				 **/
-				bool operator==(const Arxx::Structure::Relation::iterator & iReference) const;
+				auto operator==(Arxx::Structure::Relation::iterator const & Other) const -> bool;
 				
 				/**
 				 * @brief Tests two iterators for inequality.
 				 * @param iReference The iterator to check against.
 				 **/
-				bool operator!=(const Arxx::Structure::Relation::iterator & iReference) const;
+				auto operator!=(Arxx::Structure::Relation::iterator const & Other) const -> bool;
 				
 				/**
 				 * @brief Tests two iterators for equality.
 				 * @param iReference The iterator to check against.
 				 **/
-				bool operator==(const Arxx::Structure::Relation::const_iterator & iReference) const;
+				auto operator==(Arxx::Structure::Relation::const_iterator const & Other) const -> bool;
 				
 				/**
 				 * @brief Tests two iterators for inequality.
 				 * @param iReference The iterator to check against.
 				 **/
-				bool operator!=(const Arxx::Structure::Relation::const_iterator & iReference) const;
+				auto operator!=(Arxx::Structure::Relation::const_iterator const & Other) const -> bool;
                 
 			private:
 				/**
@@ -188,31 +188,31 @@ namespace Arxx
 				 *
 				 * Advances the Reference iterator. It is not defined which will be the next Reference the iterator points to. It is only assured that every Reference in the Relation will be passed once.
 				 **/
-				const_iterator & operator++();
+				auto operator++() -> Arxx::Structure::Relation::const_iterator &;
 				
 				/**
 				 * @brief This will return the Arxx::Reference that this iterator points to.
 				 * 
 				 * This is the const version of the operator*() thus the returned Reference is const as well.
 				 **/
-				const Arxx::Reference & operator*() const;
+				auto operator*() const -> Arxx::Reference const &;
 				
 				/**
 				 * @brief The Reference accessor.
 				 **/
-				const Arxx::Reference * operator->();
+				auto operator->() -> Arxx::Reference const *;
 				
 				/**
 				 * @brief Tests two iterators for equality.
 				 * @param iReference The iterator to check against.
 				 **/
-				bool operator==(const Arxx::Structure::Relation::const_iterator & iReference) const;
+				auto operator==(Arxx::Structure::Relation::const_iterator const & Other) const -> bool;
 				
 				/**
 				 * @brief Tests two iterators for inequality.
 				 * @param iReference The iterator to check against.
 				 **/
-				bool operator!=(const Arxx::Structure::Relation::const_iterator & iReference) const;
+				auto operator!=(Arxx::Structure::Relation::const_iterator const & Other) const -> bool;
                 
 			private:
 				/**
@@ -230,7 +230,7 @@ namespace Arxx
 			 * 
 			 * This function adds a reference to a unique ID to the relation.
 			 **/
-			void vAdd(Arxx::u4byte u4UniqueID);
+			auto vAdd(Arxx::u4byte u4UniqueID) -> void;
 			
 			/**
 			 * @brief Removes a reference with a certain unique ID from the relation.
@@ -238,7 +238,7 @@ namespace Arxx
 			 * 
 			 * This function removes a reference with a certain unique ID from the relation.
 			 **/
-			bool bDelete(Arxx::u4byte u4UniqueID);
+			auto bDelete(Arxx::u4byte u4UniqueID) -> bool;
 			
 			/**
 			 * @brief Gets a list of pointers to the items with the specified name.
@@ -251,37 +251,37 @@ namespace Arxx
 			 * 
 			 * Relations contain items without regard of their names. Therefore multiple items inside a relation may have the same name and all these items are returned.
 			 **/
-			std::list< Arxx::Item * > GetItems(const std::string & Name);
+			auto GetItems(std::string const & Name) -> std::list<Arxx::Item *>;
 			
 			/**
 			 * @brief Returns the number of references in the relation.
 			 **/
-			size_type size() const;
+			auto size() const -> size_type;
 			
 			/**
 			 * @brief Returns the first reference iterator of the relation.
 			 **/
-			Arxx::Structure::Relation::iterator begin();
+			auto begin() -> Arxx::Structure::Relation::iterator;
 			
 			/**
 			 * @brief Returns the end reference iterator of the relation.
 			 **/
-			Arxx::Structure::Relation::iterator end();
+			auto end() -> Arxx::Structure::Relation::iterator;
 			
 			/**
 			 * @brief Returns the first reference iterator of the relation.
 			 **/
-			Arxx::Structure::Relation::const_iterator begin() const;
+			auto begin() const -> Arxx::Structure::Relation::const_iterator;
 			
 			/**
 			 * @brief Returns the end reference iterator of the relation.
 			 **/
-			Arxx::Structure::Relation::const_iterator end() const;
+			auto end() const -> Arxx::Structure::Relation::const_iterator;
 			
 			/**
 			 * @brief Returns the name of the relation.
 			 **/
-			const std::string & sGetName() const;
+			auto sGetName() const -> std::string const &;
             
 		private:
 			/**
@@ -289,7 +289,7 @@ namespace Arxx
 			 * @param Structure The structure object that this relation is linked to.
 			 * @param sName The unique name of the relation inside the related Structure.
 			 **/
-			Relation(Arxx::Structure & Structure, const std::string & sName);
+			Relation(Arxx::Structure & Structure, std::string const & sName);
 			
 			/**
 			 * @brief The related Structure object.
@@ -342,50 +342,50 @@ namespace Arxx
 			 *
 			 * Advances the Relation iterator. It is not defined which will be the next Relation the iterator points to. It is only assured that every Relation in the Structure will be passed once.
 			 **/
-			iterator & operator++();
+			auto operator++() -> Arxx::Structure::iterator &;
 			
 			/**
 			 * @brief This will return the Relation that this iterator points to.
 			 * 
 			 * This is the non-const version of the operator*() so it returns a non-const Relation.
 			 **/
-			Arxx::Structure::Relation & operator*();
+			auto operator*() -> Arxx::Structure::Relation &;
 			
 			/**
 			 * @brief This will return the Relation that this iterator points to.
 			 * 
 			 * This is the const version of the operator*() thus the returned Relation is const as well.
 			 **/
-			const Arxx::Structure::Relation & operator*() const;
+			auto operator*() const -> Arxx::Structure::Relation const &;
 			
 			/**
 			 * @brief The Relation accessor.
 			 **/
-			Arxx::Structure::Relation * operator->();
+			auto operator->() -> Arxx::Structure::Relation *;
 			
 			/**
 			 * @brief Tests two iterators for equality.
 			 * @param iRelation The iterator to check against.
 			 **/
-			bool operator==(const Arxx::Structure::iterator & iRelation) const;
+			auto operator==(Arxx::Structure::iterator const & Other) const -> bool;
 			
 			/**
 			 * @brief Tests two iterators for inequality.
 			 * @param iRelation The iterator to check against.
 			 **/
-			bool operator!=(const Arxx::Structure::iterator & iRelation) const;
+			auto operator!=(Arxx::Structure::iterator const & Other) const -> bool;
 			
 			/**
 			 * @brief Tests two iterators for equality.
 			 * @param iRelation The iterator to check against.
 			 **/
-			bool operator==(const Arxx::Structure::const_iterator & iRelation) const;
+			auto operator==(Arxx::Structure::const_iterator const & Other) const -> bool;
 			
 			/**
 			 * @brief Tests two iterators for inequality.
 			 * @param iRelation The iterator to check against.
 			 **/
-			bool operator!=(const Arxx::Structure::const_iterator & iRelation) const;
+			auto operator!=(Arxx::Structure::const_iterator const & Other) const -> bool;
             
 		private:
 			/**
@@ -433,31 +433,31 @@ namespace Arxx
 			 *
 			 * Advances the Relation iterator. It is not defined which will be the next Relation the iterator points to. It is only assured that every Relation in the Structure will be passed once.
 			 **/
-			const_iterator & operator++();
+			auto operator++() -> Arxx::Structure::const_iterator &;
 			
 			/**
 			 * @brief This will return the Arxx::Relation that this iterator points to.
 			 * 
 			 * This is the const version of the operator*() thus the returned Relation is const as well.
 			 **/
-			const Arxx::Structure::Relation & operator*() const;
+			auto operator*() const -> Arxx::Structure::Relation const &;
 			
 			/**
 			 * @brief The Relation accessor.
 			 **/
-			const Arxx::Structure::Relation * operator->();
+			auto operator->() -> Arxx::Structure::Relation const *;
 			
 			/**
 			 * @brief Tests two iterators for equality.
 			 * @param iRelation The iterator to check against.
 			 **/
-			bool operator==(const Arxx::Structure::const_iterator & iRelation) const;
+			auto operator==(Arxx::Structure::const_iterator const & Other) const -> bool;
 			
 			/**
 			 * @brief Tests two iterators for inequality.
 			 * @param iRelation The iterator to check against.
 			 **/
-			bool operator!=(const Arxx::Structure::const_iterator & iRelation) const;
+			auto operator!=(Arxx::Structure::const_iterator const & Other) const -> bool;
             
 		private:
 			/**
@@ -493,7 +493,7 @@ namespace Arxx
 		 * 
 		 * This function will create the relation if it does not exist yet and the unresolved reference with the unique ID @a u4UniqueID will be the only member of this new relation.
 		 **/
-		bool bAdd(Arxx::u4byte u4UniqueID, const std::string & sRelation = "child");
+		auto bAdd(Arxx::u4byte u4UniqueID, std::string const & sRelation = "child") -> bool;
 		
 		/**
 		 * @brief Deletes an unresolved item reference from a relation.
@@ -515,7 +515,7 @@ namespace Arxx
 		 * 
 		 * If the deleted item reference was the last one in the relation so that the relation @a sRelation is now empty it is deleted from the relations container.
 		 **/
-		bool bDelete(Arxx::u4byte u4UniqueID, const std::string & sRelation = "child");
+		auto bDelete(Arxx::u4byte u4UniqueID, std::string const & sRelation = "child") -> bool;
 		
 		/**
 		 * @brief The const accessor for constant relations.
@@ -524,7 +524,7 @@ namespace Arxx
 		 * 
 		 * This function returns a reference to a Arxx::Structure::Relation object which you can use to query the content of this relation.
 		 **/
-		const Arxx::Structure::Relation & GetRelation(const std::string & sRelation) const;
+		auto GetRelation(std::string const & sRelation) const -> Arxx::Structure::Relation const &;
 		
 		/**
 		 * @brief The accessor for relations.
@@ -533,41 +533,41 @@ namespace Arxx
 		 * 
 		 * This function returns a reference to a Arxx::Structure::Relation object which you can use to query and modify the content of this relation.
 		 **/
-		Arxx::Structure::Relation & GetRelation(const std::string & sRelation);
+		auto GetRelation(std::string const & sRelation) -> Arxx::Structure::Relation &;
 		
 		/**
 		 * @brief Query whether a paricular relation exists.
 		 * @param sRelation The name of the relation.
 		 **/
-		bool bHasRelation(const std::string & sRelation) const;
+		auto bHasRelation(std::string const & sRelation) const -> bool;
 		
 		/**
 		 * @brief Returns the number of Relations in the Structure.
 		 **/
-		size_type size() const;
+		auto size() const -> size_type;
 		
 		/**
 		 * @brief Returns the first Relation iterator of the Structure.
 		 **/
-		Arxx::Structure::iterator begin();
+		auto begin() -> Arxx::Structure::iterator;
 		
 		/**
 		 * @brief Returns the end Relation iterator of the Structure.
 		 **/
-		Arxx::Structure::iterator end();
+		auto end() -> Arxx::Structure::iterator;
 		
 		/**
 		 * @brief Returns the first const Relation iterator of the Structure.
 		 **/
-		Arxx::Structure::const_iterator begin() const;
+		auto begin() const -> Arxx::Structure::const_iterator;
 		
 		/**
 		 * @brief Returns the end const Relation iterator of the Structure.
 		 **/
-		Arxx::Structure::const_iterator end() const;
+		auto end() const -> Arxx::Structure::const_iterator;
         
 	private:
-		friend Arxx::Buffer & Arxx::operator<<(Arxx::Buffer & Buffer, const Arxx::Structure & Structure);
+		friend auto Arxx::operator<<(Arxx::Buffer & Buffer, Arxx::Structure const & Structure) -> Arxx::Buffer &;
 		
 		/**
 		 * @brief Writes the Structure information to a Buffer.
@@ -575,11 +575,11 @@ namespace Arxx
 		 * 
 		 * This function simply appends the structure information to the @a Buffer.
 		 **/
-		void vWriteToBuffer(Arxx::Buffer & Buffer) const;
+		auto vWriteToBuffer(Arxx::Buffer & Buffer) const -> void;
 		
-		void vReadFromStream(Arxx::u4byte u4StructureDataLength, std::istream & IStream);
+		auto vReadFromStream(Arxx::u4byte u4StructureDataLength, std::istream & IStream) -> void;
 		
-		void vRemoveRelation(Arxx::Structure::Relation * pRelation);
+		auto vRemoveRelation(Arxx::Structure::Relation * pRelation) -> void;
         
 		Arxx::Item & m_Item;
 		std::map< std::string, Arxx::Structure::Relation > m_Relations;

@@ -26,32 +26,32 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Arxx::Item                                                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-Arxx::Item * Arxx::Item::Create()
+auto Arxx::Item::Create() -> Arxx::Item *
 {
 	return Arxx::Item::Create(0, g_u4InvalidID);
 }
 
-Arxx::Item * Arxx::Item::Create(Arxx::u4byte Identifier)
+auto Arxx::Item::Create(Arxx::u4byte Identifier) -> Arxx::Item *
 {
 	return Arxx::Item::Create(0, Identifier);
 }
 
-Arxx::Item * Arxx::Item::Create(Arxx::Archive & Archive)
+auto Arxx::Item::Create(Arxx::Archive & Archive) -> Arxx::Item *
 {
 	return Arxx::Item::Create(&Archive);
 }
 
-Arxx::Item * Arxx::Item::Create(Arxx::Archive & Archive, Arxx::u4byte Identifier)
+auto Arxx::Item::Create(Arxx::Archive & Archive, Arxx::u4byte Identifier) -> Arxx::Item *
 {
 	return Arxx::Item::Create(&Archive, Identifier);
 }
 
-Arxx::Item * Arxx::Item::Create(Arxx::Archive * Archive)
+auto Arxx::Item::Create(Arxx::Archive * Archive) -> Arxx::Item *
 {
 	return Arxx::Item::Create(Archive, g_u4InvalidID);
 }
 
-Arxx::Item * Arxx::Item::Create(Arxx::Archive * Archive, Arxx::u4byte Identifier)
+auto Arxx::Item::Create(Arxx::Archive * Archive, Arxx::u4byte Identifier) -> Arxx::Item *
 {
 	Arxx::Item * Result(new Arxx::Item());
 	
@@ -64,7 +64,7 @@ Arxx::Item * Arxx::Item::Create(Arxx::Archive * Archive, Arxx::u4byte Identifier
 	return Result;
 }
 
-void Arxx::Item::Delete(Arxx::Item * Item)
+auto Arxx::Item::Delete(Arxx::Item * Item) -> void
 {
 	if(Item->m_Archive != 0)
 	{
@@ -92,12 +92,12 @@ Arxx::Item::~Item()
 	assert(m_Archive == 0);
 }
 
-Arxx::u4byte Arxx::Item::GetIdentifier() const
+auto Arxx::Item::GetIdentifier() const -> Arxx::u4byte
 {
 	return m_Identifier;
 }
 
-void Arxx::Item::SetIdentifier(Arxx::u4byte Identifier)
+auto Arxx::Item::SetIdentifier(Arxx::u4byte Identifier) -> void
 {
 	if(m_Archive == 0)
 	{
@@ -132,57 +132,57 @@ void Arxx::Item::SetIdentifier(Arxx::u4byte Identifier)
 	}
 }
 
-const std::string & Arxx::Item::GetName() const
+auto Arxx::Item::GetName() const -> std::string const &
 {
 	return m_Name;
 }
 
-void Arxx::Item::SetName(const std::string & Name)
+auto Arxx::Item::SetName(std::string const & Name) -> void
 {
 	m_Name = Name;
 }
 
-Arxx::u4byte Arxx::Item::GetType() const
+auto Arxx::Item::GetType() const -> Arxx::u4byte
 {
 	return m_Type;
 }
 
-void Arxx::Item::SetType(Arxx::u4byte Type)
+auto Arxx::Item::SetType(Arxx::u4byte Type) -> void
 {
 	m_Type = Type;
 }
 
-Arxx::u4byte Arxx::Item::GetSubType() const
+auto Arxx::Item::GetSubType() const -> Arxx::u4byte
 {
 	return m_SubType;
 }
 
-void Arxx::Item::SetSubType(Arxx::u4byte SubType)
+auto Arxx::Item::SetSubType(Arxx::u4byte SubType) -> void
 {
 	m_SubType = SubType;
 }
 
-Arxx::u1byte Arxx::Item::GetMajorVersionNumber() const
+auto Arxx::Item::GetMajorVersionNumber() const -> Arxx::u1byte
 {
 	return m_MajorVersionNumber;
 }
 
-Arxx::u1byte Arxx::Item::GetMinorVersionNumber() const
+auto Arxx::Item::GetMinorVersionNumber() const -> Arxx::u1byte
 {
 	return m_MinorVersionNumber;
 }
 
-Arxx::u1byte Arxx::Item::GetRevisionNumber() const
+auto Arxx::Item::GetRevisionNumber() const -> Arxx::u1byte
 {
 	return m_RevisionNumber;
 }
 
-Arxx::u1byte Arxx::Item::GetCandidateNumber() const
+auto Arxx::Item::GetCandidateNumber() const -> Arxx::u1byte
 {
 	return m_CandidateNumber;
 }
 
-void Arxx::Item::SetVersionNumbers(Arxx::u1byte MajorVersionNumber, Arxx::u1byte MinorVersionNumber, Arxx::u1byte RevisionNumber, Arxx::u1byte CandidateNumber)
+auto Arxx::Item::SetVersionNumbers(Arxx::u1byte MajorVersionNumber, Arxx::u1byte MinorVersionNumber, Arxx::u1byte RevisionNumber, Arxx::u1byte CandidateNumber) -> void
 {
 	m_MajorVersionNumber = MajorVersionNumber;
 	m_MinorVersionNumber = MinorVersionNumber;
@@ -190,22 +190,22 @@ void Arxx::Item::SetVersionNumbers(Arxx::u1byte MajorVersionNumber, Arxx::u1byte
 	m_CandidateNumber = CandidateNumber;
 }
 
-Arxx::Archive * Arxx::Item::GetArchive() const
+auto Arxx::Item::GetArchive() const -> Arxx::Archive *
 {
 	return m_Archive;
 }
 
-Arxx::Structure & Arxx::Item::GetStructure()
+auto Arxx::Item::GetStructure() -> Arxx::Structure &
 {
 	return m_Structure;
 }
 
-const Arxx::Structure & Arxx::Item::GetStructure() const
+auto Arxx::Item::GetStructure() const -> Arxx::Structure const &
 {
 	return m_Structure;
 }
 
-bool Arxx::Item::m_Fetch(Arxx::u4byte Offset, Arxx::u4byte Length)
+auto Arxx::Item::m_Fetch(Arxx::u4byte Offset, Arxx::u4byte Length) -> bool
 {
 	if(m_Archive != 0)
 	{

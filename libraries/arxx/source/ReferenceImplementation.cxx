@@ -42,7 +42,7 @@ Arxx::ReferenceImplementation::~ReferenceImplementation()
 	assert(m_u4ReferenceCount == 0);
 }
 
-Arxx::ReferenceImplementation * Arxx::ReferenceImplementation::pGetReference(Arxx::Item & Item)
+auto Arxx::ReferenceImplementation::pGetReference(Arxx::Item & Item) -> Arxx::ReferenceImplementation *
 {
 	Arxx::ReferenceImplementation * pReference(new Arxx::ReferenceImplementation);
 	
@@ -54,7 +54,7 @@ Arxx::ReferenceImplementation * Arxx::ReferenceImplementation::pGetReference(Arx
 	return pReference;
 }
 
-Arxx::ReferenceImplementation * Arxx::ReferenceImplementation::pGetReference(Arxx::u4byte u4UniqueID, Arxx::Archive * pArchive)
+auto Arxx::ReferenceImplementation::pGetReference(Arxx::u4byte u4UniqueID, Arxx::Archive * pArchive) -> Arxx::ReferenceImplementation *
 {
 	Arxx::ReferenceImplementation * pReference(new Arxx::ReferenceImplementation);
 	
@@ -66,14 +66,14 @@ Arxx::ReferenceImplementation * Arxx::ReferenceImplementation::pGetReference(Arx
 	return pReference;
 }
 
-Arxx::ReferenceImplementation * Arxx::ReferenceImplementation::pGetReference(Arxx::ReferenceImplementation * pReference)
+auto Arxx::ReferenceImplementation::pGetReference(Arxx::ReferenceImplementation * pReference) -> Arxx::ReferenceImplementation *
 {
 	pReference->m_u4ReferenceCount++;
 	
 	return pReference;
 }
 
-bool Arxx::ReferenceImplementation::bRelease(Arxx::ReferenceImplementation * pReference)
+auto Arxx::ReferenceImplementation::bRelease(Arxx::ReferenceImplementation * pReference) -> bool
 {
 	assert(pReference->m_u4ReferenceCount != 0);
 	pReference->m_u4ReferenceCount--;
@@ -98,27 +98,27 @@ bool Arxx::ReferenceImplementation::bRelease(Arxx::ReferenceImplementation * pRe
 	}
 }
 
-Arxx::u4byte Arxx::ReferenceImplementation::u4GetUniqueID() const
+auto Arxx::ReferenceImplementation::u4GetUniqueID() const -> Arxx::u4byte
 {
 	return m_u4UniqueID;
 }
 
-Arxx::Item * Arxx::ReferenceImplementation::pGetItem()
+auto Arxx::ReferenceImplementation::pGetItem() -> Arxx::Item *
 {
 	return m_pItem;
 }
 
-const Arxx::Item * Arxx::ReferenceImplementation::pGetItem() const
+auto Arxx::ReferenceImplementation::pGetItem() const -> Arxx::Item const *
 {
 	return m_pItem;
 }
 
-Arxx::u4byte Arxx::ReferenceImplementation::u4GetReferenceCount() const
+auto Arxx::ReferenceImplementation::u4GetReferenceCount() const -> Arxx::u4byte
 {
 	return m_u4ReferenceCount;
 }
 
-void Arxx::ReferenceImplementation::vResolve(Arxx::Item & Item)
+auto Arxx::ReferenceImplementation::vResolve(Arxx::Item & Item) -> void
 {
 	if(pGetItem() != 0)
 	{
@@ -131,7 +131,7 @@ void Arxx::ReferenceImplementation::vResolve(Arxx::Item & Item)
 	m_pItem = &Item;
 }
 
-void Arxx::ReferenceImplementation::vUnresolve()
+auto Arxx::ReferenceImplementation::vUnresolve() -> void
 {
 	if(pGetItem() == 0)
 	{
@@ -140,7 +140,7 @@ void Arxx::ReferenceImplementation::vUnresolve()
 	m_pItem = 0;
 }
 
-void Arxx::ReferenceImplementation::vDecoupleFromArchive()
+auto Arxx::ReferenceImplementation::vDecoupleFromArchive() -> void
 {
 	m_pArchive = 0;
 }

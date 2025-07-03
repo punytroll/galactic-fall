@@ -38,8 +38,8 @@ Arxx::Reference::Reference(Arxx::u4byte u4UniqueID, Arxx::Archive * pArchive) :
 {
 }
 
-Arxx::Reference::Reference(const Arxx::Reference & Reference) :
-	m_pReference(0)
+Arxx::Reference::Reference(Arxx::Reference const & Reference) :
+	m_pReference(nullptr)
 {
 	vChangeReference(Reference.m_pReference);
 }
@@ -49,37 +49,37 @@ Arxx::Reference::~Reference()
 	vChangeReference(0);
 }
 
-Arxx::u4byte Arxx::Reference::u4GetUniqueID() const
+auto Arxx::Reference::u4GetUniqueID() const -> Arxx::u4byte
 {
 	return m_pReference->u4GetUniqueID();
 }
 
-Arxx::Item * Arxx::Reference::pGetItem()
+auto Arxx::Reference::pGetItem() -> Arxx::Item *
 {
 	return m_pReference->pGetItem();
 }
 
-const Arxx::Item * Arxx::Reference::pGetItem() const
+auto Arxx::Reference::pGetItem() const -> Arxx::Item const *
 {
 	return m_pReference->pGetItem();
 }
 
-Arxx::u4byte Arxx::Reference::u4GetReferenceCount() const
+auto Arxx::Reference::u4GetReferenceCount() const -> Arxx::u4byte
 {
 	return m_pReference->u4GetReferenceCount();
 }
 
-void Arxx::Reference::vResolve(Arxx::Item & Item)
+auto Arxx::Reference::vResolve(Arxx::Item & Item) -> void
 {
 	m_pReference->vResolve(Item);
 }
 
-void Arxx::Reference::vUnresolve()
+auto Arxx::Reference::vUnresolve() -> void
 {
 	m_pReference->vUnresolve();
 }
 
-bool Arxx::Reference::bAttach(Arxx::Reference & Reference)
+auto Arxx::Reference::bAttach(Arxx::Reference & Reference) -> bool
 {
 	if((Reference.u4GetUniqueID() != u4GetUniqueID()) || (Reference.pGetItem() != 0))
 	{
@@ -90,7 +90,7 @@ bool Arxx::Reference::bAttach(Arxx::Reference & Reference)
 	return true;
 }
 
-bool Arxx::Reference::bDetach()
+auto Arxx::Reference::bDetach() -> bool
 {
 	Arxx::ReferenceImplementation * pReference(Arxx::ReferenceImplementation::pGetReference(u4GetUniqueID()));
 	
@@ -101,19 +101,19 @@ bool Arxx::Reference::bDetach()
 	return true;
 }
 
-void Arxx::Reference::vDecoupleFromArchive()
+auto Arxx::Reference::vDecoupleFromArchive() -> void
 {
 	m_pReference->vDecoupleFromArchive();
 }
 
-void Arxx::Reference::vChangeReference(Arxx::ReferenceImplementation * pReference)
+auto Arxx::Reference::vChangeReference(Arxx::ReferenceImplementation * pReference) -> void
 {
-	if(m_pReference != 0)
+	if(m_pReference != nullptr)
 	{
 		Arxx::ReferenceImplementation::bRelease(m_pReference);
-		m_pReference = 0;
+		m_pReference = nullptr;
 	}
-	if(pReference != 0)
+	if(pReference != nullptr)
 	{
 		m_pReference = Arxx::ReferenceImplementation::pGetReference(pReference);
 	}

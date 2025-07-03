@@ -51,36 +51,36 @@ namespace Arxx
 		 * 
 		 * This constructor creates a second BufferWriter which refers to the same Buffer but using an own marker. The new BufferWriter behaves as if created on its own.
 		 **/
-		BufferWriter(const Arxx::BufferWriter & BufferWriter);
+		BufferWriter(Arxx::BufferWriter const & Other);
 		
 		/**
 		 * @brief Write a block of data at the writer's position in the buffer.
 		 * @param stDataLength The length of the data block @a Data
 		 * @param Data The data block to insert at the writer's position. May be omitted to insert @a stDataLength zeroed bytes.
 		 **/
-		void vWrite(Arxx::Buffer::size_type stDataLength, Arxx::Buffer::const_pointer Data = 0);
+		auto vWrite(Arxx::Buffer::size_type stDataLength, Arxx::Buffer::const_pointer Data = 0) -> void;
 		
 		/**
 		 * @brief Returns the associated Arxx::Buffer object.
 		 * @return A non-const Arxx::Buffer reference.
 		 **/
-		Arxx::Buffer & GetBuffer();
+		auto GetBuffer() -> Arxx::Buffer &;
 		
 		/**
 		 * @brief Returns the associated Arxx::Buffer object.
 		 * @return A const Arxx::Buffer reference.
 		 **/
-		const Arxx::Buffer & GetBuffer() const;
+		auto GetBuffer() const -> Arxx::Buffer const &;
 		
 		/**
 		 * @brief Returns the marker's position.
 		 **/
-		Arxx::Buffer::size_type stGetPosition() const;
+		auto stGetPosition() const -> Arxx::Buffer::size_type;
 		
 		/**
 		 * @brief Sets the marker's position.
 		 **/
-		void vSetPosition(Arxx::Buffer::size_type stPosition);
+		auto vSetPosition(Arxx::Buffer::size_type stPosition) -> void;
         
 	private:
 		Arxx::Buffer & m_Buffer;
@@ -98,7 +98,7 @@ namespace Arxx
 	 *
 	 * @note The string will be stored as a zero-terminated string so that a trailing zero will be appended.
 	 **/
-	Arxx::BufferWriter & operator<<(Arxx::BufferWriter & BufferWriter, const std::string & sString);
+	auto operator<<(Arxx::BufferWriter & BufferWriter, std::string const & sString) -> Arxx::BufferWriter &;
 
 	/**
 	 * @brief A helper function for storing a C string in a buffer.
@@ -112,7 +112,7 @@ namespace Arxx
 	 *
 	 * @note The string will be stored as a zero-terminated string so that a trailing zero will be appended.
 	 **/
-	Arxx::BufferWriter & operator<<(Arxx::BufferWriter & BufferWriter, const char * pcString);
+	auto operator<<(Arxx::BufferWriter & BufferWriter, const char * pcString) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function for storing float numbers in a buffer.
@@ -122,7 +122,7 @@ namespace Arxx
 	 * 
 	 * This function stores the float value @a fValue in the buffer using an input function.
 	 **/
-	Arxx::BufferWriter & operator<<(Arxx::BufferWriter & BufferWriter, const float & fValue);
+	auto operator<<(Arxx::BufferWriter & BufferWriter, float fValue) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function for storing Arxx::u1byte objects in a buffer.
@@ -132,7 +132,7 @@ namespace Arxx
 	 * 
 	 * This function stores the Arxx::u1byte value @a Value in the buffer using an input function.
 	 **/
-	Arxx::BufferWriter & operator<<(Arxx::BufferWriter & BufferWriter, const Arxx::u1byte & Value);
+	auto operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u1byte Value) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function for storing Arxx::u4byte objects in a buffer.
@@ -142,7 +142,7 @@ namespace Arxx
 	 * 
 	 * This function stores the Arxx::u4byte value @a u4Value in the buffer using an input function.
 	 **/
-	Arxx::BufferWriter & operator<<(Arxx::BufferWriter & BufferWriter, const Arxx::u4byte & u4Value);
+	auto operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u4byte u4Value) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function for storing Arxx::u8byte objects in a buffer.
@@ -152,7 +152,7 @@ namespace Arxx
 	 * 
 	 * This function stores the Arxx::u8byte value @a u8Value in the buffer using an input function.
 	 **/
-	Arxx::BufferWriter & operator<<(Arxx::BufferWriter & BufferWriter, const Arxx::u8byte & u8Value);
+	auto operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u8byte u8Value) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function for storing bool objects in a buffer.
@@ -162,7 +162,7 @@ namespace Arxx
 	 * 
 	 * This function stores the bool value @a bValue in the buffer using an input function.
 	 **/
-	Arxx::BufferWriter & operator<<(Arxx::BufferWriter & BufferWriter, const bool & bValue);
+	auto operator<<(Arxx::BufferWriter & BufferWriter, bool bValue) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function for storing char objects in a buffer.
@@ -172,7 +172,7 @@ namespace Arxx
 	 * 
 	 * This function stores the char value @a cValue in the buffer using an input function.
 	 **/
-	Arxx::BufferWriter & operator<<(Arxx::BufferWriter & BufferWriter, const char & cValue);
+	auto operator<<(Arxx::BufferWriter & BufferWriter, char cValue) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function that allows filling a buffer from an std::istream.
@@ -182,7 +182,7 @@ namespace Arxx
 	 * 
 	 * This function will append the stream content at the I/O position of the buffer. It will read @a Stream.first bytes from the stream. In case the stream end before that amount of bytes the buffer will contain only as much bytes as could be read from the stream. This function is an I/O operation and thus will modify the I/O position of the buffer to point after the last byte read.
 	 **/
-	Arxx::BufferWriter & operator<<(Arxx::BufferWriter & BufferWriter, const std::pair< Arxx::Buffer::size_type, std::istream * > & Stream);
+	auto operator<<(Arxx::BufferWriter & BufferWriter, std::pair< Arxx::Buffer::size_type, std::istream * > const & Stream) -> Arxx::BufferWriter &;
 }
 
 #endif

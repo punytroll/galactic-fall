@@ -34,13 +34,13 @@ Arxx::BufferWriter::BufferWriter(Arxx::Buffer & Buffer, Arxx::Buffer::size_type 
 {
 }
 
-Arxx::BufferWriter::BufferWriter(const Arxx::BufferWriter & BufferWriter) :
-	m_Buffer(BufferWriter.m_Buffer),
-	m_Marker(BufferWriter.m_Buffer, BufferWriter.stGetPosition(), Arxx::Buffer::Marker::LEFT)
+Arxx::BufferWriter::BufferWriter(Arxx::BufferWriter const & Other) :
+	m_Buffer(Other.m_Buffer),
+	m_Marker(Other.m_Buffer, Other.stGetPosition(), Arxx::Buffer::Marker::LEFT)
 {
 }
 
-void Arxx::BufferWriter::vWrite(Arxx::Buffer::size_type stDataLength, Arxx::Buffer::const_pointer Data)
+auto Arxx::BufferWriter::vWrite(Arxx::Buffer::size_type stDataLength, Arxx::Buffer::const_pointer Data) -> void
 {
 	if(m_Marker.bIsValid() == false)
 	{
@@ -51,82 +51,83 @@ void Arxx::BufferWriter::vWrite(Arxx::Buffer::size_type stDataLength, Arxx::Buff
 	m_Marker.vSetAlignment(Arxx::Buffer::Marker::LEFT);
 }
 
-Arxx::Buffer & Arxx::BufferWriter::GetBuffer()
+auto Arxx::BufferWriter::GetBuffer() -> Arxx::Buffer &
 {
 	return m_Buffer;
 }
 
-const Arxx::Buffer & Arxx::BufferWriter::GetBuffer() const
+auto Arxx::BufferWriter::GetBuffer() const -> Arxx::Buffer const &
 {
 	return m_Buffer;
 }
 
-Arxx::Buffer::size_type Arxx::BufferWriter::stGetPosition() const
+auto Arxx::BufferWriter::stGetPosition() const -> Arxx::Buffer::size_type
 {
 	return m_Marker.stGetPosition();
 }
 
-void Arxx::BufferWriter::vSetPosition(Arxx::Buffer::size_type stPosition)
+auto Arxx::BufferWriter::vSetPosition(Arxx::Buffer::size_type stPosition) -> void
 {
 	return m_Marker.vSetPosition(stPosition);
 }
 
-Arxx::BufferWriter & Arxx::operator<<(Arxx::BufferWriter & BufferWriter, const std::string & sString)
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, std::string const & sString) -> Arxx::BufferWriter &
 {
 	BufferWriter.vWrite(sString.length() + 1, reinterpret_cast< Arxx::Buffer::const_pointer >(sString.c_str()));
 
 	return BufferWriter;
 }
 
-Arxx::BufferWriter & Arxx::operator<<(Arxx::BufferWriter & BufferWriter, const char * pcString)
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, char const * pcString) -> Arxx::BufferWriter &
 {
 	BufferWriter.vWrite(strlen(pcString) + 1, reinterpret_cast< Arxx::Buffer::const_pointer >(pcString));
 
 	return BufferWriter;
 }
-Arxx::BufferWriter & Arxx::operator<<(Arxx::BufferWriter & BufferWriter, const float & fValue)
+
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, float fValue) -> Arxx::BufferWriter &
 {
 	BufferWriter.vWrite(sizeof(float), reinterpret_cast< Arxx::Buffer::const_pointer >(&fValue));
 	
 	return BufferWriter;
 }
 
-Arxx::BufferWriter & Arxx::operator<<(Arxx::BufferWriter & BufferWriter, const Arxx::u1byte & Value)
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u1byte Value) -> Arxx::BufferWriter &
 {
 	BufferWriter.vWrite(sizeof(Arxx::u1byte), reinterpret_cast< Arxx::Buffer::const_pointer >(&Value));
 	
 	return BufferWriter;
 }
 
-Arxx::BufferWriter & Arxx::operator<<(Arxx::BufferWriter & BufferWriter, const Arxx::u4byte & u4Value)
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u4byte u4Value) -> Arxx::BufferWriter &
 {
 	BufferWriter.vWrite(sizeof(Arxx::u4byte), reinterpret_cast< Arxx::Buffer::const_pointer >(&u4Value));
 	
 	return BufferWriter;
 }
 
-Arxx::BufferWriter & Arxx::operator<<(Arxx::BufferWriter & BufferWriter, const Arxx::u8byte & u8Value)
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u8byte u8Value) -> Arxx::BufferWriter &
 {
 	BufferWriter.vWrite(sizeof(Arxx::u8byte), reinterpret_cast< Arxx::Buffer::const_pointer >(&u8Value));
 	
 	return BufferWriter;
 }
 
-Arxx::BufferWriter & Arxx::operator<<(Arxx::BufferWriter & BufferWriter, const bool & bValue)
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, bool bValue) -> Arxx::BufferWriter &
 {
 	BufferWriter.vWrite(sizeof(bool), reinterpret_cast< Arxx::Buffer::const_pointer >(&bValue));
 	
 	return BufferWriter;
 }
 
-Arxx::BufferWriter & Arxx::operator<<(Arxx::BufferWriter & BufferWriter, const char & cValue)
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, char cValue) -> Arxx::BufferWriter &
 {
 	BufferWriter.vWrite(sizeof(char), reinterpret_cast< Arxx::Buffer::const_pointer >(&cValue));
 	
 	return BufferWriter;
 }
 
-Arxx::BufferWriter & Arxx::operator<<(Arxx::BufferWriter & BufferWriter, const std::pair< Arxx::Buffer::size_type, std::istream * > & Stream)
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, std::pair< Arxx::Buffer::size_type, std::istream * > const & Stream) -> Arxx::BufferWriter &
 {
 #ifdef DEBUG
 	std::cerr << "Arxx::operator<<(std::pair< size, stream >): size = " << Stream.first << std::endl;

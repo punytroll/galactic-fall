@@ -20,19 +20,19 @@
 #include <arxx/Buffer.h>
 #include <arxx/BufferReader.h>
 
-Arxx::BufferReader::BufferReader(const Arxx::Buffer & Buffer, Arxx::Buffer::size_type stPosition) :
+Arxx::BufferReader::BufferReader(Arxx::Buffer const & Buffer, Arxx::Buffer::size_type stPosition) :
 	m_Buffer(Buffer),
 	m_Marker(Buffer, stPosition, Arxx::Buffer::Marker::LEFT)
 {
 }
 
-Arxx::BufferReader::BufferReader(const Arxx::BufferReader & BufferReader) :
-	m_Buffer(BufferReader.m_Buffer),
-	m_Marker(BufferReader.m_Buffer, BufferReader.stGetPosition(), Arxx::Buffer::Marker::LEFT)
+Arxx::BufferReader::BufferReader(Arxx::BufferReader const & Other) :
+	m_Buffer(Other.m_Buffer),
+	m_Marker(Other.m_Buffer, Other.stGetPosition(), Arxx::Buffer::Marker::LEFT)
 {
 }
 
-Arxx::Buffer::size_type Arxx::BufferReader::stRead(Arxx::Buffer::size_type stLength, Arxx::Buffer::pointer Buffer)
+auto Arxx::BufferReader::stRead(Arxx::Buffer::size_type stLength, Arxx::Buffer::pointer Buffer) -> Arxx::Buffer::size_type
 {
 	if(m_Marker.bIsValid() == false)
 	{
@@ -48,22 +48,22 @@ Arxx::Buffer::size_type Arxx::BufferReader::stRead(Arxx::Buffer::size_type stLen
 	return stLength;
 }
 
-const Arxx::Buffer & Arxx::BufferReader::GetBuffer() const
+auto Arxx::BufferReader::GetBuffer() const -> Arxx::Buffer const &
 {
 	return m_Buffer;
 }
 
-Arxx::Buffer::size_type Arxx::BufferReader::stGetPosition() const
+auto Arxx::BufferReader::stGetPosition() const -> Arxx::Buffer::size_type
 {
 	return m_Marker.stGetPosition();
 }
 
-void Arxx::BufferReader::vSetPosition(Arxx::Buffer::size_type stPosition)
+auto Arxx::BufferReader::vSetPosition(Arxx::Buffer::size_type stPosition) -> void
 {
 	return m_Marker.vSetPosition(stPosition);
 }
 
-Arxx::BufferReader & Arxx::operator>>(Arxx::BufferReader & BufferReader, std::string & sString)
+auto Arxx::operator>>(Arxx::BufferReader & BufferReader, std::string & sString) -> Arxx::BufferReader &
 {
 	const Arxx::Buffer & Buffer(BufferReader.GetBuffer());
 	Arxx::Buffer::size_type stIndex(BufferReader.stGetPosition());
@@ -83,35 +83,35 @@ Arxx::BufferReader & Arxx::operator>>(Arxx::BufferReader & BufferReader, std::st
 	return BufferReader;
 }
 
-Arxx::BufferReader & Arxx::operator>>(Arxx::BufferReader & BufferReader, float & fValue)
+auto Arxx::operator>>(Arxx::BufferReader & BufferReader, float & fValue) -> Arxx::BufferReader &
 {
 	BufferReader.stRead(sizeof(float), reinterpret_cast< Arxx::Buffer::pointer >(&fValue));
 	
 	return BufferReader;
 }
 
-Arxx::BufferReader & Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u1byte & u1Value)
+auto Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u1byte & u1Value) -> Arxx::BufferReader &
 {
 	BufferReader.stRead(sizeof(Arxx::u1byte), reinterpret_cast< Arxx::Buffer::pointer >(&u1Value));
 	
 	return BufferReader;
 }
 
-Arxx::BufferReader & Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u4byte & u4Value)
+auto Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u4byte & u4Value) -> Arxx::BufferReader &
 {
 	BufferReader.stRead(sizeof(Arxx::u4byte), reinterpret_cast< Arxx::Buffer::pointer >(&u4Value));
 	
 	return BufferReader;
 }
 
-Arxx::BufferReader & Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u8byte & Value)
+auto Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u8byte & Value) -> Arxx::BufferReader &
 {
 	BufferReader.stRead(sizeof(Arxx::u8byte), reinterpret_cast< Arxx::Buffer::pointer >(&Value));
 	
 	return BufferReader;
 }
 
-Arxx::BufferReader & Arxx::operator>>(Arxx::BufferReader & BufferReader, bool & bValue)
+auto Arxx::operator>>(Arxx::BufferReader & BufferReader, bool & bValue) -> Arxx::BufferReader &
 {
 	BufferReader.stRead(sizeof(bool), reinterpret_cast< Arxx::Buffer::pointer >(&bValue));
 	

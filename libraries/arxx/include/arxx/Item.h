@@ -47,20 +47,30 @@ namespace Arxx
 	public:
 		friend class Arxx::Archive;
         
-		static Arxx::Item * Create();
-		static Arxx::Item * Create(Arxx::u4byte Identifier);
-		static Arxx::Item * Create(Arxx::Archive & Archive);
-		static Arxx::Item * Create(Arxx::Archive & Archive, Arxx::u4byte Identifier);
-		static Arxx::Item * Create(Arxx::Archive * Archive);
-		static Arxx::Item * Create(Arxx::Archive * Archive, Arxx::u4byte Identifier);
-		static void Delete(Arxx::Item * Item);
+		static auto Create() -> Arxx::Item *;
+		static auto Create(Arxx::u4byte Identifier) -> Arxx::Item *;
+		static auto Create(Arxx::Archive & Archive) -> Arxx::Item *;
+		static auto Create(Arxx::Archive & Archive, Arxx::u4byte Identifier) -> Arxx::Item *;
+		static auto Create(Arxx::Archive * Archive) -> Arxx::Item *;
+		static auto Create(Arxx::Archive * Archive, Arxx::u4byte Identifier) -> Arxx::Item *;
+		static auto Delete(Arxx::Item * Item) -> void;
 		
+		/**
+		 * @brief Deleted copy constructor, as items cannot be copied.
+		 **/
+		Item(Arxx::Item const & Item) = delete;
+		
+		/**
+		 * @brief Deleted copy assignment operator, as items cannot be assigned to.
+         **/
+		auto operator=(Arxx::Item const & Item) -> Arxx::Item & = delete;
+        
 		/**
 		 * @brief This function returns the identifier of @em this Arxx::Item.
 		 * 
 		 * Returns the identifier of @em this item. Remember that it is unique inside the associated archive.
 		 **/
-		Arxx::u4byte GetIdentifier() const;
+		auto GetIdentifier() const -> Arxx::u4byte;
 		
 		/**
 		 * @brief Sets @em this item's unique identifier inside the library.
@@ -70,14 +80,14 @@ namespace Arxx
 		 * 
 		 * If @em this Arxx::Item is inside an Arxx:Archive the function is responsible for checking that the new identifier is not used yet.
 		 **/
-		void SetIdentifier(Arxx::u4byte Identifier);
+		auto SetIdentifier(Arxx::u4byte Identifier) -> void;
 		
 		/**
 		 * @brief Returns a const reference to the items name.
 		 *
 		 * This function is called for const items and returns a const reference to the item's name.
 		 **/
-		const std::string & GetName() const;
+		auto GetName() const -> std::string const &;
 		
 		/**
 		 * @brief Set the item's name.
@@ -85,7 +95,7 @@ namespace Arxx
 		 *
 		 * This function lets you change the name of an item to any value representable in a std::string.
 		 **/
-		void SetName(const std::string & Name);
+		auto SetName(std::string const & Name) -> void;
 		
 		/**
 		 * @brief Returns the type identifier of @em this item.
@@ -94,7 +104,7 @@ namespace Arxx
 		 *
 		 * The default value for the type is 0xFFFFFFFF.
 		 **/
-		Arxx::u4byte GetType() const;
+		auto GetType() const -> Arxx::u4byte;
 		
 		/**
 		 * @brief Returns the sub-type identifier of @em this item.
@@ -103,27 +113,27 @@ namespace Arxx
 		 *
 		 * The default value for the sub type is 0xFFFFFFFF.
 		 **/
-		Arxx::u4byte GetSubType() const;
+		auto GetSubType() const -> Arxx::u4byte;
 		
 		/**
 		 * @brief Returns the major version number of @em this item.
 		 **/
-		Arxx::u1byte GetMajorVersionNumber() const;
+		auto GetMajorVersionNumber() const -> Arxx::u1byte;
 		
 		/**
 		 * @brief Returns the minor version number of @em this item.
 		 **/
-		Arxx::u1byte GetMinorVersionNumber() const;
+		auto GetMinorVersionNumber() const -> Arxx::u1byte;
 		
 		/**
 		 * @brief Returns the revision number of @em this item.
 		 **/
-		Arxx::u1byte GetRevisionNumber() const;
+		auto GetRevisionNumber() const -> Arxx::u1byte;
 		
 		/**
 		 * @brief Returns the candidate number of @em this item.
 		 **/
-		Arxx::u1byte GetCandidateNumber() const;
+		auto GetCandidateNumber() const -> Arxx::u1byte;
 		
 		/**
 		 * @brief Enables you to set the type identifier of @em this item.
@@ -131,7 +141,7 @@ namespace Arxx
 		 * 
 		 * The type identifier has no sematic meaning to ARX or libarxx. It only serves the purpose of getting a meaning by the application.
 		 **/
-		void SetType(Arxx::u4byte Type);
+		auto SetType(Arxx::u4byte Type) -> void;
 		
 		/**
 		 * @brief Enables you to set the sub-type identifier of @em this item.
@@ -139,7 +149,7 @@ namespace Arxx
 		 * 
 		 * As the type the sub-type identifier has no sematic meaning to ARX or libarxx. It is meant to be placed into meaning by the application.
 		 **/
-		void SetSubType(Arxx::u4byte SubType);
+		auto SetSubType(Arxx::u4byte SubType) -> void;
 		
 		/**
 		 * @brief Sets the version number of this @em item.
@@ -150,27 +160,27 @@ namespace Arxx
 		 *
 		 * Sets the version numbers of the item. Note that this information is purely related to the content and in no way related to the components or structure of the Arxx::Item.
 		 **/
-		void SetVersionNumbers(Arxx::u1byte MajorVersionNumber, Arxx::u1byte MinorVersionNumber, Arxx::u1byte RevisionNumber, Arxx::u1byte CandidateNumber);
+		auto SetVersionNumbers(Arxx::u1byte MajorVersionNumber, Arxx::u1byte MinorVersionNumber, Arxx::u1byte RevisionNumber, Arxx::u1byte CandidateNumber) -> void;
 		
 		/**
 		 * @brief Returns a pointer to the registered Archive.
 		 *
 		 * The function will return `0` if there is no Archive set for the Item.
 		 **/
-		Arxx::Archive * GetArchive() const;
+		auto GetArchive() const -> Arxx::Archive *;
 		
 		/**
 		 * @brief Returns the Structure component associated with this Item.
 		 **/
-		Arxx::Structure & GetStructure();
+		auto GetStructure() -> Arxx::Structure &;
 		
 		/**
 		 * @brief Returns the const Structure component associated with this Item.
 		 **/
-		const Arxx::Structure & GetStructure() const;
+		auto GetStructure() const -> Arxx::Structure const &;
         
 	protected:
-		virtual bool m_Fetch(Arxx::u4byte Offset, Arxx::u4byte Length);
+		auto m_Fetch(Arxx::u4byte Offset, Arxx::u4byte Length) -> bool override;
         
 	private:
 		/**
@@ -180,23 +190,11 @@ namespace Arxx
 		Item();
 		
 		/**
-		 * @brief The destructor for items.
-		 *
+		 * @brief The destructor is private.
+		 * 
 		 * This destructor is virtual so that you can savely derieve from the Arxx::Item.
 		 **/
 		virtual ~Item();
-		
-		/**
-		 * @brief Hide the copy constructor from user space. We won't need it in any tool here.
-		 * @sa If you ever should be in need of this functionality I need to figure out the semantics.
-		 **/
-		Item(const Item & Item);
-		
-		/**
-		 * @brief Hide to assignment operator from user space.
-		 * @sa If you are in need of this functionality, tell me so I can figure out the semantis needed for this.
-		 **/
-		Item & operator=(const Item & Item);
 		
 		/**
 		 * @brief The item's identifier to identify it inside a library.

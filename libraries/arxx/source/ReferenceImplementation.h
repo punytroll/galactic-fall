@@ -40,7 +40,7 @@ namespace Arxx
 		 * 
 		 * Of course, the new reference is resolved.
 		 **/
-		static Arxx::ReferenceImplementation * pGetReference(Arxx::Item & Item);
+		static auto pGetReference(Arxx::Item & Item) -> Arxx::ReferenceImplementation *;
 		
 		/**
 		 * @brief Returns a new ReferenceImplementation instance created from a unique ID.
@@ -49,7 +49,7 @@ namespace Arxx
 		 * 
 		 * The new reference of course is unresolved.
 		 **/
-		static Arxx::ReferenceImplementation * pGetReference(Arxx::u4byte u4UniqueID, Arxx::Archive * pArchive = 0);
+		static auto pGetReference(Arxx::u4byte u4UniqueID, Arxx::Archive * pArchive = nullptr) -> Arxx::ReferenceImplementation *;
 		
 		/**
 		 * @brief Increases the reference counter and conveniently returns the parameter.
@@ -57,7 +57,7 @@ namespace Arxx
 		 * 
 		 * Since the new reference is equal to the old reference its resolved status is equal as well.
 		 **/
-		static Arxx::ReferenceImplementation * pGetReference(Arxx::ReferenceImplementation * pReference);
+		static auto pGetReference(Arxx::ReferenceImplementation * pReference) -> Arxx::ReferenceImplementation *;
 		
 		/**
 		 * @brief Decreases the reference counter and possible deletes the reference.
@@ -66,33 +66,43 @@ namespace Arxx
 		 * 
 		 * If decreasing the reference counter of @a pReference make it equal to zero, the object pReference is deleted.
 		 **/
-		static bool bRelease(Arxx::ReferenceImplementation * pReference);
+		static auto bRelease(Arxx::ReferenceImplementation * pReference) -> bool;
+		
+		/**
+		 * @brief No copy semantic for ReferenceImplementation objects.
+		 **/
+		ReferenceImplementation(Arxx::ReferenceImplementation const & Reference) = delete;
+		
+		/**
+		 * @brief No assigment semantic for ReferenceImplementation objects.
+		 **/
+		auto operator=(Arxx::ReferenceImplementation const & Reference) -> Arxx::ReferenceImplementation & = delete;
 		
 		/**
 		 * @brief Returns the unique ID of the reference.
 		 * 
 		 * It does not matter if the reference is resolved or unresolved, the unique ID is certain to be returned.
 		 **/
-		Arxx::u4byte u4GetUniqueID() const;
+		auto u4GetUniqueID() const -> Arxx::u4byte;
 		
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
 		 * 
 		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is 0.
 		 **/
-		Arxx::Item * pGetItem();
+		auto pGetItem() -> Arxx::Item *;
 		
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
 		 * 
 		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is 0.
 		 **/
-		const Arxx::Item * pGetItem() const;
+		auto pGetItem() const -> Arxx::Item const *;
 		
 		/**
 		 * @brief Returns m_u4ReferenceCounter, the number of Arxx::Reference objects that hold @em this ReferenceImplementation object.
 		 **/
-		Arxx::u4byte u4GetReferenceCount() const;
+		auto u4GetReferenceCount() const -> Arxx::u4byte;
 		
 		/**
 		 * @brief Resolves an unresolved reference with a given item.
@@ -104,17 +114,17 @@ namespace Arxx
 		 * 
 		 * Not meeting one of these requirements will throw an std::runtime_error exception.
 		 **/
-		void vResolve(Arxx::Item & Item);
+		auto vResolve(Arxx::Item & Item) -> void;
 		
 		/**
 		 * @brief Unresolves the resolved reference by setting its Arxx::Item pointer to 0.
 		 **/
-		void vUnresolve();
+		auto vUnresolve() -> void;
 		
 		/**
 		 * @brief This function sets m_pArchive to `0`.
 		 **/
-		void vDecoupleFromArchive();
+		auto vDecoupleFromArchive() -> void;
 	private:
 		/**
 		 * @brief The constructor of a ReferenceImplementation object.
@@ -129,16 +139,6 @@ namespace Arxx
 		 * Instances of this class may only be destroyed using the vRelease() call.
 		 **/
 		~ReferenceImplementation();
-		
-		/**
-		 * @brief No copy semantic for ReferenceImplementation objects.
-		 **/
-		ReferenceImplementation(const Arxx::ReferenceImplementation & Reference);
-		
-		/**
-		 * @brief No assigment semantic for ReferenceImplementation objects.
-		 **/
-		Arxx::ReferenceImplementation & operator=(const Arxx::ReferenceImplementation & Reference);
 		
 		Arxx::u4byte m_u4UniqueID;
 		Arxx::Item * m_pItem;

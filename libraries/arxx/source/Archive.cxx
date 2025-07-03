@@ -50,7 +50,7 @@ Arxx::Archive::~Archive()
 	Close();
 }
 
-bool Arxx::Archive::Load(const std::string & FilePath)
+auto Arxx::Archive::Load(std::string const & FilePath) -> bool
 {
 	m_IStream = new std::ifstream(FilePath.c_str());
 	if(m_IStream->fail())
@@ -77,7 +77,7 @@ bool Arxx::Archive::Load(const std::string & FilePath)
 	return true;
 }
 
-void Arxx::Archive::Close()
+auto Arxx::Archive::Close() -> void
 {
 	while(m_Items.begin() != m_Items.end())
 	{
@@ -98,7 +98,7 @@ void Arxx::Archive::Close()
 	}
 }
 
-void Arxx::Archive::Register(Arxx::Item * Item)
+auto Arxx::Archive::Register(Arxx::Item * Item) -> void
 {
 	if(Item == 0)
 	{
@@ -171,7 +171,7 @@ void Arxx::Archive::Register(Arxx::Item * Item)
 	}
 }
 
-void Arxx::Archive::Unregister(Item * Item)
+auto Arxx::Archive::Unregister(Arxx::Item * Item) -> void
 {
 	if(Item->m_Archive != this)
 	{
@@ -210,7 +210,7 @@ void Arxx::Archive::Unregister(Item * Item)
 	m_References.erase(iReference);
 }
 
-void Arxx::Archive::SetRootItem(Item * Item)
+auto Arxx::Archive::SetRootItem(Arxx::Item * Item) -> void
 {
 	if((Item != 0) && (Item->m_Archive != this))
 	{
@@ -219,7 +219,7 @@ void Arxx::Archive::SetRootItem(Item * Item)
 	m_RootItem = Item;
 }
 
-const Arxx::Item * Arxx::Archive::GetItem(Arxx::u4byte ItemIdentifier) const
+auto Arxx::Archive::GetItem(Arxx::u4byte ItemIdentifier) const -> Arxx::Item const *
 {
 	if(ItemIdentifier == g_u4InvalidID)
 	{
@@ -236,7 +236,7 @@ const Arxx::Item * Arxx::Archive::GetItem(Arxx::u4byte ItemIdentifier) const
 	return (*iIterator).second;
 }
 
-Arxx::Item * Arxx::Archive::GetItem(Arxx::u4byte ItemIdentifier)
+auto Arxx::Archive::GetItem(Arxx::u4byte ItemIdentifier) -> Arxx::Item *
 {
 	if(ItemIdentifier == g_u4InvalidID)
 	{
@@ -253,7 +253,7 @@ Arxx::Item * Arxx::Archive::GetItem(Arxx::u4byte ItemIdentifier)
 	return (*iIterator).second;
 }
 
-Arxx::Item * Arxx::Archive::GetItem(std::string Path)
+auto Arxx::Archive::GetItem(std::string Path) -> Arxx::Item *
 {
 	if(Path[0] != '/')
 	{
@@ -316,7 +316,7 @@ Arxx::Item * Arxx::Archive::GetItem(std::string Path)
 	return Item;
 }
 
-const Arxx::Item * Arxx::Archive::GetItem(std::string Path) const
+auto Arxx::Archive::GetItem(std::string Path) const -> Arxx::Item const *
 {
 	if(Path[0] != '/')
 	{
@@ -379,17 +379,17 @@ const Arxx::Item * Arxx::Archive::GetItem(std::string Path) const
 	return Item;
 }
 
-Arxx::Item * Arxx::Archive::GetRootItem()
+auto Arxx::Archive::GetRootItem() -> Arxx::Item *
 {
 	return m_RootItem;
 }
 
-const Arxx::Item * Arxx::Archive::GetRootItem() const
+auto Arxx::Archive::GetRootItem() const -> Arxx::Item const *
 {
 	return m_RootItem;
 }
 
-Arxx::Reference Arxx::Archive::GetReference(Arxx::u4byte ItemIdentifier)
+auto Arxx::Archive::GetReference(Arxx::u4byte ItemIdentifier) -> Arxx::Reference
 {
 	std::map< Arxx::u4byte, Arxx::Reference >::iterator iReference(m_References.find(ItemIdentifier));
 	
@@ -403,7 +403,7 @@ Arxx::Reference Arxx::Archive::GetReference(Arxx::u4byte ItemIdentifier)
 	}
 }
 
-void Arxx::Archive::ReleaseReference(Arxx::ReferenceImplementation * pReference)
+auto Arxx::Archive::ReleaseReference(Arxx::ReferenceImplementation * pReference) -> void
 {
 	std::map< Arxx::u4byte, Arxx::Reference >::iterator iReference(m_References.find(pReference->u4GetUniqueID()));
 	
@@ -414,7 +414,7 @@ void Arxx::Archive::ReleaseReference(Arxx::ReferenceImplementation * pReference)
 	m_References.erase(iReference);
 }
 
-void Arxx::Archive::m_Read_2_1_0_0(Arxx::u4byte u4ItemCount)
+auto Arxx::Archive::m_Read_2_1_0_0(Arxx::u4byte u4ItemCount) -> void
 {
 	Arxx::ItemHeader ItemHeader;
 	Arxx::u4byte u4I(0);
@@ -441,7 +441,7 @@ void Arxx::Archive::m_Read_2_1_0_0(Arxx::u4byte u4ItemCount)
 	}
 }
 
-bool Arxx::Archive::Fetch(Arxx::u4byte Offset, Arxx::u4byte Length, Arxx::Buffer * Buffer)
+auto Arxx::Archive::Fetch(Arxx::u4byte Offset, Arxx::u4byte Length, Arxx::Buffer * Buffer) -> bool
 {
 	m_IStream->seekg(Offset, std::ios_base::beg);
 	Buffer->vSetLength(0);
@@ -453,7 +453,7 @@ bool Arxx::Archive::Fetch(Arxx::u4byte Offset, Arxx::u4byte Length, Arxx::Buffer
 	return true;
 }
 
-void Arxx::Archive::Save(const std::string & FilePath, bool bAutoCompress)
+auto Arxx::Archive::Save(std::string const & FilePath, bool bAutoCompress) -> void
 {
 	std::stringstream ssTemporaryFilePath;
 	
@@ -524,36 +524,36 @@ void Arxx::Archive::Save(const std::string & FilePath, bool bAutoCompress)
 	waitpid(iChildPID, &iReturn, 0);
 }
 
-Arxx::Archive::iterator Arxx::Archive::begin()
+auto Arxx::Archive::begin() -> Arxx::Archive::iterator
 {
 	// will be fed into an implicite constructor for Arxx::Archive::iterator
 	return m_Items.begin();
 }
 
-Arxx::Archive::iterator Arxx::Archive::end()
+auto Arxx::Archive::end() -> Arxx::Archive::iterator
 {
 	// will be fed into an implicite constructor for Arxx::Archive::iterator
 	return m_Items.end();
 }
 
-Arxx::Archive::const_iterator Arxx::Archive::begin() const
+auto Arxx::Archive::begin() const -> Arxx::Archive::const_iterator
 {
 	// will be fed into an implicite constructor for Arxx::Archive::const_iterator
 	return m_Items.begin();
 }
 
-Arxx::Archive::const_iterator Arxx::Archive::end() const
+auto Arxx::Archive::end() const -> Arxx::Archive::const_iterator
 {
 	// will be fed into an implicite constructor for Arxx::Archive::const_iterator
 	return m_Items.end();
 }
 
-Arxx::Archive::size_type Arxx::Archive::size() const
+auto Arxx::Archive::size() const -> Arxx::Archive::size_type
 {
 	return m_Items.size();
 }
 
-Arxx::u4byte Arxx::Archive::GetNumberOfReferences() const
+auto Arxx::Archive::GetNumberOfReferences() const -> Arxx::u4byte
 {
 	return m_References.size();
 }
@@ -572,36 +572,36 @@ Arxx::Archive::iterator::~iterator()
 {
 }
 
-Arxx::Archive::iterator & Arxx::Archive::iterator::operator++()
+auto Arxx::Archive::iterator::operator++() -> Arxx::Archive::iterator &
 {
 	++m_iItem;
 
 	return *this;
 }
 
-Arxx::Item * Arxx::Archive::iterator::operator*()
+auto Arxx::Archive::iterator::operator*() -> Arxx::Item *
 {
 	return m_iItem->second;
 }
 
-const Arxx::Item * Arxx::Archive::iterator::operator*() const
+auto Arxx::Archive::iterator::operator*() const -> Arxx::Item const *
 {
 	return m_iItem->second;
 }
 
-Arxx::Item * Arxx::Archive::iterator::operator->()
+auto Arxx::Archive::iterator::operator->() -> Arxx::Item *
 {
 	return m_iItem->second;
 }
 
-bool Arxx::Archive::iterator::operator==(const Arxx::Archive::iterator & iItem) const
+auto Arxx::Archive::iterator::operator==(Arxx::Archive::iterator const & Other) const -> bool
 {
-	return m_iItem == iItem.m_iItem;
+	return m_iItem == Other.m_iItem;
 }
 
-bool Arxx::Archive::iterator::operator!=(const Arxx::Archive::iterator & iItem) const
+auto Arxx::Archive::iterator::operator!=(Arxx::Archive::iterator const & Other) const -> bool
 {
-	return m_iItem != iItem.m_iItem;
+	return m_iItem != Other.m_iItem;
 }
 
 
@@ -618,29 +618,29 @@ Arxx::Archive::const_iterator::~const_iterator()
 {
 }
 
-Arxx::Archive::const_iterator & Arxx::Archive::const_iterator::operator++()
+auto Arxx::Archive::const_iterator::operator++() -> Arxx::Archive::const_iterator &
 {
 	++m_iItem;
 
 	return *this;
 }
 
-const Arxx::Item * Arxx::Archive::const_iterator::operator*() const
+auto Arxx::Archive::const_iterator::operator*() const -> Arxx::Item const *
 {
 	return m_iItem->second;
 }
 
-const Arxx::Item * Arxx::Archive::const_iterator::operator->() const
+auto Arxx::Archive::const_iterator::operator->() const -> Arxx::Item const *
 {
 	return m_iItem->second;
 }
 
-bool Arxx::Archive::const_iterator::operator==(const Arxx::Archive::const_iterator & iItem) const
+auto Arxx::Archive::const_iterator::operator==(Arxx::Archive::const_iterator const & Other) const -> bool
 {
-	return m_iItem == iItem.m_iItem;
+	return m_iItem == Other.m_iItem;
 }
 
-bool Arxx::Archive::const_iterator::operator!=(const Arxx::Archive::const_iterator & iItem) const
+auto Arxx::Archive::const_iterator::operator!=(Arxx::Archive::const_iterator const & Other) const -> bool
 {
-	return m_iItem != iItem.m_iItem;
+	return m_iItem != Other.m_iItem;
 }

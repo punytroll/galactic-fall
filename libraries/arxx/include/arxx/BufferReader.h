@@ -36,14 +36,14 @@ namespace Arxx
 	class BufferReader
 	{
 	public:
-		BufferReader(const Arxx::Buffer & Buffer, Arxx::Buffer::size_type stPosition = Arxx::Buffer::Marker::BEGIN);
+		BufferReader(Arxx::Buffer const & Buffer, Arxx::Buffer::size_type stPosition = Arxx::Buffer::Marker::BEGIN);
 		
 		/**
 		 * @brief A copy constructor for the BufferReader.
 		 * 
 		 * This constructor creates a second BufferReader which refers to the same Buffer but using its own marker at the same location. The new BufferReader behaves as if created on its own.
 		 **/
-		BufferReader(const Arxx::BufferReader & BufferReader);
+		BufferReader(Arxx::BufferReader const & Other);
 		
 		/**
 		 * @brief This functions allows to get more than one byte at a time from the buffer.
@@ -56,25 +56,25 @@ namespace Arxx
 		 *
 		 * @note This function refuses to read more elements than there are from the I/O position to the end. It will throw a std::out_of_range exception in this case.
 		 **/
-		Arxx::Buffer::size_type stRead(Arxx::Buffer::size_type stLength, Arxx::Buffer::pointer Buffer);
+		auto stRead(Arxx::Buffer::size_type stLength, Arxx::Buffer::pointer Buffer) -> Arxx::Buffer::size_type;
 		
 		/**
 		 * @brief Returns the associated Arxx::Buffer object.
 		 **/
-		const Arxx::Buffer & GetBuffer() const;
+		auto GetBuffer() const -> Arxx::Buffer const &;
 		
 		/**
 		 * @brief Returns the marker's position.
 		 **/
-		Arxx::Buffer::size_type stGetPosition() const;
+		auto stGetPosition() const -> Arxx::Buffer::size_type;
 		
 		/**
 		 * @brief Sets the marker's position.
 		 **/
-		void vSetPosition(Arxx::Buffer::size_type stPosition);
+		auto vSetPosition(Arxx::Buffer::size_type stPosition) -> void;
         
 	private:
-		const Arxx::Buffer & m_Buffer;
+		Arxx::Buffer const & m_Buffer;
 		Arxx::Buffer::Marker m_Marker;
         
 	};
@@ -88,7 +88,7 @@ namespace Arxx
 	 *
 	 * @note This function will read until it finds either the first null character in the buffer or the end of the buffer so that the string itself cannot contain a null character.
 	 **/
-	Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, std::string & sString);
+	auto operator>>(Arxx::BufferReader & BufferReader, std::string & sString) -> Arxx::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading float values from a buffer.
@@ -98,7 +98,7 @@ namespace Arxx
 	 * 
 	 * This function reads a float value from the buffer storing it in @a fValue .
 	 **/
-	Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, float & fValue);
+	auto operator>>(Arxx::BufferReader & BufferReader, float & fValue) -> Arxx::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading u1byte values from a buffer.
@@ -108,7 +108,7 @@ namespace Arxx
 	 * 
 	 * This function reads a u1byte value from the buffer storing it in @a u1Value .
 	 **/
-	Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Arxx::u1byte & u1Value);
+	auto operator>>(Arxx::BufferReader & BufferReader, Arxx::u1byte & u1Value) -> Arxx::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading u4byte values from a buffer.
@@ -118,7 +118,7 @@ namespace Arxx
 	 * 
 	 * This function reads a u4byte value from the buffer storing it in @a u4Value .
 	 **/
-	Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Arxx::u4byte & u4Value);
+	auto operator>>(Arxx::BufferReader & BufferReader, Arxx::u4byte & u4Value) -> Arxx::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading Arxx::u8byte values from a buffer.
@@ -128,7 +128,7 @@ namespace Arxx
 	 * 
 	 * This function reads a Arxx::u8byte value from the buffer storing it in @a Value .
 	 **/
-	Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Arxx::u8byte & Value);
+	auto operator>>(Arxx::BufferReader & BufferReader, Arxx::u8byte & Value) -> Arxx::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading bool objects from a buffer.
@@ -138,7 +138,7 @@ namespace Arxx
 	 * 
 	 * This function reads the bool value @a bValue from the buffer using an output function.
 	 **/
-	Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, bool & bValue);
+	auto operator>>(Arxx::BufferReader & BufferReader, bool & bValue) -> Arxx::BufferReader &;
 }
 
 #endif

@@ -50,7 +50,7 @@ Arxx::Data::~Data()
 {
 }
 
-void Arxx::Data::Decompress()
+auto Arxx::Data::Decompress() -> void
 {
 	switch(m_CompressionType)
 	{
@@ -160,7 +160,7 @@ void Arxx::Data::Decompress()
 	}
 }
 
-void Arxx::Data::Compress(const Arxx::Data::Compression & CompressionType)
+auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 {
 	if((IsCompressed() == true) || (IsFetched() == false))
 	{
@@ -271,22 +271,22 @@ void Arxx::Data::Compress(const Arxx::Data::Compression & CompressionType)
 	}
 }
 
-bool Arxx::Data::IsCompressed() const
+auto Arxx::Data::IsCompressed() const -> bool
 {
 	return m_CompressionType != Arxx::Data::NONE;
 }
 
-bool Arxx::Data::IsDecompressed() const
+auto Arxx::Data::IsDecompressed() const -> bool
 {
 	return m_CompressionType == Arxx::Data::NONE;
 }
 
-Arxx::Data::Compression Arxx::Data::GetCompression() const
+auto Arxx::Data::GetCompression() const -> Arxx::Data::Compression
 {
 	return m_CompressionType;
 }
 
-Arxx::u4byte Arxx::Data::GetDecompressedLength() const
+auto Arxx::Data::GetDecompressedLength() const -> Arxx::u4byte
 {
 	if((IsFetched() == true) && (IsDecompressed() == true))
 	{
@@ -298,7 +298,7 @@ Arxx::u4byte Arxx::Data::GetDecompressedLength() const
 	}
 }
 
-Arxx::u4byte Arxx::Data::GetCompressedLength() const
+auto Arxx::Data::GetCompressedLength() const -> Arxx::u4byte
 {
 	if((IsFetched() == true) && (IsCompressed() == true))
 	{
@@ -310,7 +310,7 @@ Arxx::u4byte Arxx::Data::GetCompressedLength() const
 	}
 }
 
-bool Arxx::Data::Fetch()
+auto Arxx::Data::Fetch() -> bool
 {
 	if(m_Fetched == false)
 	{
@@ -324,7 +324,7 @@ bool Arxx::Data::Fetch()
 	}
 }
 
-void Arxx::Data::Unfetch()
+auto Arxx::Data::Unfetch() -> void
 {
 	if(IsFetched() == true)
 	{
@@ -333,7 +333,7 @@ void Arxx::Data::Unfetch()
 	}
 }
 
-void Arxx::Data::SetFetchInformation(Arxx::u4byte Offset, Arxx::Data::Compression CompressionType, Arxx::u4byte DecompressedLength, Arxx::u4byte CompressedLength)
+auto Arxx::Data::SetFetchInformation(Arxx::u4byte Offset, Arxx::Data::Compression CompressionType, Arxx::u4byte DecompressedLength, Arxx::u4byte CompressedLength) -> void
 {
 	m_Offset = Offset;
 	m_CompressionType = CompressionType;
@@ -342,12 +342,12 @@ void Arxx::Data::SetFetchInformation(Arxx::u4byte Offset, Arxx::Data::Compressio
 	m_Fetched = false;
 }
 
-bool Arxx::Data::IsFetched() const
+auto Arxx::Data::IsFetched() const -> bool
 {
 	return m_Fetched;
 }
 
-bool Arxx::Data::m_Fetch([[maybe_unused]] Arxx::u4byte Offset, Arxx::u4byte Length)
+auto Arxx::Data::m_Fetch([[maybe_unused]] Arxx::u4byte Offset, Arxx::u4byte Length) -> bool
 {
 	return Length == 0;
 }
