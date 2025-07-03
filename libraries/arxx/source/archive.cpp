@@ -70,7 +70,7 @@ auto Arxx::Archive::Load(std::string const & FilePath) -> bool
 	}
 	else
 	{
-		std::cerr << "Unknown ARX archive format: version = " << static_cast< Arxx::u4byte >(ArchiveHeader.MajorVersionNumber) << '.' << static_cast< Arxx::u4byte >(ArchiveHeader.MinorVersionNumber) << '.' << static_cast< Arxx::u4byte >(ArchiveHeader.RevisionNumber) << '.' << static_cast< Arxx::u4byte >(ArchiveHeader.CandidateNumber) << '.' << std::endl;
+		std::cerr << "Unknown ARX archive format: version = " << static_cast<Arxx::u4byte>(ArchiveHeader.MajorVersionNumber) << '.' << static_cast<Arxx::u4byte>(ArchiveHeader.MinorVersionNumber) << '.' << static_cast<Arxx::u4byte>(ArchiveHeader.RevisionNumber) << '.' << static_cast<Arxx::u4byte>(ArchiveHeader.CandidateNumber) << '.' << std::endl;
 		throw bad_file_format(FilePath);
 	}
 	
@@ -88,7 +88,7 @@ auto Arxx::Archive::Close() -> void
 	}
 	m_RootItem = 0;
 	
-	std::map< Arxx::u4byte, Arxx::Reference >::iterator Iterator(m_References.begin());
+	std::map<Arxx::u4byte, Arxx::Reference>::iterator Iterator(m_References.begin());
 	
 	while(Iterator != m_References.end())
 	{
@@ -113,7 +113,7 @@ auto Arxx::Archive::Register(Arxx::Item * Item) -> void
 	}
 	if(Item->GetIdentifier() == g_InvalidItemIdentifier)
 	{
-		std::map< Arxx::u4byte, Arxx::Item * >::iterator Iterator;
+		std::map<Arxx::u4byte, Arxx::Item *>::iterator Iterator;
 		Arxx::u4byte NewIdentifier;
 		
 		do
@@ -125,7 +125,7 @@ auto Arxx::Archive::Register(Arxx::Item * Item) -> void
 	}
 	else
 	{
-		std::map< Arxx::u4byte, Arxx::Item * >::iterator ItemIterator = m_Items.find(Item->GetIdentifier());
+		std::map<Arxx::u4byte, Arxx::Item *>::iterator ItemIterator = m_Items.find(Item->GetIdentifier());
 		
 		if(ItemIterator != m_Items.end())
 		{
@@ -137,7 +137,7 @@ auto Arxx::Archive::Register(Arxx::Item * Item) -> void
 		}
 		m_Items[Item->GetIdentifier()] = Item;
 		
-		std::map< Arxx::u4byte, Arxx::Reference >::iterator ReferenceIterator(m_References.find(Item->GetIdentifier()));
+		std::map<Arxx::u4byte, Arxx::Reference>::iterator ReferenceIterator(m_References.find(Item->GetIdentifier()));
 		
 		if(ReferenceIterator == m_References.end())
 		{
@@ -177,8 +177,8 @@ auto Arxx::Archive::Unregister(Arxx::Item * Item) -> void
 		throw std::invalid_argument("Item");
 	}
 	
-	std::map< Arxx::u4byte, Arxx::Item * >::iterator ItemIterator(m_Items.find(Item->GetIdentifier()));
-	std::map< Arxx::u4byte, Arxx::Reference >::iterator ReferenceIterator(m_References.find(Item->GetIdentifier()));
+	std::map<Arxx::u4byte, Arxx::Item *>::iterator ItemIterator(m_Items.find(Item->GetIdentifier()));
+	std::map<Arxx::u4byte, Arxx::Reference>::iterator ReferenceIterator(m_References.find(Item->GetIdentifier()));
 	
 	if((ItemIterator == m_Items.end()) || (ReferenceIterator == m_References.end()))
 	{
@@ -225,7 +225,7 @@ auto Arxx::Archive::GetItem(Arxx::u4byte ItemIdentifier) const -> Arxx::Item con
 		return 0;
 	}
 	
-	std::map< Arxx::u4byte, Arxx::Item * >::const_iterator ItemIterator(m_Items.find(ItemIdentifier));
+	std::map<Arxx::u4byte, Arxx::Item *>::const_iterator ItemIterator(m_Items.find(ItemIdentifier));
 	
 	if(ItemIterator == m_Items.end())
 	{
@@ -242,7 +242,7 @@ auto Arxx::Archive::GetItem(Arxx::u4byte ItemIdentifier) -> Arxx::Item *
 		return 0;
 	}
 	
-	std::map< Arxx::u4byte, Arxx::Item * >::iterator ItemIterator(m_Items.find(ItemIdentifier));
+	std::map<Arxx::u4byte, Arxx::Item *>::iterator ItemIterator(m_Items.find(ItemIdentifier));
 	
 	if(ItemIterator == m_Items.end())
 	{
@@ -390,7 +390,7 @@ auto Arxx::Archive::GetRootItem() const -> Arxx::Item const *
 
 auto Arxx::Archive::GetReference(Arxx::u4byte ItemIdentifier) -> Arxx::Reference
 {
-	std::map< Arxx::u4byte, Arxx::Reference >::iterator ReferenceIterator(m_References.find(ItemIdentifier));
+	std::map<Arxx::u4byte, Arxx::Reference>::iterator ReferenceIterator(m_References.find(ItemIdentifier));
 	
 	if(ReferenceIterator == m_References.end())
 	{
@@ -404,7 +404,7 @@ auto Arxx::Archive::GetReference(Arxx::u4byte ItemIdentifier) -> Arxx::Reference
 
 auto Arxx::Archive::ReleaseReference(Arxx::ReferenceImplementation * Reference) -> void
 {
-	std::map< Arxx::u4byte, Arxx::Reference >::iterator ReferenceIterator(m_References.find(Reference->GetItemIdentifier()));
+	std::map<Arxx::u4byte, Arxx::Reference>::iterator ReferenceIterator(m_References.find(Reference->GetItemIdentifier()));
 	
 	if(ReferenceIterator == m_References.end())
 	{
@@ -435,7 +435,7 @@ auto Arxx::Archive::m_Read_2_1_0_0(Arxx::u4byte ItemCount) -> void
 		pItem->SetName(pcName);
 		delete[] pcName;
 		pItem->GetStructure().ReadFromStream(ItemHeader.StructureLength, *m_IStream);
-		pItem->SetFetchInformation(m_IStream->tellg(), static_cast< Arxx::Data::Compression >(ItemHeader.DataCompressionType), ItemHeader.DataDecompressedLength, ItemHeader.DataCompressedLength);
+		pItem->SetFetchInformation(m_IStream->tellg(), static_cast<Arxx::Data::Compression>(ItemHeader.DataCompressionType), ItemHeader.DataDecompressedLength, ItemHeader.DataCompressedLength);
 		m_IStream->seekg((ItemHeader.DataCompressionType == 0) ? (ItemHeader.DataDecompressedLength) : (ItemHeader.DataCompressedLength), std::ios_base::cur);
 	}
 }
@@ -447,7 +447,7 @@ auto Arxx::Archive::Fetch(Arxx::u4byte Offset, Arxx::u4byte Length, Arxx::Buffer
 	
 	Arxx::BufferWriter BufferWriter(*Buffer);
 	
-	BufferWriter << std::make_pair(static_cast< Arxx::Buffer::size_type >(Length), reinterpret_cast< std::istream * >(m_IStream));
+	BufferWriter << std::make_pair(static_cast<Arxx::Buffer::size_type>(Length), reinterpret_cast<std::istream *>(m_IStream));
 	
 	return true;
 }
@@ -475,7 +475,7 @@ auto Arxx::Archive::Save(std::string const & FilePath, bool AutoCompress) -> voi
 	ArchiveHeader.NumberOfItems = m_Items.size();
 	OStream << ArchiveHeader;
 	
-	std::map< Arxx::u4byte, Arxx::Item * >::iterator ItemIterator(m_Items.begin());
+	std::map<Arxx::u4byte, Arxx::Item *>::iterator ItemIterator(m_Items.begin());
 	
 	while(ItemIterator != m_Items.end())
 	{
@@ -518,7 +518,7 @@ auto Arxx::Archive::Save(std::string const & FilePath, bool AutoCompress) -> voi
 	
 	if((ChildPID = fork()) == 0)
 	{
-		execlp("mv", "mv", "--force", TemporaryFilePath.str().c_str(), FilePath.c_str(), reinterpret_cast< char * >(0));
+		execlp("mv", "mv", "--force", TemporaryFilePath.str().c_str(), FilePath.c_str(), reinterpret_cast<char *>(0));
 	}
 	waitpid(ChildPID, &Return, 0);
 }
@@ -562,7 +562,7 @@ auto Arxx::Archive::GetNumberOfReferences() const -> Arxx::u4byte
 // Arxx::Archive::iterator                                                                        //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Archive::iterator::iterator(std::map< Arxx::u4byte, Arxx::Item * >::iterator Iterator) :
+Arxx::Archive::iterator::iterator(std::map<Arxx::u4byte, Arxx::Item *>::iterator Iterator) :
 	m_Iterator(Iterator)
 {
 }
@@ -608,7 +608,7 @@ auto Arxx::Archive::iterator::operator!=(Arxx::Archive::iterator const & Other) 
 // Arxx::Archive::const_iterator                                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Archive::const_iterator::const_iterator(std::map< Arxx::u4byte, Arxx::Item * >::const_iterator Iterator) :
+Arxx::Archive::const_iterator::const_iterator(std::map<Arxx::u4byte, Arxx::Item *>::const_iterator Iterator) :
 	m_Iterator(Iterator)
 {
 }

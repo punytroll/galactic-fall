@@ -65,7 +65,7 @@ namespace Arxx
 			 *
 			 * This constructor creates a an Item iterator from an STL iterator.
 			 **/
-			iterator(std::map< Arxx::u4byte, Arxx::Item * >::iterator Iterator);
+			iterator(std::map<Arxx::u4byte, Arxx::Item *>::iterator Iterator);
 			
 			/**
 			 * @brief The destructor of an Item iterator.
@@ -116,7 +116,7 @@ namespace Arxx
 			 * 
 			 * This is an iterator into the Arxx::Archive's internal Item map @a Arxx::Archive::m_Items.
 			 **/
-			std::map< Arxx::u4byte, Arxx::Item * >::iterator m_Iterator;
+			std::map<Arxx::u4byte, Arxx::Item *>::iterator m_Iterator;
             
 		};
 		
@@ -134,7 +134,7 @@ namespace Arxx
 			 *
 			 * This constructor creates a an Item iterator from an STL iterator.
 			 **/
-			const_iterator(std::map< Arxx::u4byte, Arxx::Item * >::const_iterator Iterator);
+			const_iterator(std::map<Arxx::u4byte, Arxx::Item *>::const_iterator Iterator);
 			
 			/**
 			 * @brief The destructor of a const Item iterator.
@@ -178,11 +178,11 @@ namespace Arxx
 			 * 
 			 * This is an iterator into Arxx::Archive's internal Item map @a Arxx::Archive::m_Items.
 			 **/
-			std::map< Arxx::u4byte, Arxx::Item * >::const_iterator m_Iterator;
+			std::map<Arxx::u4byte, Arxx::Item *>::const_iterator m_Iterator;
             
 		};
 		
-		typedef std::map< Arxx::u4byte, Arxx::Item * >::size_type size_type;
+		typedef std::map<Arxx::u4byte, Arxx::Item *>::size_type size_type;
 		
 		/**
 		 * @brief The default constructor.
@@ -414,8 +414,8 @@ namespace Arxx
 		 **/
 		auto m_Read_2_1_0_0(Arxx::u4byte ItemCount) -> void;
 		
-		std::map< Arxx::u4byte, Arxx::Item * > m_Items;
-		std::map< Arxx::u4byte, Arxx::Reference > m_References;
+		std::map<Arxx::u4byte, Arxx::Item *> m_Items;
+		std::map<Arxx::u4byte, Arxx::Reference> m_References;
 		Arxx::Item * m_RootItem;
 		
 		/**

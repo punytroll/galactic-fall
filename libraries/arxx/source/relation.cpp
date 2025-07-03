@@ -47,7 +47,7 @@ auto Arxx::Structure::Relation::Add(Arxx::u4byte ItemIdentifier) -> void
 
 auto Arxx::Structure::Relation::Delete(Arxx::u4byte ItemIdentifier) -> bool
 {
-	std::multimap< Arxx::u4byte, Arxx::Reference >::iterator Iterator(m_References.lower_bound(ItemIdentifier));
+	std::multimap<Arxx::u4byte, Arxx::Reference>::iterator Iterator(m_References.lower_bound(ItemIdentifier));
 	
 	if(Iterator == m_References.end())
 	{
@@ -66,7 +66,7 @@ auto Arxx::Structure::Relation::GetItems(std::string const & Name) -> std::list<
 {
 	std::list<Arxx::Item *> Result;
 	
-	for(std::multimap< Arxx::u4byte, Arxx::Reference >::iterator ItemIterator = m_References.begin(); ItemIterator != m_References.end(); ++ItemIterator)
+	for(std::multimap<Arxx::u4byte, Arxx::Reference>::iterator ItemIterator = m_References.begin(); ItemIterator != m_References.end(); ++ItemIterator)
 	{
 		if((ItemIterator->second.GetItem() != nullptr) && (ItemIterator->second.GetItem()->GetName() == Name))
 		{

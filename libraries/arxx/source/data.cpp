@@ -76,7 +76,7 @@ auto Arxx::Data::Decompress() -> void
 			
 			zStream.zalloc = 0;
 			zStream.zfree = 0;
-			zStream.next_in = const_cast< Arxx::u1byte * >(GetBegin());
+			zStream.next_in = const_cast<Arxx::u1byte *>(GetBegin());
 			/** @todo Why not use u4GetCompressedLength() here? **/
 			zStream.avail_in = GetLength();
 			zStream.next_out = DecompressedData;
@@ -120,10 +120,10 @@ auto Arxx::Data::Decompress() -> void
 			BZStream.bzalloc = 0;
 			BZStream.bzfree = 0;
 			BZStream.opaque = 0;
-			BZStream.next_in = reinterpret_cast< char * >(const_cast< Arxx::u1byte * >(GetBegin()));
+			BZStream.next_in = reinterpret_cast<char *>(const_cast<Arxx::u1byte *>(GetBegin()));
 			/** @todo Why not use u4GetCompressedLength() here? **/
 			BZStream.avail_in = GetLength();
-			BZStream.next_out = reinterpret_cast< char * >(DecompressedData);
+			BZStream.next_out = reinterpret_cast<char *>(DecompressedData);
 			/** @todo Why not use u4GetDecompressedLength() here? **/
 			BZStream.avail_out = m_DecompressedLength;
 			
@@ -184,16 +184,16 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 	case Arxx::Data::ZLIB_9:
 		{
 #ifdef HAVE_ZLIB_H
-			Arxx::Data::pointer CompressedData = new Arxx::Data::value_type[static_cast< Arxx::u4byte >(GetDecompressedLength() * 1.001 + 12)];
+			Arxx::Data::pointer CompressedData = new Arxx::Data::value_type[static_cast<Arxx::u4byte>(GetDecompressedLength() * 1.001 + 12)];
 			z_stream zStream;
 			signed long slReturn = 0;
 			
 			zStream.zalloc = 0;
 			zStream.zfree = 0;
-			zStream.next_in = const_cast< Arxx::u1byte * >(GetBegin());
+			zStream.next_in = const_cast<Arxx::u1byte *>(GetBegin());
 			zStream.avail_in = GetDecompressedLength();
 			zStream.next_out = CompressedData;
-			zStream.avail_out = static_cast< Arxx::u4byte >(GetDecompressedLength() * 1.001 + 12);
+			zStream.avail_out = static_cast<Arxx::u4byte>(GetDecompressedLength() * 1.001 + 12);
 			if((slReturn = deflateInit(&zStream, CompressionType - Arxx::Data::ZLIB_0)) != Z_OK)
 			{
 				delete[] CompressedData;
@@ -226,16 +226,16 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 	case Arxx::Data::BZLIB:
 		{
 #ifdef HAVE_BZLIB_H
-			Arxx::u4byte u4CompressedDataLength(static_cast< Arxx::u4byte >(GetDecompressedLength() * 1.01 + 600));
+			Arxx::u4byte u4CompressedDataLength(static_cast<Arxx::u4byte>(GetDecompressedLength() * 1.01 + 600));
 			Arxx::Data::pointer CompressedData(new Arxx::Data::value_type[u4CompressedDataLength]);
 			bz_stream BZStream;
 			
 			BZStream.bzalloc = 0;
 			BZStream.bzfree = 0;
 			BZStream.opaque = 0;
-			BZStream.next_in = reinterpret_cast< char * >(const_cast< Arxx::u1byte * >(GetBegin()));
+			BZStream.next_in = reinterpret_cast<char *>(const_cast<Arxx::u1byte *>(GetBegin()));
 			BZStream.avail_in = GetDecompressedLength();
-			BZStream.next_out = reinterpret_cast< char * >(CompressedData);
+			BZStream.next_out = reinterpret_cast<char *>(CompressedData);
 			BZStream.avail_out = u4CompressedDataLength;
 			
 			int iBZResult;

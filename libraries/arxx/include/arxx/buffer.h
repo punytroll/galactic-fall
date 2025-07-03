@@ -434,7 +434,7 @@ namespace Arxx
 		/**
 		 * @brief The associated markers.
 		 **/
-		mutable std::set< Arxx::Buffer::Marker * > m_Markers;
+		mutable std::set<Arxx::Buffer::Marker *> m_Markers;
 		
 		/**
 		 * @brief The position of the begin of @em this buffer itside its superior buffer.
@@ -446,9 +446,9 @@ namespace Arxx
 		/**
 		 * @brief A vector of pointers to structures describing the sub buffers.
 		 *
-		 * The order of thesepointers is irrelevant except for one thing: the last sub buffer must always have the greatest m_stOrder value because it will be the reference for the m_stOrder of new registering buffers.
+		 * The order of these pointers is irrelevant except for one thing: the last sub buffer must always have the greatest m_stOrder value because it will be the reference for the m_stOrder of new registering buffers.
 		 **/
-		std::vector< Arxx::Buffer::SubBuffer * > m_SubBuffers;
+		std::vector<Arxx::Buffer::SubBuffer *> m_SubBuffers;
 		
 		/**
 		 * @brief Indicates the changing state of @em this buffer.

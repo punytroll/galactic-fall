@@ -203,18 +203,18 @@ namespace Arxx
 	 **/
 	inline std::ostream & operator<<(std::ostream & OStream, Arxx::ArchiveHeader & ArchiveHeader)
 	{
-		OStream.write(reinterpret_cast< const char * >(&ArchiveHeader.MajorVersionNumber), sizeof(u1byte));
-		OStream.write(reinterpret_cast< const char * >(&ArchiveHeader.MinorVersionNumber), sizeof(u1byte));
-		OStream.write(reinterpret_cast< const char * >(&ArchiveHeader.RevisionNumber), sizeof(u1byte));
-		OStream.write(reinterpret_cast< const char * >(&ArchiveHeader.CandidateNumber), sizeof(u1byte));
+		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.MajorVersionNumber), sizeof(u1byte));
+		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.MinorVersionNumber), sizeof(u1byte));
+		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.RevisionNumber), sizeof(u1byte));
+		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.CandidateNumber), sizeof(u1byte));
 		
 		u4byte RootItemIdentifier(htonl(ArchiveHeader.RootItemIdentifier));
 		
-		OStream.write(reinterpret_cast< const char * >(&RootItemIdentifier), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&RootItemIdentifier), sizeof(u4byte));
 		
 		u4byte NumberOfItems(htonl(ArchiveHeader.NumberOfItems));
 		
-		OStream.write(reinterpret_cast< const char * >(&NumberOfItems), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&NumberOfItems), sizeof(u4byte));
 	
 		return OStream;
 	}
@@ -228,40 +228,40 @@ namespace Arxx
 	{
 		u4byte Identifier(htonl(ItemHeader.Identifier));
 		
-		OStream.write(reinterpret_cast< const char * >(&Identifier), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&Identifier), sizeof(u4byte));
 		
 		u4byte Type(htonl(ItemHeader.Type));
 		
-		OStream.write(reinterpret_cast< const char * >(&Type), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&Type), sizeof(u4byte));
 		
 		u4byte SubType(htonl(ItemHeader.SubType));
 		
-		OStream.write(reinterpret_cast< const char * >(&SubType), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&SubType), sizeof(u4byte));
 		
-		OStream.write(reinterpret_cast< const char * >(&ItemHeader.MajorVersionNumber), sizeof(u1byte));
-		OStream.write(reinterpret_cast< const char * >(&ItemHeader.MinorVersionNumber), sizeof(u1byte));
-		OStream.write(reinterpret_cast< const char * >(&ItemHeader.RevisionNumber), sizeof(u1byte));
-		OStream.write(reinterpret_cast< const char * >(&ItemHeader.CandidateNumber), sizeof(u1byte));
+		OStream.write(reinterpret_cast<char const *>(&ItemHeader.MajorVersionNumber), sizeof(u1byte));
+		OStream.write(reinterpret_cast<char const *>(&ItemHeader.MinorVersionNumber), sizeof(u1byte));
+		OStream.write(reinterpret_cast<char const *>(&ItemHeader.RevisionNumber), sizeof(u1byte));
+		OStream.write(reinterpret_cast<char const *>(&ItemHeader.CandidateNumber), sizeof(u1byte));
 		
 		u4byte DataCompressionType(htonl(ItemHeader.DataCompressionType));
 		
-		OStream.write(reinterpret_cast< const char * >(&DataCompressionType), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&DataCompressionType), sizeof(u4byte));
 		
 		u4byte NameLength(htonl(ItemHeader.NameLength));
 		
-		OStream.write(reinterpret_cast< const char * >(&NameLength), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&NameLength), sizeof(u4byte));
 		
 		u4byte DataDecompressedLength(htonl(ItemHeader.DataDecompressedLength));
 		
-		OStream.write(reinterpret_cast< const char * >(&DataDecompressedLength), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&DataDecompressedLength), sizeof(u4byte));
 		
 		u4byte DataCompressedLength(htonl(ItemHeader.DataCompressedLength));
 		
-		OStream.write(reinterpret_cast< const char * >(&DataCompressedLength), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&DataCompressedLength), sizeof(u4byte));
 		
 		u4byte StructureLength(htonl(ItemHeader.StructureLength));
 		
-		OStream.write(reinterpret_cast< const char * >(&StructureLength), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&StructureLength), sizeof(u4byte));
 	
 		return OStream;
 	}
@@ -273,19 +273,19 @@ namespace Arxx
 	 **/
 	inline std::istream & operator>>(std::istream & IStream, Arxx::ArchiveHeader & ArchiveHeader)
 	{
-		IStream.read(reinterpret_cast< char * >(&ArchiveHeader.MajorVersionNumber), sizeof(u1byte));
-		IStream.read(reinterpret_cast< char * >(&ArchiveHeader.MinorVersionNumber), sizeof(u1byte));
-		IStream.read(reinterpret_cast< char * >(&ArchiveHeader.RevisionNumber), sizeof(u1byte));
-		IStream.read(reinterpret_cast< char * >(&ArchiveHeader.CandidateNumber), sizeof(u1byte));
+		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.MajorVersionNumber), sizeof(u1byte));
+		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.MinorVersionNumber), sizeof(u1byte));
+		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.RevisionNumber), sizeof(u1byte));
+		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.CandidateNumber), sizeof(u1byte));
 		
 		u4byte RootItemIdentifier;
 		
-		IStream.read(reinterpret_cast< char * >(&RootItemIdentifier), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&RootItemIdentifier), sizeof(u4byte));
 		ArchiveHeader.RootItemIdentifier = ntohl(RootItemIdentifier);
 		
 		u4byte NumberOfItems;
 		
-		IStream.read(reinterpret_cast< char * >(&NumberOfItems), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&NumberOfItems), sizeof(u4byte));
 		ArchiveHeader.NumberOfItems = ntohl(NumberOfItems);
 		
 		return IStream;
@@ -300,46 +300,46 @@ namespace Arxx
 	{
 		u4byte Identifier;
 		
-		IStream.read(reinterpret_cast< char * >(&Identifier), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&Identifier), sizeof(u4byte));
 		ItemHeader.Identifier = ntohl(Identifier);
 		
 		u4byte Type;
 		
-		IStream.read(reinterpret_cast< char * >(&Type), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&Type), sizeof(u4byte));
 		ItemHeader.Type = ntohl(Type);
 		
 		u4byte SubType;
 		
-		IStream.read(reinterpret_cast< char * >(&SubType), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&SubType), sizeof(u4byte));
 		ItemHeader.SubType = ntohl(SubType);
-		IStream.read(reinterpret_cast< char * >(&ItemHeader.MajorVersionNumber), sizeof(u1byte));
-		IStream.read(reinterpret_cast< char * >(&ItemHeader.MinorVersionNumber), sizeof(u1byte));
-		IStream.read(reinterpret_cast< char * >(&ItemHeader.RevisionNumber), sizeof(u1byte));
-		IStream.read(reinterpret_cast< char * >(&ItemHeader.CandidateNumber), sizeof(u1byte));
+		IStream.read(reinterpret_cast<char *>(&ItemHeader.MajorVersionNumber), sizeof(u1byte));
+		IStream.read(reinterpret_cast<char *>(&ItemHeader.MinorVersionNumber), sizeof(u1byte));
+		IStream.read(reinterpret_cast<char *>(&ItemHeader.RevisionNumber), sizeof(u1byte));
+		IStream.read(reinterpret_cast<char *>(&ItemHeader.CandidateNumber), sizeof(u1byte));
 		
 		u4byte DataCompressionType;
 		
-		IStream.read(reinterpret_cast< char * >(&DataCompressionType), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&DataCompressionType), sizeof(u4byte));
 		ItemHeader.DataCompressionType = ntohl(DataCompressionType);
 		
 		u4byte NameLength;
 		
-		IStream.read(reinterpret_cast< char * >(&NameLength), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&NameLength), sizeof(u4byte));
 		ItemHeader.NameLength = ntohl(NameLength);
 		
 		u4byte DataDecompressedLength;
 		
-		IStream.read(reinterpret_cast< char * >(&DataDecompressedLength), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&DataDecompressedLength), sizeof(u4byte));
 		ItemHeader.DataDecompressedLength = ntohl(DataDecompressedLength);
 		
 		u4byte DataCompressedLength;
 		
-		IStream.read(reinterpret_cast< char * >(&DataCompressedLength), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&DataCompressedLength), sizeof(u4byte));
 		ItemHeader.DataCompressedLength = ntohl(DataCompressedLength);
 		
 		u4byte StructureLength;
 		
-		IStream.read(reinterpret_cast< char * >(&StructureLength), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&StructureLength), sizeof(u4byte));
 		ItemHeader.StructureLength = ntohl(StructureLength);
 		
 		return IStream;

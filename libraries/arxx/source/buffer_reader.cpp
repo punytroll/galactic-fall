@@ -85,35 +85,35 @@ auto Arxx::operator>>(Arxx::BufferReader & BufferReader, std::string & String) -
 
 auto Arxx::operator>>(Arxx::BufferReader & BufferReader, float & Value) -> Arxx::BufferReader &
 {
-	BufferReader.Read(sizeof(float), reinterpret_cast< Arxx::Buffer::pointer >(&Value));
+	BufferReader.Read(sizeof(float), reinterpret_cast<Arxx::Buffer::pointer>(&Value));
 	
 	return BufferReader;
 }
 
 auto Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u1byte & Value) -> Arxx::BufferReader &
 {
-	BufferReader.Read(sizeof(Arxx::u1byte), reinterpret_cast< Arxx::Buffer::pointer >(&Value));
+	BufferReader.Read(sizeof(Arxx::u1byte), reinterpret_cast<Arxx::Buffer::pointer>(&Value));
 	
 	return BufferReader;
 }
 
 auto Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u4byte & Value) -> Arxx::BufferReader &
 {
-	BufferReader.Read(sizeof(Arxx::u4byte), reinterpret_cast< Arxx::Buffer::pointer >(&Value));
+	BufferReader.Read(sizeof(Arxx::u4byte), reinterpret_cast<Arxx::Buffer::pointer>(&Value));
 	
 	return BufferReader;
 }
 
 auto Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u8byte & Value) -> Arxx::BufferReader &
 {
-	BufferReader.Read(sizeof(Arxx::u8byte), reinterpret_cast< Arxx::Buffer::pointer >(&Value));
+	BufferReader.Read(sizeof(Arxx::u8byte), reinterpret_cast<Arxx::Buffer::pointer>(&Value));
 	
 	return BufferReader;
 }
 
 auto Arxx::operator>>(Arxx::BufferReader & BufferReader, bool & Value) -> Arxx::BufferReader &
 {
-	BufferReader.Read(sizeof(bool), reinterpret_cast< Arxx::Buffer::pointer >(&Value));
+	BufferReader.Read(sizeof(bool), reinterpret_cast<Arxx::Buffer::pointer>(&Value));
 	
 	return BufferReader;
 }

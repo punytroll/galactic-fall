@@ -182,7 +182,7 @@ namespace Arxx
 	 * 
 	 * This function will append the stream content at the I/O position of the buffer. It will read @a Stream.first bytes from the stream. In case the stream end before that amount of bytes the buffer will contain only as much bytes as could be read from the stream. This function is an I/O operation and thus will modify the I/O position of the buffer to point after the last byte read.
 	 **/
-	auto operator<<(Arxx::BufferWriter & BufferWriter, std::pair< Arxx::Buffer::size_type, std::istream * > const & Stream) -> Arxx::BufferWriter &;
+	auto operator<<(Arxx::BufferWriter & BufferWriter, std::pair<Arxx::Buffer::size_type, std::istream *> const & Stream) -> Arxx::BufferWriter &;
 }
 
 #endif

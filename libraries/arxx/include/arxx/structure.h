@@ -65,7 +65,7 @@ namespace Arxx
 		public:
 			friend class Arxx::Structure;
             
-			typedef std::multimap< Arxx::u4byte, Arxx::Reference >::size_type size_type;
+			typedef std::multimap<Arxx::u4byte, Arxx::Reference>::size_type size_type;
 			
 			class const_iterator;
 			
@@ -85,7 +85,7 @@ namespace Arxx
 				 *
 				 * This constructor creates a Reference iterator from an STL iterator.
 				 **/
-				iterator(std::multimap< Arxx::u4byte, Arxx::Reference >::iterator Iterator);
+				iterator(std::multimap<Arxx::u4byte, Arxx::Reference>::iterator Iterator);
 				
 				/**
 				 * @brief The destructor of a Reference iterator.
@@ -148,7 +148,7 @@ namespace Arxx
 				 * 
 				 * This is an iterator into the Relation's internal Reference map.
 				 **/
-				std::multimap< Arxx::u4byte, Arxx::Reference >::iterator m_Iterator;
+				std::multimap<Arxx::u4byte, Arxx::Reference>::iterator m_Iterator;
                 
 			};
 			
@@ -168,7 +168,7 @@ namespace Arxx
 				 *
 				 * This constructor creates a const Reference iterator from an STL iterator.
 				 **/
-				const_iterator(std::multimap< Arxx::u4byte, Arxx::Reference >::const_iterator Iterator);
+				const_iterator(std::multimap<Arxx::u4byte, Arxx::Reference>::const_iterator Iterator);
 				
 				/**
 				 * @brief The constructor of a const Reference iterator from a non-const iterator.
@@ -220,7 +220,7 @@ namespace Arxx
 				 * 
 				 * This is an iterator into a Relation's internal Reference map.
 				 **/
-				std::multimap< Arxx::u4byte, Arxx::Reference >::const_iterator m_Iterator;
+				std::multimap<Arxx::u4byte, Arxx::Reference>::const_iterator m_Iterator;
                 
 			};
 			
@@ -301,7 +301,7 @@ namespace Arxx
 			/**
 			 * @brief The Item references stored in the Relation.
 			 **/
-			std::multimap< Arxx::u4byte, Arxx::Reference > m_References;
+			std::multimap<Arxx::u4byte, Arxx::Reference> m_References;
 			
 			/**
 			 * @brief The name of the relation.
@@ -330,7 +330,7 @@ namespace Arxx
 			 *
 			 * This constructor creates a Relation iterator from an STL iterator.
 			 **/
-			iterator(std::map< std::string, Arxx::Structure::Relation >::iterator Iterator);
+			iterator(std::map<std::string, Arxx::Structure::Relation>::iterator Iterator);
 			
 			/**
 			 * @brief The destructor of a Relation iterator.
@@ -393,7 +393,7 @@ namespace Arxx
 			 * 
 			 * This is an iterator into the Structure's internal Relation map.
 			 **/
-			std::map< std::string, Arxx::Structure::Relation >::iterator m_Iterator;
+			std::map<std::string, Arxx::Structure::Relation>::iterator m_Iterator;
             
 		};
 		
@@ -413,7 +413,7 @@ namespace Arxx
 			 *
 			 * This constructor creates a const Relation iterator from an STL iterator.
 			 **/
-			const_iterator(std::map< std::string, Arxx::Structure::Relation >::const_iterator Iterator);
+			const_iterator(std::map<std::string, Arxx::Structure::Relation>::const_iterator Iterator);
 			
 			/**
 			 * @brief The constructor of a const Relation iterator from a non-const Relation iterator.
@@ -465,11 +465,11 @@ namespace Arxx
 			 * 
 			 * This is an iterator into a Structure's internal Relation map.
 			 **/
-			std::map< std::string, Arxx::Structure::Relation >::const_iterator m_Iterator;
+			std::map<std::string, Arxx::Structure::Relation>::const_iterator m_Iterator;
             
 		};
 		
-		typedef std::map< std::string, Arxx::Structure::Relation >::size_type size_type;
+		typedef std::map<std::string, Arxx::Structure::Relation>::size_type size_type;
 		
 		/**
 		 * @brief This constructor binds the structure to a specific Arxx::Item.
@@ -582,7 +582,7 @@ namespace Arxx
 		auto RemoveRelation(Arxx::Structure::Relation * Relation) -> void;
         
 		Arxx::Item & m_Item;
-		std::map< std::string, Arxx::Structure::Relation > m_Relations;
+		std::map<std::string, Arxx::Structure::Relation> m_Relations;
         
 	};
 }

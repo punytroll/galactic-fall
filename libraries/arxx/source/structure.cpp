@@ -129,7 +129,7 @@ static auto GetU4Byte(std::istream & IStream) -> Arxx::u4byte
 {
 	Arxx::u4byte Result(0);
 	
-	IStream.read(reinterpret_cast< std::istream::char_type * >(&Result), sizeof(Arxx::u4byte));
+	IStream.read(reinterpret_cast<std::istream::char_type *>(&Result), sizeof(Arxx::u4byte));
 	Result = ntohl(Result);
 	
 	return Result;
@@ -212,13 +212,13 @@ auto Arxx::Structure::WriteToBuffer(Arxx::Buffer & Buffer) const -> void
 		
 		const Arxx::Structure::Relation & Relation(RelationIterator->second);
 		
-		BufferWriter << static_cast< Arxx::u4byte >(htonl(Relation.size()));
+		BufferWriter << static_cast<Arxx::u4byte>(htonl(Relation.size()));
 		
 		Arxx::Structure::Relation::const_iterator ReferenceIterator(Relation.begin());
 		
 		while(ReferenceIterator != Relation.end())
 		{
-			BufferWriter << static_cast< Arxx::u4byte >(htonl(ReferenceIterator->GetItemIdentifier()));
+			BufferWriter << static_cast<Arxx::u4byte>(htonl(ReferenceIterator->GetItemIdentifier()));
 			++ReferenceIterator;
 		}
 		++RelationIterator;
