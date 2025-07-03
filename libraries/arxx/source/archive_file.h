@@ -22,7 +22,7 @@
 
 #include <netinet/in.h>
 
-#include <arxx/Common.h>
+#include <arxx/common.h>
 
 /**
  * @file ArchiveFile.h

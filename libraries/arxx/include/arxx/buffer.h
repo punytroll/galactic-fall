@@ -25,7 +25,7 @@
 #include <string>
 #include <vector>
 
-#include <arxx/Common.h>
+#include <arxx/common.h>
 
 /**
  * @file Buffer.h

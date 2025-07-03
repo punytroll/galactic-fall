@@ -19,8 +19,8 @@
 
 #include <cassert>
 
-#include <arxx/Item.h>
-#include <arxx/Archive.h>
+#include <arxx/item.h>
+#include <arxx/archive.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

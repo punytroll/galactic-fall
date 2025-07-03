@@ -21,8 +21,8 @@
 
 #include <istream>
 
-#include <arxx/Buffer.h>
-#include <arxx/BufferWriter.h>
+#include <arxx/buffer.h>
+#include <arxx/buffer_writer.h>
 
 #ifdef DEBUG
 #include <iostream>

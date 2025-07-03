@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <arxx/Buffer.h>
-#include <arxx/BufferReader.h>
+#include <arxx/buffer.h>
+#include <arxx/buffer_reader.h>
 
 Arxx::BufferReader::BufferReader(Arxx::Buffer const & Buffer, Arxx::Buffer::size_type stPosition) :
 	m_Buffer(Buffer),

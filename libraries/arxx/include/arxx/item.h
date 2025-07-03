@@ -20,8 +20,8 @@
 #ifndef GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__ITEM_H
 #define GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__ITEM_H
 
-#include <arxx/Data.h>
-#include <arxx/Structure.h>
+#include <arxx/data.h>
+#include <arxx/structure.h>
 
 /**
  * @file Item.h

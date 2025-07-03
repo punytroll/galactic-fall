@@ -23,7 +23,7 @@
 #include <map>
 #include <vector>
 
-#include <arxx/Common.h>
+#include <arxx/common.h>
 
 /**
  * @file Archive.h

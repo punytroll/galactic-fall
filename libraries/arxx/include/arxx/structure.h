@@ -24,8 +24,8 @@
 #include <map>
 #include <vector>
 
-#include <arxx/Common.h>
-#include <arxx/Reference.h>
+#include <arxx/common.h>
+#include <arxx/reference.h>
 
 /**
  * @file Structure.h

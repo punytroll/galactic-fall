@@ -20,6 +20,8 @@
 #include <cassert>
 #include <cstdint>
 
+#include <arxx/buffer_reader.h>
+
 #include <algebra/quaternion.h>
 #include <algebra/vector2f.h>
 #include <algebra/vector3f.h>

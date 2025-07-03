@@ -20,7 +20,10 @@
 #ifndef BUFFER_READING_H
 #define BUFFER_READING_H
 
-#include <arxx/BufferReader.h>
+namespace Arxx
+{
+    class BufferReader;
+}
 
 namespace Graphics
 {

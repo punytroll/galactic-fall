@@ -20,7 +20,7 @@
 #ifndef GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__BUFFERWRITER_H
 #define GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__BUFFERWRITER_H
 
-#include <arxx/Buffer.h>
+#include <arxx/buffer.h>
 
 /**
  * @file BufferWriter.h

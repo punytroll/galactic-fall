@@ -25,13 +25,13 @@
 #include <iostream>
 #include <sstream>
 
-#include <arxx/Archive.h>
-#include <arxx/BufferWriter.h>
-#include <arxx/Item.h>
-#include <arxx/Reference.h>
+#include <arxx/archive.h>
+#include <arxx/buffer_writer.h>
+#include <arxx/item.h>
+#include <arxx/reference.h>
 
-#include "ArchiveFile.h"
-#include "ReferenceImplementation.h"
+#include "archive_file.h"
+#include "reference_implementation.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

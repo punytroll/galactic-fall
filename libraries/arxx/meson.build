@@ -1,17 +1,17 @@
 arxx_library = static_library(
   'arxx',
   sources: files(
-    'source/Archive.cxx',
-    'source/Buffer.cxx',
-    'source/BufferReader.cxx',
-    'source/BufferWriter.cxx',
-    'source/Common.cxx',
-    'source/Data.cxx',
-    'source/Item.cxx',
-    'source/Reference.cxx',
-    'source/ReferenceImplementation.cxx',
-    'source/Relation.cxx',
-    'source/Structure.cxx'
+    'source/archive.cpp',
+    'source/buffer.cpp',
+    'source/buffer_reader.cpp',
+    'source/buffer_writer.cpp',
+    'source/common.cpp',
+    'source/data.cpp',
+    'source/item.cpp',
+    'source/reference.cpp',
+    'source/reference_implementation.cpp',
+    'source/relation.cpp',
+    'source/structure.cpp'
   ),
   include_directories: [include_directories('include')]
 )

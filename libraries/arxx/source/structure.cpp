@@ -22,10 +22,10 @@
 #include <cassert>
 #include <iostream>
 
-#include <arxx/Buffer.h>
-#include <arxx/BufferWriter.h>
-#include <arxx/Reference.h>
-#include <arxx/Structure.h>
+#include <arxx/buffer.h>
+#include <arxx/buffer_writer.h>
+#include <arxx/reference.h>
+#include <arxx/structure.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

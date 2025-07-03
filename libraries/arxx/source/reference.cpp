@@ -19,9 +19,9 @@
 
 #include <cassert>
 
-#include <arxx/Reference.h>
+#include <arxx/reference.h>
 
-#include "ReferenceImplementation.h"
+#include "reference_implementation.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

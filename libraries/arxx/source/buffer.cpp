@@ -19,7 +19,7 @@
 
 #include <iostream>
 
-#include <arxx/Buffer.h>
+#include <arxx/buffer.h>
 
 const Arxx::Buffer::size_type Arxx::Buffer::m_stDataUpdated = 0x01;
 const Arxx::Buffer::size_type Arxx::Buffer::m_stDataDeleted = 0x02;

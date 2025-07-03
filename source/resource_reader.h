@@ -20,7 +20,7 @@
 #ifndef RESOURCE_READER_H
 #define RESOURCE_READER_H
 
-#include <arxx/Structure.h>
+#include <arxx/structure.h>
 
 namespace Arxx
 {

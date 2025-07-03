@@ -20,8 +20,8 @@
 #ifndef GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__DATA_H
 #define GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__DATA_H
 
-#include <arxx/Buffer.h>
-#include <arxx/Common.h>
+#include <arxx/buffer.h>
+#include <arxx/common.h>
 
 /**
  * @file Data.h

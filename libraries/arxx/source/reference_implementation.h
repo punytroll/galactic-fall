@@ -20,7 +20,7 @@
 #ifndef GALACTIC_FALL__LIBRARIES__ARXX__SOURCE__REFERENCEIMPLEMENTATION_H
 #define GALACTIC_FALL__LIBRARIES__ARXX__SOURCE__REFERENCEIMPLEMENTATION_H
 
-#include <arxx/Common.h>
+#include <arxx/common.h>
 
 namespace Arxx
 {
