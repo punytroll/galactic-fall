@@ -70,7 +70,7 @@ auto Arxx::Data::Decompress() -> void
 	case Arxx::Data::ZLIB_9:
 		{
 #ifdef HAVE_ZLIB_H
-			Arxx::Data::pointer DecompressedData(new Arxx::Data::value_type[_DecompressedLength]);
+			Arxx::Data::pointer DecompressedData(new Arxx::Data::value_type[m_DecompressedLength]);
 			z_stream zStream;
 			int iReturn = 0;
 			
@@ -81,7 +81,7 @@ auto Arxx::Data::Decompress() -> void
 			zStream.avail_in = stGetLength();
 			zStream.next_out = DecompressedData;
 			/** @todo Why not use u4GetDecompressedLength() here? **/
-			zStream.avail_out = _DecompressedLength;
+			zStream.avail_out = m_DecompressedLength;
 			if((iReturn = inflateInit(&zStream)) != Z_OK)
 			{
 				delete[] DecompressedData;
@@ -114,7 +114,7 @@ auto Arxx::Data::Decompress() -> void
 	case Arxx::Data::BZLIB:
 		{
 #ifdef HAVE_BZLIB_H
-			Arxx::Data::pointer DecompressedData(new Arxx::Data::value_type[_DecompressedLength]);
+			Arxx::Data::pointer DecompressedData(new Arxx::Data::value_type[m_DecompressedLength]);
 			bz_stream BZStream;
 			
 			BZStream.bzalloc = 0;
@@ -125,30 +125,30 @@ auto Arxx::Data::Decompress() -> void
 			BZStream.avail_in = stGetLength();
 			BZStream.next_out = reinterpret_cast< char * >(DecompressedData);
 			/** @todo Why not use u4GetDecompressedLength() here? **/
-			BZStream.avail_out = _DecompressedLength;
+			BZStream.avail_out = m_DecompressedLength;
 			
 			int iBZResult;
 			
 			if((iBZResult = BZ2_bzDecompressInit(&BZStream, 0, 0)) != BZ_OK)
 			{
-				delete DecompressedData;
+				delete[] DecompressedData;
 				/** @todo Correctly specify the actual error that occured in bzlib. **/
 				throw bzlib_error("TODO: specify!");
 			}
 			if((iBZResult = BZ2_bzDecompress(&BZStream)) != BZ_STREAM_END)
 			{
-				delete DecompressedData;
+				delete[] DecompressedData;
 				/** @todo Correctly specify the actual error that occured in bzlib. **/
 				throw bzlib_error("TODO: specify!");
 			}
 			if((iBZResult = BZ2_bzDecompressEnd(&BZStream)) != BZ_OK)
 			{
-				delete DecompressedData;
+				delete[] DecompressedData;
 				/** @todo Correctly specify the actual error that occured in bzlib. **/
 				throw bzlib_error("TODO: specify!");
 			}
 			vSetLength(0);
-			vInsert(0, _DecompressedLength, DecompressedData);
+			vInsert(0, m_DecompressedLength, DecompressedData);
 			delete[] DecompressedData;
 			m_CompressionType = Arxx::Data::NONE;
 			m_CompressedLength = 0;

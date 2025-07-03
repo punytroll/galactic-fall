@@ -1,5 +1,20 @@
+arxx_library_cpp_args = []
+arxx_library_dependencies = []
+
+zlib_dependency = dependency('zlib', required: get_option('zlib'))
+if zlib_dependency.found() == true
+  arxx_library_cpp_args += '-DHAVE_ZLIB_H'
+  arxx_library_dependencies += zlib_dependency
+endif
+bzip2_dependency = dependency('bzip2', required: get_option('bzip2'))
+if bzip2_dependency.found() == true
+  arxx_library_cpp_args += '-DHAVE_BZLIB_H'
+  arxx_library_dependencies += bzip2_dependency
+endif
+
 arxx_library = static_library(
   'arxx',
+  cpp_args: arxx_library_cpp_args,
   sources: files(
     'source/archive.cpp',
     'source/buffer.cpp',
@@ -18,5 +33,6 @@ arxx_library = static_library(
 
 arxx_dependency = declare_dependency(
   include_directories: [include_directories('include')],
-  link_with: [arxx_library]
+  link_with: [arxx_library],
+  dependencies: arxx_library_dependencies
 )
