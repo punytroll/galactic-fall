@@ -78,7 +78,7 @@ auto Arxx::Data::Decompress() -> void
 			zStream.zfree = 0;
 			zStream.next_in = const_cast< Arxx::u1byte * >(GetBegin());
 			/** @todo Why not use u4GetCompressedLength() here? **/
-			zStream.avail_in = stGetLength();
+			zStream.avail_in = GetLength();
 			zStream.next_out = DecompressedData;
 			/** @todo Why not use u4GetDecompressedLength() here? **/
 			zStream.avail_out = m_DecompressedLength;
@@ -100,8 +100,8 @@ auto Arxx::Data::Decompress() -> void
 				/** @todo Correctly specify the actual error that occured in zlib. **/
 				throw zlib_error("TODO: specify!");
 			}
-			vSetLength(0);
-			vInsert(0, m_DecompressedLength, DecompressedData);
+			SetLength(0);
+			Insert(0, m_DecompressedLength, DecompressedData);
 			delete[] DecompressedData;
 			m_CompressionType = Arxx::Data::NONE;
 			m_CompressedLength = 0;
@@ -122,7 +122,7 @@ auto Arxx::Data::Decompress() -> void
 			BZStream.opaque = 0;
 			BZStream.next_in = reinterpret_cast< char * >(const_cast< Arxx::u1byte * >(GetBegin()));
 			/** @todo Why not use u4GetCompressedLength() here? **/
-			BZStream.avail_in = stGetLength();
+			BZStream.avail_in = GetLength();
 			BZStream.next_out = reinterpret_cast< char * >(DecompressedData);
 			/** @todo Why not use u4GetDecompressedLength() here? **/
 			BZStream.avail_out = m_DecompressedLength;
@@ -147,8 +147,8 @@ auto Arxx::Data::Decompress() -> void
 				/** @todo Correctly specify the actual error that occured in bzlib. **/
 				throw bzlib_error("TODO: specify!");
 			}
-			vSetLength(0);
-			vInsert(0, m_DecompressedLength, DecompressedData);
+			SetLength(0);
+			Insert(0, m_DecompressedLength, DecompressedData);
 			delete[] DecompressedData;
 			m_CompressionType = Arxx::Data::NONE;
 			m_CompressedLength = 0;
@@ -212,8 +212,8 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 				/** @todo Correctly specify the actual error that occured in zlib. **/
 				throw zlib_error("TODO: specify!");
 			}
-			vSetLength(0);
-			vInsert(0, zStream.total_out, CompressedData);
+			SetLength(0);
+			Insert(0, zStream.total_out, CompressedData);
 			delete[] CompressedData;
 			m_CompressionType = CompressionType;
 			m_CompressedLength = zStream.total_out;
@@ -258,8 +258,8 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 				/** @todo Correctly specify the actual error that occured in bzlib. **/
 				throw bzlib_error("TODO: specify!");
 			}
-			vSetLength(0);
-			vInsert(0, BZStream.total_out_lo32, CompressedData);
+			SetLength(0);
+			Insert(0, BZStream.total_out_lo32, CompressedData);
 			delete[] CompressedData;
 			m_CompressionType = CompressionType;
 			m_CompressedLength = BZStream.total_out_lo32;
@@ -290,7 +290,7 @@ auto Arxx::Data::GetDecompressedLength() const -> Arxx::u4byte
 {
 	if((IsFetched() == true) && (IsDecompressed() == true))
 	{
-		return stGetLength();
+		return GetLength();
 	}
 	else
 	{
@@ -302,7 +302,7 @@ auto Arxx::Data::GetCompressedLength() const -> Arxx::u4byte
 {
 	if((IsFetched() == true) && (IsCompressed() == true))
 	{
-		return stGetLength();
+		return GetLength();
 	}
 	else
 	{
@@ -328,7 +328,7 @@ auto Arxx::Data::Unfetch() -> void
 {
 	if(IsFetched() == true)
 	{
-		vDelete(0, stGetLength());
+		Delete(0, GetLength());
 		m_Fetched = false;
 	}
 }

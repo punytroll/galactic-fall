@@ -36,7 +36,7 @@ namespace Arxx
 	class BufferReader
 	{
 	public:
-		BufferReader(Arxx::Buffer const & Buffer, Arxx::Buffer::size_type stPosition = Arxx::Buffer::Marker::BEGIN);
+		BufferReader(Arxx::Buffer const & Buffer, Arxx::Buffer::size_type Position = Arxx::Buffer::Marker::BEGIN);
 		
 		/**
 		 * @brief A copy constructor for the BufferReader.
@@ -56,7 +56,7 @@ namespace Arxx
 		 *
 		 * @note This function refuses to read more elements than there are from the I/O position to the end. It will throw a std::out_of_range exception in this case.
 		 **/
-		auto stRead(Arxx::Buffer::size_type stLength, Arxx::Buffer::pointer Buffer) -> Arxx::Buffer::size_type;
+		auto Read(Arxx::Buffer::size_type Length, Arxx::Buffer::pointer Buffer) -> Arxx::Buffer::size_type;
 		
 		/**
 		 * @brief Returns the associated Arxx::Buffer object.
@@ -66,12 +66,12 @@ namespace Arxx
 		/**
 		 * @brief Returns the marker's position.
 		 **/
-		auto stGetPosition() const -> Arxx::Buffer::size_type;
+		auto GetPosition() const -> Arxx::Buffer::size_type;
 		
 		/**
 		 * @brief Sets the marker's position.
 		 **/
-		auto vSetPosition(Arxx::Buffer::size_type stPosition) -> void;
+		auto SetPosition(Arxx::Buffer::size_type Position) -> void;
         
 	private:
 		Arxx::Buffer const & m_Buffer;
@@ -82,48 +82,48 @@ namespace Arxx
 	/**
 	 * @brief A helper function for reading a string from a buffer.
 	 * @param BufferReader The BufferReader from which the string will be read.
-	 * @param sString A std::string which will be filled with the string from the buffer.
+	 * @param String A std::string which will be filled with the string from the buffer.
 	 *
 	 * This function reads a string from the @a BufferReader. The string may be either null-terminated or end at the end of the buffer.
 	 *
 	 * @note This function will read until it finds either the first null character in the buffer or the end of the buffer so that the string itself cannot contain a null character.
 	 **/
-	auto operator>>(Arxx::BufferReader & BufferReader, std::string & sString) -> Arxx::BufferReader &;
+	auto operator>>(Arxx::BufferReader & BufferReader, std::string & String) -> Arxx::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading float values from a buffer.
 	 * @param BufferReader The BufferReader from which the float value will be read.
-	 * @param fValue The target for the float value that is to be read.
+	 * @param Value The target for the float value that is to be read.
 	 * @return The Buffer after the output execution.
 	 * 
-	 * This function reads a float value from the buffer storing it in @a fValue .
+	 * This function reads a float value from the buffer storing it in @a Value .
 	 **/
-	auto operator>>(Arxx::BufferReader & BufferReader, float & fValue) -> Arxx::BufferReader &;
+	auto operator>>(Arxx::BufferReader & BufferReader, float & Value) -> Arxx::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading u1byte values from a buffer.
 	 * @param BufferReader The BufferReader from which the u1byte value will be read.
-	 * @param u4Value The target for the u1byte value that is to be read.
+	 * @param Value The target for the u1byte value that is to be read.
 	 * @return The Buffer after the output execution.
 	 * 
-	 * This function reads a u1byte value from the buffer storing it in @a u1Value .
+	 * This function reads a u1byte value from the buffer storing it in @a Value .
 	 **/
-	auto operator>>(Arxx::BufferReader & BufferReader, Arxx::u1byte & u1Value) -> Arxx::BufferReader &;
+	auto operator>>(Arxx::BufferReader & BufferReader, Arxx::u1byte & Value) -> Arxx::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading u4byte values from a buffer.
 	 * @param BufferReader The BufferReader from which the u4byte value will be read.
-	 * @param u4Value The target for the u4byte value that is to be read.
+	 * @param Value The target for the u4byte value that is to be read.
 	 * @return The Buffer after the output execution.
 	 * 
-	 * This function reads a u4byte value from the buffer storing it in @a u4Value .
+	 * This function reads a u4byte value from the buffer storing it in @a Value .
 	 **/
-	auto operator>>(Arxx::BufferReader & BufferReader, Arxx::u4byte & u4Value) -> Arxx::BufferReader &;
+	auto operator>>(Arxx::BufferReader & BufferReader, Arxx::u4byte & Value) -> Arxx::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading Arxx::u8byte values from a buffer.
 	 * @param BufferReader The BufferReader from which the Arxx::u8byte value will be read.
-	 * @param u4Value The target for the Arxx::u8byte value that is to be read.
+	 * @param Value The target for the Arxx::u8byte value that is to be read.
 	 * @return The Buffer after the output execution.
 	 * 
 	 * This function reads a Arxx::u8byte value from the buffer storing it in @a Value .
@@ -133,12 +133,12 @@ namespace Arxx
 	/**
 	 * @brief A helper function for reading bool objects from a buffer.
 	 * @param BufferReader The BufferReader from which the bool will be read.
-	 * @param bValue The target for the bool value that is to be read.
+	 * @param Value The target for the bool value that is to be read.
 	 * @return The Buffer after the output execution.
 	 * 
-	 * This function reads the bool value @a bValue from the buffer using an output function.
+	 * This function reads the bool value @a Value from the buffer using an output function.
 	 **/
-	auto operator>>(Arxx::BufferReader & BufferReader, bool & bValue) -> Arxx::BufferReader &;
+	auto operator>>(Arxx::BufferReader & BufferReader, bool & Value) -> Arxx::BufferReader &;
 }
 
 #endif

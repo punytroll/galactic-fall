@@ -28,27 +28,27 @@
 #include <iostream>
 #endif
 
-Arxx::BufferWriter::BufferWriter(Arxx::Buffer & Buffer, Arxx::Buffer::size_type stPosition) :
+Arxx::BufferWriter::BufferWriter(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position) :
 	m_Buffer(Buffer),
-	m_Marker(Buffer, stPosition, Arxx::Buffer::Marker::LEFT)
+	m_Marker(Buffer, Position, Arxx::Buffer::Marker::LEFT)
 {
 }
 
 Arxx::BufferWriter::BufferWriter(Arxx::BufferWriter const & Other) :
 	m_Buffer(Other.m_Buffer),
-	m_Marker(Other.m_Buffer, Other.stGetPosition(), Arxx::Buffer::Marker::LEFT)
+	m_Marker(Other.m_Buffer, Other.GetPosition(), Arxx::Buffer::Marker::LEFT)
 {
 }
 
-auto Arxx::BufferWriter::vWrite(Arxx::Buffer::size_type stDataLength, Arxx::Buffer::const_pointer Data) -> void
+auto Arxx::BufferWriter::Write(Arxx::Buffer::size_type DataLength, Arxx::Buffer::const_pointer Data) -> void
 {
-	if(m_Marker.bIsValid() == false)
+	if(m_Marker.IsValid() == false)
 	{
 		throw std::runtime_error("Arxx::BufferWriter::vWrite: Buffer was destroyed.");
 	}
-	m_Marker.vSetAlignment(Arxx::Buffer::Marker::RIGHT);
-	m_Buffer.vInsert(m_Marker.stGetPosition(), stDataLength, Data);
-	m_Marker.vSetAlignment(Arxx::Buffer::Marker::LEFT);
+	m_Marker.SetAlignment(Arxx::Buffer::Marker::RIGHT);
+	m_Buffer.Insert(m_Marker.GetPosition(), DataLength, Data);
+	m_Marker.SetAlignment(Arxx::Buffer::Marker::LEFT);
 }
 
 auto Arxx::BufferWriter::GetBuffer() -> Arxx::Buffer &
@@ -61,68 +61,68 @@ auto Arxx::BufferWriter::GetBuffer() const -> Arxx::Buffer const &
 	return m_Buffer;
 }
 
-auto Arxx::BufferWriter::stGetPosition() const -> Arxx::Buffer::size_type
+auto Arxx::BufferWriter::GetPosition() const -> Arxx::Buffer::size_type
 {
-	return m_Marker.stGetPosition();
+	return m_Marker.GetPosition();
 }
 
-auto Arxx::BufferWriter::vSetPosition(Arxx::Buffer::size_type stPosition) -> void
+auto Arxx::BufferWriter::SetPosition(Arxx::Buffer::size_type Position) -> void
 {
-	return m_Marker.vSetPosition(stPosition);
+	return m_Marker.SetPosition(Position);
 }
 
-auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, std::string const & sString) -> Arxx::BufferWriter &
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, std::string const & String) -> Arxx::BufferWriter &
 {
-	BufferWriter.vWrite(sString.length() + 1, reinterpret_cast< Arxx::Buffer::const_pointer >(sString.c_str()));
+	BufferWriter.Write(String.length() + 1, reinterpret_cast< Arxx::Buffer::const_pointer >(String.c_str()));
 
 	return BufferWriter;
 }
 
-auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, char const * pcString) -> Arxx::BufferWriter &
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, char const * String) -> Arxx::BufferWriter &
 {
-	BufferWriter.vWrite(strlen(pcString) + 1, reinterpret_cast< Arxx::Buffer::const_pointer >(pcString));
+	BufferWriter.Write(strlen(String) + 1, reinterpret_cast< Arxx::Buffer::const_pointer >(String));
 
 	return BufferWriter;
 }
 
-auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, float fValue) -> Arxx::BufferWriter &
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, float Value) -> Arxx::BufferWriter &
 {
-	BufferWriter.vWrite(sizeof(float), reinterpret_cast< Arxx::Buffer::const_pointer >(&fValue));
+	BufferWriter.Write(sizeof(float), reinterpret_cast< Arxx::Buffer::const_pointer >(&Value));
 	
 	return BufferWriter;
 }
 
 auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u1byte Value) -> Arxx::BufferWriter &
 {
-	BufferWriter.vWrite(sizeof(Arxx::u1byte), reinterpret_cast< Arxx::Buffer::const_pointer >(&Value));
+	BufferWriter.Write(sizeof(Arxx::u1byte), reinterpret_cast< Arxx::Buffer::const_pointer >(&Value));
 	
 	return BufferWriter;
 }
 
-auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u4byte u4Value) -> Arxx::BufferWriter &
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u4byte Value) -> Arxx::BufferWriter &
 {
-	BufferWriter.vWrite(sizeof(Arxx::u4byte), reinterpret_cast< Arxx::Buffer::const_pointer >(&u4Value));
+	BufferWriter.Write(sizeof(Arxx::u4byte), reinterpret_cast< Arxx::Buffer::const_pointer >(&Value));
 	
 	return BufferWriter;
 }
 
-auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u8byte u8Value) -> Arxx::BufferWriter &
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u8byte Value) -> Arxx::BufferWriter &
 {
-	BufferWriter.vWrite(sizeof(Arxx::u8byte), reinterpret_cast< Arxx::Buffer::const_pointer >(&u8Value));
+	BufferWriter.Write(sizeof(Arxx::u8byte), reinterpret_cast< Arxx::Buffer::const_pointer >(&Value));
 	
 	return BufferWriter;
 }
 
-auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, bool bValue) -> Arxx::BufferWriter &
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, bool Value) -> Arxx::BufferWriter &
 {
-	BufferWriter.vWrite(sizeof(bool), reinterpret_cast< Arxx::Buffer::const_pointer >(&bValue));
+	BufferWriter.Write(sizeof(bool), reinterpret_cast< Arxx::Buffer::const_pointer >(&Value));
 	
 	return BufferWriter;
 }
 
-auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, char cValue) -> Arxx::BufferWriter &
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, char Value) -> Arxx::BufferWriter &
 {
-	BufferWriter.vWrite(sizeof(char), reinterpret_cast< Arxx::Buffer::const_pointer >(&cValue));
+	BufferWriter.Write(sizeof(char), reinterpret_cast< Arxx::Buffer::const_pointer >(&Value));
 	
 	return BufferWriter;
 }
@@ -142,7 +142,7 @@ auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, std::pair< Arxx::Buffer
 		if(Stream.second->good() == true)
 		{
 			++Index;
-			BufferWriter.vWrite(1, reinterpret_cast< Arxx::Buffer::pointer >(&Character));
+			BufferWriter.Write(1, reinterpret_cast< Arxx::Buffer::pointer >(&Character));
 		}
 		else
 		{

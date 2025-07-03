@@ -28,7 +28,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 auto Arxx::Item::Create() -> Arxx::Item *
 {
-	return Arxx::Item::Create(0, g_u4InvalidID);
+	return Arxx::Item::Create(0, g_InvalidItemIdentifier);
 }
 
 auto Arxx::Item::Create(Arxx::u4byte Identifier) -> Arxx::Item *
@@ -48,7 +48,7 @@ auto Arxx::Item::Create(Arxx::Archive & Archive, Arxx::u4byte Identifier) -> Arx
 
 auto Arxx::Item::Create(Arxx::Archive * Archive) -> Arxx::Item *
 {
-	return Arxx::Item::Create(Archive, g_u4InvalidID);
+	return Arxx::Item::Create(Archive, g_InvalidItemIdentifier);
 }
 
 auto Arxx::Item::Create(Arxx::Archive * Archive, Arxx::u4byte Identifier) -> Arxx::Item *

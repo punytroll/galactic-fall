@@ -60,7 +60,7 @@ namespace Arxx
 	class Buffer
 	{
 	public:
-		friend std::string sIndentation(Arxx::Buffer * pBuffer);
+		friend std::string Indentation(Arxx::Buffer * Buffer);
         
 		/**
 		 * @brief The type of an element stored in this buffer.
@@ -129,7 +129,7 @@ namespace Arxx
 			 * 
 			 * The position is truncated at Buffer.stGetLength() if greater than that.
 			 **/
-			Marker(const Arxx::Buffer & Buffer, Arxx::Buffer::size_type stPosition = 0, Arxx::Buffer::Marker::Alignment Alignment = LEFT);
+			Marker(const Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position = 0, Arxx::Buffer::Marker::Alignment Alignment = LEFT);
 			
 			/**
 			 * @brief The Marker's destructor.
@@ -143,14 +143,14 @@ namespace Arxx
 			 * 
 			 * The position is guaranteed to be valid inside the buffer.
 			 **/
-			auto stGetPosition() const -> Arxx::Buffer::size_type;
+			auto GetPosition() const -> Arxx::Buffer::size_type;
 			
 			/**
 			 * @brief Sets the marker's position in the buffer.
 			 * 
 			 * Will not complain about the position being behind the buffer's end but will adjust to the length.
 			 **/
-			auto vSetPosition(Arxx::Buffer::size_type stPosition) -> void;
+			auto SetPosition(Arxx::Buffer::size_type Position) -> void;
 			
 			/**
 			 * @brief Returns the marker's alignment.
@@ -164,14 +164,14 @@ namespace Arxx
 			 * 
 			 * @sa Arxx::Buffer::Marker::m_Alignment
 			 **/
-			auto vSetAlignment(Arxx::Buffer::Marker::Alignment Alignment) -> void;
+			auto SetAlignment(Arxx::Buffer::Marker::Alignment Alignment) -> void;
 			
 			/**
 			 * @brief Returns whether the marker is valid.
 			 * 
 			 * Currently the only occasion when a marker might be invalid is that the associated Arxx::Buffer got destroyed.
 			 **/
-			auto bIsValid() const -> bool;
+			auto IsValid() const -> bool;
             
 		private:
 			/**
@@ -188,12 +188,12 @@ namespace Arxx
 			 * 
 			 * Is initialized by the constructor and might be set to `0` by Arxx::Buffer::Marker::vInvalidateBuffer().
 			 **/
-			Arxx::Buffer const * m_pBuffer;
+			Arxx::Buffer const * m_Buffer;
 			
 			/**
 			 * @brief The marker's current position inside the associated Arxx::Buffer.
 			 **/
-			Arxx::Buffer::size_type m_stPosition;
+			Arxx::Buffer::size_type m_Position;
 			
 			/**
 			 * @brief The marker's alignment.
@@ -225,7 +225,7 @@ namespace Arxx
 		 *
 		 * Use this constructor if you want to have a sub buffer of the superior buffer @a Buffer. It may be of length 0 to get an insertion spot at a later time.
 		 **/
-		Buffer(Buffer & Buffer, Arxx::Buffer::size_type stPosition, Arxx::Buffer::size_type stLength);
+		Buffer(Buffer & Buffer, Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length);
         
 		/**
 		 * @brief Deleted copy constructor, to prevent copying a buffer.
@@ -251,7 +251,7 @@ namespace Arxx
 		 * 
 		 * This length is the length of the data inside the buffer, so the number of bytes actually used by the data.
 		 **/
-		auto stGetLength() const -> Arxx::Buffer::size_type;
+		auto GetLength() const -> Arxx::Buffer::size_type;
 		
 		/**
 		 * @brief Sets the length of the data actually in the buffer.
@@ -265,7 +265,7 @@ namespace Arxx
 		 * - If the specified length is smaller than the current length the buffer will be shrunken to this length. This will happen back to front, so all child buffers which reside anywhere between stLength and stGetLength() will be modified as well. This call is then equivalent to:
 		 * @code vDelete(stLength, stGetLength() - stLength); @endcode
 		 **/
-		auto vSetLength(Arxx::Buffer::size_type stLength = 0) -> void;
+		auto SetLength(Arxx::Buffer::size_type Length = 0) -> void;
 		
 		/**
 		 * @brief Insert a given amount of data at a specified postion.
@@ -277,7 +277,7 @@ namespace Arxx
 		 *
 		 * @note This function directly calls the private function vWrite(), so this function throws the same exceptions as vWrite().
 		 **/
-		auto vInsert(Arxx::Buffer::size_type stPosition, Arxx::Buffer::size_type stDataLength, Arxx::Buffer::const_pointer Data = 0) -> void;
+		auto Insert(Arxx::Buffer::size_type Position, Arxx::Buffer::size_type DataLength, Arxx::Buffer::const_pointer Data = nullptr) -> void;
 		
 		/**
 		 * @brief Deletes a given amount of data at a specified position.
@@ -286,7 +286,7 @@ namespace Arxx
 		 * 
 		 * This function deletes stLength elements at position stPosition.
 		 **/
-		auto vDelete(Arxx::Buffer::size_type stPosition, Arxx::Buffer::size_type stLength) -> void;
+		auto Delete(Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length) -> void;
 		
 		/**
 		 * @brief Allows read-only access to indexed data members for const buffers.
@@ -296,7 +296,7 @@ namespace Arxx
 		 *
 		 * @note Since this function addresses data in the buffer it will call vAssureDataPresence().
 		 **/
-		auto operator[](Arxx::Buffer::size_type stIndex) const -> Arxx::Buffer::value_type;
+		auto operator[](Arxx::Buffer::size_type Index) const -> Arxx::Buffer::value_type;
 		
 		/**
 		 * @brief Allows read/write access to indexed data members.
@@ -306,7 +306,7 @@ namespace Arxx
 		 *
 		 * @note Since this function addresses data in the buffer it will call vAssureDataPresence().
 		 **/
-		auto operator[](Arxx::Buffer::size_type stIndex) -> Arxx::Buffer::reference;
+		auto operator[](Arxx::Buffer::size_type Index) -> Arxx::Buffer::reference;
 		
 		/**
 		 * @brief Retreives a const pointer to the data of this buffer.
@@ -317,22 +317,22 @@ namespace Arxx
         
 	protected:
 		/**
-		 * @brief A constant. Its value will be passed to vParentDataChanged() whenever data is to be updated.
-		 * @sa vParentDataChanged() for further details.
+		 * @brief A constant. Its value will be passed to ParentDataChanged() whenever data is to be updated.
+		 * @sa ParentDataChanged() for further details.
 		 **/
-		static const Arxx::Buffer::size_type m_stDataUpdated;
+		static const Arxx::Buffer::size_type m_DataUpdated;
 		
 		/**
-		 * @brief A constant. Its value will be passed to vParentDataChanged() whenever data was deleted.
-		 * @sa vParentDataChanged() for further details.
+		 * @brief A constant. Its value will be passed to ParentDataChanged() whenever data was deleted.
+		 * @sa ParentDataChanged() for further details.
 		 **/
-		static const Arxx::Buffer::size_type m_stDataDeleted;
+		static const Arxx::Buffer::size_type m_DataDeleted;
 		
 		/**
-		 * @brief A constant. Its value will be passed to vParentDataChanged() whenever data was inserted.
-		 * @sa vParentDataChanged() for further details.
+		 * @brief A constant. Its value will be passed to ParentDataChanged() whenever data was inserted.
+		 * @sa ParentDataChanged() for further details.
 		 **/
-		static const Arxx::Buffer::size_type m_stDataInserted;
+		static const Arxx::Buffer::size_type m_DataInserted;
         
 	private:
 		class SubBuffer;
@@ -342,18 +342,18 @@ namespace Arxx
 		 *
 		 * This function handles the necessary steps to organise the control structure which contains all the sub buffers. This structure is needed to propagate changes.
 		 **/
-		auto vRegister(Arxx::Buffer & SubBuffer) -> void;
+		auto Register(Arxx::Buffer & SubBuffer) -> void;
 		
 		/**
 		 * @brief This function removes a buffer from the list of all sub buffer of @em this buffer.
 		 *
 		 * This function handles the necessary steps to organise the control structure which contains all the sub buffers. This structure is needed to propagate changes.
 		 **/
-		auto vUnregister(Arxx::Buffer & SubBuffer) -> void;
+		auto Unregister(Arxx::Buffer & SubBuffer) -> void;
 		
-		auto vRegister(Arxx::Buffer::Marker & Marker) const -> void;
+		auto Register(Arxx::Buffer::Marker & Marker) const -> void;
 		
-		auto vUnregister(Arxx::Buffer::Marker & Marker) const -> void;
+		auto Unregister(Arxx::Buffer::Marker & Marker) const -> void;
 		
 		/**
 		 * @brief This function is responsible for any functionality that writes data to the buffer.
@@ -364,7 +364,7 @@ namespace Arxx
 		 * 
 		 * This function is one of the two core functions of the buffer. It allows to insert any data in any buffer and will pipe the call to the most superior buffer which actually copies the data. It will then decide which sub buffers should be notified that content or position has changed.
 		 **/
-		auto vWrite(Arxx::Buffer & Buffer, Arxx::Buffer::size_type stPosition, Arxx::Buffer::size_type stDataLength, Arxx::Buffer::const_pointer Data = nullptr) -> void;
+		auto Write(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position, Arxx::Buffer::size_type DataLength, Arxx::Buffer::const_pointer Data = nullptr) -> void;
 		
 		/**
 		 * @brief This function is called whenever the data of the sup buffer is changed in a way that also affects this buffer.
@@ -401,14 +401,14 @@ namespace Arxx
 		 *   - The deletion overlaps @em this buffer completely: m_stLength is set to 0 and m_stPosition is set to stPosition.
 		 * - The structural changes are very much the same as for Inserts. We just need to pass this change down to all sub buffers by calling vParentDataChanged(m_stDataDeleted, stPosition - m_stPosition, stLength).
 		 **/
-		auto vParentDataChanged(size_type stChangeMode, Arxx::Buffer::size_type stPosition, Arxx::Buffer::size_type stLength) -> void;
+		auto ParentDataChanged(size_type ChangeMode, Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length) -> void;
     
 		/**
 		 * @brief A pointer pointing to the superior buffer.
 		 *
 		 * This pointer points to the Buffer that this buffer is a part of. In case this buffer is the most superior buffer it is '0'.
 		 **/
-		Arxx::Buffer * m_pSupBuffer;
+		Arxx::Buffer * m_SupBuffer;
 		
 		/**
 		 * @brief The pointer to the actual content of @em this buffer.
@@ -420,7 +420,7 @@ namespace Arxx
 		 *
 		 * @note There is a separate property m_stCapacity for the size of the allocated memory.
 		 **/
-		Arxx::Buffer::size_type m_stLength;
+		Arxx::Buffer::size_type m_Length;
 		
 		/**
 		 * @brief The size of the memory block reserved for the content of @em this buffer.
@@ -429,7 +429,7 @@ namespace Arxx
 		 *
 		 * @note There is a separate property m_stLength for the length of the content.
 		 **/
-		Arxx::Buffer::size_type m_stCapacity;
+		Arxx::Buffer::size_type m_Capacity;
 		
 		/**
 		 * @brief The associated markers.
@@ -441,7 +441,7 @@ namespace Arxx
 		 *
 		 * This value is zero-based.
 		 **/
-		Arxx::Buffer::size_type m_stPosition;
+		Arxx::Buffer::size_type m_Position;
         
 		/**
 		 * @brief A vector of pointers to structures describing the sub buffers.
@@ -455,7 +455,7 @@ namespace Arxx
 		 *
 		 * This is a fluid state and will be changed in vWrite() and vDelete() when @em this buffer is actually changing. It will not be true from anywhere outside the library.
 		 **/
-		bool m_bChanging;
+		bool m_Changing;
         
 	};
 	

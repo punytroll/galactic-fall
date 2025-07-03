@@ -112,11 +112,11 @@ static void MakeItemAvailable(Arxx::Item * Item)
 
 static Arxx::Item * Resolve(Arxx::Reference & Reference)
 {
-	auto Item(Reference.pGetItem());
+	auto Item(Reference.GetItem());
 	
 	if(Item == nullptr)
 	{
-		throw std::runtime_error("The unique identifier '" + to_string_cast(Reference.u4GetUniqueID()) + "' is referenced but could not be resolved.");
+		throw std::runtime_error("The item identifier '" + to_string_cast(Reference.GetItemIdentifier()) + "' is referenced but could not be resolved.");
 	}
 	MakeItemAvailable(Item);
 	
@@ -158,7 +158,7 @@ void ResourceReader::_ReadItems(const std::string & Path, std::function< void (A
 	{
 		throw std::runtime_error("Could not find an item at the path '" + Path + "'.");
 	}
-	if(Directory->GetStructure().bHasRelation("child") == false)
+	if(Directory->GetStructure().HasRelation("child") == false)
 	{
 		throw std::runtime_error("The item '" + Path + "' does not contain a 'child' relation.");
 	}
@@ -204,7 +204,7 @@ Galaxy * ResourceReader::ReadGalaxy(const std::string & GalaxyIdentifier)
 	{
 		throw std::runtime_error("Could not find an item at the path '" + Path + "'.");
 	}
-	if(Directory->GetStructure().bHasRelation("child") == false)
+	if(Directory->GetStructure().HasRelation("child") == false)
 	{
 		throw std::runtime_error("The item '" + Path + "' does not contain a 'child' relation.");
 	}
@@ -233,7 +233,7 @@ Galaxy * ResourceReader::ReadGalaxy(const std::string & GalaxyIdentifier)
 			Reader >> Name;
 			assert(NewGalaxy->GetAspectName() != nullptr);
 			NewGalaxy->GetAspectName()->SetName(Name);
-			if(GalaxyItem->GetStructure().bHasRelation("factions") == false)
+			if(GalaxyItem->GetStructure().HasRelation("factions") == false)
 			{
 				throw std::runtime_error("The item '" + Path + "/" + GalaxyItem->GetName() + "' does not contain a 'factions' relation.");
 			}
@@ -358,15 +358,15 @@ void ResourceReader::_ReadSystem(Arxx::Reference & Reference, Galaxy * Galaxy, s
 		NewSystem->AddFactionInfluence(Faction, FactionInfluence);
 	}
 	Galaxy->GetAspectObjectContainer()->AddContent(NewSystem);
-	if(Item->GetStructure().bHasRelation("stars") == true)
+	if(Item->GetStructure().HasRelation("stars") == true)
 	{
 		_ReadItems(Item->GetStructure().GetRelation("stars"), std::bind(ReadStar, std::placeholders::_1, NewSystem));
 	}
-	if(Item->GetStructure().bHasRelation("planets") == true)
+	if(Item->GetStructure().HasRelation("planets") == true)
 	{
 		_ReadItems(Item->GetStructure().GetRelation("planets"), std::bind(ReadPlanet, std::placeholders::_1, Galaxy, NewSystem));
 	}
-	if(Item->GetStructure().bHasRelation("linked-systems") == true)
+	if(Item->GetStructure().HasRelation("linked-systems") == true)
 	{
 		_ReadItems(Item->GetStructure().GetRelation("linked-systems"), std::bind(ReadSystemLink, std::placeholders::_1, NewSystem, std::ref(SystemLinks)));
 	}
@@ -1248,7 +1248,7 @@ static void ReadTexture(Arxx::Reference & Reference)
 	{
 		throw std::runtime_error("Could not create texture '" + Identifier + "'.");
 	}
-	Texture->SetData(Width, Height, Format, Reader.GetBuffer().GetBegin() + Reader.stGetPosition());
+	Texture->SetData(Width, Height, Format, Reader.GetBuffer().GetBegin() + Reader.GetPosition());
 }
 
 static void ReadTurretClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager)

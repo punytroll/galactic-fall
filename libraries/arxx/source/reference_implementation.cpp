@@ -30,64 +30,64 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Arxx::ReferenceImplementation::ReferenceImplementation() :
-	m_u4UniqueID(0),
-	m_pItem(0),
-	m_u4ReferenceCount(1),
-	m_pArchive(0)
+	m_ItemIdentifier(0),
+	m_Item(0),
+	m_ReferenceCount(1),
+	m_Archive(0)
 {
 }
 
 Arxx::ReferenceImplementation::~ReferenceImplementation()
 {
-	assert(m_u4ReferenceCount == 0);
+	assert(m_ReferenceCount == 0);
 }
 
-auto Arxx::ReferenceImplementation::pGetReference(Arxx::Item & Item) -> Arxx::ReferenceImplementation *
+auto Arxx::ReferenceImplementation::Create(Arxx::Item & Item) -> Arxx::ReferenceImplementation *
 {
-	Arxx::ReferenceImplementation * pReference(new Arxx::ReferenceImplementation);
+	Arxx::ReferenceImplementation * ReferenceImplementation(new Arxx::ReferenceImplementation{});
 	
-	pReference->m_pItem = &Item;
-	pReference->m_u4UniqueID = Item.GetIdentifier();
-	pReference->m_u4ReferenceCount = 1;
-	pReference->m_pArchive = Item.GetArchive();
+	ReferenceImplementation->m_Item = &Item;
+	ReferenceImplementation->m_ItemIdentifier = Item.GetIdentifier();
+	ReferenceImplementation->m_ReferenceCount = 1;
+	ReferenceImplementation->m_Archive = Item.GetArchive();
 	
-	return pReference;
+	return ReferenceImplementation;
 }
 
-auto Arxx::ReferenceImplementation::pGetReference(Arxx::u4byte u4UniqueID, Arxx::Archive * pArchive) -> Arxx::ReferenceImplementation *
+auto Arxx::ReferenceImplementation::Create(Arxx::u4byte ItemIdentifier, Arxx::Archive * Archive) -> Arxx::ReferenceImplementation *
 {
-	Arxx::ReferenceImplementation * pReference(new Arxx::ReferenceImplementation);
+	Arxx::ReferenceImplementation * ReferenceImplementation(new Arxx::ReferenceImplementation{});
 	
-	pReference->m_pItem = 0;
-	pReference->m_u4UniqueID = u4UniqueID;
-	pReference->m_u4ReferenceCount = 1;
-	pReference->m_pArchive = pArchive;
+	ReferenceImplementation->m_Item = 0;
+	ReferenceImplementation->m_ItemIdentifier = ItemIdentifier;
+	ReferenceImplementation->m_ReferenceCount = 1;
+	ReferenceImplementation->m_Archive = Archive;
 	
-	return pReference;
+	return ReferenceImplementation;
 }
 
-auto Arxx::ReferenceImplementation::pGetReference(Arxx::ReferenceImplementation * pReference) -> Arxx::ReferenceImplementation *
+auto Arxx::ReferenceImplementation::Create(Arxx::ReferenceImplementation * ReferenceImplementation) -> Arxx::ReferenceImplementation *
 {
-	pReference->m_u4ReferenceCount++;
+	ReferenceImplementation->m_ReferenceCount++;
 	
-	return pReference;
+	return ReferenceImplementation;
 }
 
-auto Arxx::ReferenceImplementation::bRelease(Arxx::ReferenceImplementation * pReference) -> bool
+auto Arxx::ReferenceImplementation::Release(Arxx::ReferenceImplementation * ReferenceImplementation) -> bool
 {
-	assert(pReference->m_u4ReferenceCount != 0);
-	pReference->m_u4ReferenceCount--;
-	if(pReference->m_u4ReferenceCount == 0)
+	assert(ReferenceImplementation->m_ReferenceCount != 0);
+	ReferenceImplementation->m_ReferenceCount--;
+	if(ReferenceImplementation->m_ReferenceCount == 0)
 	{
-		delete pReference;
+		delete ReferenceImplementation;
 		
 		return true;
 	}
 	else
 	{
-		if((pReference->m_pItem == 0) && (pReference->m_pArchive != 0) && (pReference->m_u4ReferenceCount == 1))
+		if((ReferenceImplementation->m_Item == nullptr) && (ReferenceImplementation->m_Archive != nullptr) && (ReferenceImplementation->m_ReferenceCount == 1))
 		{
-			pReference->m_pArchive->ReleaseReference(pReference);
+			ReferenceImplementation->m_Archive->ReleaseReference(ReferenceImplementation);
 			
 			return true;
 		}
@@ -98,49 +98,49 @@ auto Arxx::ReferenceImplementation::bRelease(Arxx::ReferenceImplementation * pRe
 	}
 }
 
-auto Arxx::ReferenceImplementation::u4GetUniqueID() const -> Arxx::u4byte
+auto Arxx::ReferenceImplementation::GetItemIdentifier() const -> Arxx::u4byte
 {
-	return m_u4UniqueID;
+	return m_ItemIdentifier;
 }
 
-auto Arxx::ReferenceImplementation::pGetItem() -> Arxx::Item *
+auto Arxx::ReferenceImplementation::GetItem() -> Arxx::Item *
 {
-	return m_pItem;
+	return m_Item;
 }
 
-auto Arxx::ReferenceImplementation::pGetItem() const -> Arxx::Item const *
+auto Arxx::ReferenceImplementation::GetItem() const -> Arxx::Item const *
 {
-	return m_pItem;
+	return m_Item;
 }
 
-auto Arxx::ReferenceImplementation::u4GetReferenceCount() const -> Arxx::u4byte
+auto Arxx::ReferenceImplementation::GetReferenceCount() const -> Arxx::u4byte
 {
-	return m_u4ReferenceCount;
+	return m_ReferenceCount;
 }
 
-auto Arxx::ReferenceImplementation::vResolve(Arxx::Item & Item) -> void
+auto Arxx::ReferenceImplementation::Resolve(Arxx::Item & Item) -> void
 {
-	if(pGetItem() != 0)
+	if(GetItem() != nullptr)
 	{
 		throw std::runtime_error("Arxx::ReferenceImplementation::Resolve: Trying to resolve a resolved reference.");
 	}
-	if(Item.GetIdentifier() != u4GetUniqueID())
+	if(Item.GetIdentifier() != GetItemIdentifier())
 	{
 		throw std::runtime_error("Arxx::ReferenceImplementation::Resolve: Trying to resolve a reference with different unique ID.");
 	}
-	m_pItem = &Item;
+	m_Item = std::addressof(Item);
 }
 
-auto Arxx::ReferenceImplementation::vUnresolve() -> void
+auto Arxx::ReferenceImplementation::Unresolve() -> void
 {
-	if(pGetItem() == 0)
+	if(GetItem() == nullptr)
 	{
 		throw std::runtime_error("Arxx::ReferenceImplementation::Unresolve: Trying to unresolve an unresolved reference.");
 	}
-	m_pItem = 0;
+	m_Item = nullptr;
 }
 
-auto Arxx::ReferenceImplementation::vDecoupleFromArchive() -> void
+auto Arxx::ReferenceImplementation::DecoupleFromArchive() -> void
 {
-	m_pArchive = 0;
+	m_Archive = nullptr;
 }

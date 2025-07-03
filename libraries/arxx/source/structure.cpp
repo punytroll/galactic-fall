@@ -37,66 +37,66 @@ Arxx::Structure::Structure(Arxx::Item & Item) :
 {
 }
 
-auto Arxx::Structure::bAdd(Arxx::u4byte u4UniqueID, std::string const & sRelation) -> bool
+auto Arxx::Structure::Add(Arxx::u4byte ItemIdentifier, std::string const & Relation) -> bool
 {
-	if((sRelation == "reference") || (u4UniqueID == g_u4InvalidID))
+	if((Relation == "reference") || (ItemIdentifier == g_InvalidItemIdentifier))
 	{
 		return false;
 	}
 	
-	std::map<std::string, Arxx::Structure::Relation>::iterator iRelation(m_Relations.find(sRelation));
+	std::map<std::string, Arxx::Structure::Relation>::iterator RelationIterator(m_Relations.find(Relation));
 	
-	if(iRelation == m_Relations.end())
+	if(RelationIterator == m_Relations.end())
 	{
-		iRelation = m_Relations.insert(std::make_pair(sRelation, Arxx::Structure::Relation(*this, sRelation))).first;
+		RelationIterator = m_Relations.insert(std::make_pair(Relation, Arxx::Structure::Relation(*this, Relation))).first;
 	}
-	iRelation->second.vAdd(u4UniqueID);
+	RelationIterator->second.Add(ItemIdentifier);
 	
 	return true;
 }
 
-auto Arxx::Structure::bDelete(Arxx::u4byte u4UniqueID, std::string const & sRelation) -> bool
+auto Arxx::Structure::Delete(Arxx::u4byte ItemIdentifier, std::string const & Relation) -> bool
 {
-	if((sRelation == "reference") || (u4UniqueID == g_u4InvalidID))
+	if((Relation == "reference") || (ItemIdentifier == g_InvalidItemIdentifier))
 	{
 		return false;
 	}
 	
-	std::map<std::string, Arxx::Structure::Relation>::iterator iRelation(m_Relations.find(sRelation));
+	std::map<std::string, Arxx::Structure::Relation>::iterator RelationIterator(m_Relations.find(Relation));
 	
-	if(iRelation == m_Relations.end())
+	if(RelationIterator == m_Relations.end())
 	{
 		return false;
 	}
 	
-	return iRelation->second.bDelete(u4UniqueID);
+	return RelationIterator->second.Delete(ItemIdentifier);
 }
 
-auto Arxx::Structure::GetRelation(std::string const & sRelation) const -> Arxx::Structure::Relation const &
+auto Arxx::Structure::GetRelation(std::string const & Relation) const -> Arxx::Structure::Relation const &
 {
-	std::map<std::string, Arxx::Structure::Relation>::const_iterator iRelation(m_Relations.find(sRelation));
+	std::map<std::string, Arxx::Structure::Relation>::const_iterator RelationIterator(m_Relations.find(Relation));
 	
-	if(iRelation == m_Relations.end())
+	if(RelationIterator == m_Relations.end())
 	{
-		throw std::runtime_error("Relation \"" + sRelation + "\" not found.");
+		throw std::runtime_error("Relation \"" + Relation + "\" not found.");
 	}
 	else
 	{
-		return iRelation->second;
+		return RelationIterator->second;
 	}
 }
 
-auto Arxx::Structure::GetRelation(std::string const & sRelation) -> Arxx::Structure::Relation &
+auto Arxx::Structure::GetRelation(std::string const & Relation) -> Arxx::Structure::Relation &
 {
-	std::map<std::string, Arxx::Structure::Relation>::iterator iRelation(m_Relations.find(sRelation));
+	std::map<std::string, Arxx::Structure::Relation>::iterator RelationIterator(m_Relations.find(Relation));
 	
-	if(iRelation == m_Relations.end())
+	if(RelationIterator == m_Relations.end())
 	{
-		throw std::runtime_error("Relation \"" + sRelation + "\" not found.");
+		throw std::runtime_error("Relation \"" + Relation + "\" not found.");
 	}
 	else
 	{
-		return iRelation->second;
+		return RelationIterator->second;
 	}
 }
 
@@ -125,26 +125,26 @@ auto Arxx::Structure::end() const -> Arxx::Structure::const_iterator
 	return m_Relations.end();
 }
 
-static auto u4GetU4Byte(std::istream & IStream) -> Arxx::u4byte
+static auto GetU4Byte(std::istream & IStream) -> Arxx::u4byte
 {
-	Arxx::u4byte u4Result(0);
+	Arxx::u4byte Result(0);
 	
-	IStream.read(reinterpret_cast< std::istream::char_type * >(&u4Result), sizeof(Arxx::u4byte));
-	u4Result = ntohl(u4Result);
+	IStream.read(reinterpret_cast< std::istream::char_type * >(&Result), sizeof(Arxx::u4byte));
+	Result = ntohl(Result);
 	
-	return u4Result;
+	return Result;
 }
 
-static auto sGetString(std::istream & IStream) -> std::string
+static auto GetString(std::istream & IStream) -> std::string
 {
-	std::string sResult;
-	char cChar(0);
+	std::string Result;
+	char Char(0);
 	
-	while(IStream.get(cChar))
+	while(IStream.get(Char))
 	{
-		if(cChar != '\0')
+		if(Char != '\0')
 		{
-			sResult += cChar;
+			Result += Char;
 		}
 		else
 		{
@@ -152,76 +152,76 @@ static auto sGetString(std::istream & IStream) -> std::string
 		}
 	}
 	
-	return sResult;
+	return Result;
 }
 
-auto Arxx::Structure::vRemoveRelation(Arxx::Structure::Relation * pRelation) -> void
+auto Arxx::Structure::RemoveRelation(Arxx::Structure::Relation * Relation) -> void
 {
-	std::map<std::string, Arxx::Structure::Relation>::iterator iRelation(m_Relations.begin());
+	std::map<std::string, Arxx::Structure::Relation>::iterator RelationIterator(m_Relations.begin());
 	
-	while(iRelation != m_Relations.end())
+	while(RelationIterator != m_Relations.end())
 	{
-		if(&(iRelation->second) == pRelation)
+		if(std::addressof(RelationIterator->second) == Relation)
 		{
-			m_Relations.erase(iRelation);
+			m_Relations.erase(RelationIterator);
 			
 			return;
 		}
-		++iRelation;
+		++RelationIterator;
 	}
 }
 
-auto Arxx::Structure::bHasRelation(std::string const & sRelation) const -> bool
+auto Arxx::Structure::HasRelation(std::string const & Relation) const -> bool
 {
-	return m_Relations.find(sRelation) != m_Relations.end();
+	return m_Relations.find(Relation) != m_Relations.end();
 }
 
-auto Arxx::Structure::vReadFromStream(Arxx::u4byte u4StructureDataLength, std::istream & IStream) -> void
+auto Arxx::Structure::ReadFromStream(Arxx::u4byte StructureDataLength, std::istream & IStream) -> void
 {
-	while(u4StructureDataLength > 0)
+	while(StructureDataLength > 0)
 	{
-		std::string sRelation(sGetString(IStream));
+		std::string Relation(GetString(IStream));
 		
 		assert(IStream);
-		u4StructureDataLength -= sRelation.length() + 1;
+		StructureDataLength -= Relation.length() + 1;
 		
-		Arxx::u4byte u4ItemCount(u4GetU4Byte(IStream));
+		Arxx::u4byte ItemCount(GetU4Byte(IStream));
 		
 		assert(IStream);
-		u4StructureDataLength -= 4;
-		while(u4ItemCount > 0)
+		StructureDataLength -= 4;
+		while(ItemCount > 0)
 		{
-			Arxx::u4byte u4UniqueID(u4GetU4Byte(IStream));
+			Arxx::u4byte ItemIdentifier(GetU4Byte(IStream));
 			
 			assert(IStream);
-			u4StructureDataLength -= 4;
-			bAdd(u4UniqueID, sRelation);
-			--u4ItemCount;
+			StructureDataLength -= 4;
+			Add(ItemIdentifier, Relation);
+			--ItemCount;
 		}
 	}
 }
 
-auto Arxx::Structure::vWriteToBuffer(Arxx::Buffer & Buffer) const -> void
+auto Arxx::Structure::WriteToBuffer(Arxx::Buffer & Buffer) const -> void
 {
 	Arxx::BufferWriter BufferWriter(Buffer);
-	std::map<std::string, Arxx::Structure::Relation>::const_iterator iRelation(m_Relations.begin());
+	std::map<std::string, Arxx::Structure::Relation>::const_iterator RelationIterator(m_Relations.begin());
 	
-	while(iRelation != m_Relations.end())
+	while(RelationIterator != m_Relations.end())
 	{
-		BufferWriter << iRelation->first;
+		BufferWriter << RelationIterator->first;
 		
-		const Arxx::Structure::Relation & Relation(iRelation->second);
+		const Arxx::Structure::Relation & Relation(RelationIterator->second);
 		
 		BufferWriter << static_cast< Arxx::u4byte >(htonl(Relation.size()));
 		
-		Arxx::Structure::Relation::const_iterator iReference(Relation.begin());
+		Arxx::Structure::Relation::const_iterator ReferenceIterator(Relation.begin());
 		
-		while(iReference != Relation.end())
+		while(ReferenceIterator != Relation.end())
 		{
-			BufferWriter << static_cast< Arxx::u4byte >(htonl(iReference->u4GetUniqueID()));
-			++iReference;
+			BufferWriter << static_cast< Arxx::u4byte >(htonl(ReferenceIterator->GetItemIdentifier()));
+			++ReferenceIterator;
 		}
-		++iRelation;
+		++RelationIterator;
 	}
 }
 
@@ -230,8 +230,8 @@ auto Arxx::Structure::vWriteToBuffer(Arxx::Buffer & Buffer) const -> void
 // Arxx::Structure::iterator                                                                     //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Structure::iterator::iterator(std::map<std::string, Arxx::Structure::Relation>::iterator iRelation) :
-	m_iRelation(iRelation)
+Arxx::Structure::iterator::iterator(std::map<std::string, Arxx::Structure::Relation>::iterator Iterator) :
+	m_Iterator(Iterator)
 {
 }
 
@@ -241,44 +241,44 @@ Arxx::Structure::iterator::~iterator()
 
 auto Arxx::Structure::iterator::operator++() -> Arxx::Structure::iterator &
 {
-	++m_iRelation;
+	++m_Iterator;
 	
 	return *this;
 }
 
 auto Arxx::Structure::iterator::operator*() -> Arxx::Structure::Relation &
 {
-	return m_iRelation->second;
+	return m_Iterator->second;
 }
 
 auto Arxx::Structure::iterator::operator*() const -> Arxx::Structure::Relation const &
 {
-	return m_iRelation->second;
+	return m_Iterator->second;
 }
 
 auto Arxx::Structure::iterator::operator->() -> Arxx::Structure::Relation *
 {
-	return &(m_iRelation->second);
+	return std::addressof(m_Iterator->second);
 }
 
-auto Arxx::Structure::iterator::operator==(Arxx::Structure::iterator const & iRelation) const -> bool
+auto Arxx::Structure::iterator::operator==(Arxx::Structure::iterator const & Other) const -> bool
 {
-	return m_iRelation == iRelation.m_iRelation;
+	return m_Iterator == Other.m_Iterator;
 }
 
-auto Arxx::Structure::iterator::operator!=(Arxx::Structure::iterator const & iRelation) const -> bool
+auto Arxx::Structure::iterator::operator!=(Arxx::Structure::iterator const & Other) const -> bool
 {
-	return m_iRelation != iRelation.m_iRelation;
+	return m_Iterator != Other.m_Iterator;
 }
 
-auto Arxx::Structure::iterator::operator==(Arxx::Structure::const_iterator const & iRelation) const -> bool
+auto Arxx::Structure::iterator::operator==(Arxx::Structure::const_iterator const & Other) const -> bool
 {
-	return m_iRelation == iRelation.m_iRelation;
+	return m_Iterator == Other.m_Iterator;
 }
 
-auto Arxx::Structure::iterator::operator!=(Arxx::Structure::const_iterator const & iRelation) const -> bool
+auto Arxx::Structure::iterator::operator!=(Arxx::Structure::const_iterator const & Other) const -> bool
 {
-	return m_iRelation != iRelation.m_iRelation;
+	return m_Iterator != Other.m_Iterator;
 }
 
 
@@ -286,13 +286,13 @@ auto Arxx::Structure::iterator::operator!=(Arxx::Structure::const_iterator const
 // Arxx::Structure::const_iterator                                                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Structure::const_iterator::const_iterator(std::map<std::string, Arxx::Structure::Relation>::const_iterator iRelation) :
-	m_iRelation(iRelation)
+Arxx::Structure::const_iterator::const_iterator(std::map<std::string, Arxx::Structure::Relation>::const_iterator Iterator) :
+	m_Iterator(Iterator)
 {
 }
 
-Arxx::Structure::const_iterator::const_iterator(Arxx::Structure::iterator iRelation) :
-	m_iRelation(iRelation.m_iRelation)
+Arxx::Structure::const_iterator::const_iterator(Arxx::Structure::iterator Iterator) :
+	m_Iterator(Iterator.m_Iterator)
 {
 }
 
@@ -302,34 +302,34 @@ Arxx::Structure::const_iterator::~const_iterator()
 
 auto Arxx::Structure::const_iterator::operator++() -> Arxx::Structure::const_iterator &
 {
-	++m_iRelation;
+	++m_Iterator;
 	
 	return *this;
 }
 
 auto Arxx::Structure::const_iterator::operator*() const -> Arxx::Structure::Relation const &
 {
-	return m_iRelation->second;
+	return m_Iterator->second;
 }
 
 auto Arxx::Structure::const_iterator::operator->() -> Arxx::Structure::Relation const *
 {
-	return std::addressof(m_iRelation->second);
+	return std::addressof(m_Iterator->second);
 }
 
 auto Arxx::Structure::const_iterator::operator==(Arxx::Structure::const_iterator const & Other) const -> bool
 {
-	return m_iRelation == Other.m_iRelation;
+	return m_Iterator == Other.m_Iterator;
 }
 
 auto Arxx::Structure::const_iterator::operator!=(Arxx::Structure::const_iterator const & Other) const -> bool
 {
-	return m_iRelation != Other.m_iRelation;
+	return m_Iterator != Other.m_Iterator;
 }
 
 auto Arxx::operator<<(Arxx::Buffer & Buffer, Arxx::Structure const & Structure) -> Arxx::Buffer &
 {
-	Structure.vWriteToBuffer(Buffer);
+	Structure.WriteToBuffer(Buffer);
 	
 	return Buffer;
 }

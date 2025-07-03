@@ -29,92 +29,92 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Arxx::Reference::Reference(Arxx::Item & Item) :
-	m_pReference(Arxx::ReferenceImplementation::pGetReference(Item))
+	m_ReferenceImplementation{Arxx::ReferenceImplementation::Create(Item)}
 {
 }
 
-Arxx::Reference::Reference(Arxx::u4byte u4UniqueID, Arxx::Archive * pArchive) :
-	m_pReference(Arxx::ReferenceImplementation::pGetReference(u4UniqueID, pArchive))
+Arxx::Reference::Reference(Arxx::u4byte ItemIdentifier, Arxx::Archive * Archive) :
+	m_ReferenceImplementation{Arxx::ReferenceImplementation::Create(ItemIdentifier, Archive)}
 {
 }
 
 Arxx::Reference::Reference(Arxx::Reference const & Reference) :
-	m_pReference(nullptr)
+	m_ReferenceImplementation{nullptr}
 {
-	vChangeReference(Reference.m_pReference);
+	ChangeReferenceImplementation(Reference.m_ReferenceImplementation);
 }
 
 Arxx::Reference::~Reference()
 {
-	vChangeReference(0);
+	ChangeReferenceImplementation(nullptr);
 }
 
-auto Arxx::Reference::u4GetUniqueID() const -> Arxx::u4byte
+auto Arxx::Reference::GetItemIdentifier() const -> Arxx::u4byte
 {
-	return m_pReference->u4GetUniqueID();
+	return m_ReferenceImplementation->GetItemIdentifier();
 }
 
-auto Arxx::Reference::pGetItem() -> Arxx::Item *
+auto Arxx::Reference::GetItem() -> Arxx::Item *
 {
-	return m_pReference->pGetItem();
+	return m_ReferenceImplementation->GetItem();
 }
 
-auto Arxx::Reference::pGetItem() const -> Arxx::Item const *
+auto Arxx::Reference::GetItem() const -> Arxx::Item const *
 {
-	return m_pReference->pGetItem();
+	return m_ReferenceImplementation->GetItem();
 }
 
-auto Arxx::Reference::u4GetReferenceCount() const -> Arxx::u4byte
+auto Arxx::Reference::GetReferenceCount() const -> Arxx::u4byte
 {
-	return m_pReference->u4GetReferenceCount();
+	return m_ReferenceImplementation->GetReferenceCount();
 }
 
-auto Arxx::Reference::vResolve(Arxx::Item & Item) -> void
+auto Arxx::Reference::Resolve(Arxx::Item & Item) -> void
 {
-	m_pReference->vResolve(Item);
+	m_ReferenceImplementation->Resolve(Item);
 }
 
-auto Arxx::Reference::vUnresolve() -> void
+auto Arxx::Reference::Unresolve() -> void
 {
-	m_pReference->vUnresolve();
+	m_ReferenceImplementation->Unresolve();
 }
 
-auto Arxx::Reference::bAttach(Arxx::Reference & Reference) -> bool
+auto Arxx::Reference::Attach(Arxx::Reference & Reference) -> bool
 {
-	if((Reference.u4GetUniqueID() != u4GetUniqueID()) || (Reference.pGetItem() != 0))
+	if((Reference.GetItemIdentifier() != GetItemIdentifier()) || (Reference.GetItem() != nullptr))
 	{
 		return false;
 	}
-	Reference.vChangeReference(m_pReference);
+	Reference.ChangeReferenceImplementation(m_ReferenceImplementation);
 	
 	return true;
 }
 
-auto Arxx::Reference::bDetach() -> bool
+auto Arxx::Reference::Detach() -> bool
 {
-	Arxx::ReferenceImplementation * pReference(Arxx::ReferenceImplementation::pGetReference(u4GetUniqueID()));
+	Arxx::ReferenceImplementation * ReferenceImplementation(Arxx::ReferenceImplementation::Create(GetItemIdentifier()));
 	
-	vChangeReference(pReference);
+	ChangeReferenceImplementation(ReferenceImplementation);
 	// releasing the local pointer
-	Arxx::ReferenceImplementation::bRelease(pReference);
+	Arxx::ReferenceImplementation::Release(ReferenceImplementation);
 	
 	return true;
 }
 
-auto Arxx::Reference::vDecoupleFromArchive() -> void
+auto Arxx::Reference::DecoupleFromArchive() -> void
 {
-	m_pReference->vDecoupleFromArchive();
+	m_ReferenceImplementation->DecoupleFromArchive();
 }
 
-auto Arxx::Reference::vChangeReference(Arxx::ReferenceImplementation * pReference) -> void
+auto Arxx::Reference::ChangeReferenceImplementation(Arxx::ReferenceImplementation * ReferenceImplementation) -> void
 {
-	if(m_pReference != nullptr)
+	if(m_ReferenceImplementation != nullptr)
 	{
-		Arxx::ReferenceImplementation::bRelease(m_pReference);
-		m_pReference = nullptr;
+		Arxx::ReferenceImplementation::Release(m_ReferenceImplementation);
+		m_ReferenceImplementation = nullptr;
 	}
-	if(pReference != nullptr)
+	if(ReferenceImplementation != nullptr)
 	{
-		m_pReference = Arxx::ReferenceImplementation::pGetReference(pReference);
+		m_ReferenceImplementation = Arxx::ReferenceImplementation::Create(ReferenceImplementation);
 	}
 }

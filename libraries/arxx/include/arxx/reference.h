@@ -61,7 +61,7 @@ namespace Arxx
 		 * 
 		 * This constructor will of course create a new ReferenceImplementation object so it can store its unresolved reference.
 		 **/
-		Reference(Arxx::u4byte u4UniqueID, Arxx::Archive * pArchive = nullptr);
+		Reference(Arxx::u4byte ItemIdentifier, Arxx::Archive * Archive = nullptr);
 		
 		/**
 		 * @brief Constructs a Arxx::Reference from another Reference object.
@@ -79,11 +79,11 @@ namespace Arxx
 		virtual ~Reference();
 		
 		/**
-		 * @brief Returns the unique ID of the reference.
+		 * @brief Returns the item identifier of the reference.
 		 * 
-		 * It does not matter if the reference is resolved or unresolved, the unique ID is certain to be returned.
+		 * It does not matter if the reference is resolved or unresolved, the item identifier is certain to be returned.
 		 **/
-		auto u4GetUniqueID() const -> Arxx::u4byte;
+		auto GetItemIdentifier() const -> Arxx::u4byte;
 		
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
@@ -94,7 +94,7 @@ namespace Arxx
 		 * 
 		 * @sa Arxx::ReferenceImplementation::pGetItem().
 		 **/
-		auto pGetItem() -> Arxx::Item *;
+		auto GetItem() -> Arxx::Item *;
 		
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
@@ -105,7 +105,7 @@ namespace Arxx
 		 * 
 		 * @sa Arxx::ReferenceImplementation::pGetItem().
 		 **/
-		auto pGetItem() const -> Arxx::Item const *;
+		auto GetItem() const -> Arxx::Item const *;
 		
 		/**
 		 * @brief Returns m_u4ReferenceCounter, the number of Arxx::Reference objects that hold @em this ReferenceImplementation object.
@@ -114,7 +114,7 @@ namespace Arxx
 		 * 
 		 * @sa Arxx::ReferenceImplementation::u4GetReferenceCount().
 		 **/
-		auto u4GetReferenceCount() const -> Arxx::u4byte;
+		auto GetReferenceCount() const -> Arxx::u4byte;
 		
 		/**
 		 * @brief Resolves an unresolved reference with a given item.
@@ -124,7 +124,7 @@ namespace Arxx
 		 * 
 		 * @sa Arxx::ReferenceImplementation::vResolve().
 		 **/
-		auto vResolve(Arxx::Item & Item) -> void;
+		auto Resolve(Arxx::Item & Item) -> void;
 		
 		/**
 		 * @brief Unresolves the resolved reference.
@@ -133,7 +133,7 @@ namespace Arxx
 		 * 
 		 * @sa Arxx::ReferenceImplementation::vUnresolve().
 		 **/
-		auto vUnresolve() -> void;
+		auto Unresolve() -> void;
 		
 		/**
 		 * @brief This function will attach another Reference object representing the same Item.
@@ -145,7 +145,7 @@ namespace Arxx
 		 * 
 		 * This function will return with false if either the unique IDs don't match or @a Reference is resolved.
 		 **/
-		auto bAttach(Arxx::Reference & Reference) -> bool;
+		auto Attach(Arxx::Reference & Reference) -> bool;
 		
 		/**
 		 * @brief This function will detach the Reference object from the Reference set.
@@ -156,27 +156,27 @@ namespace Arxx
 		 * 
 		 * This Reference and its ReferenceImplementation will be unresolved after this, and decoupled from any Archive that it may have been connected to prior to this call.
 		 **/
-		auto bDetach() -> bool;
+		auto Detach() -> bool;
 		
 		/**
 		 * @brief This function will reset the Archive pointer to `0`.
 		 * 
 		 * It is only used by the Arxx::Archive and should not be used elsewhere. Probably it should be private.
 		 **/
-		auto vDecoupleFromArchive() -> void;
+		auto DecoupleFromArchive() -> void;
 		
 		auto operator<(Arxx::Reference const & Other) const -> bool
 		{
-			return u4GetUniqueID() < Other.u4GetUniqueID();
+			return GetItemIdentifier() < Other.GetItemIdentifier();
 		}
         
 	private:
 		/**
 		 * @brief Small helper function.
 		 **/
-		auto vChangeReference(Arxx::ReferenceImplementation * pReference) -> void;
+		auto ChangeReferenceImplementation(Arxx::ReferenceImplementation * ReferenceImplementation) -> void;
 		
-		Arxx::ReferenceImplementation * m_pReference;
+		Arxx::ReferenceImplementation * m_ReferenceImplementation;
         
 	};
 }

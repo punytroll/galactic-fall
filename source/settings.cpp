@@ -85,7 +85,7 @@ void Settings::SetWindowDimensions(const Vector2f & WindowDimensions)
 
 void Settings::LoadFromItem(Arxx::Item * Item)
 {
-	if(Item->GetStructure().bHasRelation("child") == false)
+	if(Item->GetStructure().HasRelation("child") == false)
 	{
 		throw std::runtime_error("The item '" + Item->GetName() + "' does not contain a 'child' relation.");
 	}

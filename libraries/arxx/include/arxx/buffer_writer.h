@@ -44,7 +44,7 @@ namespace Arxx
 		 * @brief The BufferWriter constructor.
 		 * @note Sets the Buffers IO position to the buffer's length.
 		 **/
-		BufferWriter(Arxx::Buffer & Buffer, Arxx::Buffer::size_type stPosition = Arxx::Buffer::Marker::END);
+		BufferWriter(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position = Arxx::Buffer::Marker::END);
 		
 		/**
 		 * @brief A copy constructor for the BufferWriter.
@@ -58,7 +58,7 @@ namespace Arxx
 		 * @param stDataLength The length of the data block @a Data
 		 * @param Data The data block to insert at the writer's position. May be omitted to insert @a stDataLength zeroed bytes.
 		 **/
-		auto vWrite(Arxx::Buffer::size_type stDataLength, Arxx::Buffer::const_pointer Data = 0) -> void;
+		auto Write(Arxx::Buffer::size_type DataLength, Arxx::Buffer::const_pointer Data = nullptr) -> void;
 		
 		/**
 		 * @brief Returns the associated Arxx::Buffer object.
@@ -75,12 +75,12 @@ namespace Arxx
 		/**
 		 * @brief Returns the marker's position.
 		 **/
-		auto stGetPosition() const -> Arxx::Buffer::size_type;
+		auto GetPosition() const -> Arxx::Buffer::size_type;
 		
 		/**
 		 * @brief Sets the marker's position.
 		 **/
-		auto vSetPosition(Arxx::Buffer::size_type stPosition) -> void;
+		auto SetPosition(Arxx::Buffer::size_type Position) -> void;
         
 	private:
 		Arxx::Buffer & m_Buffer;
@@ -91,43 +91,43 @@ namespace Arxx
 	/**
 	 * @brief A helper function for storing a std::string instance in a buffer.
 	 * @param BufferWriter The buffer in which the string will be stored.
-	 * @param sString The string which is about to be stored.
+	 * @param String The string which is about to be stored.
 	 * @return The BufferWriter after the input execution.
 	 *
-	 * This helper function stores the std::string @a sString in the buffer @a Buffer. It uses the Buffers::Buffer::vInput function so that the buffer current I/O position will be used as the insertion position. Therefore also the overwrite state of the buffer will be adhered. Afterwards the I/O position will be set to the end of the insertion by Buffer::Buffer::vInput().
+	 * This helper function stores the std::string @a String in the buffer @a Buffer. It uses the Buffers::Buffer::vInput function so that the buffer current I/O position will be used as the insertion position. Therefore also the overwrite state of the buffer will be adhered. Afterwards the I/O position will be set to the end of the insertion by Buffer::Buffer::vInput().
 	 *
 	 * @note The string will be stored as a zero-terminated string so that a trailing zero will be appended.
 	 **/
-	auto operator<<(Arxx::BufferWriter & BufferWriter, std::string const & sString) -> Arxx::BufferWriter &;
+	auto operator<<(Arxx::BufferWriter & BufferWriter, std::string const & String) -> Arxx::BufferWriter &;
 
 	/**
 	 * @brief A helper function for storing a C string in a buffer.
 	 * @param BufferWriter The buffer in which the C string will be stored.
-	 * @param pcString The C string which is about to be stored.
+	 * @param String The C string which is about to be stored.
 	 * @return The BufferWriter after the input execution.
 	 *
-	 * This helper function stores the C string @a pcString in the buffer @a Buffer.
+	 * This helper function stores the C string @a String in the buffer @a Buffer.
 	 * 
 	 * The function uses strlen(3) to determine the length of the string.
 	 *
 	 * @note The string will be stored as a zero-terminated string so that a trailing zero will be appended.
 	 **/
-	auto operator<<(Arxx::BufferWriter & BufferWriter, const char * pcString) -> Arxx::BufferWriter &;
+	auto operator<<(Arxx::BufferWriter & BufferWriter, const char * String) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function for storing float numbers in a buffer.
 	 * @param BufferWriter The buffer in which the float number will be stored.
-	 * @param fValue The float value which is to be stored.
+	 * @param Value The float value which is to be stored.
 	 * @return The BufferWriter after the input execution.
 	 * 
-	 * This function stores the float value @a fValue in the buffer using an input function.
+	 * This function stores the float value @a Value in the buffer using an input function.
 	 **/
-	auto operator<<(Arxx::BufferWriter & BufferWriter, float fValue) -> Arxx::BufferWriter &;
+	auto operator<<(Arxx::BufferWriter & BufferWriter, float Value) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function for storing Arxx::u1byte objects in a buffer.
 	 * @param BufferWriter The buffer in which the Arxx::u1byte will be stored.
-	 * @param u4Value The Arxx::u1byte value which is to be stored.
+	 * @param Value The Arxx::u1byte value which is to be stored.
 	 * @return The BufferWriter after the input execution.
 	 * 
 	 * This function stores the Arxx::u1byte value @a Value in the buffer using an input function.
@@ -137,42 +137,42 @@ namespace Arxx
 	/**
 	 * @brief A helper function for storing Arxx::u4byte objects in a buffer.
 	 * @param BufferWriter The buffer in which the Arxx::u4byte will be stored.
-	 * @param u4Value The Arxx::u4byte value which is to be stored.
+	 * @param Value The Arxx::u4byte value which is to be stored.
 	 * @return The BufferWriter after the input execution.
 	 * 
-	 * This function stores the Arxx::u4byte value @a u4Value in the buffer using an input function.
+	 * This function stores the Arxx::u4byte value @a Value in the buffer using an input function.
 	 **/
-	auto operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u4byte u4Value) -> Arxx::BufferWriter &;
+	auto operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u4byte Value) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function for storing Arxx::u8byte objects in a buffer.
 	 * @param BufferWriter The buffer in which the Arxx::u8byte will be stored.
-	 * @param u8Value The Arxx::u8byte value which is to be stored.
+	 * @param Value The Arxx::u8byte value which is to be stored.
 	 * @return The BufferWriter after the input execution.
 	 * 
-	 * This function stores the Arxx::u8byte value @a u8Value in the buffer using an input function.
+	 * This function stores the Arxx::u8byte value @a Value in the buffer using an input function.
 	 **/
-	auto operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u8byte u8Value) -> Arxx::BufferWriter &;
+	auto operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u8byte Value) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function for storing bool objects in a buffer.
 	 * @param BufferWriter The buffer in which the bool will be stored.
-	 * @param bValue The bool value which is to be stored.
+	 * @param Value The bool value which is to be stored.
 	 * @return The BufferWriter after the input execution.
 	 * 
-	 * This function stores the bool value @a bValue in the buffer using an input function.
+	 * This function stores the bool value @a Value in the buffer using an input function.
 	 **/
-	auto operator<<(Arxx::BufferWriter & BufferWriter, bool bValue) -> Arxx::BufferWriter &;
+	auto operator<<(Arxx::BufferWriter & BufferWriter, bool Value) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function for storing char objects in a buffer.
 	 * @param BufferWriter The buffer in which the bool will be stored.
-	 * @param cValue The char value which is to be stored.
+	 * @param Value The char value which is to be stored.
 	 * @return The BufferWriter after the input execution.
 	 * 
-	 * This function stores the char value @a cValue in the buffer using an input function.
+	 * This function stores the char value @a Value in the buffer using an input function.
 	 **/
-	auto operator<<(Arxx::BufferWriter & BufferWriter, char cValue) -> Arxx::BufferWriter &;
+	auto operator<<(Arxx::BufferWriter & BufferWriter, char Value) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function that allows filling a buffer from an std::istream.

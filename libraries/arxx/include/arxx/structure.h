@@ -85,7 +85,7 @@ namespace Arxx
 				 *
 				 * This constructor creates a Reference iterator from an STL iterator.
 				 **/
-				iterator(std::multimap< Arxx::u4byte, Arxx::Reference >::iterator iReference);
+				iterator(std::multimap< Arxx::u4byte, Arxx::Reference >::iterator Iterator);
 				
 				/**
 				 * @brief The destructor of a Reference iterator.
@@ -148,7 +148,7 @@ namespace Arxx
 				 * 
 				 * This is an iterator into the Relation's internal Reference map.
 				 **/
-				std::multimap< Arxx::u4byte, Arxx::Reference >::iterator m_iReference;
+				std::multimap< Arxx::u4byte, Arxx::Reference >::iterator m_Iterator;
                 
 			};
 			
@@ -168,7 +168,7 @@ namespace Arxx
 				 *
 				 * This constructor creates a const Reference iterator from an STL iterator.
 				 **/
-				const_iterator(std::multimap< Arxx::u4byte, Arxx::Reference >::const_iterator iReference);
+				const_iterator(std::multimap< Arxx::u4byte, Arxx::Reference >::const_iterator Iterator);
 				
 				/**
 				 * @brief The constructor of a const Reference iterator from a non-const iterator.
@@ -176,7 +176,7 @@ namespace Arxx
 				 *
 				 * This constructor creates a const Reference iterator from a non-const Reference iterator.
 				 **/
-				const_iterator(Arxx::Structure::Relation::iterator iIterator);
+				const_iterator(Arxx::Structure::Relation::iterator Iterator);
 				
 				/**
 				 * @brief The destructor of a const Reference iterator.
@@ -220,7 +220,7 @@ namespace Arxx
 				 * 
 				 * This is an iterator into a Relation's internal Reference map.
 				 **/
-				std::multimap< Arxx::u4byte, Arxx::Reference >::const_iterator m_iReference;
+				std::multimap< Arxx::u4byte, Arxx::Reference >::const_iterator m_Iterator;
                 
 			};
 			
@@ -230,7 +230,7 @@ namespace Arxx
 			 * 
 			 * This function adds a reference to a unique ID to the relation.
 			 **/
-			auto vAdd(Arxx::u4byte u4UniqueID) -> void;
+			auto Add(Arxx::u4byte ItemIdentifier) -> void;
 			
 			/**
 			 * @brief Removes a reference with a certain unique ID from the relation.
@@ -238,7 +238,7 @@ namespace Arxx
 			 * 
 			 * This function removes a reference with a certain unique ID from the relation.
 			 **/
-			auto bDelete(Arxx::u4byte u4UniqueID) -> bool;
+			auto Delete(Arxx::u4byte ItemIdentifier) -> bool;
 			
 			/**
 			 * @brief Gets a list of pointers to the items with the specified name.
@@ -281,7 +281,7 @@ namespace Arxx
 			/**
 			 * @brief Returns the name of the relation.
 			 **/
-			auto sGetName() const -> std::string const &;
+			auto GetName() const -> std::string const &;
             
 		private:
 			/**
@@ -289,7 +289,7 @@ namespace Arxx
 			 * @param Structure The structure object that this relation is linked to.
 			 * @param sName The unique name of the relation inside the related Structure.
 			 **/
-			Relation(Arxx::Structure & Structure, std::string const & sName);
+			Relation(Arxx::Structure & Structure, std::string const & Name);
 			
 			/**
 			 * @brief The related Structure object.
@@ -306,7 +306,7 @@ namespace Arxx
 			/**
 			 * @brief The name of the relation.
 			 **/
-			std::string m_sName;
+			std::string m_Name;
             
 		};
 		
@@ -330,7 +330,7 @@ namespace Arxx
 			 *
 			 * This constructor creates a Relation iterator from an STL iterator.
 			 **/
-			iterator(std::map< std::string, Arxx::Structure::Relation >::iterator iRelation);
+			iterator(std::map< std::string, Arxx::Structure::Relation >::iterator Iterator);
 			
 			/**
 			 * @brief The destructor of a Relation iterator.
@@ -393,7 +393,7 @@ namespace Arxx
 			 * 
 			 * This is an iterator into the Structure's internal Relation map.
 			 **/
-			std::map< std::string, Arxx::Structure::Relation >::iterator m_iRelation;
+			std::map< std::string, Arxx::Structure::Relation >::iterator m_Iterator;
             
 		};
 		
@@ -413,7 +413,7 @@ namespace Arxx
 			 *
 			 * This constructor creates a const Relation iterator from an STL iterator.
 			 **/
-			const_iterator(std::map< std::string, Arxx::Structure::Relation >::const_iterator iRelation);
+			const_iterator(std::map< std::string, Arxx::Structure::Relation >::const_iterator Iterator);
 			
 			/**
 			 * @brief The constructor of a const Relation iterator from a non-const Relation iterator.
@@ -421,7 +421,7 @@ namespace Arxx
 			 *
 			 * This constructor creates a const Relation iterator from a non-const Relation iterator.
 			 **/
-			const_iterator(Arxx::Structure::iterator iRelation);
+			const_iterator(Arxx::Structure::iterator Iterator);
 			
 			/**
 			 * @brief The destructor of a const Relation iterator.
@@ -465,7 +465,7 @@ namespace Arxx
 			 * 
 			 * This is an iterator into a Structure's internal Relation map.
 			 **/
-			std::map< std::string, Arxx::Structure::Relation >::const_iterator m_iRelation;
+			std::map< std::string, Arxx::Structure::Relation >::const_iterator m_Iterator;
             
 		};
 		
@@ -479,8 +479,8 @@ namespace Arxx
 		
 		/**
 		 * @brief Adds an unresolved item reference to a relation.
-		 * @param sRelation The relation that is changed with this call.
-		 * @param u4UniqueID A unique ID that is to be added to the relation.
+		 * @param Relation The relation that is changed with this call.
+		 * @param ItemIdentifier A unique ID that is to be added to the relation.
 		 * @return A boolean value indicating whether the operation has been performed successfully.
 		 * 
 		 * This function will add the unique ID @a u4UniqueID to the relation identified by @a sRelation.
@@ -493,12 +493,12 @@ namespace Arxx
 		 * 
 		 * This function will create the relation if it does not exist yet and the unresolved reference with the unique ID @a u4UniqueID will be the only member of this new relation.
 		 **/
-		auto bAdd(Arxx::u4byte u4UniqueID, std::string const & sRelation = "child") -> bool;
+		auto Add(Arxx::u4byte ItemIdentifier, std::string const & Relation = "child") -> bool;
 		
 		/**
 		 * @brief Deletes an unresolved item reference from a relation.
-		 * @param sRelation The relation that is changed with this call.
-		 * @param u4UniqueID The unique item id that is tried to be deleted from the relation.
+		 * @param Relation The relation that is changed with this call.
+		 * @param ItemIdentifier The unique item id that is tried to be deleted from the relation.
 		 * @return A boolean value indicating whether the operation has been performed successfully.
 		 * 
 		 * This function will delete the unresolved item reference referring to an item with unique id u4UniqueID from the relation indicated by @a sRelation.
@@ -515,7 +515,7 @@ namespace Arxx
 		 * 
 		 * If the deleted item reference was the last one in the relation so that the relation @a sRelation is now empty it is deleted from the relations container.
 		 **/
-		auto bDelete(Arxx::u4byte u4UniqueID, std::string const & sRelation = "child") -> bool;
+		auto Delete(Arxx::u4byte ItemIdentifier, std::string const & Relation = "child") -> bool;
 		
 		/**
 		 * @brief The const accessor for constant relations.
@@ -524,7 +524,7 @@ namespace Arxx
 		 * 
 		 * This function returns a reference to a Arxx::Structure::Relation object which you can use to query the content of this relation.
 		 **/
-		auto GetRelation(std::string const & sRelation) const -> Arxx::Structure::Relation const &;
+		auto GetRelation(std::string const & Relation) const -> Arxx::Structure::Relation const &;
 		
 		/**
 		 * @brief The accessor for relations.
@@ -533,13 +533,13 @@ namespace Arxx
 		 * 
 		 * This function returns a reference to a Arxx::Structure::Relation object which you can use to query and modify the content of this relation.
 		 **/
-		auto GetRelation(std::string const & sRelation) -> Arxx::Structure::Relation &;
+		auto GetRelation(std::string const & Relation) -> Arxx::Structure::Relation &;
 		
 		/**
 		 * @brief Query whether a paricular relation exists.
 		 * @param sRelation The name of the relation.
 		 **/
-		auto bHasRelation(std::string const & sRelation) const -> bool;
+		auto HasRelation(std::string const & Relation) const -> bool;
 		
 		/**
 		 * @brief Returns the number of Relations in the Structure.
@@ -575,11 +575,11 @@ namespace Arxx
 		 * 
 		 * This function simply appends the structure information to the @a Buffer.
 		 **/
-		auto vWriteToBuffer(Arxx::Buffer & Buffer) const -> void;
+		auto WriteToBuffer(Arxx::Buffer & Buffer) const -> void;
 		
-		auto vReadFromStream(Arxx::u4byte u4StructureDataLength, std::istream & IStream) -> void;
+		auto ReadFromStream(Arxx::u4byte StructureDataLength, std::istream & IStream) -> void;
 		
-		auto vRemoveRelation(Arxx::Structure::Relation * pRelation) -> void;
+		auto RemoveRelation(Arxx::Structure::Relation * Relation) -> void;
         
 		Arxx::Item & m_Item;
 		std::map< std::string, Arxx::Structure::Relation > m_Relations;

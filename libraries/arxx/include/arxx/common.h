@@ -60,7 +60,7 @@ namespace Arxx
 	 *
 	 * This value mainly serves as a return value. If you call a function that returns an Item's unique ID this value is sematically the same as if the Arxx::Item pointer was returned with 0.
 	 **/
-	const u4byte g_u4InvalidID = 0xFFFFFFFF;
+	const u4byte g_InvalidItemIdentifier = 0xFFFFFFFF;
 	
 	/**
 	 * @brief An exception class indicating that a given ID is not unique.

@@ -20,32 +20,32 @@
 #include <arxx/buffer.h>
 #include <arxx/buffer_reader.h>
 
-Arxx::BufferReader::BufferReader(Arxx::Buffer const & Buffer, Arxx::Buffer::size_type stPosition) :
+Arxx::BufferReader::BufferReader(Arxx::Buffer const & Buffer, Arxx::Buffer::size_type Position) :
 	m_Buffer(Buffer),
-	m_Marker(Buffer, stPosition, Arxx::Buffer::Marker::LEFT)
+	m_Marker(Buffer, Position, Arxx::Buffer::Marker::LEFT)
 {
 }
 
 Arxx::BufferReader::BufferReader(Arxx::BufferReader const & Other) :
 	m_Buffer(Other.m_Buffer),
-	m_Marker(Other.m_Buffer, Other.stGetPosition(), Arxx::Buffer::Marker::LEFT)
+	m_Marker(Other.m_Buffer, Other.GetPosition(), Arxx::Buffer::Marker::LEFT)
 {
 }
 
-auto Arxx::BufferReader::stRead(Arxx::Buffer::size_type stLength, Arxx::Buffer::pointer Buffer) -> Arxx::Buffer::size_type
+auto Arxx::BufferReader::Read(Arxx::Buffer::size_type Length, Arxx::Buffer::pointer Buffer) -> Arxx::Buffer::size_type
 {
-	if(m_Marker.bIsValid() == false)
+	if(m_Marker.IsValid() == false)
 	{
-		throw std::runtime_error("Arxx::BufferWriter::vWrite: Buffer was destroyed.");
+		throw std::runtime_error("Arxx::BufferWriter::Write: Buffer was destroyed.");
 	}
-	if(m_Marker.stGetPosition() + stLength > m_Buffer.stGetLength())
+	if(m_Marker.GetPosition() + Length > m_Buffer.GetLength())
 	{
 		throw std::out_of_range("Trying to read after the end.");
 	}
-	std::copy(m_Buffer.GetBegin() + m_Marker.stGetPosition(), m_Buffer.GetBegin() + m_Marker.stGetPosition() + stLength, Buffer);
-	m_Marker.vSetPosition(m_Marker.stGetPosition() + stLength);
+	std::copy(m_Buffer.GetBegin() + m_Marker.GetPosition(), m_Buffer.GetBegin() + m_Marker.GetPosition() + Length, Buffer);
+	m_Marker.SetPosition(m_Marker.GetPosition() + Length);
 	
-	return stLength;
+	return Length;
 }
 
 auto Arxx::BufferReader::GetBuffer() const -> Arxx::Buffer const &
@@ -53,67 +53,67 @@ auto Arxx::BufferReader::GetBuffer() const -> Arxx::Buffer const &
 	return m_Buffer;
 }
 
-auto Arxx::BufferReader::stGetPosition() const -> Arxx::Buffer::size_type
+auto Arxx::BufferReader::GetPosition() const -> Arxx::Buffer::size_type
 {
-	return m_Marker.stGetPosition();
+	return m_Marker.GetPosition();
 }
 
-auto Arxx::BufferReader::vSetPosition(Arxx::Buffer::size_type stPosition) -> void
+auto Arxx::BufferReader::SetPosition(Arxx::Buffer::size_type Position) -> void
 {
-	return m_Marker.vSetPosition(stPosition);
+	return m_Marker.SetPosition(Position);
 }
 
-auto Arxx::operator>>(Arxx::BufferReader & BufferReader, std::string & sString) -> Arxx::BufferReader &
+auto Arxx::operator>>(Arxx::BufferReader & BufferReader, std::string & String) -> Arxx::BufferReader &
 {
-	const Arxx::Buffer & Buffer(BufferReader.GetBuffer());
-	Arxx::Buffer::size_type stIndex(BufferReader.stGetPosition());
-	Arxx::Buffer::size_type stLength(Buffer.stGetLength());
-	char cChar(0);
+	Arxx::Buffer const & Buffer(BufferReader.GetBuffer());
+	Arxx::Buffer::size_type Index(BufferReader.GetPosition());
+	Arxx::Buffer::size_type Length(Buffer.GetLength());
+	char Char(0);
 
-	while(stLength > stIndex)
+	while(Length > Index)
 	{
-		if((cChar = Buffer[stIndex++]) == '\0')
+		if((Char = Buffer[Index++]) == '\0')
 		{
 			break;
 		}
-		sString += cChar;
+		String += Char;
 	}
-	BufferReader.vSetPosition(BufferReader.stGetPosition() + sString.length() + 1);
+	BufferReader.SetPosition(BufferReader.GetPosition() + String.length() + 1);
 
 	return BufferReader;
 }
 
-auto Arxx::operator>>(Arxx::BufferReader & BufferReader, float & fValue) -> Arxx::BufferReader &
+auto Arxx::operator>>(Arxx::BufferReader & BufferReader, float & Value) -> Arxx::BufferReader &
 {
-	BufferReader.stRead(sizeof(float), reinterpret_cast< Arxx::Buffer::pointer >(&fValue));
+	BufferReader.Read(sizeof(float), reinterpret_cast< Arxx::Buffer::pointer >(&Value));
 	
 	return BufferReader;
 }
 
-auto Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u1byte & u1Value) -> Arxx::BufferReader &
+auto Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u1byte & Value) -> Arxx::BufferReader &
 {
-	BufferReader.stRead(sizeof(Arxx::u1byte), reinterpret_cast< Arxx::Buffer::pointer >(&u1Value));
+	BufferReader.Read(sizeof(Arxx::u1byte), reinterpret_cast< Arxx::Buffer::pointer >(&Value));
 	
 	return BufferReader;
 }
 
-auto Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u4byte & u4Value) -> Arxx::BufferReader &
+auto Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u4byte & Value) -> Arxx::BufferReader &
 {
-	BufferReader.stRead(sizeof(Arxx::u4byte), reinterpret_cast< Arxx::Buffer::pointer >(&u4Value));
+	BufferReader.Read(sizeof(Arxx::u4byte), reinterpret_cast< Arxx::Buffer::pointer >(&Value));
 	
 	return BufferReader;
 }
 
 auto Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u8byte & Value) -> Arxx::BufferReader &
 {
-	BufferReader.stRead(sizeof(Arxx::u8byte), reinterpret_cast< Arxx::Buffer::pointer >(&Value));
+	BufferReader.Read(sizeof(Arxx::u8byte), reinterpret_cast< Arxx::Buffer::pointer >(&Value));
 	
 	return BufferReader;
 }
 
-auto Arxx::operator>>(Arxx::BufferReader & BufferReader, bool & bValue) -> Arxx::BufferReader &
+auto Arxx::operator>>(Arxx::BufferReader & BufferReader, bool & Value) -> Arxx::BufferReader &
 {
-	BufferReader.stRead(sizeof(bool), reinterpret_cast< Arxx::Buffer::pointer >(&bValue));
+	BufferReader.Read(sizeof(bool), reinterpret_cast< Arxx::Buffer::pointer >(&Value));
 	
 	return BufferReader;
 }

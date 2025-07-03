@@ -40,7 +40,7 @@ namespace Arxx
 		 * 
 		 * Of course, the new reference is resolved.
 		 **/
-		static auto pGetReference(Arxx::Item & Item) -> Arxx::ReferenceImplementation *;
+		static auto Create(Arxx::Item & Item) -> Arxx::ReferenceImplementation *;
 		
 		/**
 		 * @brief Returns a new ReferenceImplementation instance created from a unique ID.
@@ -49,7 +49,7 @@ namespace Arxx
 		 * 
 		 * The new reference of course is unresolved.
 		 **/
-		static auto pGetReference(Arxx::u4byte u4UniqueID, Arxx::Archive * pArchive = nullptr) -> Arxx::ReferenceImplementation *;
+		static auto Create(Arxx::u4byte ItemIdentifier, Arxx::Archive * Archive = nullptr) -> Arxx::ReferenceImplementation *;
 		
 		/**
 		 * @brief Increases the reference counter and conveniently returns the parameter.
@@ -57,7 +57,7 @@ namespace Arxx
 		 * 
 		 * Since the new reference is equal to the old reference its resolved status is equal as well.
 		 **/
-		static auto pGetReference(Arxx::ReferenceImplementation * pReference) -> Arxx::ReferenceImplementation *;
+		static auto Create(Arxx::ReferenceImplementation * ReferenceImplementation) -> Arxx::ReferenceImplementation *;
 		
 		/**
 		 * @brief Decreases the reference counter and possible deletes the reference.
@@ -66,7 +66,7 @@ namespace Arxx
 		 * 
 		 * If decreasing the reference counter of @a pReference make it equal to zero, the object pReference is deleted.
 		 **/
-		static auto bRelease(Arxx::ReferenceImplementation * pReference) -> bool;
+		static auto Release(Arxx::ReferenceImplementation * ReferenceImplementation) -> bool;
 		
 		/**
 		 * @brief No copy semantic for ReferenceImplementation objects.
@@ -83,26 +83,26 @@ namespace Arxx
 		 * 
 		 * It does not matter if the reference is resolved or unresolved, the unique ID is certain to be returned.
 		 **/
-		auto u4GetUniqueID() const -> Arxx::u4byte;
+		auto GetItemIdentifier() const -> Arxx::u4byte;
 		
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
 		 * 
 		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is 0.
 		 **/
-		auto pGetItem() -> Arxx::Item *;
+		auto GetItem() -> Arxx::Item *;
 		
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
 		 * 
 		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is 0.
 		 **/
-		auto pGetItem() const -> Arxx::Item const *;
+		auto GetItem() const -> Arxx::Item const *;
 		
 		/**
 		 * @brief Returns m_u4ReferenceCounter, the number of Arxx::Reference objects that hold @em this ReferenceImplementation object.
 		 **/
-		auto u4GetReferenceCount() const -> Arxx::u4byte;
+		auto GetReferenceCount() const -> Arxx::u4byte;
 		
 		/**
 		 * @brief Resolves an unresolved reference with a given item.
@@ -114,17 +114,17 @@ namespace Arxx
 		 * 
 		 * Not meeting one of these requirements will throw an std::runtime_error exception.
 		 **/
-		auto vResolve(Arxx::Item & Item) -> void;
+		auto Resolve(Arxx::Item & Item) -> void;
 		
 		/**
 		 * @brief Unresolves the resolved reference by setting its Arxx::Item pointer to 0.
 		 **/
-		auto vUnresolve() -> void;
+		auto Unresolve() -> void;
 		
 		/**
 		 * @brief This function sets m_pArchive to `0`.
 		 **/
-		auto vDecoupleFromArchive() -> void;
+		auto DecoupleFromArchive() -> void;
 	private:
 		/**
 		 * @brief The constructor of a ReferenceImplementation object.
@@ -140,10 +140,10 @@ namespace Arxx
 		 **/
 		~ReferenceImplementation();
 		
-		Arxx::u4byte m_u4UniqueID;
-		Arxx::Item * m_pItem;
-		Arxx::u4byte m_u4ReferenceCount;
-		Arxx::Archive * m_pArchive;
+		Arxx::u4byte m_ItemIdentifier;
+		Arxx::Item * m_Item;
+		Arxx::u4byte m_ReferenceCount;
+		Arxx::Archive * m_Archive;
 	};
 }
 

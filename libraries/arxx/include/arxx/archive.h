@@ -65,7 +65,7 @@ namespace Arxx
 			 *
 			 * This constructor creates a an Item iterator from an STL iterator.
 			 **/
-			iterator(std::map< Arxx::u4byte, Arxx::Item * >::iterator iItem);
+			iterator(std::map< Arxx::u4byte, Arxx::Item * >::iterator Iterator);
 			
 			/**
 			 * @brief The destructor of an Item iterator.
@@ -102,13 +102,13 @@ namespace Arxx
 			 * @brief Tests two iterators for equality.
 			 * @param iItem The iterator to check against.
 			 **/
-			auto operator==(Arxx::Archive::iterator const & iItem) const -> bool;
+			auto operator==(Arxx::Archive::iterator const & Other) const -> bool;
 			
 			/**
 			 * @brief Tests two iterators for inequality.
 			 * @param iItem The iterator to check against.
 			 **/
-			auto operator!=(Arxx::Archive::iterator const & iItem) const -> bool;
+			auto operator!=(Arxx::Archive::iterator const & Other) const -> bool;
             
 		private:
 			/**
@@ -116,7 +116,7 @@ namespace Arxx
 			 * 
 			 * This is an iterator into the Arxx::Archive's internal Item map @a Arxx::Archive::m_Items.
 			 **/
-			std::map< Arxx::u4byte, Arxx::Item * >::iterator m_iItem;
+			std::map< Arxx::u4byte, Arxx::Item * >::iterator m_Iterator;
             
 		};
 		
@@ -134,7 +134,7 @@ namespace Arxx
 			 *
 			 * This constructor creates a an Item iterator from an STL iterator.
 			 **/
-			const_iterator(std::map< Arxx::u4byte, Arxx::Item * >::const_iterator iItem);
+			const_iterator(std::map< Arxx::u4byte, Arxx::Item * >::const_iterator Iterator);
 			
 			/**
 			 * @brief The destructor of a const Item iterator.
@@ -164,13 +164,13 @@ namespace Arxx
 			 * @brief Tests two iterators for equality.
 			 * @param iItem The iterator to check against.
 			 **/
-			auto operator==(const Arxx::Archive::const_iterator & iItem) const -> bool;
+			auto operator==(const Arxx::Archive::const_iterator & Other) const -> bool;
 			
 			/**
 			 * @brief Tests two iterators for inequality.
 			 * @param iItem The iterator to check against.
 			 **/
-			auto operator!=(const Arxx::Archive::const_iterator & iItem) const -> bool;
+			auto operator!=(const Arxx::Archive::const_iterator & Other) const -> bool;
             
 		private:
 			/**
@@ -178,7 +178,7 @@ namespace Arxx
 			 * 
 			 * This is an iterator into Arxx::Archive's internal Item map @a Arxx::Archive::m_Items.
 			 **/
-			std::map< Arxx::u4byte, Arxx::Item * >::const_iterator m_iItem;
+			std::map< Arxx::u4byte, Arxx::Item * >::const_iterator m_Iterator;
             
 		};
 		
@@ -343,11 +343,11 @@ namespace Arxx
 		
 		/**
 		 * @brief Returns a Arxx::Reference for a given unique ID.
-		 * @param u4UniqueID The unique ID which you will get a Arxx::Reference for.
+		 * @param ItemIdentifier The item identifier which you will get an Arxx::Reference for.
 		 * 
 		 * If a Arxx::Item object with the given unique ID is registered in the Archive the Reference will be resolved. If no such Item is registered the Reference will be unresolved, but will be linked to the Archive, so that, once an Item with that unique ID is registered at the Archive, the Reference will be resolved.
 		 **/
-		auto GetReference(Arxx::u4byte u4UniqueID) -> Arxx::Reference;
+		auto GetReference(Arxx::u4byte ItemIdentifier) -> Arxx::Reference;
 		
 		/**
 		 * @brief Returns a Arxx::Archive::iterator to the first Item.
@@ -398,7 +398,7 @@ namespace Arxx
 		 * 
 		 * This function will retrieve the associated Reference object and will remove it from the m_References map thus releasing the ReferenceImplementation object which then is deleted.
 		 **/
-		auto ReleaseReference(Arxx::ReferenceImplementation * pReference) -> void;
+		auto ReleaseReference(Arxx::ReferenceImplementation * Reference) -> void;
 		
 		/**
 		 * @brief Fetch data from the archive file into the buffer.
@@ -412,7 +412,7 @@ namespace Arxx
 		/**
 		 * @brief The reader function that retrieves Item header information from a channel.
 		 **/
-		auto m_Read_2_1_0_0(Arxx::u4byte u4ItemCount) -> void;
+		auto m_Read_2_1_0_0(Arxx::u4byte ItemCount) -> void;
 		
 		std::map< Arxx::u4byte, Arxx::Item * > m_Items;
 		std::map< Arxx::u4byte, Arxx::Reference > m_References;
