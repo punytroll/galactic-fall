@@ -260,38 +260,38 @@ namespace Arxx
 		 * 
 		 * If @a Item is not correctly registered in the Archive an std::invalid_argument exception is thrown.
 		 * 
-		 * @note This function will change @a Item! Note that @a Item's Arxx::Item::m_pArchive field will be set to `0` if no errors occure.
+		 * @note This function will change @a Item! Note that the item's @a m_Archive field will be set to `nullptr` if no errors occure.
 		 **/
 		auto Unregister(Arxx::Item * Item) -> void;
 		
 		/**
 		 * @brief Sets a root Item.
-		 * @param pItem A pointer to a Arxx::Item that is to be set as the Archive's root Item or 0.
+		 * @param Item A pointer to an Arxx::Item that is to be set as the archive's root item or nullptr.
 		 * @throw std::invalid_argument If the Item that @a pItem points to is not registered in the Archive.
 		 * 
-		 * This function will modify the m_pRootItem member of the Archive setting it to @a pItem.
+		 * This function will modify the @a m_RootItem member of the Archive setting it to @a Item.
 		 * 
-		 * You may pass @a pItem `0` to unset the root Item of the Archive.
+		 * You may pass @a Item `nullptr` to unset the root Item of the Archive.
 		 **/
 		auto SetRootItem(Arxx::Item * Item) -> void;
 		
 		/**
-		 * @brief This function finds the Item associated with a given identifier.
-		 * @param ItemIdentifier The identifier of an Item which is to be found in the Archive.
+		 * @brief This function finds the item with a given item identifier.
+		 * @param ItemIdentifier The identifier of the item which is to be found in the archive.
 		 * 
-		 * If the identifier is unknown in the Archive the function will return 0.
+		 * If the identifier is unknown in the archive, the function will return `nullptr`.
 		 * 
-		 * @note This function guarantees to be of complexity in O(log(n)) where n is the number of Item objects in the Archive.
+		 * @note This function guarantees to be of complexity in O(log(n)) where n is the number of items in the archive.
 		 **/
 		auto GetItem(Arxx::u4byte ItemIdentifier) -> Arxx::Item *;
 		
 		/**
-		 * @brief This function finds the Item associated with a given identifier.
-		 * @param ItemIdentifier The identifier of an Item which is to be found in the Archive.
+		 * @brief This function finds the item with a given item identifier.
+		 * @param ItemIdentifier The identifier of the item which is to be found in the archive.
 		 * 
-		 * If the identifier is unknown in the Archive this function will return 0.
+		 * If the identifier is unknown in the archive this function will return `nullptr`.
 		 * 
-		 * @note This function guarantees to be of complexity in O(log(n)) where n is the number of Item objects in the Archive.
+		 * @note This function guarantees to be of complexity in O(log(n)) where n is the number of items in the archive.
 		 **/
 		auto GetItem(Arxx::u4byte ItemIdentifier) const -> Arxx::Item const *;
 		
@@ -300,9 +300,9 @@ namespace Arxx
 		 * @param Path A string with the path information.
 		 * @return A pointer to an item that is identified by the path expression.
 		 * 
-		 * Based on the name attribute of items and the structural information this function walks through the @a Path trying to find the appropriate item.
+		 * Based on the name attribute of items and the structural information, this function walks through the @a path trying to find the appropriate item, or returns `nullptr`.
 		 * 
-		 * @note Since item names do not need to be unique inside a relation, this function only finds the first item at the path.
+		 * @note Since item names do not need to be unique inside a relation, this function only finds the first item on the path.
 		 * 
 		 * The default relation to be searched is "child". However, the @a Path may contain information concerning the name of the relation that is to be searched for the appropriate item:
 		 * @code /sub/one::name/down::another @endcode
@@ -316,7 +316,7 @@ namespace Arxx
 		 * @param Path A string with the path information.
 		 * @return A pointer to an item that is identified by the path expression.
 		 * 
-		 * Based on the name attribute of items and the structural information this function walks through the @a Path trying to find the appropriate item.
+		 * Based on the name attribute of items and the structural information this function walks through the @a Path trying to find the appropriate item, or returns `nullptr`.
 		 * 
 		 * @note Since item names do not need to be unique inside a relation, this function only finds the first item at the path.
 		 * 
@@ -328,16 +328,16 @@ namespace Arxx
 		auto GetItem(std::string Path) const -> Arxx::Item const *;
 		
 		/**
-		 * @brief Provides access to the root Item.
+		 * @brief Provides access to the root item.
 		 * 
-		 * This function returns the _RootItem member of the Archive, so if the Archive has no root Item set the function will return 0.
+		 * This function returns the m_RootItem member of the archive, so if the archive has no root item set, the function will return `nullptr`.
 		 **/
 		auto GetRootItem() -> Arxx::Item *;
 		
 		/**
-		 * @brief Provides const access to the root Item.
+		 * @brief Provides const access to the root item.
 		 * 
-		 * This function returns the _RootItem member of the Archive, so if the Archive has no root Item set the function will return 0.
+		 * This function returns the m_RootItem member of the archive, so if the archive has no root item set, the function will return `nullptr`.
 		 **/
 		auto GetRootItem() const -> Arxx::Item const *;
 		

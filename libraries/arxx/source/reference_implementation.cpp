@@ -31,9 +31,9 @@
 
 Arxx::ReferenceImplementation::ReferenceImplementation() :
 	m_ItemIdentifier(0),
-	m_Item(0),
+	m_Item(nullptr),
 	m_ReferenceCount(1),
-	m_Archive(0)
+	m_Archive(nullptr)
 {
 }
 
@@ -58,7 +58,7 @@ auto Arxx::ReferenceImplementation::Create(Arxx::u4byte ItemIdentifier, Arxx::Ar
 {
 	Arxx::ReferenceImplementation * ReferenceImplementation(new Arxx::ReferenceImplementation{});
 	
-	ReferenceImplementation->m_Item = 0;
+	ReferenceImplementation->m_Item = nullptr;
 	ReferenceImplementation->m_ItemIdentifier = ItemIdentifier;
 	ReferenceImplementation->m_ReferenceCount = 1;
 	ReferenceImplementation->m_Archive = Archive;

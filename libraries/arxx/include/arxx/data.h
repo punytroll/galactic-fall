@@ -36,7 +36,7 @@ namespace Arxx
 	 *
 	 * This is the component underlying the Arxx::Item class. It delivers the ability to compress and decompress the data. Because of the public inhertitance from Arxx::Buffer it is still possible to call Buffer::stGetLength() but be aware that it will give you the state of the buffer which might not be what you want for two reasons:
 	 * - the buffer content might be compressed or decompressed
-	 * - the data might not be fetched yet, which makes Arxx::Buffer::stGetLength() return `0` since there is nothing in the buffer
+	 * - the data might not be fetched yet, which makes Arxx::Buffer::GetLength() return `0` since there is nothing in the buffer
 	 * - the data might not be fetched yet, but you have written something in the buffer. Arxx::Buffer::stGetLength() will of course return the length of that data instead of the length of the Item's data, be it compressed or decompressed.
 	 **/
 	class Data : public Arxx::Buffer

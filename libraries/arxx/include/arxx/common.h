@@ -58,7 +58,7 @@ namespace Arxx
 	/**
 	 * @brief A libarxx wide constant that always stands for invalid or not specified unique or non-unique IDs.
 	 *
-	 * This value mainly serves as a return value. If you call a function that returns an Item's unique ID this value is sematically the same as if the Arxx::Item pointer was returned with 0.
+	 * This value mainly serves as a return value. If you call a function that returns an Item's unique ID this value is sematically the same as if the Arxx::Item pointer was returned with `nullptr`.
 	 **/
 	const u4byte g_InvalidItemIdentifier = 0xFFFFFFFF;
 	

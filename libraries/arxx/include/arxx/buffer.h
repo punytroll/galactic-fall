@@ -177,7 +177,7 @@ namespace Arxx
 			/**
 			 * @brief Invalidates the marker's associated buffer.
 			 * 
-			 * This function sets m_pBuffer to `0`.
+			 * This function sets m_Buffer to `nullptr`.
 			 * 
 			 * Calling this function invalidates the marker.
 			 **/
@@ -186,7 +186,7 @@ namespace Arxx
 			/**
 			 * @brief A pointer to the associated Arxx::Buffer.
 			 * 
-			 * Is initialized by the constructor and might be set to `0` by Arxx::Buffer::Marker::vInvalidateBuffer().
+			 * Is initialized by the constructor and might be set to `nullptr` by Arxx::Buffer::Marker::InvalidateBuffer().
 			 **/
 			Arxx::Buffer const * m_Buffer;
 			
@@ -398,7 +398,7 @@ namespace Arxx
 		 *   - The deletion is completely inside @em this buffer: m_stLength needs to be reduced by stLength.
 		 *   - The deletion begins inside @em this buffer and overlaps the end: m_stLength needs to be reduced by the size of the overlapping.
 		 *   - The deletion is completely behind @em this buffer: nothing to be done.
-		 *   - The deletion overlaps @em this buffer completely: m_stLength is set to 0 and m_stPosition is set to stPosition.
+		 *   - The deletion overlaps @em this buffer completely: m_Length is set to 0 and m_Position is set to Position.
 		 * - The structural changes are very much the same as for Inserts. We just need to pass this change down to all sub buffers by calling vParentDataChanged(m_stDataDeleted, stPosition - m_stPosition, stLength).
 		 **/
 		auto ParentDataChanged(size_type ChangeMode, Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length) -> void;
@@ -406,7 +406,7 @@ namespace Arxx
 		/**
 		 * @brief A pointer pointing to the superior buffer.
 		 *
-		 * This pointer points to the Buffer that this buffer is a part of. In case this buffer is the most superior buffer it is '0'.
+		 * This pointer points to the Buffer that this buffer is a part of. In case this buffer is the most superior buffer it is 'nullptr'.
 		 **/
 		Arxx::Buffer * m_SupBuffer;
 		

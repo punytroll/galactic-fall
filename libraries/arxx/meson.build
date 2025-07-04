@@ -5,11 +5,17 @@ zlib_dependency = dependency('zlib', required: get_option('zlib'))
 if zlib_dependency.found() == true
   arxx_library_cpp_args += '-DHAVE_ZLIB_H'
   arxx_library_dependencies += zlib_dependency
+  message('Arxx library is built with ZLib support.')
+elif
+  message('Arxx library is built without ZLib support.')
 endif
 bzip2_dependency = dependency('bzip2', required: get_option('bzip2'))
 if bzip2_dependency.found() == true
   arxx_library_cpp_args += '-DHAVE_BZLIB_H'
   arxx_library_dependencies += bzip2_dependency
+  message('Arxx library is built with BZip2 support.')
+elif
+  message('Arxx library is built without BZip2 support.')
 endif
 
 arxx_library = static_library(

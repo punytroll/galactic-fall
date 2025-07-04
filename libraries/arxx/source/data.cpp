@@ -74,8 +74,8 @@ auto Arxx::Data::Decompress() -> void
 			z_stream zStream;
 			int iReturn = 0;
 			
-			zStream.zalloc = 0;
-			zStream.zfree = 0;
+			zStream.zalloc = nullptr;
+			zStream.zfree = nullptr;
 			zStream.next_in = const_cast<Arxx::u1byte *>(GetBegin());
 			/** @todo Why not use u4GetCompressedLength() here? **/
 			zStream.avail_in = GetLength();
@@ -117,8 +117,8 @@ auto Arxx::Data::Decompress() -> void
 			Arxx::Data::pointer DecompressedData(new Arxx::Data::value_type[m_DecompressedLength]);
 			bz_stream BZStream;
 			
-			BZStream.bzalloc = 0;
-			BZStream.bzfree = 0;
+			BZStream.bzalloc = nullptr;
+			BZStream.bzfree = nullptr;
 			BZStream.opaque = 0;
 			BZStream.next_in = reinterpret_cast<char *>(const_cast<Arxx::u1byte *>(GetBegin()));
 			/** @todo Why not use u4GetCompressedLength() here? **/
@@ -188,8 +188,8 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 			z_stream zStream;
 			signed long slReturn = 0;
 			
-			zStream.zalloc = 0;
-			zStream.zfree = 0;
+			zStream.zalloc = nullptr;
+			zStream.zfree = nullptr;
 			zStream.next_in = const_cast<Arxx::u1byte *>(GetBegin());
 			zStream.avail_in = GetDecompressedLength();
 			zStream.next_out = CompressedData;
@@ -230,8 +230,8 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 			Arxx::Data::pointer CompressedData(new Arxx::Data::value_type[u4CompressedDataLength]);
 			bz_stream BZStream;
 			
-			BZStream.bzalloc = 0;
-			BZStream.bzfree = 0;
+			BZStream.bzalloc = nullptr;
+			BZStream.bzfree = nullptr;
 			BZStream.opaque = 0;
 			BZStream.next_in = reinterpret_cast<char *>(const_cast<Arxx::u1byte *>(GetBegin()));
 			BZStream.avail_in = GetDecompressedLength();

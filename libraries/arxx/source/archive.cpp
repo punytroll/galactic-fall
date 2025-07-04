@@ -39,8 +39,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Arxx::Archive::Archive() :
-	m_RootItem(0),
-	m_IStream(0)
+	m_RootItem(nullptr),
+	m_IStream(nullptr)
 {
 	srand(time(0));
 }
@@ -86,7 +86,7 @@ auto Arxx::Archive::Close() -> void
 		Unregister(Item);
 		Arxx::Item::Delete(Item);
 	}
-	m_RootItem = 0;
+	m_RootItem = nullptr;
 	
 	std::map<Arxx::u4byte, Arxx::Reference>::iterator Iterator(m_References.begin());
 	
@@ -99,11 +99,11 @@ auto Arxx::Archive::Close() -> void
 
 auto Arxx::Archive::Register(Arxx::Item * Item) -> void
 {
-	if(Item == 0)
+	if(Item == nullptr)
 	{
 		throw std::invalid_argument("Item");
 	}
-	if(Item->m_Archive == 0)
+	if(Item->m_Archive == nullptr)
 	{
 		Item->m_Archive = this;
 	}
@@ -211,9 +211,9 @@ auto Arxx::Archive::Unregister(Arxx::Item * Item) -> void
 
 auto Arxx::Archive::SetRootItem(Arxx::Item * Item) -> void
 {
-	if((Item != 0) && (Item->m_Archive != this))
+	if((Item != nullptr) && (Item->m_Archive != this))
 	{
-		throw std::invalid_argument("pItem");
+		throw std::invalid_argument("Item");
 	}
 	m_RootItem = Item;
 }
@@ -222,14 +222,14 @@ auto Arxx::Archive::GetItem(Arxx::u4byte ItemIdentifier) const -> Arxx::Item con
 {
 	if(ItemIdentifier == g_InvalidItemIdentifier)
 	{
-		return 0;
+		return nullptr;
 	}
 	
 	std::map<Arxx::u4byte, Arxx::Item *>::const_iterator ItemIterator(m_Items.find(ItemIdentifier));
 	
 	if(ItemIterator == m_Items.end())
 	{
-		return 0;
+		return nullptr;
 	}
 	
 	return ItemIterator->second;
@@ -239,14 +239,14 @@ auto Arxx::Archive::GetItem(Arxx::u4byte ItemIdentifier) -> Arxx::Item *
 {
 	if(ItemIdentifier == g_InvalidItemIdentifier)
 	{
-		return 0;
+		return nullptr;
 	}
 	
 	std::map<Arxx::u4byte, Arxx::Item *>::iterator ItemIterator(m_Items.find(ItemIdentifier));
 	
 	if(ItemIterator == m_Items.end())
 	{
-		return 0;
+		return nullptr;
 	}
 	
 	return ItemIterator->second;
@@ -256,13 +256,13 @@ auto Arxx::Archive::GetItem(std::string Path) -> Arxx::Item *
 {
 	if(Path[0] != '/')
 	{
-		return 0;
+		return nullptr;
 	}
 	
 	std::string ChildRelation;
 	Arxx::Item * Item(GetRootItem());
 	
-	while((Item != 0) && ((Path != "/") || (Path == "")))
+	while((Item != nullptr) && ((Path != "/") || (Path == "")))
 	{
 		std::string::size_type PathSeparatorIndex(Path.find('/', 1));
 		std::string ChildName(Path.substr(1, PathSeparatorIndex - 1));
@@ -289,7 +289,7 @@ auto Arxx::Archive::GetItem(std::string Path) -> Arxx::Item *
 		}
 		if(Item->GetStructure().HasRelation(ChildRelation) == false)
 		{
-			return 0;
+			return nullptr;
 		}
 		else
 		{
@@ -298,7 +298,7 @@ auto Arxx::Archive::GetItem(std::string Path) -> Arxx::Item *
 			
 			for(; ReferenceIterator != Relation.end(); ++ReferenceIterator)
 			{
-				if((ReferenceIterator->GetItem() != 0) && (ReferenceIterator->GetItem()->GetName() == ChildName))
+				if((ReferenceIterator->GetItem() != nullptr) && (ReferenceIterator->GetItem()->GetName() == ChildName))
 				{
 					Item = ReferenceIterator->GetItem();
 					
@@ -307,7 +307,7 @@ auto Arxx::Archive::GetItem(std::string Path) -> Arxx::Item *
 			}
 			if(ReferenceIterator == Relation.end())
 			{
-				return 0;
+				return nullptr;
 			}
 		}
 	}
@@ -319,13 +319,13 @@ auto Arxx::Archive::GetItem(std::string Path) const -> Arxx::Item const *
 {
 	if(Path[0] != '/')
 	{
-		return 0;
+		return nullptr;
 	}
 	
 	std::string ChildRelation;
 	const Arxx::Item * Item(GetRootItem());
 	
-	while((Item != 0) && ((Path != "/") || (Path == "")))
+	while((Item != nullptr) && ((Path != "/") || (Path == "")))
 	{
 		std::string::size_type PathSeparatorIndex(Path.find('/', 1));
 		std::string ChildName(Path.substr(1, PathSeparatorIndex - 1));
@@ -352,7 +352,7 @@ auto Arxx::Archive::GetItem(std::string Path) const -> Arxx::Item const *
 		}
 		if(Item->GetStructure().HasRelation(ChildRelation) == false)
 		{
-			return 0;
+			return nullptr;
 		}
 		else
 		{
@@ -361,7 +361,7 @@ auto Arxx::Archive::GetItem(std::string Path) const -> Arxx::Item const *
 			
 			for(; ReferenceIterator != Relation.end(); ++ReferenceIterator)
 			{
-				if((ReferenceIterator->GetItem() != 0) && (ReferenceIterator->GetItem()->GetName() == ChildName))
+				if((ReferenceIterator->GetItem() != nullptr) && (ReferenceIterator->GetItem()->GetName() == ChildName))
 				{
 					Item = ReferenceIterator->GetItem();
 					
@@ -370,7 +370,7 @@ auto Arxx::Archive::GetItem(std::string Path) const -> Arxx::Item const *
 			}
 			if(ReferenceIterator == Relation.end())
 			{
-				return 0;
+				return nullptr;
 			}
 		}
 	}
@@ -471,7 +471,7 @@ auto Arxx::Archive::Save(std::string const & FilePath, bool AutoCompress) -> voi
 	ArchiveHeader.MinorVersionNumber = 1;
 	ArchiveHeader.RevisionNumber = 0;
 	ArchiveHeader.CandidateNumber = 0;
-	ArchiveHeader.RootItemIdentifier = ((m_RootItem != 0) ? (m_RootItem->GetIdentifier()) : (g_InvalidItemIdentifier));
+	ArchiveHeader.RootItemIdentifier = ((m_RootItem != nullptr) ? (m_RootItem->GetIdentifier()) : (g_InvalidItemIdentifier));
 	ArchiveHeader.NumberOfItems = m_Items.size();
 	OStream << ArchiveHeader;
 	

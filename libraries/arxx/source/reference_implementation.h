@@ -88,14 +88,14 @@ namespace Arxx
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
 		 * 
-		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is 0.
+		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is `nullptr`.
 		 **/
 		auto GetItem() -> Arxx::Item *;
 		
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
 		 * 
-		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is 0.
+		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is `nullptr`.
 		 **/
 		auto GetItem() const -> Arxx::Item const *;
 		
@@ -117,12 +117,12 @@ namespace Arxx
 		auto Resolve(Arxx::Item & Item) -> void;
 		
 		/**
-		 * @brief Unresolves the resolved reference by setting its Arxx::Item pointer to 0.
+		 * @brief Unresolves the resolved reference by setting its Arxx::Item pointer to `nullptr`.
 		 **/
 		auto Unresolve() -> void;
 		
 		/**
-		 * @brief This function sets m_pArchive to `0`.
+		 * @brief This function sets m_Archive to `nullptr`.
 		 **/
 		auto DecoupleFromArchive() -> void;
 	private:

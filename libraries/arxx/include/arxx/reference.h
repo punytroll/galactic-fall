@@ -88,31 +88,31 @@ namespace Arxx
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
 		 * 
-		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is 0.
+		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is `nullptr`.
 		 * 
-		 * This function only calls Arxx::ReferenceImplementation::pGetItem().
+		 * This function only calls Arxx::ReferenceImplementation::GetItem().
 		 * 
-		 * @sa Arxx::ReferenceImplementation::pGetItem().
+		 * @sa Arxx::ReferenceImplementation::GetItem().
 		 **/
 		auto GetItem() -> Arxx::Item *;
 		
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
 		 * 
-		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is 0.
+		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is `nullptr`.
 		 * 
-		 * This function only calls Arxx::ReferenceImplementation::pGetItem().
+		 * This function only calls Arxx::ReferenceImplementation::GetItem().
 		 * 
-		 * @sa Arxx::ReferenceImplementation::pGetItem().
+		 * @sa Arxx::ReferenceImplementation::GetItem().
 		 **/
 		auto GetItem() const -> Arxx::Item const *;
 		
 		/**
-		 * @brief Returns m_u4ReferenceCounter, the number of Arxx::Reference objects that hold @em this ReferenceImplementation object.
+		 * @brief Returns m_ReferenceCounter, the number of Arxx::Reference objects that hold @em this ReferenceImplementation object.
 		 * 
-		 * This function only calls Arxx::ReferenceImplementation::u4GetReferenceCount().
+		 * This function only calls Arxx::ReferenceImplementation::GetReferenceCount().
 		 * 
-		 * @sa Arxx::ReferenceImplementation::u4GetReferenceCount().
+		 * @sa Arxx::ReferenceImplementation::GetReferenceCount().
 		 **/
 		auto GetReferenceCount() const -> Arxx::u4byte;
 		
@@ -120,18 +120,18 @@ namespace Arxx
 		 * @brief Resolves an unresolved reference with a given item.
 		 * @param Item The Arxx::Item that will be used to resolve the reference.
 		 * 
-		 * This function only calls Arxx::ReferenceImplementation::vResolve(Item).
+		 * This function only calls Arxx::ReferenceImplementation::Resolve(Item).
 		 * 
-		 * @sa Arxx::ReferenceImplementation::vResolve().
+		 * @sa Arxx::ReferenceImplementation::Resolve().
 		 **/
 		auto Resolve(Arxx::Item & Item) -> void;
 		
 		/**
 		 * @brief Unresolves the resolved reference.
 		 * 
-		 * This function only calls Arxx::ReferenceImplementation::vUnresolve().
+		 * This function only calls Arxx::ReferenceImplementation::Unresolve().
 		 * 
-		 * @sa Arxx::ReferenceImplementation::vUnresolve().
+		 * @sa Arxx::ReferenceImplementation::Unresolve().
 		 **/
 		auto Unresolve() -> void;
 		
@@ -141,9 +141,9 @@ namespace Arxx
 		 * 
 		 * A Reference set is a number of Reference objects that use the same ReferenceImplementation.
 		 * 
-		 * This function will call Reference.vDetach if u4GetReferenceCount() is greater than 1.
+		 * This function will call Reference.Detach if GetReferenceCount() is greater than 1.
 		 * 
-		 * This function will return with false if either the unique IDs don't match or @a Reference is resolved.
+		 * This function will return with false if either the item identifiers don't match or @a Reference is resolved.
 		 **/
 		auto Attach(Arxx::Reference & Reference) -> bool;
 		
@@ -152,14 +152,14 @@ namespace Arxx
 		 * 
 		 * A Reference set is a number of Reference objects that use the same ReferenceImplementation.
 		 * 
-		 * This function will create a ReferenceImplementation object that is used only by this Reference and will release the m_pReference ReferenceImplementation.
+		 * This function will create a ReferenceImplementation object that is used only by this Reference and will release the m_ReferenceImplementation.
 		 * 
 		 * This Reference and its ReferenceImplementation will be unresolved after this, and decoupled from any Archive that it may have been connected to prior to this call.
 		 **/
 		auto Detach() -> bool;
 		
 		/**
-		 * @brief This function will reset the Archive pointer to `0`.
+		 * @brief This function will reset the Archive pointer to `nullptr`.
 		 * 
 		 * It is only used by the Arxx::Archive and should not be used elsewhere. Probably it should be private.
 		 **/

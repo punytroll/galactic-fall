@@ -35,7 +35,7 @@ Arxx::Structure::Relation::Relation(Arxx::Structure & Structure, std::string con
 
 auto Arxx::Structure::Relation::Add(Arxx::u4byte ItemIdentifier) -> void
 {
-	if(m_Structure.m_Item.GetArchive() == 0)
+	if(m_Structure.m_Item.GetArchive() == nullptr)
 	{
 		m_References.insert(std::make_pair(ItemIdentifier, Arxx::Reference(ItemIdentifier)));
 	}

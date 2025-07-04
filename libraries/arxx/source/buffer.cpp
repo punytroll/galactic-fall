@@ -114,7 +114,7 @@ private:
 };
 
 Arxx::Buffer::Buffer() :
-	m_SupBuffer(0),
+	m_SupBuffer(nullptr),
 	m_Begin(0),
 	m_Length(0),
 	m_Capacity(0),
@@ -148,7 +148,7 @@ Arxx::Buffer::Buffer(Arxx::Buffer & Buffer, size_type Position, size_type Length
 
 Arxx::Buffer::~Buffer()
 {
-	if(m_SupBuffer == 0)
+	if(m_SupBuffer == nullptr)
 	{
 		delete[] m_Begin;
 	}
@@ -241,7 +241,7 @@ void Arxx::Buffer::Write(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position
 	pointer OldBegin(m_Begin);
 
 	// if the following condition is met we are in the most superior buffer
-	if(m_SupBuffer == 0)
+	if(m_SupBuffer == nullptr)
 	{
 		// now the real work begins, we have to make the change.
 		bool InsertedData(false);
@@ -382,7 +382,7 @@ void Arxx::Buffer::Delete(size_type Position, size_type Length)
 	{
 		throw std::out_of_range("Trying to delete after the end or until after the end.");
 	}
-	if(m_SupBuffer == 0)
+	if(m_SupBuffer == nullptr)
 	{
 		std::copy(m_Begin + Position + Length, m_Begin + m_Length, m_Begin + Position);
 		m_Length -= Length;

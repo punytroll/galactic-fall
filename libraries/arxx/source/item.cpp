@@ -28,12 +28,12 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 auto Arxx::Item::Create() -> Arxx::Item *
 {
-	return Arxx::Item::Create(0, g_InvalidItemIdentifier);
+	return Arxx::Item::Create(nullptr, g_InvalidItemIdentifier);
 }
 
 auto Arxx::Item::Create(Arxx::u4byte Identifier) -> Arxx::Item *
 {
-	return Arxx::Item::Create(0, Identifier);
+	return Arxx::Item::Create(nullptr, Identifier);
 }
 
 auto Arxx::Item::Create(Arxx::Archive & Archive) -> Arxx::Item *
@@ -56,7 +56,7 @@ auto Arxx::Item::Create(Arxx::Archive * Archive, Arxx::u4byte Identifier) -> Arx
 	Arxx::Item * Result(new Arxx::Item());
 	
 	Result->SetIdentifier(Identifier);
-	if(Archive != 0)
+	if(Archive != nullptr)
 	{
 		Archive->Register(Result);
 	}
@@ -66,10 +66,10 @@ auto Arxx::Item::Create(Arxx::Archive * Archive, Arxx::u4byte Identifier) -> Arx
 
 auto Arxx::Item::Delete(Arxx::Item * Item) -> void
 {
-	if(Item->m_Archive != 0)
+	if(Item->m_Archive != nullptr)
 	{
 		Item->m_Archive->Unregister(Item);
-		Item->m_Archive = 0;
+		Item->m_Archive = nullptr;
 	}
 	delete Item;
 }
@@ -82,14 +82,14 @@ Arxx::Item::Item() :
 	m_MinorVersionNumber(0),
 	m_RevisionNumber(0),
 	m_CandidateNumber(0),
-	m_Archive(0),
+	m_Archive(nullptr),
 	m_Structure(*this)
 {
 }
 
 Arxx::Item::~Item()
 {
-	assert(m_Archive == 0);
+	assert(m_Archive == nullptr);
 }
 
 auto Arxx::Item::GetIdentifier() const -> Arxx::u4byte
@@ -99,7 +99,7 @@ auto Arxx::Item::GetIdentifier() const -> Arxx::u4byte
 
 auto Arxx::Item::SetIdentifier(Arxx::u4byte Identifier) -> void
 {
-	if(m_Archive == 0)
+	if(m_Archive == nullptr)
 	{
 		m_Identifier = Identifier;
 	}
@@ -207,7 +207,7 @@ auto Arxx::Item::GetStructure() const -> Arxx::Structure const &
 
 auto Arxx::Item::m_Fetch(Arxx::u4byte Offset, Arxx::u4byte Length) -> bool
 {
-	if(m_Archive != 0)
+	if(m_Archive != nullptr)
 	{
 		return m_Archive->Fetch(Offset, Length, this);
 	}

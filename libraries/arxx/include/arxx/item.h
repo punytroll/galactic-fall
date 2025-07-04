@@ -165,7 +165,7 @@ namespace Arxx
 		/**
 		 * @brief Returns a pointer to the registered Archive.
 		 *
-		 * The function will return `0` if there is no Archive set for the Item.
+		 * The function will return `nullptr` if this item belongs to no archive.
 		 **/
 		auto GetArchive() const -> Arxx::Archive *;
 		
@@ -267,7 +267,7 @@ namespace Arxx
 		/**
 		 * @brief A pointer to the Archive.
 		 * 
-		 * Depending on the constructor this field is either initialized with 0 or with the address of the Archive passed to the constructor.
+		 * Depending on the constructor this field is either initialized with `nullptr` or with the address of the archive passed to the constructor.
 		 * 
 		 * It is changed in conjuction with the Arxx::Archive::vRegisterItem() and Arxx::Archive::vUnregisterItem() functions.
 		 **/
