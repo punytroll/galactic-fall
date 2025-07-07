@@ -31,7 +31,7 @@ namespace Arxx
 	/**
 	 * @brief The real Arxx::Item reference used by Arxx::Reference to implement shared references.
 	 **/
-	class ReferenceImplementation
+	class ReferenceCore
 	{
 	public:
 		/**
@@ -40,7 +40,7 @@ namespace Arxx
 		 * 
 		 * Of course, the new reference is resolved.
 		 **/
-		static auto Create(Arxx::Item & Item) -> Arxx::ReferenceImplementation *;
+		static auto Create(Arxx::Item & Item) -> Arxx::ReferenceCore *;
 		
 		/**
 		 * @brief Returns a new ReferenceImplementation instance created from a unique ID.
@@ -49,7 +49,7 @@ namespace Arxx
 		 * 
 		 * The new reference of course is unresolved.
 		 **/
-		static auto Create(Arxx::u4byte ItemIdentifier, Arxx::Archive * Archive = nullptr) -> Arxx::ReferenceImplementation *;
+		static auto Create(Arxx::u4byte ItemIdentifier, Arxx::Archive * Archive = nullptr) -> Arxx::ReferenceCore *;
 		
 		/**
 		 * @brief Increases the reference counter and conveniently returns the parameter.
@@ -57,7 +57,7 @@ namespace Arxx
 		 * 
 		 * Since the new reference is equal to the old reference its resolved status is equal as well.
 		 **/
-		static auto Create(Arxx::ReferenceImplementation * ReferenceImplementation) -> Arxx::ReferenceImplementation *;
+		static auto Create(Arxx::ReferenceCore * ReferenceCore) -> Arxx::ReferenceCore *;
 		
 		/**
 		 * @brief Decreases the reference counter and possible deletes the reference.
@@ -66,17 +66,17 @@ namespace Arxx
 		 * 
 		 * If decreasing the reference counter of @a pReference make it equal to zero, the object pReference is deleted.
 		 **/
-		static auto Release(Arxx::ReferenceImplementation * ReferenceImplementation) -> bool;
+		static auto Release(Arxx::ReferenceCore * ReferenceCore) -> bool;
 		
 		/**
 		 * @brief No copy semantic for ReferenceImplementation objects.
 		 **/
-		ReferenceImplementation(Arxx::ReferenceImplementation const & Reference) = delete;
+		ReferenceCore(Arxx::ReferenceCore const & Reference) = delete;
 		
 		/**
 		 * @brief No assigment semantic for ReferenceImplementation objects.
 		 **/
-		auto operator=(Arxx::ReferenceImplementation const & Reference) -> Arxx::ReferenceImplementation & = delete;
+		auto operator=(Arxx::ReferenceCore const & Reference) -> Arxx::ReferenceCore & = delete;
 		
 		/**
 		 * @brief Returns the unique ID of the reference.
@@ -100,7 +100,7 @@ namespace Arxx
 		auto GetItem() const -> Arxx::Item const *;
 		
 		/**
-		 * @brief Returns m_u4ReferenceCounter, the number of Arxx::Reference objects that hold @em this ReferenceImplementation object.
+		 * @brief Returns m_u4ReferenceCounter, the number of Arxx::Reference objects that hold @em this ReferenceCore object.
 		 **/
 		auto GetReferenceCount() const -> Arxx::u4byte;
 		
@@ -131,14 +131,14 @@ namespace Arxx
 		 * 
 		 * Instances of this class are only created via the pGetReference() calls.
 		 **/
-		ReferenceImplementation() = default;
+		ReferenceCore() = default;
 		
 		/**
 		 * @brief The destructor of a ReferenceImplementation object.
 		 * 
 		 * Instances of this class may only be destroyed using the vRelease() call.
 		 **/
-		~ReferenceImplementation();
+		~ReferenceCore();
 		
 		Arxx::u4byte m_ItemIdentifier{0};
 		Arxx::Item * m_Item{nullptr};

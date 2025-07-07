@@ -34,7 +34,7 @@ namespace Arxx
 	
 	class Archive;
 	
-	class ReferenceImplementation;
+	class ReferenceCore;
 	
 	/**
 	 * @brief Instances of this class represent items either by unique ID or if known by pointer.
@@ -174,9 +174,9 @@ namespace Arxx
 		/**
 		 * @brief Small helper function.
 		 **/
-		auto ChangeReferenceImplementation(Arxx::ReferenceImplementation * ReferenceImplementation) -> void;
+		auto m_SetCore(Arxx::ReferenceCore * ReferenceCore) -> void;
 		
-		Arxx::ReferenceImplementation * m_ReferenceImplementation;
+		Arxx::ReferenceCore * m_ReferenceCore;
         
 	};
 }

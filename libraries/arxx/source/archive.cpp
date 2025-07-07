@@ -31,7 +31,7 @@
 #include <arxx/reference.h>
 
 #include "archive_file.h"
-#include "reference_implementation.h"
+#include "reference_core.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -400,9 +400,9 @@ auto Arxx::Archive::GetReference(Arxx::u4byte ItemIdentifier) -> Arxx::Reference
 	}
 }
 
-auto Arxx::Archive::ReleaseReference(Arxx::ReferenceImplementation * Reference) -> void
+auto Arxx::Archive::ReleaseReferenceCore(Arxx::ReferenceCore * ReferenceCore) -> void
 {
-	std::map<Arxx::u4byte, Arxx::Reference>::iterator ReferenceIterator(m_References.find(Reference->GetItemIdentifier()));
+	std::map<Arxx::u4byte, Arxx::Reference>::iterator ReferenceIterator(m_References.find(ReferenceCore->GetItemIdentifier()));
 	
 	if(ReferenceIterator == m_References.end())
 	{

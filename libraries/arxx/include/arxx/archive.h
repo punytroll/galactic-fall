@@ -39,7 +39,7 @@ namespace Arxx
 	
 	class Reference;
 	
-	class ReferenceImplementation;
+	class ReferenceCore;
 	
 	/**
 	 * @brief The Arxx::Archive class is a container for an arbitrary amount of Arxx::Item objects.
@@ -392,13 +392,13 @@ namespace Arxx
 		/**
 		 * @brief This function releases a Reference inside the Archive.
 		 * 
-		 * This is an internal function, but as the API user will never lay hands on a Arxx::ReferenceImplementation object it is still public to avoid friend declarations.
+		 * This is an internal function, but as the API user will never lay hands on a Arxx::ReferenceCore object it is still public to avoid friend declarations.
 		 * 
-		 * This function is called whenever the reference count of an unresolved Arxx::ReferenceImplementation object reaches `1`, because in that case the associated Archive object is the only reference holder of the ReferenceImplementation object. Since unresolved References serve no purpose other than to be resolved magically there is no sense in keeping it only inside the Archive.
+		 * This function is called whenever the reference count of an unresolved Arxx::ReferenceCore object reaches `1`, because in that case the associated Archive object is the only reference holder of the ReferenceCore object. Since unresolved References serve no purpose other than to be resolved magically there is no sense in keeping it only inside the Archive.
 		 * 
-		 * This function will retrieve the associated Reference object and will remove it from the m_References map thus releasing the ReferenceImplementation object which then is deleted.
+		 * This function will retrieve the associated Reference object and will remove it from the m_References map thus releasing the ReferenceCore object which then is deleted.
 		 **/
-		auto ReleaseReference(Arxx::ReferenceImplementation * Reference) -> void;
+		auto ReleaseReferenceCore(Arxx::ReferenceCore * ReferenceCore) -> void;
 		
 		/**
 		 * @brief Fetch data from the archive file into the buffer.

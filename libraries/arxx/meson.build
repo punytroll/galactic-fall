@@ -30,7 +30,7 @@ arxx_library = static_library(
     'source/data.cpp',
     'source/item.cpp',
     'source/reference.cpp',
-    'source/reference_implementation.cpp',
+    'source/reference_core.cpp',
     'source/relation.cpp',
     'source/structure.cpp'
   ),
