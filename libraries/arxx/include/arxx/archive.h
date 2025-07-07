@@ -416,12 +416,12 @@ namespace Arxx
 		
 		std::map<Arxx::u4byte, Arxx::Item *> m_Items;
 		std::map<Arxx::u4byte, Arxx::Reference> m_References;
-		Arxx::Item * m_RootItem;
+		Arxx::Item * m_RootItem{nullptr};
 		
 		/**
 		 * @brief The archive file stream.
 		 **/
-		std::istream * m_IStream;
+		std::istream * m_IStream{nullptr};
         
 	};
 }

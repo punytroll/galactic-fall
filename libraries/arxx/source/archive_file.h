@@ -96,25 +96,6 @@ namespace Arxx
 	{
 	public:
 		/**
-		 * @brief Default constructor creating an empty ItemHeader.
-		 **/
-		ItemHeader() :
-			Identifier(0),
-			Type(0),
-			SubType(0),
-			MajorVersionNumber(0),
-			MinorVersionNumber(0),
-			RevisionNumber(0),
-			CandidateNumber(0),
-			DataCompressionType(0),
-			NameLength(0),
-			DataDecompressedLength(0),
-			DataCompressedLength(0),
-			StructureLength(0)
-		{
-		}
-		
-		/**
 		 * @brief The identifier of the item.
 		 *
 		 * The identifier of an item is unique in respect to the parenting archive.

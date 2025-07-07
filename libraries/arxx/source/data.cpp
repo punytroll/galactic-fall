@@ -37,19 +37,6 @@ Arxx::Data::Compression Arxx::Data::m_DefaultCompression = ZLIB_9;
 Arxx::Data::Compression Arxx::Data::m_DefaultCompression = NONE;
 #endif
 
-Arxx::Data::Data() :
-	m_Offset(0),
-	m_CompressionType(Arxx::Data::NONE),
-	m_DecompressedLength(0),
-	m_CompressedLength(0),
-	m_Fetched(true)
-{
-}
-
-Arxx::Data::~Data()
-{
-}
-
 auto Arxx::Data::Decompress() -> void
 {
 	switch(m_CompressionType)

@@ -73,8 +73,8 @@ public:
 	 * This constructor creates a SubBuffer. The parameters are the information the superior buffer whishes to associate with the sub buffer.
 	 **/
 	SubBuffer(Arxx::Buffer & Buffer, size_type Order) :
-		m_Buffer(Buffer),
-		m_Order(Order)
+		m_Buffer{Buffer},
+		m_Order{Order}
 	{
 	}
 
@@ -113,25 +113,11 @@ private:
 	size_type m_Order;
 };
 
-Arxx::Buffer::Buffer() :
-	m_SupBuffer(nullptr),
-	m_Begin(0),
-	m_Length(0),
-	m_Capacity(0),
-	m_Position(0),
-	m_Changing(false)
-{
-}
-
 Arxx::Buffer::Buffer(Arxx::Buffer & Buffer, size_type Position, size_type Length) :
-	m_SupBuffer(&Buffer),
-	m_Begin(0),
-	m_Length(0),
-	m_Capacity(0),
-	m_Position((Buffer.GetLength() < Position) ? (Buffer.GetLength()) : (Position)),
-	m_Changing(false)
+	m_SupBuffer{&Buffer},
+	m_Position{(Buffer.GetLength() < Position) ? (Buffer.GetLength()) : (Position)}
 {
-	if(Buffer.m_Begin != 0)
+	if(Buffer.m_Begin != nullptr)
 	{
 		m_Begin = Buffer.m_Begin + m_Position;
 	}
@@ -621,9 +607,9 @@ std::ostream & Arxx::operator<<(std::ostream & OStream, const Arxx::Buffer & Buf
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Arxx::Buffer::Marker::Marker(Arxx::Buffer const & Buffer, Arxx::Buffer::size_type Position, Arxx::Buffer::Marker::Alignment Alignment) :
-	m_Buffer(&Buffer),
-	m_Position((m_Buffer->GetLength() > Position) ? (Position) : (m_Buffer->GetLength())),
-	m_Alignment(Alignment)
+	m_Buffer{&Buffer},
+	m_Position{(m_Buffer->GetLength() > Position) ? (Position) : (m_Buffer->GetLength())},
+	m_Alignment{Alignment}
 {
 	m_Buffer->Register(*this);
 }

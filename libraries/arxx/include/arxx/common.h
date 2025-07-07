@@ -72,11 +72,11 @@ namespace Arxx
 	public:
 		/**
 		 * @brief The constructor of an id_not_unique exception.
-		 * @param sString A string with further information for this exception.
+		 * @param String A string with further information for this exception.
 		 *
-		 * This exception is derieved from std::invalid_argument and the string passed via sString is directed to the constructor of std::invalid_argument and thus may be requested via the what() function of std::exception.
+		 * This exception is derieved from std::invalid_argument and the string passed via String is directed to the constructor of std::invalid_argument and thus may be requested via the what() function of std::exception.
 		 **/
-		id_not_unique(const std::string & sString);
+		id_not_unique(std::string const & String);
 	};
 	
 	/**
@@ -89,11 +89,11 @@ namespace Arxx
 	public:
 		/**
 		 * @brief The constructor of a zlib_error exception.
-		 * @param sString A string with further information for this exception.
+		 * @param String A string with further information for this exception.
 		 *
-		 * This exception is derieved from std::runtime_error and the string passed via sString is directed to the constructor of std::runtime_error so it may be requested via the what() function of std::exception.
+		 * This exception is derieved from std::runtime_error and the string passed via String is directed to the constructor of std::runtime_error so it may be requested via the what() function of std::exception.
 		 **/
-		zlib_error(const std::string & sString);
+		zlib_error(std::string const & String);
 	};
 	
 	/**
@@ -106,11 +106,11 @@ namespace Arxx
 	public:
 		/**
 		 * @brief The constructor of a bzlib_error exception.
-		 * @param sString A string with further information for this exception.
+		 * @param String A string with further information for this exception.
 		 *
-		 * This exception is derieved from std::runtime_error and the string passed via sString is directed to the constructor of std::runtime_error so it may be requested via the what() function of std::exception.
+		 * This exception is derieved from std::runtime_error and the string passed via String is directed to the constructor of std::runtime_error so it may be requested via the what() function of std::exception.
 		 **/
-		bzlib_error(const std::string & sString);
+		bzlib_error(std::string const & String);
 	};
 	
 	/**
@@ -123,11 +123,11 @@ namespace Arxx
 	public:
 		/**
 		 * @brief The constructor of a bad_file_format exception.
-		 * @param sString A string with further information for this exception.
+		 * @param String A string with further information for this exception.
 		 *
-		 * This exception is derieved from std::logic_error and the string passed via sString is directed to the constructor of std::logic_error so it may be requested via the what() function of std::exception.
+		 * This exception is derieved from std::logic_error and the string passed via String is directed to the constructor of std::logic_error so it may be requested via the what() function of std::exception.
 		 **/
-		bad_file_format(const std::string & sString);
+		bad_file_format(std::string const & String);
 	};
 	
 	/**
@@ -140,11 +140,11 @@ namespace Arxx
 	public:
 		/**
 		 * @brief The constructor of a file_error exception.
-		 * @param sString A string with further information for this exception.
+		 * @param String A string with further information for this exception.
 		 *
-		 * This exception is derieved from std::logic_error and the string passed via sString is directed to the constructor of std::logic_error so it may be requested via the what() function of std::exception.
+		 * This exception is derieved from std::logic_error and the string passed via String is directed to the constructor of std::logic_error so it may be requested via the what() function of std::exception.
 		 **/
-		file_error(const std::string & sString);
+		file_error(std::string const & String);
 	};
 }
 

@@ -75,15 +75,7 @@ auto Arxx::Item::Delete(Arxx::Item * Item) -> void
 }
 
 Arxx::Item::Item() :
-	m_Identifier(0xFFFFFFFF),
-	m_Type(0xFFFFFFFF),
-	m_SubType(0xFFFFFFFF),
-	m_MajorVersionNumber(0),
-	m_MinorVersionNumber(0),
-	m_RevisionNumber(0),
-	m_CandidateNumber(0),
-	m_Archive(nullptr),
-	m_Structure(*this)
+	m_Structure{*this}
 {
 }
 

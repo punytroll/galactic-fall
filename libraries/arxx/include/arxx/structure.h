@@ -88,11 +88,6 @@ namespace Arxx
 				iterator(std::multimap<Arxx::u4byte, Arxx::Reference>::iterator Iterator);
 				
 				/**
-				 * @brief The destructor of a Reference iterator.
-				 **/
-				~iterator();
-				
-				/**
 				 * @brief Advances the iterator.
 				 *
 				 * Advances the Reference iterator. It is not defined which will be the next Reference the iterator points to. It is only assured that every Reference in the Relation will be passed once.
@@ -177,11 +172,6 @@ namespace Arxx
 				 * This constructor creates a const Reference iterator from a non-const Reference iterator.
 				 **/
 				const_iterator(Arxx::Structure::Relation::iterator Iterator);
-				
-				/**
-				 * @brief The destructor of a const Reference iterator.
-				 **/
-				~const_iterator();
 				
 				/**
 				 * @brief Advances the iterator.
@@ -287,7 +277,7 @@ namespace Arxx
 			/**
 			 * @brief A constructor that links a relation to a specific Arxx::Structure.
 			 * @param Structure The structure object that this relation is linked to.
-			 * @param sName The unique name of the relation inside the related Structure.
+			 * @param Name The unique name of the relation inside the related Structure.
 			 **/
 			Relation(Arxx::Structure & Structure, std::string const & Name);
 			
@@ -331,11 +321,6 @@ namespace Arxx
 			 * This constructor creates a Relation iterator from an STL iterator.
 			 **/
 			iterator(std::map<std::string, Arxx::Structure::Relation>::iterator Iterator);
-			
-			/**
-			 * @brief The destructor of a Relation iterator.
-			 **/
-			~iterator();
 			
 			/**
 			 * @brief Advances the iterator.
@@ -422,11 +407,6 @@ namespace Arxx
 			 * This constructor creates a const Relation iterator from a non-const Relation iterator.
 			 **/
 			const_iterator(Arxx::Structure::iterator Iterator);
-			
-			/**
-			 * @brief The destructor of a const Relation iterator.
-			 **/
-			~const_iterator();
 			
 			/**
 			 * @brief Advances the iterator.

@@ -23,8 +23,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Arxx::id_not_unique                                                                            //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-Arxx::id_not_unique::id_not_unique(const std::string & sString) :
-	std::invalid_argument(sString)
+Arxx::id_not_unique::id_not_unique(std::string const & String) :
+	std::invalid_argument{String}
 {
 }
 
@@ -32,8 +32,8 @@ Arxx::id_not_unique::id_not_unique(const std::string & sString) :
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Arxx::zlib_error                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-Arxx::zlib_error::zlib_error(const std::string & sString) :
-	std::runtime_error(sString)
+Arxx::zlib_error::zlib_error(std::string const & String) :
+	std::runtime_error{String}
 {
 }
 
@@ -41,8 +41,8 @@ Arxx::zlib_error::zlib_error(const std::string & sString) :
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Arxx::bzlib_error                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-Arxx::bzlib_error::bzlib_error(const std::string & sString) :
-	std::runtime_error(sString)
+Arxx::bzlib_error::bzlib_error(std::string const & String) :
+	std::runtime_error{String}
 {
 }
 
@@ -50,8 +50,8 @@ Arxx::bzlib_error::bzlib_error(const std::string & sString) :
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Arxx::bad_file_format                                                                          //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-Arxx::bad_file_format::bad_file_format(const std::string & sString) :
-	std::logic_error(sString)
+Arxx::bad_file_format::bad_file_format(std::string const & String) :
+	std::logic_error{String}
 {
 }
 
@@ -59,7 +59,7 @@ Arxx::bad_file_format::bad_file_format(const std::string & sString) :
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Arxx::file_error                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-Arxx::file_error::file_error(const std::string & sString) :
-	std::logic_error(sString)
+Arxx::file_error::file_error(std::string const & String) :
+	std::logic_error{String}
 {
 }

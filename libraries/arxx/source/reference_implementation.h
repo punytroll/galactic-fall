@@ -131,7 +131,7 @@ namespace Arxx
 		 * 
 		 * Instances of this class are only created via the pGetReference() calls.
 		 **/
-		ReferenceImplementation();
+		ReferenceImplementation() = default;
 		
 		/**
 		 * @brief The destructor of a ReferenceImplementation object.
@@ -140,10 +140,10 @@ namespace Arxx
 		 **/
 		~ReferenceImplementation();
 		
-		Arxx::u4byte m_ItemIdentifier;
-		Arxx::Item * m_Item;
-		Arxx::u4byte m_ReferenceCount;
-		Arxx::Archive * m_Archive;
+		Arxx::u4byte m_ItemIdentifier{0};
+		Arxx::Item * m_Item{nullptr};
+		Arxx::u4byte m_ReferenceCount{1};
+		Arxx::Archive * m_Archive{nullptr};
 	};
 }
 

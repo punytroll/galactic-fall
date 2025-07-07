@@ -28,8 +28,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Arxx::Structure::Relation::Relation(Arxx::Structure & Structure, std::string const & Name) :
-	m_Structure(Structure),
-	m_Name(Name)
+	m_Structure{Structure},
+	m_Name{Name}
 {
 }
 
@@ -112,11 +112,7 @@ auto Arxx::Structure::Relation::GetName() const -> std::string const &
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Arxx::Structure::Relation::iterator::iterator(std::multimap<Arxx::u4byte, Arxx::Reference>::iterator Iterator) :
-	m_Iterator(Iterator)
-{
-}
-
-Arxx::Structure::Relation::iterator::~iterator()
+	m_Iterator{Iterator}
 {
 }
 
@@ -167,16 +163,12 @@ auto Arxx::Structure::Relation::iterator::operator!=(Arxx::Structure::Relation::
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Arxx::Structure::Relation::const_iterator::const_iterator(std::multimap<Arxx::u4byte, Arxx::Reference>::const_iterator Iterator) :
-	m_Iterator(Iterator)
+	m_Iterator{Iterator}
 {
 }
 
 Arxx::Structure::Relation::const_iterator::const_iterator(Arxx::Structure::Relation::iterator Iterator) :
-	m_Iterator(Iterator.m_Iterator)
-{
-}
-
-Arxx::Structure::Relation::const_iterator::~const_iterator()
+	m_Iterator{Iterator.m_Iterator}
 {
 }
 

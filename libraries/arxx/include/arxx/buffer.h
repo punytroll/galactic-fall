@@ -215,7 +215,7 @@ namespace Arxx
 		 * 
 		 * Constructs a buffer of size 0, I/O position is 0, overwrite state is false.
 		 **/
-		Buffer();
+		Buffer() = default;
 		
 		/**
 		 * @brief The sub buffer constructor.
@@ -408,28 +408,28 @@ namespace Arxx
 		 *
 		 * This pointer points to the Buffer that this buffer is a part of. In case this buffer is the most superior buffer it is 'nullptr'.
 		 **/
-		Arxx::Buffer * m_SupBuffer;
+		Arxx::Buffer * m_SupBuffer{nullptr};
 		
 		/**
 		 * @brief The pointer to the actual content of @em this buffer.
 		 **/
-		Arxx::Buffer::pointer m_Begin;
+		Arxx::Buffer::pointer m_Begin{nullptr};
 		
 		/**
 		 * @brief The length of the content within @em this buffer.
 		 *
-		 * @note There is a separate property m_stCapacity for the size of the allocated memory.
+		 * @note There is a separate property m_Capacity for the size of the allocated memory.
 		 **/
-		Arxx::Buffer::size_type m_Length;
+		Arxx::Buffer::size_type m_Length{0};
 		
 		/**
 		 * @brief The size of the memory block reserved for the content of @em this buffer.
 		 * 
 		 * This is an internal-only data. It describes how much data may be stored in @em this buffer currently without having to reallocate the buffers' memory.
 		 *
-		 * @note There is a separate property m_stLength for the length of the content.
+		 * @note There is a separate property m_Length for the length of the content.
 		 **/
-		Arxx::Buffer::size_type m_Capacity;
+		Arxx::Buffer::size_type m_Capacity{0};
 		
 		/**
 		 * @brief The associated markers.
@@ -441,7 +441,7 @@ namespace Arxx
 		 *
 		 * This value is zero-based.
 		 **/
-		Arxx::Buffer::size_type m_Position;
+		Arxx::Buffer::size_type m_Position{0};
         
 		/**
 		 * @brief A vector of pointers to structures describing the sub buffers.
@@ -455,7 +455,7 @@ namespace Arxx
 		 *
 		 * This is a fluid state and will be changed in vWrite() and vDelete() when @em this buffer is actually changing. It will not be true from anywhere outside the library.
 		 **/
-		bool m_Changing;
+		bool m_Changing{false};
         
 	};
 	

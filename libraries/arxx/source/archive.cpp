@@ -38,9 +38,7 @@
 // Arxx::Archive                                                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Archive::Archive() :
-	m_RootItem(nullptr),
-	m_IStream(nullptr)
+Arxx::Archive::Archive()
 {
 	srand(time(0));
 }
@@ -563,7 +561,7 @@ auto Arxx::Archive::GetNumberOfReferences() const -> Arxx::u4byte
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Arxx::Archive::iterator::iterator(std::map<Arxx::u4byte, Arxx::Item *>::iterator Iterator) :
-	m_Iterator(Iterator)
+	m_Iterator{Iterator}
 {
 }
 
@@ -609,7 +607,7 @@ auto Arxx::Archive::iterator::operator!=(Arxx::Archive::iterator const & Other) 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Arxx::Archive::const_iterator::const_iterator(std::map<Arxx::u4byte, Arxx::Item *>::const_iterator Iterator) :
-	m_Iterator(Iterator)
+	m_Iterator{Iterator}
 {
 }
 

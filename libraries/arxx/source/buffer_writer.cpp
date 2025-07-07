@@ -29,14 +29,13 @@
 #endif
 
 Arxx::BufferWriter::BufferWriter(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position) :
-	m_Buffer(Buffer),
-	m_Marker(Buffer, Position, Arxx::Buffer::Marker::LEFT)
+	m_Buffer{Buffer},
+	m_Marker{Buffer, Position, Arxx::Buffer::Marker::LEFT}
 {
 }
 
 Arxx::BufferWriter::BufferWriter(Arxx::BufferWriter const & Other) :
-	m_Buffer(Other.m_Buffer),
-	m_Marker(Other.m_Buffer, Other.GetPosition(), Arxx::Buffer::Marker::LEFT)
+	Arxx::BufferWriter::BufferWriter{Other.m_Buffer, Other.GetPosition()}
 {
 }
 

@@ -61,16 +61,6 @@ namespace Arxx
 		static Arxx::Data::Compression m_DefaultCompression;
 		
 		/**
-		 * @brief The default constructor for a Arxx::Data.
-		 **/
-		Data();
-		
-		/**
-		 * @brief The destructor of the Arxx::Data.
-		 **/
-		~Data();
-		
-		/**
 		 * @brief Decompresses the data of the buffer.
 		 **/
 		auto Decompress() -> void;
@@ -155,31 +145,31 @@ namespace Arxx
 		 * 
 		 * After creating an Item this value is intentionally invalid.
 		 **/
-		Arxx::u4byte m_Offset;
+		Arxx::u4byte m_Offset{0};
 		
 		/**
 		 * @brief The compressed state the data is currently in.
 		 * 
 		 * Is set to either 0 for to indicate no compression or some value greater than 0 to indicate the compression level of the data as in the zlib library.
 		 **/
-		Arxx::Data::Compression m_CompressionType;
+		Arxx::Data::Compression m_CompressionType{Arxx::Data::Compression::NONE};
 		
 		/**
 		 * @brief The length of the data if decompressed.
 		 **/
-		Arxx::u4byte m_DecompressedLength;
+		Arxx::u4byte m_DecompressedLength{0};
 		
 		/**
 		 * @brief The length of the data if compressed or 0.
 		 * 
 		 * Since the compressed size is not known as long as the data is decompressed this value is 0 whenever the data is decompressed.
 		 **/
-		Arxx::u4byte m_CompressedLength;
+		Arxx::u4byte m_CompressedLength{0};
 		
 		/**
 		 * @brief A status indicator showing the fetch status of the data.
 		 **/
-		bool m_Fetched;
+		bool m_Fetched{true};
         
 	};
 }

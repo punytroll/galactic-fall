@@ -203,7 +203,7 @@ namespace Arxx
 		 * 
 		 * Depending on the constructor this field is either initialized with 0xFFFFFFFF or with the identifier passed to the constructor.
 		 **/
-		u4byte m_Identifier;
+		u4byte m_Identifier{g_InvalidItemIdentifier};
 		
 		/**
 		 * @brief The item's name in string form.
@@ -233,7 +233,7 @@ namespace Arxx
 		 * 
 		 * After creating an Item this value is intentionally 0xFFFFFFFF.
 		 **/
-		Arxx::u4byte m_Type;
+		Arxx::u4byte m_Type{g_InvalidItemIdentifier};
 		
 		/**
 		 * @brief A subtype identifier for @em this item.
@@ -242,22 +242,22 @@ namespace Arxx
 		 * 
 		 * After creating an Item this value is intentionally 0xFFFFFFFF.
 		 **/
-		Arxx::u4byte m_SubType;
+		Arxx::u4byte m_SubType{g_InvalidItemIdentifier};
 		
 		/**
 		 * @brief The major version number of the item.
 		 **/
-		Arxx::u1byte m_MajorVersionNumber;
+		Arxx::u1byte m_MajorVersionNumber{0};
 		
 		/**
 		 * @brief The minor version number of the item.
 		 **/
-		Arxx::u1byte m_MinorVersionNumber;
+		Arxx::u1byte m_MinorVersionNumber{0};
 		
 		/**
 		 * @brief The revision number of the item.
 		 **/
-		Arxx::u1byte m_RevisionNumber;
+		Arxx::u1byte m_RevisionNumber{0};
 		
 		/**
 		 * @brief The candidate number of the item.
@@ -271,7 +271,7 @@ namespace Arxx
 		 * 
 		 * It is changed in conjuction with the Arxx::Archive::vRegisterItem() and Arxx::Archive::vUnregisterItem() functions.
 		 **/
-		Arxx::Archive * m_Archive;
+		Arxx::Archive * m_Archive{nullptr};
 		
 		/**
 		 * @brief The structural information of an item.

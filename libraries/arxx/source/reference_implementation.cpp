@@ -26,17 +26,8 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// Arxx::ReferenceImplementation                                                                  //
+// Arxx::ReferenceImplementation                                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-Arxx::ReferenceImplementation::ReferenceImplementation() :
-	m_ItemIdentifier(0),
-	m_Item(nullptr),
-	m_ReferenceCount(1),
-	m_Archive(nullptr)
-{
-}
-
 Arxx::ReferenceImplementation::~ReferenceImplementation()
 {
 	assert(m_ReferenceCount == 0);

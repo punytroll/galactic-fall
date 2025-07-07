@@ -33,7 +33,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Arxx::Structure::Structure(Arxx::Item & Item) :
-	m_Item(Item)
+	m_Item{Item}
 {
 }
 
@@ -231,11 +231,7 @@ auto Arxx::Structure::WriteToBuffer(Arxx::Buffer & Buffer) const -> void
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Arxx::Structure::iterator::iterator(std::map<std::string, Arxx::Structure::Relation>::iterator Iterator) :
-	m_Iterator(Iterator)
-{
-}
-
-Arxx::Structure::iterator::~iterator()
+	m_Iterator{Iterator}
 {
 }
 
@@ -287,16 +283,12 @@ auto Arxx::Structure::iterator::operator!=(Arxx::Structure::const_iterator const
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Arxx::Structure::const_iterator::const_iterator(std::map<std::string, Arxx::Structure::Relation>::const_iterator Iterator) :
-	m_Iterator(Iterator)
+	m_Iterator{Iterator}
 {
 }
 
 Arxx::Structure::const_iterator::const_iterator(Arxx::Structure::iterator Iterator) :
-	m_Iterator(Iterator.m_Iterator)
-{
-}
-
-Arxx::Structure::const_iterator::~const_iterator()
+	m_Iterator{Iterator.m_Iterator}
 {
 }
 
