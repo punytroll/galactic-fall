@@ -21,6 +21,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -50,7 +51,7 @@ Arxx::Archive::~Archive()
 
 auto Arxx::Archive::Load(std::string const & FilePath) -> bool
 {
-	m_IStream = new std::ifstream(FilePath.c_str());
+	m_IStream = new std::ifstream{FilePath.c_str()};
 	if(m_IStream->fail())
 	{
 		return false;
@@ -58,7 +59,7 @@ auto Arxx::Archive::Load(std::string const & FilePath) -> bool
 	// this position I chose after only a few looks at the file => prove me wrong ;)
 	Close();
 	
-	Arxx::ArchiveHeader ArchiveHeader;
+	auto ArchiveHeader =  Arxx::ArchiveHeader{};
 	
 	(*m_IStream) >> ArchiveHeader;
 	if((ArchiveHeader.MajorVersionNumber == 2) && (ArchiveHeader.MinorVersionNumber == 1) && (ArchiveHeader.RevisionNumber == 0) && (ArchiveHeader.CandidateNumber == 0))
@@ -69,7 +70,7 @@ auto Arxx::Archive::Load(std::string const & FilePath) -> bool
 	else
 	{
 		std::cerr << "Unknown ARX archive format: version = " << static_cast<Arxx::u4byte>(ArchiveHeader.MajorVersionNumber) << '.' << static_cast<Arxx::u4byte>(ArchiveHeader.MinorVersionNumber) << '.' << static_cast<Arxx::u4byte>(ArchiveHeader.RevisionNumber) << '.' << static_cast<Arxx::u4byte>(ArchiveHeader.CandidateNumber) << '.' << std::endl;
-		throw bad_file_format(FilePath);
+		throw Arxx::bad_file_format{FilePath};
 	}
 	
 	return true;
@@ -79,14 +80,14 @@ auto Arxx::Archive::Close() -> void
 {
 	while(m_Items.begin() != m_Items.end())
 	{
-		Arxx::Item * Item(m_Items.begin()->second);
+		auto Item = m_Items.begin()->second;
 		
 		Unregister(Item);
 		Arxx::Item::Delete(Item);
 	}
 	m_RootItem = nullptr;
 	
-	std::map<Arxx::u4byte, Arxx::Reference>::iterator Iterator(m_References.begin());
+	auto Iterator = m_References.begin();
 	
 	while(Iterator != m_References.end())
 	{
@@ -99,7 +100,7 @@ auto Arxx::Archive::Register(Arxx::Item * Item) -> void
 {
 	if(Item == nullptr)
 	{
-		throw std::invalid_argument("Item");
+		throw std::invalid_argument{"Item"};
 	}
 	if(Item->m_Archive == nullptr)
 	{
@@ -107,12 +108,12 @@ auto Arxx::Archive::Register(Arxx::Item * Item) -> void
 	}
 	if(Item->m_Archive != this)
 	{
-		throw std::invalid_argument("Item");
+		throw std::invalid_argument{"Item"};
 	}
 	if(Item->GetIdentifier() == g_InvalidItemIdentifier)
 	{
-		std::map<Arxx::u4byte, Arxx::Item *>::iterator Iterator;
-		Arxx::u4byte NewIdentifier;
+		auto Iterator = std::map<Arxx::u4byte, Arxx::Item *>::iterator{};
+		auto NewIdentifier = Arxx::u4byte{};
 		
 		do
 		{
@@ -123,19 +124,15 @@ auto Arxx::Archive::Register(Arxx::Item * Item) -> void
 	}
 	else
 	{
-		std::map<Arxx::u4byte, Arxx::Item *>::iterator ItemIterator = m_Items.find(Item->GetIdentifier());
+		auto ItemIterator = m_Items.find(Item->GetIdentifier());
 		
 		if(ItemIterator != m_Items.end())
 		{
-			std::stringstream ssID;
-			
-			ssID << Item->GetIdentifier();
-			
-			throw id_not_unique(ssID.str());
+			throw Arxx::id_not_unique{std::to_string(Item->GetIdentifier())};
 		}
 		m_Items[Item->GetIdentifier()] = Item;
 		
-		std::map<Arxx::u4byte, Arxx::Reference>::iterator ReferenceIterator(m_References.find(Item->GetIdentifier()));
+		auto ReferenceIterator = m_References.find(Item->GetIdentifier());
 		
 		if(ReferenceIterator == m_References.end())
 		{
@@ -147,18 +144,18 @@ auto Arxx::Archive::Register(Arxx::Item * Item) -> void
 		}
 		
 		/** @todo the following is the brute force implementation. It can be done much faster with a merge sort **/
-		Arxx::Structure::iterator RelationIterator(Item->GetStructure().begin());
-		Arxx::Structure::iterator RelationEnd(Item->GetStructure().end());
+		auto RelationIterator = Item->GetStructure().begin();
+		auto RelationEnd = Item->GetStructure().end();
 		
 		while(RelationIterator != RelationEnd)
 		{
-			Arxx::Structure::Relation::iterator ReferenceIterator(RelationIterator->begin());
-			Arxx::Structure::Relation::iterator ReferenceEnd(RelationIterator->end());
+			auto ReferenceIterator = RelationIterator->begin();
+			auto ReferenceEnd = RelationIterator->end();
 			
 			while(ReferenceIterator != ReferenceEnd)
 			{
 				// use GetReference() to create or retrieve the Reference in the archive's Reference map and then attach the Item's Reference to it
-				Arxx::Reference Reference(GetReference(ReferenceIterator->GetItemIdentifier()));
+				auto Reference = Arxx::Reference{GetReference(ReferenceIterator->GetItemIdentifier())};
 				
 				Reference.Attach(*ReferenceIterator);
 				++ReferenceIterator;
@@ -172,25 +169,25 @@ auto Arxx::Archive::Unregister(Arxx::Item * Item) -> void
 {
 	if(Item->m_Archive != this)
 	{
-		throw std::invalid_argument("Item");
+		throw std::invalid_argument{"Item"};
 	}
 	
-	std::map<Arxx::u4byte, Arxx::Item *>::iterator ItemIterator(m_Items.find(Item->GetIdentifier()));
-	std::map<Arxx::u4byte, Arxx::Reference>::iterator ReferenceIterator(m_References.find(Item->GetIdentifier()));
+	auto ItemIterator = m_Items.find(Item->GetIdentifier());
+	auto ReferenceIterator = m_References.find(Item->GetIdentifier());
 	
 	if((ItemIterator == m_Items.end()) || (ReferenceIterator == m_References.end()))
 	{
-		throw std::invalid_argument("Item");
+		throw std::invalid_argument{"Item"};
 	}
 	
 	// before removing the Item from the Archive we correct its references
-	Arxx::Structure::iterator RelationIterator(Item->GetStructure().begin());
-	Arxx::Structure::iterator RelationEnd(Item->GetStructure().end());
+	auto RelationIterator = Item->GetStructure().begin();
+	auto RelationEnd = Item->GetStructure().end();
 	
 	while(RelationIterator != RelationEnd)
 	{
-		Arxx::Structure::Relation::iterator ReferenceIterator(RelationIterator->begin());
-		Arxx::Structure::Relation::iterator ReferenceEnd(RelationIterator->end());
+		auto ReferenceIterator = RelationIterator->begin();
+		auto ReferenceEnd = RelationIterator->end();
 		
 		while(ReferenceIterator != ReferenceEnd)
 		{
@@ -211,7 +208,7 @@ auto Arxx::Archive::SetRootItem(Arxx::Item * Item) -> void
 {
 	if((Item != nullptr) && (Item->m_Archive != this))
 	{
-		throw std::invalid_argument("Item");
+		throw std::invalid_argument{"Item"};
 	}
 	m_RootItem = Item;
 }
@@ -223,7 +220,7 @@ auto Arxx::Archive::GetItem(Arxx::u4byte ItemIdentifier) const -> Arxx::Item con
 		return nullptr;
 	}
 	
-	std::map<Arxx::u4byte, Arxx::Item *>::const_iterator ItemIterator(m_Items.find(ItemIdentifier));
+	auto ItemIterator = m_Items.find(ItemIdentifier);
 	
 	if(ItemIterator == m_Items.end())
 	{
@@ -240,7 +237,7 @@ auto Arxx::Archive::GetItem(Arxx::u4byte ItemIdentifier) -> Arxx::Item *
 		return nullptr;
 	}
 	
-	std::map<Arxx::u4byte, Arxx::Item *>::iterator ItemIterator(m_Items.find(ItemIdentifier));
+	auto ItemIterator(m_Items.find(ItemIdentifier));
 	
 	if(ItemIterator == m_Items.end())
 	{
@@ -257,13 +254,13 @@ auto Arxx::Archive::GetItem(std::string Path) -> Arxx::Item *
 		return nullptr;
 	}
 	
-	std::string ChildRelation;
-	Arxx::Item * Item(GetRootItem());
+	auto ChildRelation = std::string{};
+	auto Item = GetRootItem();
 	
 	while((Item != nullptr) && ((Path != "/") || (Path == "")))
 	{
-		std::string::size_type PathSeparatorIndex(Path.find('/', 1));
-		std::string ChildName(Path.substr(1, PathSeparatorIndex - 1));
+		auto PathSeparatorIndex = Path.find('/', 1);
+		auto ChildName = Path.substr(1, PathSeparatorIndex - 1);
 		
 		if(PathSeparatorIndex == std::string::npos)
 		{
@@ -274,7 +271,7 @@ auto Arxx::Archive::GetItem(std::string Path) -> Arxx::Item *
 			Path = Path.substr(PathSeparatorIndex);
 		}
 		
-		std::string::size_type RelationSeparatorIndex(ChildName.find("::"));
+		auto RelationSeparatorIndex = ChildName.find("::");
 		
 		if(RelationSeparatorIndex != std::string::npos)
 		{
@@ -291,8 +288,8 @@ auto Arxx::Archive::GetItem(std::string Path) -> Arxx::Item *
 		}
 		else
 		{
-			Arxx::Structure::Relation & Relation(Item->GetStructure().GetRelation(ChildRelation));
-			Arxx::Structure::Relation::iterator ReferenceIterator(Relation.begin());
+			auto & Relation = Item->GetStructure().GetRelation(ChildRelation);
+			auto ReferenceIterator = Relation.begin();
 			
 			for(; ReferenceIterator != Relation.end(); ++ReferenceIterator)
 			{
@@ -320,13 +317,13 @@ auto Arxx::Archive::GetItem(std::string Path) const -> Arxx::Item const *
 		return nullptr;
 	}
 	
-	std::string ChildRelation;
-	const Arxx::Item * Item(GetRootItem());
+	auto ChildRelation = std::string{};
+	auto Item = GetRootItem();
 	
 	while((Item != nullptr) && ((Path != "/") || (Path == "")))
 	{
-		std::string::size_type PathSeparatorIndex(Path.find('/', 1));
-		std::string ChildName(Path.substr(1, PathSeparatorIndex - 1));
+		auto PathSeparatorIndex = Path.find('/', 1);
+		auto ChildName = Path.substr(1, PathSeparatorIndex - 1);
 		
 		if(PathSeparatorIndex == std::string::npos)
 		{
@@ -337,7 +334,7 @@ auto Arxx::Archive::GetItem(std::string Path) const -> Arxx::Item const *
 			Path = Path.substr(PathSeparatorIndex);
 		}
 		
-		std::string::size_type RelationSeparatorIndex(ChildName.find("::"));
+		auto RelationSeparatorIndex = ChildName.find("::");
 		
 		if(RelationSeparatorIndex != std::string::npos)
 		{
@@ -354,8 +351,8 @@ auto Arxx::Archive::GetItem(std::string Path) const -> Arxx::Item const *
 		}
 		else
 		{
-			const Arxx::Structure::Relation & Relation(Item->GetStructure().GetRelation(ChildRelation));
-			Arxx::Structure::Relation::const_iterator ReferenceIterator(Relation.begin());
+			auto & Relation = Item->GetStructure().GetRelation(ChildRelation);
+			auto ReferenceIterator = Relation.begin();
 			
 			for(; ReferenceIterator != Relation.end(); ++ReferenceIterator)
 			{
@@ -388,7 +385,7 @@ auto Arxx::Archive::GetRootItem() const -> Arxx::Item const *
 
 auto Arxx::Archive::GetReference(Arxx::u4byte ItemIdentifier) -> Arxx::Reference
 {
-	std::map<Arxx::u4byte, Arxx::Reference>::iterator ReferenceIterator(m_References.find(ItemIdentifier));
+	auto ReferenceIterator = m_References.find(ItemIdentifier);
 	
 	if(ReferenceIterator == m_References.end())
 	{
@@ -402,38 +399,38 @@ auto Arxx::Archive::GetReference(Arxx::u4byte ItemIdentifier) -> Arxx::Reference
 
 auto Arxx::Archive::ReleaseReferenceCore(Arxx::ReferenceCore * ReferenceCore) -> void
 {
-	std::map<Arxx::u4byte, Arxx::Reference>::iterator ReferenceIterator(m_References.find(ReferenceCore->GetItemIdentifier()));
+	auto ReferenceIterator = m_References.find(ReferenceCore->GetItemIdentifier());
 	
 	if(ReferenceIterator == m_References.end())
 	{
-		throw std::runtime_error("Arxx::Archive::vReleaseReference: Reference not found in the reference map.");
+		throw std::runtime_error{"Arxx::Archive::vReleaseReference: Reference not found in the reference map."};
 	}
 	m_References.erase(ReferenceIterator);
 }
 
 auto Arxx::Archive::m_Read_2_1_0_0(Arxx::u4byte ItemCount) -> void
 {
-	Arxx::ItemHeader ItemHeader;
-	Arxx::u4byte ItemIndex(0);
+	auto ItemIndex = 0UL;
 	
 	while(++ItemIndex <= ItemCount)
 	{
+        auto ItemHeader = Arxx::ItemHeader{};
+        
 		(*m_IStream) >> ItemHeader;
 		
-		Item * pItem(Arxx::Item::Create(this, ItemHeader.Identifier));
+		auto Item = Arxx::Item::Create(this, ItemHeader.Identifier);
 		
-		pItem->SetType(ItemHeader.Type);
-		pItem->SetSubType(ItemHeader.SubType);
-		pItem->SetVersionNumbers(ItemHeader.MajorVersionNumber, ItemHeader.MinorVersionNumber, ItemHeader.RevisionNumber, ItemHeader.CandidateNumber);
+		Item->SetType(ItemHeader.Type);
+		Item->SetSubType(ItemHeader.SubType);
+		Item->SetVersionNumbers(ItemHeader.MajorVersionNumber, ItemHeader.MinorVersionNumber, ItemHeader.RevisionNumber, ItemHeader.CandidateNumber);
 		
-		char * pcName = new char[ItemHeader.NameLength + 1];
+		auto Name = std::vector<char>(ItemHeader.NameLength + 1);
 		
-		m_IStream->read(pcName, ItemHeader.NameLength + 1);
-		pcName[ItemHeader.NameLength] = '\0';
-		pItem->SetName(pcName);
-		delete[] pcName;
-		pItem->GetStructure().ReadFromStream(ItemHeader.StructureLength, *m_IStream);
-		pItem->SetFetchInformation(m_IStream->tellg(), static_cast<Arxx::Data::Compression>(ItemHeader.DataCompressionType), ItemHeader.DataDecompressedLength, ItemHeader.DataCompressedLength);
+		m_IStream->read(Name.data(), ItemHeader.NameLength + 1);
+		Name[ItemHeader.NameLength] = '\0';
+		Item->SetName(Name.data());
+		Item->GetStructure().m_ReadFromStream(ItemHeader.StructureLength, *m_IStream);
+		Item->SetFetchInformation(m_IStream->tellg(), static_cast<Arxx::Data::Compression>(ItemHeader.DataCompressionType), ItemHeader.DataDecompressedLength, ItemHeader.DataCompressedLength);
 		m_IStream->seekg((ItemHeader.DataCompressionType == 0) ? (ItemHeader.DataDecompressedLength) : (ItemHeader.DataCompressedLength), std::ios_base::cur);
 	}
 }
@@ -443,7 +440,7 @@ auto Arxx::Archive::Fetch(Arxx::u4byte Offset, Arxx::u4byte Length, Arxx::Buffer
 	m_IStream->seekg(Offset, std::ios_base::beg);
 	Buffer->SetLength(0);
 	
-	Arxx::BufferWriter BufferWriter(*Buffer);
+	auto BufferWriter = Arxx::BufferWriter{*Buffer};
 	
 	BufferWriter << std::make_pair(static_cast<Arxx::Buffer::size_type>(Length), reinterpret_cast<std::istream *>(m_IStream));
 	
@@ -452,15 +449,12 @@ auto Arxx::Archive::Fetch(Arxx::u4byte Offset, Arxx::u4byte Length, Arxx::Buffer
 
 auto Arxx::Archive::Save(std::string const & FilePath, bool AutoCompress) -> void
 {
-	std::stringstream TemporaryFilePath;
-	
-	TemporaryFilePath << "/tmp/ARX" << time(0);
-	
-	std::ofstream OStream(TemporaryFilePath.str().c_str());
+    auto TemporaryFilePath = std::filesystem::temp_directory_path() / ("ARX" + std::to_string(time(0)));
+	auto OStream = std::ofstream{TemporaryFilePath};
 	
 	if(!OStream)
 	{
-		throw file_error(TemporaryFilePath.str());
+		throw Arxx::file_error{TemporaryFilePath};
 	}
 	
 	Arxx::ArchiveHeader ArchiveHeader;
@@ -472,51 +466,45 @@ auto Arxx::Archive::Save(std::string const & FilePath, bool AutoCompress) -> voi
 	ArchiveHeader.RootItemIdentifier = ((m_RootItem != nullptr) ? (m_RootItem->GetIdentifier()) : (g_InvalidItemIdentifier));
 	ArchiveHeader.NumberOfItems = m_Items.size();
 	OStream << ArchiveHeader;
-	
-	std::map<Arxx::u4byte, Arxx::Item *>::iterator ItemIterator(m_Items.begin());
-	
-	while(ItemIterator != m_Items.end())
+	for(auto const & [ItemIdentifier, Item] : m_Items)
 	{
-		Item & Item(*(ItemIterator->second));
-		
-		if(Item.IsFetched() == false)
+		if(Item->IsFetched() == false)
 		{
-			Item.Fetch();
+			Item->Fetch();
 		}
-		if((Item.IsFetched() == true) && (Item.IsCompressed() == false) && (Item.GetDecompressedLength() > 32) && (AutoCompress == true))
+		if((Item->IsFetched() == true) && (Item->IsCompressed() == false) && (Item->GetDecompressedLength() > 32) && (AutoCompress == true))
 		{
-			Item.Compress();
+			Item->Compress();
 		}
 		
 		Arxx::ItemHeader ItemHeader;
 		
-		ItemHeader.Identifier = Item.GetIdentifier();
-		ItemHeader.Type = Item.GetType();
-		ItemHeader.SubType = Item.GetSubType();
-		ItemHeader.MajorVersionNumber = Item.GetMajorVersionNumber();
-		ItemHeader.MinorVersionNumber = Item.GetMinorVersionNumber();
-		ItemHeader.RevisionNumber = Item.GetRevisionNumber();
-		ItemHeader.CandidateNumber = Item.GetCandidateNumber();
-		ItemHeader.DataCompressionType = Item.GetCompression();
-		ItemHeader.NameLength = Item.GetName().length();
-		ItemHeader.DataDecompressedLength = Item.GetDecompressedLength();
-		ItemHeader.DataCompressedLength = Item.GetCompressedLength();
+		ItemHeader.Identifier = Item->GetIdentifier();
+		ItemHeader.Type = Item->GetType();
+		ItemHeader.SubType = Item->GetSubType();
+		ItemHeader.MajorVersionNumber = Item->GetMajorVersionNumber();
+		ItemHeader.MinorVersionNumber = Item->GetMinorVersionNumber();
+		ItemHeader.RevisionNumber = Item->GetRevisionNumber();
+		ItemHeader.CandidateNumber = Item->GetCandidateNumber();
+		ItemHeader.DataCompressionType = Item->GetCompression();
+		ItemHeader.NameLength = Item->GetName().length();
+		ItemHeader.DataDecompressedLength = Item->GetDecompressedLength();
+		ItemHeader.DataCompressedLength = Item->GetCompressedLength();
 		
 		Arxx::Data StructureBuffer;
 		
-		StructureBuffer << Item.GetStructure();
+		StructureBuffer << Item->GetStructure();
 		ItemHeader.StructureLength = StructureBuffer.GetLength();
-		OStream << ItemHeader << Item.GetName() << '\0' << StructureBuffer << Item;
-		++ItemIterator;
+		OStream << ItemHeader << Item->GetName() << '\0' << StructureBuffer << *Item;
 	}
 	OStream.close();
 	
-	int ChildPID = 0;
-	int Return = 0;
+	auto ChildPID = 0;
+	auto Return = 0;
 	
 	if((ChildPID = fork()) == 0)
 	{
-		execlp("mv", "mv", "--force", TemporaryFilePath.str().c_str(), FilePath.c_str(), reinterpret_cast<char *>(0));
+		execlp("mv", "mv", "--force", TemporaryFilePath, FilePath.c_str(), reinterpret_cast<char *>(0));
 	}
 	waitpid(ChildPID, &Return, 0);
 }

@@ -93,7 +93,7 @@ auto Arxx::Data::Decompress() -> void
 			m_CompressionType = Arxx::Data::NONE;
 			m_CompressedLength = 0;
 #else
-			throw std::runtime_error("Unsupported decompression method.");
+			throw std::runtime_error{"Unsupported decompression method."};
 #endif
 			
 			break;
@@ -140,7 +140,7 @@ auto Arxx::Data::Decompress() -> void
 			m_CompressionType = Arxx::Data::NONE;
 			m_CompressedLength = 0;
 #else
-			throw std::runtime_error("Unsupported decompression method.");
+			throw std::runtime_error{"Unsupported decompression method."};
 #endif
 			break;
 		}
@@ -205,7 +205,7 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 			m_CompressionType = CompressionType;
 			m_CompressedLength = zStream.total_out;
 #else
-			throw std::runtime_error("Unsupported compression method.");
+			throw std::runtime_error{"Unsupported compression method."};
 #endif
 			
 			break;
@@ -251,7 +251,7 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 			m_CompressionType = CompressionType;
 			m_CompressedLength = BZStream.total_out_lo32;
 #else
-			throw std::runtime_error("Unsupported compression method.");
+			throw std::runtime_error{"Unsupported compression method."};
 #endif
 			break;
 		}

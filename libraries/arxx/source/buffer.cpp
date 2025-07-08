@@ -129,7 +129,7 @@ Arxx::Buffer::Buffer(Arxx::Buffer & Buffer, size_type Position, size_type Length
 	{
 		m_Length = m_Capacity = Buffer.m_Length - m_Position;
 	}
-	Buffer.Register(*this);
+	Buffer.m_Register(*this);
 }
 
 Arxx::Buffer::~Buffer()
@@ -140,10 +140,10 @@ Arxx::Buffer::~Buffer()
 	}
 	else
 	{
-		m_SupBuffer->Unregister(*this);
+		m_SupBuffer->m_Unregister(*this);
 	}
 
-	std::vector<Arxx::Buffer::SubBuffer *>::iterator SubBufferIterator(m_SubBuffers.begin());
+	auto SubBufferIterator = m_SubBuffers.begin();
 
 	while(SubBufferIterator != m_SubBuffers.end())
 	{
@@ -152,21 +152,21 @@ Arxx::Buffer::~Buffer()
 	}
 }
 
-void Arxx::Buffer::Register(Arxx::Buffer & Buffer)
+void Arxx::Buffer::m_Register(Arxx::Buffer & Buffer)
 {
-	size_type Order(1);
+	auto Order = 1U;
 
 	if(m_SubBuffers.size() != 0)
 	{
 		Order = (*(m_SubBuffers.end() - 1))->GetOrder() + 1;
 	}
-	m_SubBuffers.push_back(new SubBuffer(Buffer, Order));
+	m_SubBuffers.push_back(new Arxx::Buffer::SubBuffer{Buffer, Order});
 }
 
-void Arxx::Buffer::Unregister(Arxx::Buffer & Buffer)
+void Arxx::Buffer::m_Unregister(Arxx::Buffer & Buffer)
 {
-	std::vector<Arxx::Buffer::SubBuffer *>::iterator SubBufferIterator(m_SubBuffers.begin());
-	std::vector<Arxx::Buffer::SubBuffer *>::iterator SubBufferEnd(m_SubBuffers.end());
+	auto SubBufferIterator = m_SubBuffers.begin();
+	auto SubBufferEnd = m_SubBuffers.end();
 
 	while((SubBufferIterator != SubBufferEnd) && (std::addressof((*SubBufferIterator)->GetBuffer()) != std::addressof(Buffer)))
 	{
@@ -179,12 +179,12 @@ void Arxx::Buffer::Unregister(Arxx::Buffer & Buffer)
 	}
 }
 
-void Arxx::Buffer::Register(Arxx::Buffer::Marker & Marker) const
+void Arxx::Buffer::m_Register(Arxx::Buffer::Marker & Marker) const
 {
 	m_Markers.insert(&Marker);
 }
 
-void Arxx::Buffer::Unregister(Arxx::Buffer::Marker & Marker) const
+void Arxx::Buffer::m_Unregister(Arxx::Buffer::Marker & Marker) const
 {
 	m_Markers.erase(m_Markers.find(&Marker));
 }
@@ -211,34 +211,35 @@ void Arxx::Buffer::SetLength(size_type Length)
 
 void Arxx::Buffer::Insert(size_type Position, size_type DataLength, const_pointer Data)
 {
-	Write(*this, Position, DataLength, Data);
+	m_Insert(*this, Position, DataLength, Data);
 }
 
-void Arxx::Buffer::Write(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position, size_type DataLength, const_pointer Data)
+void Arxx::Buffer::m_Insert(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position, size_type DataLength, const_pointer Data)
 {
 #ifdef DEBUG
 	std::cerr << this << Indentation(this) << " Insert(Buffer = " << &Buffer << ", Position = " << Position << ", DataLength = " << DataLength << ")   ---   Status: Position = " << m_Position << ", Length = " << m_Length << ", Capacity = " << m_Capacity << ", ParentBuffer = " << m_SupBuffer << std::endl;
 #endif
 	if(Position > m_Length)
 	{
-		throw std::out_of_range("Trying to write after the end.");
+		throw std::out_of_range{"Trying to write after the end."};
 	}
 
-	pointer OldBegin(m_Begin);
+	auto OldBegin = m_Begin;
 
 	// if the following condition is met we are in the most superior buffer
 	if(m_SupBuffer == nullptr)
 	{
 		// now the real work begins, we have to make the change.
-		bool InsertedData(false);
+		auto InsertedData = false;
 		
 		if(m_Length + DataLength > m_Capacity)
 		{
 			InsertedData = true;
+            
 			// more data than free space
-			size_type Length(std::max(m_Length * 2, m_Length + DataLength));
-			pointer Begin(new value_type[Length]);
-			pointer End(std::copy(m_Begin, m_Begin + Position, Begin));
+			auto Length = std::max(m_Length * 2, m_Length + DataLength);
+			auto Begin = new value_type[Length];
+			auto End = std::copy(m_Begin, m_Begin + Position, Begin);
 			
 			if(Data != nullptr)
 			{
@@ -263,51 +264,47 @@ void Arxx::Buffer::Write(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position
 			}
 		}
 		m_Length += DataLength;
-		for(std::set<Arxx::Buffer::Marker *>::iterator MarkerIterator = m_Markers.begin(); MarkerIterator != m_Markers.end(); ++MarkerIterator)
+		for(auto Marker : m_Markers)
 		{
-			if((((*MarkerIterator)->GetPosition() == Position) && ((*MarkerIterator)->GetAlignment() == Arxx::Buffer::Marker::RIGHT)) || ((*MarkerIterator)->GetPosition() > Position))
+			if(((Marker->GetPosition() == Position) && (Marker->GetAlignment() == Arxx::Buffer::Marker::RIGHT)) || (Marker->GetPosition() > Position))
 			{
-				(*MarkerIterator)->SetPosition((*MarkerIterator)->GetPosition() + DataLength);
+				Marker->SetPosition(Marker->GetPosition() + DataLength);
 			}
 		}
 		
-		size_type Order = 0;
-		std::vector<Arxx::Buffer::SubBuffer *>::iterator SubBufferIterator;
-		std::vector<Arxx::Buffer::SubBuffer *>::iterator SubBufferEnd;
+		auto Order = 0U;
 
-		if(&Buffer != this)
+		if(std::addressof(Buffer) != this)
 		{
-			SubBufferIterator = m_SubBuffers.begin();
-			SubBufferEnd = m_SubBuffers.end();
+			auto SubBufferIterator = m_SubBuffers.begin();
+			auto SubBufferEnd = m_SubBuffers.end();
+            
 			while((SubBufferIterator != SubBufferEnd) && (std::addressof((*SubBufferIterator)->GetBuffer()) != std::addressof(Buffer)))
 			{
 				++SubBufferIterator;
 			}
 			if(SubBufferIterator == SubBufferEnd)
 			{
-				throw std::invalid_argument("The Buffer seems to be invalid (it is not registered as a child)");
+				throw std::invalid_argument{"The Buffer seems to be invalid (it is not registered as a child)"};
 			}
 			Order = (*SubBufferIterator)->GetOrder();
 		}
 #ifdef DEBUG
 		std::cerr << this << Indentation(this) << " is inserting with order " << Order << " and InsertedData = " << InsertedData << std::endl;
 #endif
-		SubBufferIterator = m_SubBuffers.begin();
-		SubBufferEnd = m_SubBuffers.end();
-		while(SubBufferIterator != SubBufferEnd)
+		for(auto SubBuffer : m_SubBuffers)
 		{
-			if(((*SubBufferIterator)->GetOrder() >= Order) && (InsertedData == true))
+			if((SubBuffer->GetOrder() >= Order) && (InsertedData == true))
 			{
-				(*SubBufferIterator)->GetBuffer().ParentDataChanged(m_DataInserted, Position, DataLength);
+				SubBuffer->GetBuffer().m_ParentDataChanged(m_DataInserted, Position, DataLength);
 			}
 			else
 			{
 				if(m_Begin != OldBegin)
 				{
-					(*SubBufferIterator)->GetBuffer().ParentDataChanged(m_DataUpdated, 0, 0);
+					SubBuffer->GetBuffer().m_ParentDataChanged(m_DataUpdated, 0, 0);
 				}
 			}
-			++SubBufferIterator;
 		}
 	}
 	else
@@ -315,46 +312,42 @@ void Arxx::Buffer::Write(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position
 		// this is fairly easy as we are in a child buffer
 		//   we just have to pass the change further up.
 		m_Changing = true;
-		m_SupBuffer->Write(*this, m_Position + Position, DataLength, Data);
+		m_SupBuffer->m_Insert(*this, m_Position + Position, DataLength, Data);
 		m_Changing = false;
 
-		size_type Order = 0;
-		std::vector<Arxx::Buffer::SubBuffer *>::iterator SubBufferIterator;
-		std::vector<Arxx::Buffer::SubBuffer *>::iterator SubBufferEnd;
+		auto Order = 0U;
 
 		if(&Buffer != this)
 		{
-			SubBufferIterator = m_SubBuffers.begin();
-			SubBufferEnd = m_SubBuffers.end();
+			auto SubBufferIterator = m_SubBuffers.begin();
+			auto SubBufferEnd = m_SubBuffers.end();
+            
 			while((SubBufferIterator != SubBufferEnd) && (std::addressof((*SubBufferIterator)->GetBuffer()) != std::addressof(Buffer)))
 			{
 				++SubBufferIterator;
 			}
 			if(SubBufferIterator == SubBufferEnd)
 			{
-				throw std::invalid_argument("The Buffer seems to be invalid (it is not registered as a child)");
+				throw std::invalid_argument{"The Buffer seems to be invalid (it is not registered as a child)"};
 			}
 			Order = (*SubBufferIterator)->GetOrder();
 		}
 #ifdef DEBUG
 		std::cerr << this << Indentation(this) << " is inserting with order " << Order << std::endl;
 #endif
-		SubBufferIterator = m_SubBuffers.begin();
-		SubBufferEnd = m_SubBuffers.end();
-		while(SubBufferIterator != SubBufferEnd)
+		for(auto SubBuffer : m_SubBuffers)
 		{
-			if((*SubBufferIterator)->GetOrder() >= Order)
+			if(SubBuffer->GetOrder() >= Order)
 			{
-				(*SubBufferIterator)->GetBuffer().ParentDataChanged(m_DataInserted, Position, DataLength);
+				SubBuffer->GetBuffer().m_ParentDataChanged(m_DataInserted, Position, DataLength);
 			}
 			else
 			{
 				if(m_Begin != OldBegin)
 				{
-					(*SubBufferIterator)->GetBuffer().ParentDataChanged(m_DataUpdated, 0, 0);
+					SubBuffer->GetBuffer().m_ParentDataChanged(m_DataUpdated, 0, 0);
 				}
 			}
-			++SubBufferIterator;
 		}
 	}
 }
@@ -366,27 +359,22 @@ void Arxx::Buffer::Delete(size_type Position, size_type Length)
 #endif
 	if((Position > m_Length) || (Position + Length > m_Length))
 	{
-		throw std::out_of_range("Trying to delete after the end or until after the end.");
+		throw std::out_of_range{"Trying to delete after the end or until after the end."};
 	}
 	if(m_SupBuffer == nullptr)
 	{
 		std::copy(m_Begin + Position + Length, m_Begin + m_Length, m_Begin + Position);
 		m_Length -= Length;
-		for(std::set<Arxx::Buffer::Marker *>::iterator MarkerIterator = m_Markers.begin(); MarkerIterator != m_Markers.end(); ++MarkerIterator)
+		for(auto Marker : m_Markers)
 		{
-			if((*MarkerIterator)->GetPosition() > m_Length)
+			if(Marker->GetPosition() > m_Length)
 			{
-				(*MarkerIterator)->SetPosition(m_Length);
+				Marker->SetPosition(m_Length);
 			}
 		}
-		
-		std::vector<Arxx::Buffer::SubBuffer *>::iterator SubBufferIterator = m_SubBuffers.begin();
-		std::vector<Arxx::Buffer::SubBuffer *>::iterator SubBufferEnd = m_SubBuffers.end();
-		
-		while(SubBufferIterator != SubBufferEnd)
+		for(auto SubBuffer : m_SubBuffers)
 		{
-			(*SubBufferIterator)->GetBuffer().ParentDataChanged(m_DataDeleted, Position, Length);
-			++SubBufferIterator;
+			SubBuffer->GetBuffer().m_ParentDataChanged(m_DataDeleted, Position, Length);
 		}
 	}
 	else
@@ -402,7 +390,7 @@ Arxx::Buffer::const_pointer Arxx::Buffer::GetBegin() const
 	return m_Begin;
 }
 
-void Arxx::Buffer::ParentDataChanged(size_type ChangeMode, size_type Position, size_type Length)
+void Arxx::Buffer::m_ParentDataChanged(size_type ChangeMode, size_type Position, size_type Length)
 {
 #ifdef DEBUG
 	std::cerr << this << Indentation(this) << " ParentDataChanged(ChangeMode = " << ChangeMode << ", Position = " << Position << ", Length = " << Length << ")   ---   Status: Position = " << m_Position << ", Length = " << m_Length << ", Changing = " << m_Changing << std::endl;
@@ -412,14 +400,9 @@ void Arxx::Buffer::ParentDataChanged(size_type ChangeMode, size_type Position, s
 	case m_DataUpdated:
 		{
 			m_Begin = m_SupBuffer->m_Begin + m_Position;
-
-			std::vector<Arxx::Buffer::SubBuffer *>::iterator SubBufferIterator = m_SubBuffers.begin();
-			std::vector<Arxx::Buffer::SubBuffer *>::iterator SubBufferEnd = m_SubBuffers.end();
-
-			while(SubBufferIterator != SubBufferEnd)
+			for(auto SubBuffer : m_SubBuffers)
 			{
-				(*SubBufferIterator)->GetBuffer().ParentDataChanged(m_DataUpdated, 0, 0);
-				++SubBufferIterator;
+				SubBuffer->GetBuffer().m_ParentDataChanged(m_DataUpdated, 0, 0);
 			}
 
 			break;
@@ -440,15 +423,15 @@ void Arxx::Buffer::ParentDataChanged(size_type ChangeMode, size_type Position, s
 					{
 						// partly intersection
 						m_Length = m_Position + m_Length - (Position + Length);
-						for(std::set<Arxx::Buffer::Marker *>::iterator MarkerIterator = m_Markers.begin(); MarkerIterator != m_Markers.end(); ++MarkerIterator)
+						for(auto Marker : m_Markers)
 						{
-							if(m_Position + (*MarkerIterator)->GetPosition() <= Position + Length)
+							if(m_Position + Marker->GetPosition() <= Position + Length)
 							{
-								(*MarkerIterator)->SetPosition(0);
+								Marker->SetPosition(0);
 							}
 							else
 							{
-								(*MarkerIterator)->SetPosition(m_Position + (*MarkerIterator)->GetPosition() - (Position + Length));
+								Marker->SetPosition(m_Position + Marker->GetPosition() - (Position + Length));
 							}
 						}
 					}
@@ -456,9 +439,9 @@ void Arxx::Buffer::ParentDataChanged(size_type ChangeMode, size_type Position, s
 					{
 						// deletion covers Buffer
 						m_Length = 0;
-						for(std::set<Arxx::Buffer::Marker *>::iterator MarkerIterator = m_Markers.begin(); MarkerIterator != m_Markers.end(); ++MarkerIterator)
+						for(auto Marker : m_Markers)
 						{
-							(*MarkerIterator)->SetPosition(0);
+							Marker->SetPosition(0);
 						}
 					}
 					m_Position = Position;
@@ -507,14 +490,9 @@ void Arxx::Buffer::ParentDataChanged(size_type ChangeMode, size_type Position, s
 				}
 			}
 			m_Begin = m_SupBuffer->m_Begin + m_Position;
-
-			std::vector<Arxx::Buffer::SubBuffer *>::iterator SubBufferIterator = m_SubBuffers.begin();
-			std::vector<Arxx::Buffer::SubBuffer *>::iterator SubBufferEnd = m_SubBuffers.end();
-
-			while(SubBufferIterator != SubBufferEnd)
+			for(auto SubBuffer : m_SubBuffers)
 			{
-				(*SubBufferIterator)->GetBuffer().ParentDataChanged(m_DataDeleted, Position - m_Position, Length);
-				++SubBufferIterator;
+				SubBuffer->GetBuffer().m_ParentDataChanged(m_DataDeleted, Position - m_Position, Length);
 			}
 
 			break;
@@ -542,30 +520,25 @@ void Arxx::Buffer::ParentDataChanged(size_type ChangeMode, size_type Position, s
 				}
 			}
 			// data inserted; we are not prepending; inserting position is after the begin of this buffer
-			// update I/O position
-			for(std::set<Arxx::Buffer::Marker *>::iterator MarkerIterator = m_Markers.begin(); MarkerIterator != m_Markers.end(); ++MarkerIterator)
+			// update markers
+			for(auto Marker : m_Markers)
 			{
-				if(((m_Position + (*MarkerIterator)->GetPosition() == Position) && ((*MarkerIterator)->GetAlignment() == Arxx::Buffer::Marker::RIGHT)) || ((*MarkerIterator)->GetPosition() > Position))
+				if(((m_Position + Marker->GetPosition() == Position) && (Marker->GetAlignment() == Arxx::Buffer::Marker::RIGHT)) || (Marker->GetPosition() > Position))
 				{
-					// only if the data was inserted BEFORE or AT the I/O position
-					(*MarkerIterator)->SetPosition((*MarkerIterator)->GetPosition() + Length);
+					// only if the data was inserted BEFORE or AT the marker position
+					Marker->SetPosition(Marker->GetPosition() + Length);
 				}
 			}
 			m_Begin = m_SupBuffer->m_Begin + m_Position;
-
-			// NEXT: because, if we are changing there is an order, which must be followed. handle from vInsert
+			// NEXT: because, if we are changing there is an order, which must be followed.
 			if(m_Changing == false)
 			{
-				std::vector<Arxx::Buffer::SubBuffer *>::iterator SubBufferIterator = m_SubBuffers.begin();
-				std::vector<Arxx::Buffer::SubBuffer *>::iterator SubBufferEnd = m_SubBuffers.end();
-
-				while(SubBufferIterator != SubBufferEnd)
+				for(auto SubBuffer : m_SubBuffers)
 				{
 					if(Position >= m_Position)
 					{
-						(*SubBufferIterator)->GetBuffer().ParentDataChanged(m_DataInserted, Position - m_Position, Length);
+						SubBuffer->GetBuffer().m_ParentDataChanged(m_DataInserted, Position - m_Position, Length);
 					}
-					++SubBufferIterator;
 				}
 			}
 
@@ -611,12 +584,12 @@ Arxx::Buffer::Marker::Marker(Arxx::Buffer const & Buffer, Arxx::Buffer::size_typ
 	m_Position{(m_Buffer->GetLength() > Position) ? (Position) : (m_Buffer->GetLength())},
 	m_Alignment{Alignment}
 {
-	m_Buffer->Register(*this);
+	m_Buffer->m_Register(*this);
 }
 
 Arxx::Buffer::Marker::~Marker()
 {
-	m_Buffer->Unregister(*this);
+	m_Buffer->m_Unregister(*this);
 }
 
 Arxx::Buffer::size_type Arxx::Buffer::Marker::GetPosition() const

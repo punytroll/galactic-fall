@@ -125,16 +125,16 @@ namespace Arxx
 			/**
 			 * @brief The Marker's constructor.
 			 * 
-			 * The constructor will call Arxx::Buffer::vRegister(this) to register the marker at the associated Arxx::Buffer.
+			 * The constructor will call Arxx::Buffer::Register(this) to register the marker at the associated Arxx::Buffer.
 			 * 
-			 * The position is truncated at Buffer.stGetLength() if greater than that.
+			 * The position is truncated at Buffer.GetLength() if greater than that.
 			 **/
 			Marker(const Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position = 0, Arxx::Buffer::Marker::Alignment Alignment = LEFT);
 			
 			/**
 			 * @brief The Marker's destructor.
 			 * 
-			 * The destructor will call Arxx::Buffer::vUnregister(this) to unregister the marker at the associated Arxx::Buffer.
+			 * The destructor will call Arxx::Buffer::Unregister(this) to unregister the marker at the associated Arxx::Buffer.
 			 **/
 			~Marker();
 			
@@ -342,29 +342,29 @@ namespace Arxx
 		 *
 		 * This function handles the necessary steps to organise the control structure which contains all the sub buffers. This structure is needed to propagate changes.
 		 **/
-		auto Register(Arxx::Buffer & SubBuffer) -> void;
+		auto m_Register(Arxx::Buffer & SubBuffer) -> void;
 		
 		/**
 		 * @brief This function removes a buffer from the list of all sub buffer of @em this buffer.
 		 *
 		 * This function handles the necessary steps to organise the control structure which contains all the sub buffers. This structure is needed to propagate changes.
 		 **/
-		auto Unregister(Arxx::Buffer & SubBuffer) -> void;
+		auto m_Unregister(Arxx::Buffer & SubBuffer) -> void;
 		
-		auto Register(Arxx::Buffer::Marker & Marker) const -> void;
+		auto m_Register(Arxx::Buffer::Marker & Marker) const -> void;
 		
-		auto Unregister(Arxx::Buffer::Marker & Marker) const -> void;
+		auto m_Unregister(Arxx::Buffer::Marker & Marker) const -> void;
 		
 		/**
-		 * @brief This function is responsible for any functionality that writes data to the buffer.
-		 * @param Buffer The buffer that makes the write request.
-		 * @param stPosition The position (inside this buffer) where the data is to be stored.
-		 * @param stDataLength The length of the data block @a Data.
+		 * @brief This function is responsible for any functionality that inserts data to the buffer.
+		 * @param Buffer The original buffer that made the insertion request.
+		 * @param Position The position where the data is to be inserted, modified to this buffer.
+		 * @param DataLength The length of the data block @a Data.
 		 * @param Data The data block to be written into the buffer.
 		 * 
 		 * This function is one of the two core functions of the buffer. It allows to insert any data in any buffer and will pipe the call to the most superior buffer which actually copies the data. It will then decide which sub buffers should be notified that content or position has changed.
 		 **/
-		auto Write(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position, Arxx::Buffer::size_type DataLength, Arxx::Buffer::const_pointer Data = nullptr) -> void;
+		auto m_Insert(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position, Arxx::Buffer::size_type DataLength, Arxx::Buffer::const_pointer Data = nullptr) -> void;
 		
 		/**
 		 * @brief This function is called whenever the data of the sup buffer is changed in a way that also affects this buffer.
@@ -401,7 +401,7 @@ namespace Arxx
 		 *   - The deletion overlaps @em this buffer completely: m_Length is set to 0 and m_Position is set to Position.
 		 * - The structural changes are very much the same as for Inserts. We just need to pass this change down to all sub buffers by calling vParentDataChanged(m_stDataDeleted, stPosition - m_stPosition, stLength).
 		 **/
-		auto ParentDataChanged(size_type ChangeMode, Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length) -> void;
+		auto m_ParentDataChanged(size_type ChangeMode, Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length) -> void;
     
 		/**
 		 * @brief A pointer pointing to the superior buffer.

@@ -555,11 +555,11 @@ namespace Arxx
 		 * 
 		 * This function simply appends the structure information to the @a Buffer.
 		 **/
-		auto WriteToBuffer(Arxx::Buffer & Buffer) const -> void;
+		auto m_WriteToBuffer(Arxx::Buffer & Buffer) const -> void;
 		
-		auto ReadFromStream(Arxx::u4byte StructureDataLength, std::istream & IStream) -> void;
+		auto m_ReadFromStream(Arxx::u4byte StructureDataLength, std::istream & IStream) -> void;
 		
-		auto RemoveRelation(Arxx::Structure::Relation * Relation) -> void;
+		auto m_RemoveRelation(Arxx::Structure::Relation * Relation) -> void;
         
 		Arxx::Item & m_Item;
 		std::map<std::string, Arxx::Structure::Relation> m_Relations;

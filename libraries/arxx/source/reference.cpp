@@ -92,7 +92,7 @@ auto Arxx::Reference::Attach(Arxx::Reference & Reference) -> bool
 
 auto Arxx::Reference::Detach() -> bool
 {
-	Arxx::ReferenceCore * ReferenceCore(Arxx::ReferenceCore::Create(GetItemIdentifier()));
+	auto ReferenceCore = Arxx::ReferenceCore::Create(GetItemIdentifier());
 	
 	m_SetCore(ReferenceCore);
 	// releasing the local pointer

@@ -43,7 +43,7 @@ auto Arxx::BufferWriter::Write(Arxx::Buffer::size_type DataLength, Arxx::Buffer:
 {
 	if(m_Marker.IsValid() == false)
 	{
-		throw std::runtime_error("Arxx::BufferWriter::vWrite: Buffer was destroyed.");
+		throw std::runtime_error{"Arxx::BufferWriter::vWrite: Buffer was destroyed."};
 	}
 	m_Marker.SetAlignment(Arxx::Buffer::Marker::RIGHT);
 	m_Buffer.Insert(m_Marker.GetPosition(), DataLength, Data);
@@ -126,16 +126,16 @@ auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, char Value) -> Arxx::Bu
 	return BufferWriter;
 }
 
-auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, std::pair< Arxx::Buffer::size_type, std::istream * > const & Stream) -> Arxx::BufferWriter &
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, std::pair<Arxx::Buffer::size_type, std::istream *> const & Stream) -> Arxx::BufferWriter &
 {
 #ifdef DEBUG
 	std::cerr << "Arxx::operator<<(std::pair< size, stream >): size = " << Stream.first << std::endl;
 #endif
-	Arxx::Buffer::size_type Index(0);
+	auto Index = 0U;
 
 	while(Index < Stream.first)
 	{
-		char Character;
+		auto Character = '\0';
 		
 		Stream.second->get(Character);
 		if(Stream.second->good() == true)

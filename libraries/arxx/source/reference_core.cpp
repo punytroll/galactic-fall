@@ -35,7 +35,7 @@ Arxx::ReferenceCore::~ReferenceCore()
 
 auto Arxx::ReferenceCore::Create(Arxx::Item & Item) -> Arxx::ReferenceCore *
 {
-	Arxx::ReferenceCore * ReferenceCore(new Arxx::ReferenceCore{});
+	auto ReferenceCore = new Arxx::ReferenceCore{};
 	
 	ReferenceCore->m_Item = &Item;
 	ReferenceCore->m_ItemIdentifier = Item.GetIdentifier();
@@ -47,7 +47,7 @@ auto Arxx::ReferenceCore::Create(Arxx::Item & Item) -> Arxx::ReferenceCore *
 
 auto Arxx::ReferenceCore::Create(Arxx::u4byte ItemIdentifier, Arxx::Archive * Archive) -> Arxx::ReferenceCore *
 {
-	Arxx::ReferenceCore * ReferenceCore(new Arxx::ReferenceCore{});
+	auto ReferenceCore = new Arxx::ReferenceCore{};
 	
 	ReferenceCore->m_Item = nullptr;
 	ReferenceCore->m_ItemIdentifier = ItemIdentifier;
@@ -113,11 +113,11 @@ auto Arxx::ReferenceCore::Resolve(Arxx::Item & Item) -> void
 {
 	if(GetItem() != nullptr)
 	{
-		throw std::runtime_error("Arxx::ReferenceCore::Resolve: Trying to resolve a resolved reference.");
+		throw std::runtime_error{"Arxx::ReferenceCore::Resolve: Trying to resolve a resolved reference."};
 	}
 	if(Item.GetIdentifier() != GetItemIdentifier())
 	{
-		throw std::runtime_error("Arxx::ReferenceCore::Resolve: Trying to resolve a reference with different unique ID.");
+		throw std::runtime_error{"Arxx::ReferenceCore::Resolve: Trying to resolve a reference with different unique ID."};
 	}
 	m_Item = std::addressof(Item);
 }
@@ -126,7 +126,7 @@ auto Arxx::ReferenceCore::Unresolve() -> void
 {
 	if(GetItem() == nullptr)
 	{
-		throw std::runtime_error("Arxx::ReferenceCore::Unresolve: Trying to unresolve an unresolved reference.");
+		throw std::runtime_error{"Arxx::ReferenceCore::Unresolve: Trying to unresolve an unresolved reference."};
 	}
 	m_Item = nullptr;
 }

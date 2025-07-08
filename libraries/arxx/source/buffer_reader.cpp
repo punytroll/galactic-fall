@@ -35,11 +35,11 @@ auto Arxx::BufferReader::Read(Arxx::Buffer::size_type Length, Arxx::Buffer::poin
 {
 	if(m_Marker.IsValid() == false)
 	{
-		throw std::runtime_error("Arxx::BufferWriter::Write: Buffer was destroyed.");
+		throw std::runtime_error{"Arxx::BufferWriter::Write: Buffer was destroyed."};
 	}
 	if(m_Marker.GetPosition() + Length > m_Buffer.GetLength())
 	{
-		throw std::out_of_range("Trying to read after the end.");
+		throw std::out_of_range{"Trying to read after the end."};
 	}
 	std::copy(m_Buffer.GetBegin() + m_Marker.GetPosition(), m_Buffer.GetBegin() + m_Marker.GetPosition() + Length, Buffer);
 	m_Marker.SetPosition(m_Marker.GetPosition() + Length);
@@ -64,20 +64,22 @@ auto Arxx::BufferReader::SetPosition(Arxx::Buffer::size_type Position) -> void
 
 auto Arxx::operator>>(Arxx::BufferReader & BufferReader, std::string & String) -> Arxx::BufferReader &
 {
-	Arxx::Buffer const & Buffer(BufferReader.GetBuffer());
-	Arxx::Buffer::size_type Index(BufferReader.GetPosition());
-	Arxx::Buffer::size_type Length(Buffer.GetLength());
-	char Char(0);
+	auto const & Buffer = BufferReader.GetBuffer();
+	auto Index = BufferReader.GetPosition();
+	auto Length = Buffer.GetLength();
 
 	while(Length > Index)
 	{
-		if((Char = Buffer[Index++]) == '\0')
+		if(auto Char = Buffer[Index++]; Char == '\0')
 		{
 			break;
 		}
-		String += Char;
+        else
+        {
+            String += Char;
+        }
 	}
-	BufferReader.SetPosition(BufferReader.GetPosition() + String.length() + 1);
+	BufferReader.SetPosition(Index);
 
 	return BufferReader;
 }

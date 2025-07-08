@@ -53,7 +53,7 @@ auto Arxx::Item::Create(Arxx::Archive * Archive) -> Arxx::Item *
 
 auto Arxx::Item::Create(Arxx::Archive * Archive, Arxx::u4byte Identifier) -> Arxx::Item *
 {
-	Arxx::Item * Result(new Arxx::Item());
+	auto Result = new Arxx::Item();
 	
 	Result->SetIdentifier(Identifier);
 	if(Archive != nullptr)
@@ -97,8 +97,8 @@ auto Arxx::Item::SetIdentifier(Arxx::u4byte Identifier) -> void
 	}
 	else
 	{
-		// save the library as it will be set to null in vUnregisterItem.
-		Arxx::Archive * Archive(m_Archive);
+		// save the archive as it will be set to null in UnregisterItem.
+		auto Archive = m_Archive;
 		
 		try
 		{
@@ -108,7 +108,7 @@ auto Arxx::Item::SetIdentifier(Arxx::u4byte Identifier) -> void
 		{
 		}
 		
-		Arxx::u4byte OldIdentifier = m_Identifier;
+		auto OldIdentifier = m_Identifier;
 		
 		m_Identifier = Identifier;
 		try
