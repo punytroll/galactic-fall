@@ -1,12 +1,2 @@
-include $(root)/.configuration.d/PYTHON
-
-xml_stream-check-dependencies:
-	@if [ x`which ${PYTHON}` = x ]; then \
-	    echo -e "\nYour system is missing the ${PYTHON} interpreter.\nIn order to use the xml_stream component you will need to install it on your system.\n"; false; \
-	fi
-
 xml_stream_dependencies = \
-	$(PYTHON_configuration) \
 	$(root)/tools/xml_stream/xml_stream.py
-
-.PHONY: xml_stream-check-dependencies

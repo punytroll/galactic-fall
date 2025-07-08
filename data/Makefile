@@ -124,11 +124,9 @@ littlem_to_xml_xsl = \
 
 all: all-recursive
 
-all-here: check-dependencies $(all_data) data.arx
+all-here: $(all_data) data.arx
 
 all-recursive: textures-all-recursive all-here
-
-check-dependencies: littlem_to_xml-check-dependencies xml_to_data-check-dependencies arxadd-check-dependencies arxtouch-check-dependencies
 
 clean: clean-recursive
 
@@ -357,6 +355,6 @@ textures-all-recursive:
 textures-clean-recursive:
 	@$(MAKE) -C textures clean-recursive
 
-.PHONY: all all-here all-recursive check-dependencies clean clean-here clean-recursive default meshes-all-recursive meshes-clean-recursive textures-all-recursive textures-clean-recursive
+.PHONY: all all-here all-recursive clean clean-here clean-recursive default meshes-all-recursive meshes-clean-recursive textures-all-recursive textures-clean-recursive
 
 .PRECIOUS: mesh_%.xml

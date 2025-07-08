@@ -4,7 +4,7 @@ default: all
 
 all: build all-recursive
 
-all-here: configuration
+all-here:
 	meson compile -C build
 
 all-recursive: all-here data-all-recursive
@@ -32,9 +32,6 @@ clean-repository: clean
 	$(RM) -R subprojects/xml_parser
 	$(RM) -R subprojects/xml_puny_dom
 	$(RM) -R subprojects/xml_stream
-
-configuration:
-	./configure
 
 data: data-all-recursive
 

@@ -11,11 +11,9 @@ tex_files = $(patsubst original/vg/%.vg,generated/tex/%.tex,$(vg_files))
 
 all: all-recursive
 
-all-here: check-dependencies $(tex_files)
+all-here: $(tex_files)
 
 all-recursive: all-here
-
-check-dependencies: rasterizer-check-dependencies
 
 clean: clean-recursive
 
@@ -32,4 +30,4 @@ generated generated/tex:
 
 generated/tex: generated
 
-.PHONY: default all all-here all-recursive check-dependencies clean clean-here clean-recursive
+.PHONY: default all all-here all-recursive clean clean-here clean-recursive
