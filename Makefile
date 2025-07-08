@@ -18,7 +18,7 @@ check:
 clean: clean-recursive
 
 clean-here:
-	@$(RM) -R build
+	$(RM) -R build
 
 clean-recursive: clean-here
 	@$(MAKE) -C data clean-recursive
