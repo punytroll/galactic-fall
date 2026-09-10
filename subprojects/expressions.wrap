@@ -1,7 +1,8 @@
-[wrap-git]
-url = https://github.com/punytroll/expressions.git
-revision = main
-depth = 1
+[wrap-file]
+directory = expressions-0.8.1
+source_url = https://github.com/punytroll/expressions/archive/refs/tags/0.8.1.tar.gz
+source_filename = expressions-0.8.1.tar.gz
+source_hash = 531a954783416a307fc31830e5e18a41bd9e188c0702942e06b7a9dccbeaaa13
 
 [provide]
-expressions = expressions_library_dependency
+dependency_names = expressions
