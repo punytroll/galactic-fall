@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,8 @@
 
 #ifndef GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__BUFFERREADER_H
 #define GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__BUFFERREADER_H
+
+#include <cstdint>
 
 #include <arxx/buffer.h>
 
@@ -121,14 +123,14 @@ namespace Arxx
 	auto operator>>(Arxx::BufferReader & BufferReader, Arxx::u4byte & Value) -> Arxx::BufferReader &;
 	
 	/**
-	 * @brief A helper function for reading Arxx::u8byte values from a buffer.
-	 * @param BufferReader The BufferReader from which the Arxx::u8byte value will be read.
-	 * @param Value The target for the Arxx::u8byte value that is to be read.
+	 * @brief A helper function for reading 8 byte unsigned integer values from a buffer.
+	 * @param BufferReader The BufferReader from which the 8 byte unsigned integer value will be read.
+	 * @param Value The target for the 8 byte unsigned integer value that is to be read.
 	 * @return The Buffer after the output execution.
 	 * 
-	 * This function reads a Arxx::u8byte value from the buffer storing it in @a Value .
+	 * This function reads an 8 byte unsigned integer value from the buffer, storing it in @a Value .
 	 **/
-	auto operator>>(Arxx::BufferReader & BufferReader, Arxx::u8byte & Value) -> Arxx::BufferReader &;
+	auto operator>>(Arxx::BufferReader & BufferReader, std::uint64_t & Value) -> Arxx::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading bool objects from a buffer.

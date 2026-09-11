@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -105,9 +105,9 @@ auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u4byte Value) -> 
 	return BufferWriter;
 }
 
-auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u8byte Value) -> Arxx::BufferWriter &
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, std::uint64_t Value) -> Arxx::BufferWriter &
 {
-	BufferWriter.Write(sizeof(Arxx::u8byte), reinterpret_cast<Arxx::Buffer::const_pointer>(&Value));
+	BufferWriter.Write(sizeof(std::uint64_t), reinterpret_cast<Arxx::Buffer::const_pointer>(&Value));
 	
 	return BufferWriter;
 }

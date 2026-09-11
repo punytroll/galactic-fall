@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -105,9 +105,9 @@ auto Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u4byte & Value) -
 	return BufferReader;
 }
 
-auto Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u8byte & Value) -> Arxx::BufferReader &
+auto Arxx::operator>>(Arxx::BufferReader & BufferReader, std::uint64_t & Value) -> Arxx::BufferReader &
 {
-	BufferReader.Read(sizeof(Arxx::u8byte), reinterpret_cast<Arxx::Buffer::pointer>(&Value));
+	BufferReader.Read(sizeof(std::uint64_t), reinterpret_cast<Arxx::Buffer::pointer>(&Value));
 	
 	return BufferReader;
 }

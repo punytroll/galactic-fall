@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,12 +41,6 @@ namespace Arxx
 	 * If your architecture trips here, email the AUTHOR.
 	 **/
 	typedef u_int32_t u4byte;
-	/**
-	 * @brief A type that should always be mapped to an unsigned 8 byte-long value.
-	 * 
-	 * If your architecture trips here, email the AUTHOR.
-	 **/
-	typedef u_int64_t u8byte;
 	
 	/**
 	 * @brief A type that should always be mapped to an unsigned 1 byte-long value.

@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -145,14 +145,14 @@ namespace Arxx
 	auto operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u4byte Value) -> Arxx::BufferWriter &;
 	
 	/**
-	 * @brief A helper function for storing Arxx::u8byte objects in a buffer.
-	 * @param BufferWriter The buffer in which the Arxx::u8byte will be stored.
-	 * @param Value The Arxx::u8byte value which is to be stored.
+	 * @brief A helper function for storing 8 byte unsigned integer values in a buffer.
+	 * @param BufferWriter The buffer in which the 8 byte unsigned integer will be stored.
+	 * @param Value The 8 byte unsigned integer value which is to be stored.
 	 * @return The BufferWriter after the input execution.
 	 * 
-	 * This function stores the Arxx::u8byte value @a Value in the buffer using an input function.
+	 * This function stores the 8 byte unsigned integer value @a Value in the buffer using an input function.
 	 **/
-	auto operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u8byte Value) -> Arxx::BufferWriter &;
+	auto operator<<(Arxx::BufferWriter & BufferWriter, std::uint64_t Value) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function for storing bool objects in a buffer.

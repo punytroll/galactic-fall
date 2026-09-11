@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,9 +20,9 @@
 #ifndef GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__ARXX_H
 #define GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__ARXX_H
 
-#include <arxx/Archive.h>
-#include <arxx/Common.h>
-#include <arxx/Item.h>
+#include <arxx/archive.h>
+#include <arxx/common.h>
+#include <arxx/item.h>
 
 /**
  * @mainpage
