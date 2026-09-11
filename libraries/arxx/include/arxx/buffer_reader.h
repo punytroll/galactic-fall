@@ -103,14 +103,14 @@ namespace Arxx
 	auto operator>>(Arxx::BufferReader & BufferReader, float & Value) -> Arxx::BufferReader &;
 	
 	/**
-	 * @brief A helper function for reading u1byte values from a buffer.
-	 * @param BufferReader The BufferReader from which the u1byte value will be read.
-	 * @param Value The target for the u1byte value that is to be read.
+	 * @brief A helper function for reading 1 byte unsigned integer values from a buffer.
+	 * @param BufferReader The BufferReader from which the 1 byte unsigned integer value will be read.
+	 * @param Value The target for the 1 byte unsigned integer value that is to be read.
 	 * @return The Buffer after the output execution.
 	 * 
-	 * This function reads a u1byte value from the buffer storing it in @a Value .
+	 * This function reads a 1 byte unsigned integer value from the buffer storing it in @a Value .
 	 **/
-	auto operator>>(Arxx::BufferReader & BufferReader, Arxx::u1byte & Value) -> Arxx::BufferReader &;
+	auto operator>>(Arxx::BufferReader & BufferReader, std::uint8_t & Value) -> Arxx::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading u4byte values from a buffer.

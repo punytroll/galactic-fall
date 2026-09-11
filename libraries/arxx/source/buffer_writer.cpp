@@ -91,9 +91,9 @@ auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, float Value) -> Arxx::B
 	return BufferWriter;
 }
 
-auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u1byte Value) -> Arxx::BufferWriter &
+auto Arxx::operator<<(Arxx::BufferWriter & BufferWriter, std::uint8_t Value) -> Arxx::BufferWriter &
 {
-	BufferWriter.Write(sizeof(Arxx::u1byte), reinterpret_cast<Arxx::Buffer::const_pointer>(&Value));
+	BufferWriter.Write(sizeof(std::uint8_t), reinterpret_cast<Arxx::Buffer::const_pointer>(&Value));
 	
 	return BufferWriter;
 }

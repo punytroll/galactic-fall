@@ -20,6 +20,8 @@
 #ifndef GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__ITEM_H
 #define GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__ITEM_H
 
+#include <cstdint>
+
 #include <arxx/data.h>
 #include <arxx/structure.h>
 
@@ -118,22 +120,22 @@ namespace Arxx
 		/**
 		 * @brief Returns the major version number of @em this item.
 		 **/
-		auto GetMajorVersionNumber() const -> Arxx::u1byte;
+		auto GetMajorVersionNumber() const -> std::uint8_t;
 		
 		/**
 		 * @brief Returns the minor version number of @em this item.
 		 **/
-		auto GetMinorVersionNumber() const -> Arxx::u1byte;
+		auto GetMinorVersionNumber() const -> std::uint8_t;
 		
 		/**
 		 * @brief Returns the revision number of @em this item.
 		 **/
-		auto GetRevisionNumber() const -> Arxx::u1byte;
+		auto GetRevisionNumber() const -> std::uint8_t;
 		
 		/**
 		 * @brief Returns the candidate number of @em this item.
 		 **/
-		auto GetCandidateNumber() const -> Arxx::u1byte;
+		auto GetCandidateNumber() const -> std::uint8_t;
 		
 		/**
 		 * @brief Enables you to set the type identifier of @em this item.
@@ -160,7 +162,7 @@ namespace Arxx
 		 *
 		 * Sets the version numbers of the item. Note that this information is purely related to the content and in no way related to the components or structure of the Arxx::Item.
 		 **/
-		auto SetVersionNumbers(Arxx::u1byte MajorVersionNumber, Arxx::u1byte MinorVersionNumber, Arxx::u1byte RevisionNumber, Arxx::u1byte CandidateNumber) -> void;
+		auto SetVersionNumbers(std::uint8_t MajorVersionNumber, std::uint8_t MinorVersionNumber, std::uint8_t RevisionNumber, std::uint8_t CandidateNumber) -> void;
 		
 		/**
 		 * @brief Returns a pointer to the registered Archive.
@@ -247,22 +249,22 @@ namespace Arxx
 		/**
 		 * @brief The major version number of the item.
 		 **/
-		Arxx::u1byte m_MajorVersionNumber{0};
+		std::uint8_t m_MajorVersionNumber{0};
 		
 		/**
 		 * @brief The minor version number of the item.
 		 **/
-		Arxx::u1byte m_MinorVersionNumber{0};
+		std::uint8_t m_MinorVersionNumber{0};
 		
 		/**
 		 * @brief The revision number of the item.
 		 **/
-		Arxx::u1byte m_RevisionNumber{0};
+		std::uint8_t m_RevisionNumber{0};
 		
 		/**
 		 * @brief The candidate number of the item.
 		 **/
-		Arxx::u1byte m_CandidateNumber;
+		std::uint8_t m_CandidateNumber;
 		
 		/**
 		 * @brief A pointer to the Archive.

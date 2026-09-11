@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <arxx/data.h>
+#include <cstdint>
 
 /// optional headers
 #ifdef HAVE_ZLIB_H
@@ -27,6 +27,8 @@
 #ifdef HAVE_BZLIB_H
 #include <bzlib.h>
 #endif
+
+#include <arxx/data.h>
 
 /// default compression
 #ifdef HAVE_BZLIB_H
@@ -63,7 +65,7 @@ auto Arxx::Data::Decompress() -> void
 			
 			zStream.zalloc = nullptr;
 			zStream.zfree = nullptr;
-			zStream.next_in = const_cast<Arxx::u1byte *>(GetBegin());
+			zStream.next_in = const_cast<std::uint8_t *>(GetBegin());
 			/** @todo Why not use u4GetCompressedLength() here? **/
 			zStream.avail_in = GetLength();
 			zStream.next_out = DecompressedData;
@@ -107,7 +109,7 @@ auto Arxx::Data::Decompress() -> void
 			BZStream.bzalloc = nullptr;
 			BZStream.bzfree = nullptr;
 			BZStream.opaque = 0;
-			BZStream.next_in = reinterpret_cast<char *>(const_cast<Arxx::u1byte *>(GetBegin()));
+			BZStream.next_in = reinterpret_cast<char *>(const_cast<std::uint8_t *>(GetBegin()));
 			/** @todo Why not use u4GetCompressedLength() here? **/
 			BZStream.avail_in = GetLength();
 			BZStream.next_out = reinterpret_cast<char *>(DecompressedData);
@@ -177,7 +179,7 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 			
 			zStream.zalloc = nullptr;
 			zStream.zfree = nullptr;
-			zStream.next_in = const_cast<Arxx::u1byte *>(GetBegin());
+			zStream.next_in = const_cast<std::uint8_t *>(GetBegin());
 			zStream.avail_in = GetDecompressedLength();
 			zStream.next_out = CompressedData;
 			zStream.avail_out = static_cast<Arxx::u4byte>(GetDecompressedLength() * 1.001 + 12);
@@ -220,7 +222,7 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 			BZStream.bzalloc = nullptr;
 			BZStream.bzfree = nullptr;
 			BZStream.opaque = 0;
-			BZStream.next_in = reinterpret_cast<char *>(const_cast<Arxx::u1byte *>(GetBegin()));
+			BZStream.next_in = reinterpret_cast<char *>(const_cast<std::uint8_t *>(GetBegin()));
 			BZStream.avail_in = GetDecompressedLength();
 			BZStream.next_out = reinterpret_cast<char *>(CompressedData);
 			BZStream.avail_out = u4CompressedDataLength;

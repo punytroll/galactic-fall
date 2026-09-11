@@ -154,27 +154,27 @@ auto Arxx::Item::SetSubType(Arxx::u4byte SubType) -> void
 	m_SubType = SubType;
 }
 
-auto Arxx::Item::GetMajorVersionNumber() const -> Arxx::u1byte
+auto Arxx::Item::GetMajorVersionNumber() const -> std::uint8_t
 {
 	return m_MajorVersionNumber;
 }
 
-auto Arxx::Item::GetMinorVersionNumber() const -> Arxx::u1byte
+auto Arxx::Item::GetMinorVersionNumber() const -> std::uint8_t
 {
 	return m_MinorVersionNumber;
 }
 
-auto Arxx::Item::GetRevisionNumber() const -> Arxx::u1byte
+auto Arxx::Item::GetRevisionNumber() const -> std::uint8_t
 {
 	return m_RevisionNumber;
 }
 
-auto Arxx::Item::GetCandidateNumber() const -> Arxx::u1byte
+auto Arxx::Item::GetCandidateNumber() const -> std::uint8_t
 {
 	return m_CandidateNumber;
 }
 
-auto Arxx::Item::SetVersionNumbers(Arxx::u1byte MajorVersionNumber, Arxx::u1byte MinorVersionNumber, Arxx::u1byte RevisionNumber, Arxx::u1byte CandidateNumber) -> void
+auto Arxx::Item::SetVersionNumbers(std::uint8_t MajorVersionNumber, std::uint8_t MinorVersionNumber, std::uint8_t RevisionNumber, std::uint8_t CandidateNumber) -> void
 {
 	m_MajorVersionNumber = MajorVersionNumber;
 	m_MinorVersionNumber = MinorVersionNumber;

@@ -43,13 +43,6 @@ namespace Arxx
 	typedef u_int32_t u4byte;
 	
 	/**
-	 * @brief A type that should always be mapped to an unsigned 1 byte-long value.
-	 * 
-	 * If your architecture trips here, email the AUTHOR.
-	 **/
-	typedef u_int8_t u1byte;
-	
-	/**
 	 * @brief A libarxx wide constant that always stands for invalid or not specified unique or non-unique IDs.
 	 *
 	 * This value mainly serves as a return value. If you call a function that returns an Item's unique ID this value is sematically the same as if the Arxx::Item pointer was returned with `nullptr`.

@@ -22,6 +22,8 @@
 
 #include <netinet/in.h>
 
+#include <cstdint>
+
 #include <arxx/common.h>
 
 /**
@@ -47,7 +49,7 @@ namespace Arxx
 		 *
 		 * This is the leading version number.
 		 **/
-		u1byte MajorVersionNumber;
+		std::uint8_t MajorVersionNumber;
 		
 		/**
 		 * @brief The minor version number of the archive.
@@ -55,7 +57,7 @@ namespace Arxx
 		 *
 		 * This is the second leading version number.
 		 **/
-		u1byte MinorVersionNumber;
+		std::uint8_t MinorVersionNumber;
 		
 		/**
 		 * @brief The revision number of the archive.
@@ -63,7 +65,7 @@ namespace Arxx
 		 *
 		 * This is the revision number.
 		 **/
-		u1byte RevisionNumber;
+		std::uint8_t RevisionNumber;
 		
 		/**
 		 * @brief The candidate number of the archive.
@@ -71,7 +73,7 @@ namespace Arxx
 		 *
 		 * This is the candidate number.
 		 **/
-		u1byte CandidateNumber;
+		std::uint8_t CandidateNumber;
 		
 		/**
 		 * @brief The unique identifier of the root item of the archive.
@@ -120,25 +122,25 @@ namespace Arxx
 		 * @brief The major version number of the item.
 		 * @note Represents the XX.xx.xx.xx.
 		 **/
-		u1byte MajorVersionNumber;
+		std::uint8_t MajorVersionNumber;
 		
 		/**
 		 * @brief The minor version number of the item.
 		 * @note Represents the xx.XX.xx.xx.
 		 **/
-		u1byte MinorVersionNumber;
+		std::uint8_t MinorVersionNumber;
 		
 		/**
 		 * @brief The revision number of the item.
 		 * @note Represents the xx.xx.XX.xx.
 		 **/
-		u1byte RevisionNumber;
+		std::uint8_t RevisionNumber;
 		
 		/**
 		 * @brief The candidate number of the item.
 		 * @note Represents the xx.xx.xx.XX.
 		 **/
-		u1byte CandidateNumber;
+		std::uint8_t CandidateNumber;
 		
 		/**
 		 * @brief Information about the compression of the item.
@@ -184,10 +186,10 @@ namespace Arxx
 	 **/
 	inline std::ostream & operator<<(std::ostream & OStream, Arxx::ArchiveHeader & ArchiveHeader)
 	{
-		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.MajorVersionNumber), sizeof(u1byte));
-		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.MinorVersionNumber), sizeof(u1byte));
-		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.RevisionNumber), sizeof(u1byte));
-		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.CandidateNumber), sizeof(u1byte));
+		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.MajorVersionNumber), sizeof(std::uint8_t));
+		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.MinorVersionNumber), sizeof(std::uint8_t));
+		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.RevisionNumber), sizeof(std::uint8_t));
+		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.CandidateNumber), sizeof(std::uint8_t));
 		
 		u4byte RootItemIdentifier(htonl(ArchiveHeader.RootItemIdentifier));
 		
@@ -219,10 +221,10 @@ namespace Arxx
 		
 		OStream.write(reinterpret_cast<char const *>(&SubType), sizeof(u4byte));
 		
-		OStream.write(reinterpret_cast<char const *>(&ItemHeader.MajorVersionNumber), sizeof(u1byte));
-		OStream.write(reinterpret_cast<char const *>(&ItemHeader.MinorVersionNumber), sizeof(u1byte));
-		OStream.write(reinterpret_cast<char const *>(&ItemHeader.RevisionNumber), sizeof(u1byte));
-		OStream.write(reinterpret_cast<char const *>(&ItemHeader.CandidateNumber), sizeof(u1byte));
+		OStream.write(reinterpret_cast<char const *>(&ItemHeader.MajorVersionNumber), sizeof(std::uint8_t));
+		OStream.write(reinterpret_cast<char const *>(&ItemHeader.MinorVersionNumber), sizeof(std::uint8_t));
+		OStream.write(reinterpret_cast<char const *>(&ItemHeader.RevisionNumber), sizeof(std::uint8_t));
+		OStream.write(reinterpret_cast<char const *>(&ItemHeader.CandidateNumber), sizeof(std::uint8_t));
 		
 		u4byte DataCompressionType(htonl(ItemHeader.DataCompressionType));
 		
@@ -254,10 +256,10 @@ namespace Arxx
 	 **/
 	inline std::istream & operator>>(std::istream & IStream, Arxx::ArchiveHeader & ArchiveHeader)
 	{
-		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.MajorVersionNumber), sizeof(u1byte));
-		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.MinorVersionNumber), sizeof(u1byte));
-		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.RevisionNumber), sizeof(u1byte));
-		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.CandidateNumber), sizeof(u1byte));
+		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.MajorVersionNumber), sizeof(std::uint8_t));
+		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.MinorVersionNumber), sizeof(std::uint8_t));
+		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.RevisionNumber), sizeof(std::uint8_t));
+		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.CandidateNumber), sizeof(std::uint8_t));
 		
 		u4byte RootItemIdentifier;
 		
@@ -293,10 +295,10 @@ namespace Arxx
 		
 		IStream.read(reinterpret_cast<char *>(&SubType), sizeof(u4byte));
 		ItemHeader.SubType = ntohl(SubType);
-		IStream.read(reinterpret_cast<char *>(&ItemHeader.MajorVersionNumber), sizeof(u1byte));
-		IStream.read(reinterpret_cast<char *>(&ItemHeader.MinorVersionNumber), sizeof(u1byte));
-		IStream.read(reinterpret_cast<char *>(&ItemHeader.RevisionNumber), sizeof(u1byte));
-		IStream.read(reinterpret_cast<char *>(&ItemHeader.CandidateNumber), sizeof(u1byte));
+		IStream.read(reinterpret_cast<char *>(&ItemHeader.MajorVersionNumber), sizeof(std::uint8_t));
+		IStream.read(reinterpret_cast<char *>(&ItemHeader.MinorVersionNumber), sizeof(std::uint8_t));
+		IStream.read(reinterpret_cast<char *>(&ItemHeader.RevisionNumber), sizeof(std::uint8_t));
+		IStream.read(reinterpret_cast<char *>(&ItemHeader.CandidateNumber), sizeof(std::uint8_t));
 		
 		u4byte DataCompressionType;
 		

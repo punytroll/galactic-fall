@@ -20,6 +20,8 @@
 #ifndef GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__BUFFERWRITER_H
 #define GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__BUFFERWRITER_H
 
+#include <cstdint>
+
 #include <arxx/buffer.h>
 
 /**
@@ -125,14 +127,14 @@ namespace Arxx
 	auto operator<<(Arxx::BufferWriter & BufferWriter, float Value) -> Arxx::BufferWriter &;
 	
 	/**
-	 * @brief A helper function for storing Arxx::u1byte objects in a buffer.
-	 * @param BufferWriter The buffer in which the Arxx::u1byte will be stored.
-	 * @param Value The Arxx::u1byte value which is to be stored.
+	 * @brief A helper function for storing 1 byte unsigned integer values in a buffer.
+	 * @param BufferWriter The buffer in which the 1 byte unsigned integer will be stored.
+	 * @param Value The 1 byte unsigned integer value which is to be stored.
 	 * @return The BufferWriter after the input execution.
 	 * 
-	 * This function stores the Arxx::u1byte value @a Value in the buffer using an input function.
+	 * This function stores the 1 byte unsigned integer value @a Value in the buffer using an input function.
 	 **/
-	auto operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u1byte Value) -> Arxx::BufferWriter &;
+	auto operator<<(Arxx::BufferWriter & BufferWriter, std::uint8_t Value) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function for storing Arxx::u4byte objects in a buffer.

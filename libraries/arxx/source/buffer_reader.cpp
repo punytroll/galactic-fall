@@ -91,9 +91,9 @@ auto Arxx::operator>>(Arxx::BufferReader & BufferReader, float & Value) -> Arxx:
 	return BufferReader;
 }
 
-auto Arxx::operator>>(Arxx::BufferReader & BufferReader, Arxx::u1byte & Value) -> Arxx::BufferReader &
+auto Arxx::operator>>(Arxx::BufferReader & BufferReader, std::uint8_t & Value) -> Arxx::BufferReader &
 {
-	BufferReader.Read(sizeof(Arxx::u1byte), reinterpret_cast<Arxx::Buffer::pointer>(&Value));
+	BufferReader.Read(sizeof(std::uint8_t), reinterpret_cast<Arxx::Buffer::pointer>(&Value));
 	
 	return BufferReader;
 }
