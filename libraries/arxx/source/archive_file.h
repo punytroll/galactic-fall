@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -80,12 +80,12 @@ namespace Arxx
 		 *
 		 * This member might equal Arxx::g_u4InvalidID when there is no root item specified or this archive.
 		 **/
-		u4byte RootItemIdentifier;
+		std::uint32_t RootItemIdentifier;
 		
 		/**
 		 * @brief The number of items stored within the archive.
 		 **/
-		u4byte NumberOfItems;
+		std::uint32_t NumberOfItems;
 	};
 	
 	/**
@@ -102,21 +102,21 @@ namespace Arxx
 		 *
 		 * The identifier of an item is unique in respect to the parenting archive.
 		 **/
-		u4byte Identifier;
+		std::uint32_t Identifier;
 		
 		/**
 		 * @brief The type of the item.
 		 *
 		 * The type of the item.
 		 **/
-		u4byte Type;
+		std::uint32_t Type;
 		
 		/**
 		 * @brief The subtype of the item.
 		 *
 		 * The subtype of the item.
 		 **/
-		u4byte SubType;
+		std::uint32_t SubType;
 		
 		/**
 		 * @brief The major version number of the item.
@@ -147,35 +147,35 @@ namespace Arxx
 		 *
 		 * The state of compression for the item. Defines the level of compression that was used with the zlib functions or 0 to indicate no compression.
 		 **/
-		u4byte DataCompressionType;
+		std::uint32_t DataCompressionType;
 		
 		/**
 		 * @brief The length of the item's name.
 		 *
 		 * The length of the item's name. The name is stored right after the ItemHeader and without a final zero character.
 		 **/
-		u4byte NameLength;
+		std::uint32_t NameLength;
 		
 		/**
 		 * @brief The length of the item's data when decompressed.
 		 *
 		 * The length of the data when it is decompressed. This member does not imply that the data actually IS decompressed. It merely gives you a 'would-be' information.
 		 **/
-		u4byte DataDecompressedLength;
+		std::uint32_t DataDecompressedLength;
 		
 		/**
 		 * @brief The length of the item's data when compressed.
 		 *
 		 * The length of the data when it is compressed. This member does not imply that the data actually IS compressed. It merely gives you a 'would-be' information. If the item's data IS compressed, this member states the length of the compressed data block. On the other hand, when the item's data is decompressed, this member is invalid. (In the current implementation this member actually states the length of the last compression, but it CAN only give you a hint about the size of the data, in case you decompressed it externaly.
 		 **/
-		u4byte DataCompressedLength;
+		std::uint32_t DataCompressedLength;
 		
 		/**
 		 * @brief This component describes the length of the structure description for the item.
 		 *
 		 * The length of the structure buffer is needed when it will be read on loading an archive. The structure of the archive is part of its header information and therefore placed in the ItemHeader. The structure data follows immediately after the closing 0 of the item's name.
 		 **/
-		u4byte StructureLength;
+		std::uint32_t StructureLength;
 	};
 #pragma pack()
 
@@ -191,13 +191,13 @@ namespace Arxx
 		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.RevisionNumber), sizeof(std::uint8_t));
 		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.CandidateNumber), sizeof(std::uint8_t));
 		
-		u4byte RootItemIdentifier(htonl(ArchiveHeader.RootItemIdentifier));
+		auto RootItemIdentifier = htonl(ArchiveHeader.RootItemIdentifier);
 		
-		OStream.write(reinterpret_cast<char const *>(&RootItemIdentifier), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&RootItemIdentifier), sizeof(std::uint32_t));
 		
-		u4byte NumberOfItems(htonl(ArchiveHeader.NumberOfItems));
+		auto NumberOfItems = htonl(ArchiveHeader.NumberOfItems);
 		
-		OStream.write(reinterpret_cast<char const *>(&NumberOfItems), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&NumberOfItems), sizeof(std::uint32_t));
 	
 		return OStream;
 	}
@@ -209,42 +209,42 @@ namespace Arxx
 	 **/
 	inline std::ostream & operator<<(std::ostream & OStream, Arxx::ItemHeader & ItemHeader)
 	{
-		u4byte Identifier(htonl(ItemHeader.Identifier));
+		auto Identifier = htonl(ItemHeader.Identifier);
 		
-		OStream.write(reinterpret_cast<char const *>(&Identifier), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&Identifier), sizeof(std::uint32_t));
 		
-		u4byte Type(htonl(ItemHeader.Type));
+		auto Type = htonl(ItemHeader.Type);
 		
-		OStream.write(reinterpret_cast<char const *>(&Type), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&Type), sizeof(std::uint32_t));
 		
-		u4byte SubType(htonl(ItemHeader.SubType));
+		auto SubType = htonl(ItemHeader.SubType);
 		
-		OStream.write(reinterpret_cast<char const *>(&SubType), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&SubType), sizeof(std::uint32_t));
 		
 		OStream.write(reinterpret_cast<char const *>(&ItemHeader.MajorVersionNumber), sizeof(std::uint8_t));
 		OStream.write(reinterpret_cast<char const *>(&ItemHeader.MinorVersionNumber), sizeof(std::uint8_t));
 		OStream.write(reinterpret_cast<char const *>(&ItemHeader.RevisionNumber), sizeof(std::uint8_t));
 		OStream.write(reinterpret_cast<char const *>(&ItemHeader.CandidateNumber), sizeof(std::uint8_t));
 		
-		u4byte DataCompressionType(htonl(ItemHeader.DataCompressionType));
+		auto DataCompressionType = htonl(ItemHeader.DataCompressionType);
 		
-		OStream.write(reinterpret_cast<char const *>(&DataCompressionType), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&DataCompressionType), sizeof(std::uint32_t));
 		
-		u4byte NameLength(htonl(ItemHeader.NameLength));
+		auto NameLength = htonl(ItemHeader.NameLength);
 		
-		OStream.write(reinterpret_cast<char const *>(&NameLength), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&NameLength), sizeof(std::uint32_t));
 		
-		u4byte DataDecompressedLength(htonl(ItemHeader.DataDecompressedLength));
+		auto DataDecompressedLength = htonl(ItemHeader.DataDecompressedLength);
 		
-		OStream.write(reinterpret_cast<char const *>(&DataDecompressedLength), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&DataDecompressedLength), sizeof(std::uint32_t));
 		
-		u4byte DataCompressedLength(htonl(ItemHeader.DataCompressedLength));
+		auto DataCompressedLength = htonl(ItemHeader.DataCompressedLength);
 		
-		OStream.write(reinterpret_cast<char const *>(&DataCompressedLength), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&DataCompressedLength), sizeof(std::uint32_t));
 		
-		u4byte StructureLength(htonl(ItemHeader.StructureLength));
+		auto StructureLength = htonl(ItemHeader.StructureLength);
 		
-		OStream.write(reinterpret_cast<char const *>(&StructureLength), sizeof(u4byte));
+		OStream.write(reinterpret_cast<char const *>(&StructureLength), sizeof(std::uint32_t));
 	
 		return OStream;
 	}
@@ -261,14 +261,14 @@ namespace Arxx
 		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.RevisionNumber), sizeof(std::uint8_t));
 		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.CandidateNumber), sizeof(std::uint8_t));
 		
-		u4byte RootItemIdentifier;
+		std::uint32_t RootItemIdentifier;
 		
-		IStream.read(reinterpret_cast<char *>(&RootItemIdentifier), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&RootItemIdentifier), sizeof(std::uint32_t));
 		ArchiveHeader.RootItemIdentifier = ntohl(RootItemIdentifier);
 		
-		u4byte NumberOfItems;
+		std::uint32_t NumberOfItems;
 		
-		IStream.read(reinterpret_cast<char *>(&NumberOfItems), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&NumberOfItems), sizeof(std::uint32_t));
 		ArchiveHeader.NumberOfItems = ntohl(NumberOfItems);
 		
 		return IStream;
@@ -281,48 +281,48 @@ namespace Arxx
 	 **/
 	inline std::istream & operator>>(std::istream & IStream, Arxx::ItemHeader & ItemHeader)
 	{
-		u4byte Identifier;
+		std::uint32_t Identifier;
 		
-		IStream.read(reinterpret_cast<char *>(&Identifier), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&Identifier), sizeof(std::uint32_t));
 		ItemHeader.Identifier = ntohl(Identifier);
 		
-		u4byte Type;
+		std::uint32_t Type;
 		
-		IStream.read(reinterpret_cast<char *>(&Type), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&Type), sizeof(std::uint32_t));
 		ItemHeader.Type = ntohl(Type);
 		
-		u4byte SubType;
+		std::uint32_t SubType;
 		
-		IStream.read(reinterpret_cast<char *>(&SubType), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&SubType), sizeof(std::uint32_t));
 		ItemHeader.SubType = ntohl(SubType);
 		IStream.read(reinterpret_cast<char *>(&ItemHeader.MajorVersionNumber), sizeof(std::uint8_t));
 		IStream.read(reinterpret_cast<char *>(&ItemHeader.MinorVersionNumber), sizeof(std::uint8_t));
 		IStream.read(reinterpret_cast<char *>(&ItemHeader.RevisionNumber), sizeof(std::uint8_t));
 		IStream.read(reinterpret_cast<char *>(&ItemHeader.CandidateNumber), sizeof(std::uint8_t));
 		
-		u4byte DataCompressionType;
+		std::uint32_t DataCompressionType;
 		
-		IStream.read(reinterpret_cast<char *>(&DataCompressionType), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&DataCompressionType), sizeof(std::uint32_t));
 		ItemHeader.DataCompressionType = ntohl(DataCompressionType);
 		
-		u4byte NameLength;
+		std::uint32_t NameLength;
 		
-		IStream.read(reinterpret_cast<char *>(&NameLength), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&NameLength), sizeof(std::uint32_t));
 		ItemHeader.NameLength = ntohl(NameLength);
 		
-		u4byte DataDecompressedLength;
+		std::uint32_t DataDecompressedLength;
 		
-		IStream.read(reinterpret_cast<char *>(&DataDecompressedLength), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&DataDecompressedLength), sizeof(std::uint32_t));
 		ItemHeader.DataDecompressedLength = ntohl(DataDecompressedLength);
 		
-		u4byte DataCompressedLength;
+		std::uint32_t DataCompressedLength;
 		
-		IStream.read(reinterpret_cast<char *>(&DataCompressedLength), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&DataCompressedLength), sizeof(std::uint32_t));
 		ItemHeader.DataCompressedLength = ntohl(DataCompressedLength);
 		
-		u4byte StructureLength;
+		std::uint32_t StructureLength;
 		
-		IStream.read(reinterpret_cast<char *>(&StructureLength), sizeof(u4byte));
+		IStream.read(reinterpret_cast<char *>(&StructureLength), sizeof(std::uint32_t));
 		ItemHeader.StructureLength = ntohl(StructureLength);
 		
 		return IStream;

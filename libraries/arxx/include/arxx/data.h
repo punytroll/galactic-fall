@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -88,12 +88,12 @@ namespace Arxx
 		/**
 		 * @brief Gets the length of the decompressed data.
 		 **/
-		auto GetDecompressedLength() const -> Arxx::u4byte;
+		auto GetDecompressedLength() const -> std::uint32_t;
 		
 		/**
 		 * @brief Gets the length of the compressed data.
 		 **/
-		auto GetCompressedLength() const -> Arxx::u4byte;
+		auto GetCompressedLength() const -> std::uint32_t;
 		
 		/**
 		 * @brief This function requests the item's data at the appropriate data channel.
@@ -129,7 +129,7 @@ namespace Arxx
 		 * 
 		 * This function will set @a _Fetched to false.
 		 **/
-		auto SetFetchInformation(Arxx::u4byte Offset, Arxx::Data::Compression Compression, Arxx::u4byte DecompressedLength, Arxx::u4byte CompressedLength) -> void;
+		auto SetFetchInformation(std::uint32_t Offset, Arxx::Data::Compression Compression, std::uint32_t DecompressedLength, std::uint32_t CompressedLength) -> void;
 		
 		/**
 		 * @brief Returns wether the data is fetched.
@@ -137,7 +137,7 @@ namespace Arxx
 		auto IsFetched() const -> bool;
         
 	protected:
-		virtual auto m_Fetch(Arxx::u4byte Offset, Arxx::u4byte Length) -> bool;
+		virtual auto m_Fetch(std::uint32_t Offset, std::uint32_t Length) -> bool;
         
 	private:
 		/**
@@ -145,7 +145,7 @@ namespace Arxx
 		 * 
 		 * After creating an Item this value is intentionally invalid.
 		 **/
-		Arxx::u4byte m_Offset{0};
+		std::uint32_t m_Offset{0};
 		
 		/**
 		 * @brief The compressed state the data is currently in.
@@ -157,14 +157,14 @@ namespace Arxx
 		/**
 		 * @brief The length of the data if decompressed.
 		 **/
-		Arxx::u4byte m_DecompressedLength{0};
+		std::uint32_t m_DecompressedLength{0};
 		
 		/**
 		 * @brief The length of the data if compressed or 0.
 		 * 
 		 * Since the compressed size is not known as long as the data is decompressed this value is 0 whenever the data is decompressed.
 		 **/
-		Arxx::u4byte m_CompressedLength{0};
+		std::uint32_t m_CompressedLength{0};
 		
 		/**
 		 * @brief A status indicator showing the fetch status of the data.

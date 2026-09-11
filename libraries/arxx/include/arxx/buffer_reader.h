@@ -113,14 +113,14 @@ namespace Arxx
 	auto operator>>(Arxx::BufferReader & BufferReader, std::uint8_t & Value) -> Arxx::BufferReader &;
 	
 	/**
-	 * @brief A helper function for reading u4byte values from a buffer.
-	 * @param BufferReader The BufferReader from which the u4byte value will be read.
-	 * @param Value The target for the u4byte value that is to be read.
+	 * @brief A helper function for reading 4 byte unsigned integer values from a buffer.
+	 * @param BufferReader The BufferReader from which the 4 byte unsigned integer value will be read.
+	 * @param Value The target for the 4 byte unsigned integer value that is to be read.
 	 * @return The Buffer after the output execution.
 	 * 
-	 * This function reads a u4byte value from the buffer storing it in @a Value .
+	 * This function reads a 4 byte unsigned integer value from the buffer storing it in @a Value .
 	 **/
-	auto operator>>(Arxx::BufferReader & BufferReader, Arxx::u4byte & Value) -> Arxx::BufferReader &;
+	auto operator>>(Arxx::BufferReader & BufferReader, std::uint32_t & Value) -> Arxx::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading 8 byte unsigned integer values from a buffer.

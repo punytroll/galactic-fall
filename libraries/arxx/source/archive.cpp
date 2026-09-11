@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -69,7 +69,7 @@ auto Arxx::Archive::Load(std::string const & FilePath) -> bool
 	}
 	else
 	{
-		std::cerr << "Unknown ARX archive format: version = " << static_cast<Arxx::u4byte>(ArchiveHeader.MajorVersionNumber) << '.' << static_cast<Arxx::u4byte>(ArchiveHeader.MinorVersionNumber) << '.' << static_cast<Arxx::u4byte>(ArchiveHeader.RevisionNumber) << '.' << static_cast<Arxx::u4byte>(ArchiveHeader.CandidateNumber) << '.' << std::endl;
+		std::cerr << "Unknown ARX archive format: version = " << static_cast<std::uint32_t>(ArchiveHeader.MajorVersionNumber) << '.' << static_cast<std::uint32_t>(ArchiveHeader.MinorVersionNumber) << '.' << static_cast<std::uint32_t>(ArchiveHeader.RevisionNumber) << '.' << static_cast<std::uint32_t>(ArchiveHeader.CandidateNumber) << '.' << std::endl;
 		throw Arxx::bad_file_format{FilePath};
 	}
 	
@@ -112,8 +112,8 @@ auto Arxx::Archive::Register(Arxx::Item * Item) -> void
 	}
 	if(Item->GetIdentifier() == g_InvalidItemIdentifier)
 	{
-		auto Iterator = std::map<Arxx::u4byte, Arxx::Item *>::iterator{};
-		auto NewIdentifier = Arxx::u4byte{};
+		auto Iterator = std::map<std::uint32_t, Arxx::Item *>::iterator{};
+		auto NewIdentifier = std::uint32_t{};
 		
 		do
 		{
@@ -213,7 +213,7 @@ auto Arxx::Archive::SetRootItem(Arxx::Item * Item) -> void
 	m_RootItem = Item;
 }
 
-auto Arxx::Archive::GetItem(Arxx::u4byte ItemIdentifier) const -> Arxx::Item const *
+auto Arxx::Archive::GetItem(std::uint32_t ItemIdentifier) const -> Arxx::Item const *
 {
 	if(ItemIdentifier == g_InvalidItemIdentifier)
 	{
@@ -230,7 +230,7 @@ auto Arxx::Archive::GetItem(Arxx::u4byte ItemIdentifier) const -> Arxx::Item con
 	return ItemIterator->second;
 }
 
-auto Arxx::Archive::GetItem(Arxx::u4byte ItemIdentifier) -> Arxx::Item *
+auto Arxx::Archive::GetItem(std::uint32_t ItemIdentifier) -> Arxx::Item *
 {
 	if(ItemIdentifier == g_InvalidItemIdentifier)
 	{
@@ -383,7 +383,7 @@ auto Arxx::Archive::GetRootItem() const -> Arxx::Item const *
 	return m_RootItem;
 }
 
-auto Arxx::Archive::GetReference(Arxx::u4byte ItemIdentifier) -> Arxx::Reference
+auto Arxx::Archive::GetReference(std::uint32_t ItemIdentifier) -> Arxx::Reference
 {
 	auto ReferenceIterator = m_References.find(ItemIdentifier);
 	
@@ -408,7 +408,7 @@ auto Arxx::Archive::ReleaseReferenceCore(Arxx::ReferenceCore * ReferenceCore) ->
 	m_References.erase(ReferenceIterator);
 }
 
-auto Arxx::Archive::m_Read_2_1_0_0(Arxx::u4byte ItemCount) -> void
+auto Arxx::Archive::m_Read_2_1_0_0(std::uint32_t ItemCount) -> void
 {
 	auto ItemIndex = 0UL;
 	
@@ -435,7 +435,7 @@ auto Arxx::Archive::m_Read_2_1_0_0(Arxx::u4byte ItemCount) -> void
 	}
 }
 
-auto Arxx::Archive::Fetch(Arxx::u4byte Offset, Arxx::u4byte Length, Arxx::Buffer * Buffer) -> bool
+auto Arxx::Archive::Fetch(std::uint32_t Offset, std::uint32_t Length, Arxx::Buffer * Buffer) -> bool
 {
 	m_IStream->seekg(Offset, std::ios_base::beg);
 	Buffer->SetLength(0);
@@ -538,7 +538,7 @@ auto Arxx::Archive::size() const -> Arxx::Archive::size_type
 	return m_Items.size();
 }
 
-auto Arxx::Archive::GetNumberOfReferences() const -> Arxx::u4byte
+auto Arxx::Archive::GetNumberOfReferences() const -> std::uint32_t
 {
 	return m_References.size();
 }
@@ -548,7 +548,7 @@ auto Arxx::Archive::GetNumberOfReferences() const -> Arxx::u4byte
 // Arxx::Archive::iterator                                                                        //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Archive::iterator::iterator(std::map<Arxx::u4byte, Arxx::Item *>::iterator Iterator) :
+Arxx::Archive::iterator::iterator(std::map<std::uint32_t, Arxx::Item *>::iterator Iterator) :
 	m_Iterator{Iterator}
 {
 }
@@ -594,7 +594,7 @@ auto Arxx::Archive::iterator::operator!=(Arxx::Archive::iterator const & Other) 
 // Arxx::Archive::const_iterator                                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Archive::const_iterator::const_iterator(std::map<Arxx::u4byte, Arxx::Item *>::const_iterator Iterator) :
+Arxx::Archive::const_iterator::const_iterator(std::map<std::uint32_t, Arxx::Item *>::const_iterator Iterator) :
 	m_Iterator{Iterator}
 {
 }

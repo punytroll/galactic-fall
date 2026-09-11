@@ -137,14 +137,14 @@ namespace Arxx
 	auto operator<<(Arxx::BufferWriter & BufferWriter, std::uint8_t Value) -> Arxx::BufferWriter &;
 	
 	/**
-	 * @brief A helper function for storing Arxx::u4byte objects in a buffer.
-	 * @param BufferWriter The buffer in which the Arxx::u4byte will be stored.
-	 * @param Value The Arxx::u4byte value which is to be stored.
+	 * @brief A helper function for storing 4 byte unsigned integer values in a buffer.
+	 * @param BufferWriter The buffer in which the 4 byte unsigned integer will be stored.
+	 * @param Value The 4 byte unsigned integer value which is to be stored.
 	 * @return The BufferWriter after the input execution.
 	 * 
-	 * This function stores the Arxx::u4byte value @a Value in the buffer using an input function.
+	 * This function stores the 4 byte unsigned integer value @a Value in the buffer using an input function.
 	 **/
-	auto operator<<(Arxx::BufferWriter & BufferWriter, Arxx::u4byte Value) -> Arxx::BufferWriter &;
+	auto operator<<(Arxx::BufferWriter & BufferWriter, std::uint32_t Value) -> Arxx::BufferWriter &;
 	
 	/**
 	 * @brief A helper function for storing 8 byte unsigned integer values in a buffer.

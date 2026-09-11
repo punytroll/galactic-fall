@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,7 +31,7 @@ auto Arxx::Item::Create() -> Arxx::Item *
 	return Arxx::Item::Create(nullptr, g_InvalidItemIdentifier);
 }
 
-auto Arxx::Item::Create(Arxx::u4byte Identifier) -> Arxx::Item *
+auto Arxx::Item::Create(std::uint32_t Identifier) -> Arxx::Item *
 {
 	return Arxx::Item::Create(nullptr, Identifier);
 }
@@ -41,7 +41,7 @@ auto Arxx::Item::Create(Arxx::Archive & Archive) -> Arxx::Item *
 	return Arxx::Item::Create(&Archive);
 }
 
-auto Arxx::Item::Create(Arxx::Archive & Archive, Arxx::u4byte Identifier) -> Arxx::Item *
+auto Arxx::Item::Create(Arxx::Archive & Archive, std::uint32_t Identifier) -> Arxx::Item *
 {
 	return Arxx::Item::Create(&Archive, Identifier);
 }
@@ -51,9 +51,9 @@ auto Arxx::Item::Create(Arxx::Archive * Archive) -> Arxx::Item *
 	return Arxx::Item::Create(Archive, g_InvalidItemIdentifier);
 }
 
-auto Arxx::Item::Create(Arxx::Archive * Archive, Arxx::u4byte Identifier) -> Arxx::Item *
+auto Arxx::Item::Create(Arxx::Archive * Archive, std::uint32_t Identifier) -> Arxx::Item *
 {
-	auto Result = new Arxx::Item();
+	auto Result = new Arxx::Item{};
 	
 	Result->SetIdentifier(Identifier);
 	if(Archive != nullptr)
@@ -84,12 +84,12 @@ Arxx::Item::~Item()
 	assert(m_Archive == nullptr);
 }
 
-auto Arxx::Item::GetIdentifier() const -> Arxx::u4byte
+auto Arxx::Item::GetIdentifier() const -> std::uint32_t
 {
 	return m_Identifier;
 }
 
-auto Arxx::Item::SetIdentifier(Arxx::u4byte Identifier) -> void
+auto Arxx::Item::SetIdentifier(std::uint32_t Identifier) -> void
 {
 	if(m_Archive == nullptr)
 	{
@@ -134,22 +134,22 @@ auto Arxx::Item::SetName(std::string const & Name) -> void
 	m_Name = Name;
 }
 
-auto Arxx::Item::GetType() const -> Arxx::u4byte
+auto Arxx::Item::GetType() const -> std::uint32_t
 {
 	return m_Type;
 }
 
-auto Arxx::Item::SetType(Arxx::u4byte Type) -> void
+auto Arxx::Item::SetType(std::uint32_t Type) -> void
 {
 	m_Type = Type;
 }
 
-auto Arxx::Item::GetSubType() const -> Arxx::u4byte
+auto Arxx::Item::GetSubType() const -> std::uint32_t
 {
 	return m_SubType;
 }
 
-auto Arxx::Item::SetSubType(Arxx::u4byte SubType) -> void
+auto Arxx::Item::SetSubType(std::uint32_t SubType) -> void
 {
 	m_SubType = SubType;
 }
@@ -197,7 +197,7 @@ auto Arxx::Item::GetStructure() const -> Arxx::Structure const &
 	return m_Structure;
 }
 
-auto Arxx::Item::m_Fetch(Arxx::u4byte Offset, Arxx::u4byte Length) -> bool
+auto Arxx::Item::m_Fetch(std::uint32_t Offset, std::uint32_t Length) -> bool
 {
 	if(m_Archive != nullptr)
 	{

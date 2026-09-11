@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -50,11 +50,11 @@ namespace Arxx
 		friend class Arxx::Archive;
         
 		static auto Create() -> Arxx::Item *;
-		static auto Create(Arxx::u4byte Identifier) -> Arxx::Item *;
+		static auto Create(std::uint32_t Identifier) -> Arxx::Item *;
 		static auto Create(Arxx::Archive & Archive) -> Arxx::Item *;
-		static auto Create(Arxx::Archive & Archive, Arxx::u4byte Identifier) -> Arxx::Item *;
+		static auto Create(Arxx::Archive & Archive, std::uint32_t Identifier) -> Arxx::Item *;
 		static auto Create(Arxx::Archive * Archive) -> Arxx::Item *;
-		static auto Create(Arxx::Archive * Archive, Arxx::u4byte Identifier) -> Arxx::Item *;
+		static auto Create(Arxx::Archive * Archive, std::uint32_t Identifier) -> Arxx::Item *;
 		static auto Delete(Arxx::Item * Item) -> void;
 		
 		/**
@@ -72,17 +72,17 @@ namespace Arxx
 		 * 
 		 * Returns the identifier of @em this item. Remember that it is unique inside the associated archive.
 		 **/
-		auto GetIdentifier() const -> Arxx::u4byte;
+		auto GetIdentifier() const -> std::uint32_t;
 		
 		/**
 		 * @brief Sets @em this item's unique identifier inside the library.
-		 * @param u4UniqueID The new unique identifier of this item.
+		 * @param Identifier The new identifier of this item.
 		 * 
 		 * This function is trivial for items that don't belong to any library. The unique identifier has no meaning there and will just get assigned.
 		 * 
 		 * If @em this Arxx::Item is inside an Arxx:Archive the function is responsible for checking that the new identifier is not used yet.
 		 **/
-		auto SetIdentifier(Arxx::u4byte Identifier) -> void;
+		auto SetIdentifier(std::uint32_t Identifier) -> void;
 		
 		/**
 		 * @brief Returns a const reference to the items name.
@@ -106,7 +106,7 @@ namespace Arxx
 		 *
 		 * The default value for the type is 0xFFFFFFFF.
 		 **/
-		auto GetType() const -> Arxx::u4byte;
+		auto GetType() const -> std::uint32_t;
 		
 		/**
 		 * @brief Returns the sub-type identifier of @em this item.
@@ -115,7 +115,7 @@ namespace Arxx
 		 *
 		 * The default value for the sub type is 0xFFFFFFFF.
 		 **/
-		auto GetSubType() const -> Arxx::u4byte;
+		auto GetSubType() const -> std::uint32_t;
 		
 		/**
 		 * @brief Returns the major version number of @em this item.
@@ -143,7 +143,7 @@ namespace Arxx
 		 * 
 		 * The type identifier has no sematic meaning to ARX or libarxx. It only serves the purpose of getting a meaning by the application.
 		 **/
-		auto SetType(Arxx::u4byte Type) -> void;
+		auto SetType(std::uint32_t Type) -> void;
 		
 		/**
 		 * @brief Enables you to set the sub-type identifier of @em this item.
@@ -151,7 +151,7 @@ namespace Arxx
 		 * 
 		 * As the type the sub-type identifier has no sematic meaning to ARX or libarxx. It is meant to be placed into meaning by the application.
 		 **/
-		auto SetSubType(Arxx::u4byte SubType) -> void;
+		auto SetSubType(std::uint32_t SubType) -> void;
 		
 		/**
 		 * @brief Sets the version number of this @em item.
@@ -182,7 +182,7 @@ namespace Arxx
 		auto GetStructure() const -> Arxx::Structure const &;
         
 	protected:
-		auto m_Fetch(Arxx::u4byte Offset, Arxx::u4byte Length) -> bool override;
+		auto m_Fetch(std::uint32_t Offset, std::uint32_t Length) -> bool override;
         
 	private:
 		/**
@@ -205,7 +205,7 @@ namespace Arxx
 		 * 
 		 * Depending on the constructor this field is either initialized with 0xFFFFFFFF or with the identifier passed to the constructor.
 		 **/
-		u4byte m_Identifier{g_InvalidItemIdentifier};
+		std::uint32_t m_Identifier{g_InvalidItemIdentifier};
 		
 		/**
 		 * @brief The item's name in string form.
@@ -235,7 +235,7 @@ namespace Arxx
 		 * 
 		 * After creating an Item this value is intentionally 0xFFFFFFFF.
 		 **/
-		Arxx::u4byte m_Type{g_InvalidItemIdentifier};
+		std::uint32_t m_Type{g_InvalidItemIdentifier};
 		
 		/**
 		 * @brief A subtype identifier for @em this item.
@@ -244,7 +244,7 @@ namespace Arxx
 		 * 
 		 * After creating an Item this value is intentionally 0xFFFFFFFF.
 		 **/
-		Arxx::u4byte m_SubType{g_InvalidItemIdentifier};
+		std::uint32_t m_SubType{g_InvalidItemIdentifier};
 		
 		/**
 		 * @brief The major version number of the item.

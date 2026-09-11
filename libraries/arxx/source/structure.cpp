@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,7 +37,7 @@ Arxx::Structure::Structure(Arxx::Item & Item) :
 {
 }
 
-auto Arxx::Structure::Add(Arxx::u4byte ItemIdentifier, std::string const & Relation) -> bool
+auto Arxx::Structure::Add(std::uint32_t ItemIdentifier, std::string const & Relation) -> bool
 {
 	if((Relation == "reference") || (ItemIdentifier == g_InvalidItemIdentifier))
 	{
@@ -55,7 +55,7 @@ auto Arxx::Structure::Add(Arxx::u4byte ItemIdentifier, std::string const & Relat
 	return true;
 }
 
-auto Arxx::Structure::Delete(Arxx::u4byte ItemIdentifier, std::string const & Relation) -> bool
+auto Arxx::Structure::Delete(std::uint32_t ItemIdentifier, std::string const & Relation) -> bool
 {
 	if((Relation == "reference") || (ItemIdentifier == g_InvalidItemIdentifier))
 	{
@@ -125,11 +125,11 @@ auto Arxx::Structure::end() const -> Arxx::Structure::const_iterator
 	return m_Relations.end();
 }
 
-static auto GetU4Byte(std::istream & IStream) -> Arxx::u4byte
+static auto GetU4Byte(std::istream & IStream) -> std::uint32_t
 {
 	auto Result = 0UL;
 	
-	IStream.read(reinterpret_cast<std::istream::char_type *>(&Result), sizeof(Arxx::u4byte));
+	IStream.read(reinterpret_cast<std::istream::char_type *>(&Result), sizeof(std::uint32_t));
 	Result = ntohl(Result);
 	
 	return Result;
@@ -168,7 +168,7 @@ auto Arxx::Structure::HasRelation(std::string const & Relation) const -> bool
 	return m_Relations.find(Relation) != m_Relations.end();
 }
 
-auto Arxx::Structure::m_ReadFromStream(Arxx::u4byte StructureDataLength, std::istream & IStream) -> void
+auto Arxx::Structure::m_ReadFromStream(std::uint32_t StructureDataLength, std::istream & IStream) -> void
 {
 	while(StructureDataLength > 0)
 	{
@@ -200,10 +200,10 @@ auto Arxx::Structure::m_WriteToBuffer(Arxx::Buffer & Buffer) const -> void
     for(auto & [RelationName, Relation] : m_Relations)
     {
 		BufferWriter << RelationName;
-		BufferWriter << static_cast<Arxx::u4byte>(htonl(Relation.size()));
+		BufferWriter << static_cast<std::uint32_t>(htonl(Relation.size()));
 		for(auto Reference : Relation)
         {
-			BufferWriter << static_cast<Arxx::u4byte>(htonl(Reference.GetItemIdentifier()));
+			BufferWriter << static_cast<std::uint32_t>(htonl(Reference.GetItemIdentifier()));
         }
     }
 }

@@ -20,8 +20,7 @@
 #ifndef GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__COMMON_H
 #define GALACTIC_FALL__LIBRARIES__ARXX__INCLUDE__COMMON_H
 
-#include <sys/types.h>
-
+#include <cstdint>
 #include <stdexcept>
 #include <string>
 
@@ -36,18 +35,11 @@
 namespace Arxx
 {
 	/**
-	 * @brief A type that should always be mapped to an unsigned 4 byte-long value.
-	 * 
-	 * If your architecture trips here, email the AUTHOR.
-	 **/
-	typedef u_int32_t u4byte;
-	
-	/**
 	 * @brief A libarxx wide constant that always stands for invalid or not specified unique or non-unique IDs.
 	 *
 	 * This value mainly serves as a return value. If you call a function that returns an Item's unique ID this value is sematically the same as if the Arxx::Item pointer was returned with `nullptr`.
 	 **/
-	const u4byte g_InvalidItemIdentifier = 0xFFFFFFFF;
+	std::uint32_t const g_InvalidItemIdentifier = 0xFFFFFFFF;
 	
 	/**
 	 * @brief An exception class indicating that a given ID is not unique.

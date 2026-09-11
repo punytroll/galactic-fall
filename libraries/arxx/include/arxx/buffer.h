@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -102,7 +102,7 @@ namespace Arxx
 		 *
 		 * Use Buffers::Buffer::size_type when working with positions, sizes and length in a buffer to be safe from API changes.
 		 **/
-		typedef Arxx::u4byte size_type;
+		typedef std::uint32_t size_type;
 		
 		/**
 		 * @brief A marked position in a buffer, changing with content changes.

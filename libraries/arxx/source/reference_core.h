@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -44,12 +44,12 @@ namespace Arxx
 		
 		/**
 		 * @brief Returns a new ReferenceImplementation instance created from a unique ID.
-		 * @param u4UniqueID The unique ID that the new reference shoud refer to.
-		 * @param pArchive Since unique IDs are not strictly bound to but only sensible in Archives, this lets you pass the appropriate Archive.
+		 * @param UniqueID The unique ID that the new reference shoud refer to.
+		 * @param Archive Since unique IDs are not strictly bound to but only sensible in Archives, this lets you pass the appropriate Archive.
 		 * 
 		 * The new reference of course is unresolved.
 		 **/
-		static auto Create(Arxx::u4byte ItemIdentifier, Arxx::Archive * Archive = nullptr) -> Arxx::ReferenceCore *;
+		static auto Create(std::uint32_t ItemIdentifier, Arxx::Archive * Archive = nullptr) -> Arxx::ReferenceCore *;
 		
 		/**
 		 * @brief Increases the reference counter and conveniently returns the parameter.
@@ -83,7 +83,7 @@ namespace Arxx
 		 * 
 		 * It does not matter if the reference is resolved or unresolved, the unique ID is certain to be returned.
 		 **/
-		auto GetItemIdentifier() const -> Arxx::u4byte;
+		auto GetItemIdentifier() const -> std::uint32_t;
 		
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
@@ -102,7 +102,7 @@ namespace Arxx
 		/**
 		 * @brief Returns m_u4ReferenceCounter, the number of Arxx::Reference objects that hold @em this ReferenceCore object.
 		 **/
-		auto GetReferenceCount() const -> Arxx::u4byte;
+		auto GetReferenceCount() const -> std::uint32_t;
 		
 		/**
 		 * @brief Resolves an unresolved reference with a given item.
@@ -140,9 +140,9 @@ namespace Arxx
 		 **/
 		~ReferenceCore();
 		
-		Arxx::u4byte m_ItemIdentifier{0};
+		std::uint32_t m_ItemIdentifier{0};
 		Arxx::Item * m_Item{nullptr};
-		Arxx::u4byte m_ReferenceCount{1};
+		std::uint32_t m_ReferenceCount{1};
 		Arxx::Archive * m_Archive{nullptr};
 	};
 }

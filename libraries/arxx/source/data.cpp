@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -173,7 +173,7 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 	case Arxx::Data::ZLIB_9:
 		{
 #ifdef HAVE_ZLIB_H
-			Arxx::Data::pointer CompressedData = new Arxx::Data::value_type[static_cast<Arxx::u4byte>(GetDecompressedLength() * 1.001 + 12)];
+			Arxx::Data::pointer CompressedData = new Arxx::Data::value_type[static_cast<std::uint32_t>(GetDecompressedLength() * 1.001 + 12)];
 			z_stream zStream;
 			signed long slReturn = 0;
 			
@@ -182,7 +182,7 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 			zStream.next_in = const_cast<std::uint8_t *>(GetBegin());
 			zStream.avail_in = GetDecompressedLength();
 			zStream.next_out = CompressedData;
-			zStream.avail_out = static_cast<Arxx::u4byte>(GetDecompressedLength() * 1.001 + 12);
+			zStream.avail_out = static_cast<std::uint32_t>(GetDecompressedLength() * 1.001 + 12);
 			if((slReturn = deflateInit(&zStream, CompressionType - Arxx::Data::ZLIB_0)) != Z_OK)
 			{
 				delete[] CompressedData;
@@ -215,8 +215,8 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 	case Arxx::Data::BZLIB:
 		{
 #ifdef HAVE_BZLIB_H
-			Arxx::u4byte u4CompressedDataLength(static_cast<Arxx::u4byte>(GetDecompressedLength() * 1.01 + 600));
-			Arxx::Data::pointer CompressedData(new Arxx::Data::value_type[u4CompressedDataLength]);
+			auto CompressedDataLength = static_cast<std::uint32_t>(GetDecompressedLength() * 1.01 + 600);
+			auto CompressedData = new Arxx::Data::value_type[CompressedDataLength];
 			bz_stream BZStream;
 			
 			BZStream.bzalloc = nullptr;
@@ -225,7 +225,7 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 			BZStream.next_in = reinterpret_cast<char *>(const_cast<std::uint8_t *>(GetBegin()));
 			BZStream.avail_in = GetDecompressedLength();
 			BZStream.next_out = reinterpret_cast<char *>(CompressedData);
-			BZStream.avail_out = u4CompressedDataLength;
+			BZStream.avail_out = CompressedDataLength;
 			
 			int iBZResult;
 			
@@ -275,7 +275,7 @@ auto Arxx::Data::GetCompression() const -> Arxx::Data::Compression
 	return m_CompressionType;
 }
 
-auto Arxx::Data::GetDecompressedLength() const -> Arxx::u4byte
+auto Arxx::Data::GetDecompressedLength() const -> std::uint32_t
 {
 	if((IsFetched() == true) && (IsDecompressed() == true))
 	{
@@ -287,7 +287,7 @@ auto Arxx::Data::GetDecompressedLength() const -> Arxx::u4byte
 	}
 }
 
-auto Arxx::Data::GetCompressedLength() const -> Arxx::u4byte
+auto Arxx::Data::GetCompressedLength() const -> std::uint32_t
 {
 	if((IsFetched() == true) && (IsCompressed() == true))
 	{
@@ -322,7 +322,7 @@ auto Arxx::Data::Unfetch() -> void
 	}
 }
 
-auto Arxx::Data::SetFetchInformation(Arxx::u4byte Offset, Arxx::Data::Compression CompressionType, Arxx::u4byte DecompressedLength, Arxx::u4byte CompressedLength) -> void
+auto Arxx::Data::SetFetchInformation(std::uint32_t Offset, Arxx::Data::Compression CompressionType, std::uint32_t DecompressedLength, std::uint32_t CompressedLength) -> void
 {
 	m_Offset = Offset;
 	m_CompressionType = CompressionType;
@@ -336,7 +336,7 @@ auto Arxx::Data::IsFetched() const -> bool
 	return m_Fetched;
 }
 
-auto Arxx::Data::m_Fetch([[maybe_unused]] Arxx::u4byte Offset, Arxx::u4byte Length) -> bool
+auto Arxx::Data::m_Fetch([[maybe_unused]] std::uint32_t Offset, std::uint32_t Length) -> bool
 {
 	return Length == 0;
 }

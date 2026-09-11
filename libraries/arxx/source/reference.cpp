@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,7 +33,7 @@ Arxx::Reference::Reference(Arxx::Item & Item) :
 {
 }
 
-Arxx::Reference::Reference(Arxx::u4byte ItemIdentifier, Arxx::Archive * Archive) :
+Arxx::Reference::Reference(std::uint32_t ItemIdentifier, Arxx::Archive * Archive) :
 	m_ReferenceCore{Arxx::ReferenceCore::Create(ItemIdentifier, Archive)}
 {
 }
@@ -49,7 +49,7 @@ Arxx::Reference::~Reference()
 	m_SetCore(nullptr);
 }
 
-auto Arxx::Reference::GetItemIdentifier() const -> Arxx::u4byte
+auto Arxx::Reference::GetItemIdentifier() const -> std::uint32_t
 {
 	return m_ReferenceCore->GetItemIdentifier();
 }
@@ -64,7 +64,7 @@ auto Arxx::Reference::GetItem() const -> Arxx::Item const *
 	return m_ReferenceCore->GetItem();
 }
 
-auto Arxx::Reference::GetReferenceCount() const -> Arxx::u4byte
+auto Arxx::Reference::GetReferenceCount() const -> std::uint32_t
 {
 	return m_ReferenceCore->GetReferenceCount();
 }

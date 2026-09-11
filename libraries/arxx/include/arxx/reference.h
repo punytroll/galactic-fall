@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -56,12 +56,12 @@ namespace Arxx
 		
 		/**
 		 * @brief Constructs a Arxx::Reference from a unique ID.
-		 * @param u4UniqueID The unique ID that this Reference should refer to.
-		 * @param pArchive Optional Archive that this reference belongs to.
+		 * @param UniqueID The unique ID that this Reference should refer to.
+		 * @param Archive Optional Archive that this reference belongs to.
 		 * 
 		 * This constructor will of course create a new ReferenceImplementation object so it can store its unresolved reference.
 		 **/
-		Reference(Arxx::u4byte ItemIdentifier, Arxx::Archive * Archive = nullptr);
+		Reference(std::uint32_t ItemIdentifier, Arxx::Archive * Archive = nullptr);
 		
 		/**
 		 * @brief Constructs a Arxx::Reference from another Reference object.
@@ -83,7 +83,7 @@ namespace Arxx
 		 * 
 		 * It does not matter if the reference is resolved or unresolved, the item identifier is certain to be returned.
 		 **/
-		auto GetItemIdentifier() const -> Arxx::u4byte;
+		auto GetItemIdentifier() const -> std::uint32_t;
 		
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
@@ -114,7 +114,7 @@ namespace Arxx
 		 * 
 		 * @sa Arxx::ReferenceImplementation::GetReferenceCount().
 		 **/
-		auto GetReferenceCount() const -> Arxx::u4byte;
+		auto GetReferenceCount() const -> std::uint32_t;
 		
 		/**
 		 * @brief Resolves an unresolved reference with a given item.

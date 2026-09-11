@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -65,7 +65,7 @@ namespace Arxx
 			 *
 			 * This constructor creates a an Item iterator from an STL iterator.
 			 **/
-			iterator(std::map<Arxx::u4byte, Arxx::Item *>::iterator Iterator);
+			iterator(std::map<std::uint32_t, Arxx::Item *>::iterator Iterator);
 			
 			/**
 			 * @brief The destructor of an Item iterator.
@@ -116,7 +116,7 @@ namespace Arxx
 			 * 
 			 * This is an iterator into the Arxx::Archive's internal Item map @a Arxx::Archive::m_Items.
 			 **/
-			std::map<Arxx::u4byte, Arxx::Item *>::iterator m_Iterator;
+			std::map<std::uint32_t, Arxx::Item *>::iterator m_Iterator;
             
 		};
 		
@@ -134,7 +134,7 @@ namespace Arxx
 			 *
 			 * This constructor creates a an Item iterator from an STL iterator.
 			 **/
-			const_iterator(std::map<Arxx::u4byte, Arxx::Item *>::const_iterator Iterator);
+			const_iterator(std::map<std::uint32_t, Arxx::Item *>::const_iterator Iterator);
 			
 			/**
 			 * @brief The destructor of a const Item iterator.
@@ -178,11 +178,11 @@ namespace Arxx
 			 * 
 			 * This is an iterator into Arxx::Archive's internal Item map @a Arxx::Archive::m_Items.
 			 **/
-			std::map<Arxx::u4byte, Arxx::Item *>::const_iterator m_Iterator;
+			std::map<std::uint32_t, Arxx::Item *>::const_iterator m_Iterator;
             
 		};
 		
-		typedef std::map<Arxx::u4byte, Arxx::Item *>::size_type size_type;
+		typedef std::map<std::uint32_t, Arxx::Item *>::size_type size_type;
 		
 		/**
 		 * @brief The default constructor.
@@ -283,7 +283,7 @@ namespace Arxx
 		 * 
 		 * @note This function guarantees to be of complexity in O(log(n)) where n is the number of items in the archive.
 		 **/
-		auto GetItem(Arxx::u4byte ItemIdentifier) -> Arxx::Item *;
+		auto GetItem(std::uint32_t ItemIdentifier) -> Arxx::Item *;
 		
 		/**
 		 * @brief This function finds the item with a given item identifier.
@@ -293,7 +293,7 @@ namespace Arxx
 		 * 
 		 * @note This function guarantees to be of complexity in O(log(n)) where n is the number of items in the archive.
 		 **/
-		auto GetItem(Arxx::u4byte ItemIdentifier) const -> Arxx::Item const *;
+		auto GetItem(std::uint32_t ItemIdentifier) const -> Arxx::Item const *;
 		
 		/**
 		 * @brief Retrieves an item from the archive that is identified by a given path.
@@ -342,12 +342,12 @@ namespace Arxx
 		auto GetRootItem() const -> Arxx::Item const *;
 		
 		/**
-		 * @brief Returns a Arxx::Reference for a given unique ID.
+		 * @brief Returns a Arxx::Reference for a given item identifier.
 		 * @param ItemIdentifier The item identifier which you will get an Arxx::Reference for.
 		 * 
-		 * If a Arxx::Item object with the given unique ID is registered in the Archive the Reference will be resolved. If no such Item is registered the Reference will be unresolved, but will be linked to the Archive, so that, once an Item with that unique ID is registered at the Archive, the Reference will be resolved.
+		 * If a Arxx::Item object with the given item identifier is registered in the Archive the Reference will be resolved. If no such Item is registered the Reference will be unresolved, but will be linked to the Archive, so that, once an Item with that unique ID is registered at the Archive, the Reference will be resolved.
 		 **/
-		auto GetReference(Arxx::u4byte ItemIdentifier) -> Arxx::Reference;
+		auto GetReference(std::uint32_t ItemIdentifier) -> Arxx::Reference;
 		
 		/**
 		 * @brief Returns a Arxx::Archive::iterator to the first Item.
@@ -387,7 +387,7 @@ namespace Arxx
 		/**
 		 * @brief Returns the number of resolved and unresolved references in the Archive.
 		 **/
-		auto GetNumberOfReferences() const -> Arxx::u4byte;
+		auto GetNumberOfReferences() const -> std::uint32_t;
 		
 		/**
 		 * @brief This function releases a Reference inside the Archive.
@@ -406,16 +406,16 @@ namespace Arxx
 		 * @param Length The amount of data to read from the archive file.
 		 * @param Buffer The buffer to fill with the data.
 		 **/
-		auto Fetch(Arxx::u4byte Offset, Arxx::u4byte Length, Arxx::Buffer * Buffer) -> bool;
+		auto Fetch(std::uint32_t Offset, std::uint32_t Length, Arxx::Buffer * Buffer) -> bool;
         
 	private:
 		/**
 		 * @brief The reader function that retrieves Item header information from a channel.
 		 **/
-		auto m_Read_2_1_0_0(Arxx::u4byte ItemCount) -> void;
+		auto m_Read_2_1_0_0(std::uint32_t ItemCount) -> void;
 		
-		std::map<Arxx::u4byte, Arxx::Item *> m_Items;
-		std::map<Arxx::u4byte, Arxx::Reference> m_References;
+		std::map<std::uint32_t, Arxx::Item *> m_Items;
+		std::map<std::uint32_t, Arxx::Reference> m_References;
 		Arxx::Item * m_RootItem{nullptr};
 		
 		/**

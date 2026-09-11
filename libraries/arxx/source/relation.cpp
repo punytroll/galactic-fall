@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,7 +33,7 @@ Arxx::Structure::Relation::Relation(Arxx::Structure & Structure, std::string con
 {
 }
 
-auto Arxx::Structure::Relation::Add(Arxx::u4byte ItemIdentifier) -> void
+auto Arxx::Structure::Relation::Add(std::uint32_t ItemIdentifier) -> void
 {
 	if(m_Structure.m_Item.GetArchive() == nullptr)
 	{
@@ -45,7 +45,7 @@ auto Arxx::Structure::Relation::Add(Arxx::u4byte ItemIdentifier) -> void
 	}
 }
 
-auto Arxx::Structure::Relation::Delete(Arxx::u4byte ItemIdentifier) -> bool
+auto Arxx::Structure::Relation::Delete(std::uint32_t ItemIdentifier) -> bool
 {
 	auto Iterator = m_References.lower_bound(ItemIdentifier);
 	
@@ -111,7 +111,7 @@ auto Arxx::Structure::Relation::GetName() const -> std::string const &
 // Arxx::Structure::Relation::iterator                                                            //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Structure::Relation::iterator::iterator(std::multimap<Arxx::u4byte, Arxx::Reference>::iterator Iterator) :
+Arxx::Structure::Relation::iterator::iterator(std::multimap<std::uint32_t, Arxx::Reference>::iterator Iterator) :
 	m_Iterator{Iterator}
 {
 }
@@ -162,7 +162,7 @@ auto Arxx::Structure::Relation::iterator::operator!=(Arxx::Structure::Relation::
 // Arxx::Structure::Relation::const_iterator                                                      //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Structure::Relation::const_iterator::const_iterator(std::multimap<Arxx::u4byte, Arxx::Reference>::const_iterator Iterator) :
+Arxx::Structure::Relation::const_iterator::const_iterator(std::multimap<std::uint32_t, Arxx::Reference>::const_iterator Iterator) :
 	m_Iterator{Iterator}
 {
 }

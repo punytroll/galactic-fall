@@ -1,6 +1,6 @@
 /**
  * libarxx - Advanced Resource files in C++
- * Copyright (C) 2005-2025  Hagen Möbius
+ * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -65,7 +65,7 @@ namespace Arxx
 		public:
 			friend class Arxx::Structure;
             
-			typedef std::multimap<Arxx::u4byte, Arxx::Reference>::size_type size_type;
+			typedef std::multimap<std::uint32_t, Arxx::Reference>::size_type size_type;
 			
 			class const_iterator;
 			
@@ -85,7 +85,7 @@ namespace Arxx
 				 *
 				 * This constructor creates a Reference iterator from an STL iterator.
 				 **/
-				iterator(std::multimap<Arxx::u4byte, Arxx::Reference>::iterator Iterator);
+				iterator(std::multimap<std::uint32_t, Arxx::Reference>::iterator Iterator);
 				
 				/**
 				 * @brief Advances the iterator.
@@ -143,7 +143,7 @@ namespace Arxx
 				 * 
 				 * This is an iterator into the Relation's internal Reference map.
 				 **/
-				std::multimap<Arxx::u4byte, Arxx::Reference>::iterator m_Iterator;
+				std::multimap<std::uint32_t, Arxx::Reference>::iterator m_Iterator;
                 
 			};
 			
@@ -163,7 +163,7 @@ namespace Arxx
 				 *
 				 * This constructor creates a const Reference iterator from an STL iterator.
 				 **/
-				const_iterator(std::multimap<Arxx::u4byte, Arxx::Reference>::const_iterator Iterator);
+				const_iterator(std::multimap<std::uint32_t, Arxx::Reference>::const_iterator Iterator);
 				
 				/**
 				 * @brief The constructor of a const Reference iterator from a non-const iterator.
@@ -210,25 +210,25 @@ namespace Arxx
 				 * 
 				 * This is an iterator into a Relation's internal Reference map.
 				 **/
-				std::multimap<Arxx::u4byte, Arxx::Reference>::const_iterator m_Iterator;
+				std::multimap<std::uint32_t, Arxx::Reference>::const_iterator m_Iterator;
                 
 			};
 			
 			/**
-			 * @brief Adds a unique ID reference to the relation.
-			 * @param u4UniqueID The unique ID that is to be added to the relation.
+			 * @brief Adds an item identifer reference to the relation.
+			 * @param ItemIdentifier The item identifier that is to be added to the relation.
 			 * 
-			 * This function adds a reference to a unique ID to the relation.
+			 * This function adds a reference to an item identifier to the relation.
 			 **/
-			auto Add(Arxx::u4byte ItemIdentifier) -> void;
+			auto Add(std::uint32_t ItemIdentifier) -> void;
 			
 			/**
-			 * @brief Removes a reference with a certain unique ID from the relation.
-			 * @param u4UniqueID The unique ID that is to be deleted from the relation.
+			 * @brief Removes a reference with a certain item identifier from the relation.
+			 * @param ItemIdentifier The item identifier that is to be deleted from the relation.
 			 * 
-			 * This function removes a reference with a certain unique ID from the relation.
+			 * This function removes a reference with a certain item identifier from the relation.
 			 **/
-			auto Delete(Arxx::u4byte ItemIdentifier) -> bool;
+			auto Delete(std::uint32_t ItemIdentifier) -> bool;
 			
 			/**
 			 * @brief Gets a list of pointers to the items with the specified name.
@@ -291,7 +291,7 @@ namespace Arxx
 			/**
 			 * @brief The Item references stored in the Relation.
 			 **/
-			std::multimap<Arxx::u4byte, Arxx::Reference> m_References;
+			std::multimap<std::uint32_t, Arxx::Reference> m_References;
 			
 			/**
 			 * @brief The name of the relation.
@@ -460,42 +460,42 @@ namespace Arxx
 		/**
 		 * @brief Adds an unresolved item reference to a relation.
 		 * @param Relation The relation that is changed with this call.
-		 * @param ItemIdentifier A unique ID that is to be added to the relation.
+		 * @param ItemIdentifier An item identifier that is to be added to the relation.
 		 * @return A boolean value indicating whether the operation has been performed successfully.
 		 * 
-		 * This function will add the unique ID @a u4UniqueID to the relation identified by @a sRelation.
+		 * This function will add the item identifier @a ItemIdentifier to the relation identified by @a Relation.
 		 * 
 		 * There are two things to consider:
-		 * - The unique ID may not be invalid, that is equal to g_u4InvalidID.
+		 * - The item identifier may not be invalid, i.e. equal to g_u4InvalidItemIdentifier.
 		 * - You cannot change the "reference" relation with this function.
 		 * 
 		 * Violating one of these conditions will abort the call and return without having done anything.
 		 * 
-		 * This function will create the relation if it does not exist yet and the unresolved reference with the unique ID @a u4UniqueID will be the only member of this new relation.
+		 * This function will create the relation if it does not exist yet and the unresolved reference with the item identifier @a ItemIdentifier will be the only member of this new relation.
 		 **/
-		auto Add(Arxx::u4byte ItemIdentifier, std::string const & Relation = "child") -> bool;
+		auto Add(std::uint32_t ItemIdentifier, std::string const & Relation = "child") -> bool;
 		
 		/**
 		 * @brief Deletes an unresolved item reference from a relation.
 		 * @param Relation The relation that is changed with this call.
-		 * @param ItemIdentifier The unique item id that is tried to be deleted from the relation.
+		 * @param ItemIdentifier The item identifier that is tried to be deleted from the relation.
 		 * @return A boolean value indicating whether the operation has been performed successfully.
 		 * 
-		 * This function will delete the unresolved item reference referring to an item with unique id u4UniqueID from the relation indicated by @a sRelation.
+		 * This function will delete the unresolved item reference referring to an item with item identifier @a ItemIdentifier from the relation indicated by @a Relation.
 		 * 
 		 * If the unresolved item reference is not found in the relation the function may issue a second search.
 		 * -# Given the item that @a this Structure belongs to is registered at a library, the function will try to resolve the unique ID with Arxx::Library::pGetItem() (complexity in O(log(n))). If a resolved item reference to an item with this unique id is in the relation it is also found via pGetItem() and can and will be deleted from the relation. If pGetItem does not find the item there will be no such reference in the relation.
 		 * -# Given the item that @a this Structure belongs to is not registered at a library, the function will iterate through the resolved item references in the relation trying to find one that refers to an item with this unique id.
 		 * 
 		 * There are two things to consider:
-		 * - The unique ID may not be invalid, that is equal to g_u4InvalidID.
+		 * - The item identifier may not be invalid, i.e. equal to g_u4InvalidItemIdentifier.
 		 * - You can not modify the relation "reference" with this function.
 		 * 
 		 * Any atempt to do so as well as deleting from a non-existent relation will be silently ignored.
 		 * 
 		 * If the deleted item reference was the last one in the relation so that the relation @a sRelation is now empty it is deleted from the relations container.
 		 **/
-		auto Delete(Arxx::u4byte ItemIdentifier, std::string const & Relation = "child") -> bool;
+		auto Delete(std::uint32_t ItemIdentifier, std::string const & Relation = "child") -> bool;
 		
 		/**
 		 * @brief The const accessor for constant relations.
@@ -557,7 +557,7 @@ namespace Arxx
 		 **/
 		auto m_WriteToBuffer(Arxx::Buffer & Buffer) const -> void;
 		
-		auto m_ReadFromStream(Arxx::u4byte StructureDataLength, std::istream & IStream) -> void;
+		auto m_ReadFromStream(std::uint32_t StructureDataLength, std::istream & IStream) -> void;
 		
 		auto m_RemoveRelation(Arxx::Structure::Relation * Relation) -> void;
         
