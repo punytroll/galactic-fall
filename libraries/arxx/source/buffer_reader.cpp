@@ -70,13 +70,13 @@ auto Arxx::operator>>(Arxx::BufferReader & BufferReader, std::string & String) -
 
 	while(Length > Index)
 	{
-		if(auto Char = Buffer[Index++]; Char == '\0')
+		if(auto Byte = Buffer[Index++]; Byte == std::byte{0})
 		{
 			break;
 		}
         else
         {
-            String += Char;
+            String += static_cast<std::string::value_type>(Byte);
         }
 	}
 	BufferReader.SetPosition(Index);

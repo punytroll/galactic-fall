@@ -59,16 +59,16 @@ auto Arxx::Data::Decompress() -> void
 	case Arxx::Data::ZLIB_9:
 		{
 #ifdef HAVE_ZLIB_H
-			Arxx::Data::pointer DecompressedData(new Arxx::Data::value_type[m_DecompressedLength]);
+			auto DecompressedData = new Arxx::Data::value_type[m_DecompressedLength];
 			z_stream zStream;
 			int iReturn = 0;
 			
 			zStream.zalloc = nullptr;
 			zStream.zfree = nullptr;
-			zStream.next_in = const_cast<std::uint8_t *>(GetBegin());
+			zStream.next_in = const_cast<std::uint8_t *>(reinterpret_cast<std::uint8_t const *>(GetBegin()));
 			/** @todo Why not use u4GetCompressedLength() here? **/
 			zStream.avail_in = GetLength();
-			zStream.next_out = DecompressedData;
+			zStream.next_out = reinterpret_cast<std::uint8_t *>(DecompressedData);
 			/** @todo Why not use u4GetDecompressedLength() here? **/
 			zStream.avail_out = m_DecompressedLength;
 			if((iReturn = inflateInit(&zStream)) != Z_OK)
@@ -103,13 +103,13 @@ auto Arxx::Data::Decompress() -> void
 	case Arxx::Data::BZLIB:
 		{
 #ifdef HAVE_BZLIB_H
-			Arxx::Data::pointer DecompressedData(new Arxx::Data::value_type[m_DecompressedLength]);
+			auto DecompressedData = new Arxx::Data::value_type[m_DecompressedLength];
 			bz_stream BZStream;
 			
 			BZStream.bzalloc = nullptr;
 			BZStream.bzfree = nullptr;
 			BZStream.opaque = 0;
-			BZStream.next_in = reinterpret_cast<char *>(const_cast<std::uint8_t *>(GetBegin()));
+			BZStream.next_in = const_cast<char *>(reinterpret_cast<char const *>(GetBegin()));
 			/** @todo Why not use u4GetCompressedLength() here? **/
 			BZStream.avail_in = GetLength();
 			BZStream.next_out = reinterpret_cast<char *>(DecompressedData);
@@ -173,15 +173,15 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 	case Arxx::Data::ZLIB_9:
 		{
 #ifdef HAVE_ZLIB_H
-			Arxx::Data::pointer CompressedData = new Arxx::Data::value_type[static_cast<std::uint32_t>(GetDecompressedLength() * 1.001 + 12)];
+			auto CompressedData = new Arxx::Data::value_type[static_cast<std::uint32_t>(GetDecompressedLength() * 1.001 + 12)];
 			z_stream zStream;
 			signed long slReturn = 0;
 			
 			zStream.zalloc = nullptr;
 			zStream.zfree = nullptr;
-			zStream.next_in = const_cast<std::uint8_t *>(GetBegin());
+			zStream.next_in = const_cast<unsigned char *>(reinterpret_cast<unsigned char const *>(GetBegin()));
 			zStream.avail_in = GetDecompressedLength();
-			zStream.next_out = CompressedData;
+			zStream.next_out = reinterpret_cast<unsigned char *>(CompressedData);
 			zStream.avail_out = static_cast<std::uint32_t>(GetDecompressedLength() * 1.001 + 12);
 			if((slReturn = deflateInit(&zStream, CompressionType - Arxx::Data::ZLIB_0)) != Z_OK)
 			{
@@ -222,7 +222,7 @@ auto Arxx::Data::Compress(Arxx::Data::Compression CompressionType) -> void
 			BZStream.bzalloc = nullptr;
 			BZStream.bzfree = nullptr;
 			BZStream.opaque = 0;
-			BZStream.next_in = reinterpret_cast<char *>(const_cast<std::uint8_t *>(GetBegin()));
+			BZStream.next_in = const_cast<char *>(reinterpret_cast<char const *>(GetBegin()));
 			BZStream.avail_in = GetDecompressedLength();
 			BZStream.next_out = reinterpret_cast<char *>(CompressedData);
 			BZStream.avail_out = CompressedDataLength;

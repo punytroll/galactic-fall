@@ -67,7 +67,7 @@ namespace Arxx
 		 *
 		 * Use Buffers::Buffer::value_type to work with the elements to be safe from API changes.
 		 **/
-		typedef unsigned char value_type;
+		typedef std::byte value_type;
 		
 		/**
 		 * @brief The type of a reference to an element stored in this buffer.
