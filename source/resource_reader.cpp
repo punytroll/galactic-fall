@@ -1248,7 +1248,7 @@ static void ReadTexture(Arxx::Reference & Reference)
 	{
 		throw std::runtime_error("Could not create texture '" + Identifier + "'.");
 	}
-	Texture->SetData(Width, Height, Format, reinterpret_cast<unsigned char  const *>(Reader.GetBuffer().GetBegin() + Reader.GetPosition()));
+	Texture->SetData(Width, Height, Format, Reader.GetBuffer().GetBegin() + Reader.GetPosition());
 }
 
 static void ReadTurretClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager)

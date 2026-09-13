@@ -40,7 +40,7 @@ namespace Graphics
 		GLuint GetTextureName(void);
 		std::uint32_t GetWidth(void);
 		// setters
-		void SetData(std::uint32_t Width, std::uint32_t Height, std::uint32_t Format, const unsigned char * Data);
+		void SetData(std::uint32_t Width, std::uint32_t Height, std::uint32_t Format, std::byte const * Data);
 		// modifiers
 		void Activate(void) const;
 		void Create(std::uint32_t Width, std::uint32_t Height, std::uint32_t Format);

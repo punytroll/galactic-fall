@@ -53,7 +53,7 @@ Graphics::Texture::~Texture(void)
 	}
 }
 
-void Graphics::Texture::SetData(std::uint32_t Width, std::uint32_t Height, std::uint32_t Format, const unsigned char * Data)
+void Graphics::Texture::SetData(std::uint32_t Width, std::uint32_t Height, std::uint32_t Format, std::byte const * Data)
 {
 	assert(_TextureName == 0);
 	GLGenTextures(1, &_TextureName);
