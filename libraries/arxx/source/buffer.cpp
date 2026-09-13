@@ -266,7 +266,7 @@ void Arxx::Buffer::m_Insert(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Posit
 		m_Length += DataLength;
 		for(auto Marker : m_Markers)
 		{
-			if(((Marker->GetPosition() == Position) && (Marker->GetAlignment() == Arxx::Buffer::Marker::RIGHT)) || (Marker->GetPosition() > Position))
+			if(((Marker->GetPosition() == Position) && (Marker->GetAlignment() == Arxx::Buffer::Marker::Alignment::Right)) || (Marker->GetPosition() > Position))
 			{
 				Marker->SetPosition(Marker->GetPosition() + DataLength);
 			}
@@ -523,7 +523,7 @@ void Arxx::Buffer::m_ParentDataChanged(size_type ChangeMode, size_type Position,
 			// update markers
 			for(auto Marker : m_Markers)
 			{
-				if(((m_Position + Marker->GetPosition() == Position) && (Marker->GetAlignment() == Arxx::Buffer::Marker::RIGHT)) || (Marker->GetPosition() > Position))
+				if(((m_Position + Marker->GetPosition() == Position) && (Marker->GetAlignment() == Arxx::Buffer::Marker::Alignment::Right)) || (Marker->GetPosition() > Position))
 				{
 					// only if the data was inserted BEFORE or AT the marker position
 					Marker->SetPosition(Marker->GetPosition() + Length);

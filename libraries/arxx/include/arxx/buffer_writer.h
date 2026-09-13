@@ -42,11 +42,18 @@ namespace Arxx
 	class BufferWriter
 	{
 	public:
+        
 		/**
 		 * @brief The BufferWriter constructor.
-		 * @note Sets the Buffers IO position to the buffer's length.
+		 * @note Sets the Buffers IO position to the end of the buffer.
 		 **/
-		BufferWriter(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position = Arxx::Buffer::Marker::END);
+		BufferWriter(Arxx::Buffer & Buffer);
+        
+		/**
+		 * @brief The BufferWriter constructor.
+		 * @note Sets the Buffers IO position to the indicated position.
+		 **/
+		BufferWriter(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position);
 		
 		/**
 		 * @brief A copy constructor for the BufferWriter.

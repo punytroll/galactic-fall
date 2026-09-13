@@ -28,9 +28,15 @@
 #include <iostream>
 #endif
 
+Arxx::BufferWriter::BufferWriter(Arxx::Buffer & Buffer) :
+	m_Buffer{Buffer},
+	m_Marker{Buffer, Buffer.GetLength(), Arxx::Buffer::Marker::Alignment::Left}
+{
+}
+
 Arxx::BufferWriter::BufferWriter(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position) :
 	m_Buffer{Buffer},
-	m_Marker{Buffer, Position, Arxx::Buffer::Marker::LEFT}
+	m_Marker{Buffer, Position, Arxx::Buffer::Marker::Alignment::Left}
 {
 }
 
@@ -45,9 +51,9 @@ auto Arxx::BufferWriter::Write(Arxx::Buffer::size_type DataLength, Arxx::Buffer:
 	{
 		throw std::runtime_error{"Arxx::BufferWriter::vWrite: Buffer was destroyed."};
 	}
-	m_Marker.SetAlignment(Arxx::Buffer::Marker::RIGHT);
+	m_Marker.SetAlignment(Arxx::Buffer::Marker::Alignment::Right);
 	m_Buffer.Insert(m_Marker.GetPosition(), DataLength, Data);
-	m_Marker.SetAlignment(Arxx::Buffer::Marker::LEFT);
+	m_Marker.SetAlignment(Arxx::Buffer::Marker::Alignment::Left);
 }
 
 auto Arxx::BufferWriter::GetBuffer() -> Arxx::Buffer &

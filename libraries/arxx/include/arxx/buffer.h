@@ -110,17 +110,11 @@ namespace Arxx
 		class Marker
 		{
 		public:
-			typedef enum
+            enum class Alignment
 			{
-				LEFT,
-				RIGHT
-			} Alignment;
-			
-			typedef enum
-			{
-				BEGIN = 0,
-				END = 0xFFFFFFFF
-			} Position;
+				Left,
+				Right
+			};
 			
 			/**
 			 * @brief The Marker's constructor.
@@ -129,7 +123,7 @@ namespace Arxx
 			 * 
 			 * The position is truncated at Buffer.GetLength() if greater than that.
 			 **/
-			Marker(const Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position = 0, Arxx::Buffer::Marker::Alignment Alignment = LEFT);
+			Marker(const Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position = 0, Arxx::Buffer::Marker::Alignment Alignment = Arxx::Buffer::Marker::Alignment::Left);
 			
 			/**
 			 * @brief The Marker's destructor.

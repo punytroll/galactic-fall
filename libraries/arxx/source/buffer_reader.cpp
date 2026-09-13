@@ -20,9 +20,15 @@
 #include <arxx/buffer.h>
 #include <arxx/buffer_reader.h>
 
+Arxx::BufferReader::BufferReader(Arxx::Buffer const & Buffer) :
+	m_Buffer{Buffer},
+	m_Marker{Buffer, 0, Arxx::Buffer::Marker::Alignment::Left}
+{
+}
+
 Arxx::BufferReader::BufferReader(Arxx::Buffer const & Buffer, Arxx::Buffer::size_type Position) :
 	m_Buffer{Buffer},
-	m_Marker{Buffer, Position, Arxx::Buffer::Marker::LEFT}
+	m_Marker{Buffer, Position, Arxx::Buffer::Marker::Alignment::Left}
 {
 }
 

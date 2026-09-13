@@ -38,7 +38,8 @@ namespace Arxx
 	class BufferReader
 	{
 	public:
-		BufferReader(Arxx::Buffer const & Buffer, Arxx::Buffer::size_type Position = Arxx::Buffer::Marker::BEGIN);
+		BufferReader(Arxx::Buffer const & Buffer);
+		BufferReader(Arxx::Buffer const & Buffer, Arxx::Buffer::size_type Position);
 		
 		/**
 		 * @brief A copy constructor for the BufferReader.
