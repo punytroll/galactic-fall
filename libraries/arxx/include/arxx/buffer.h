@@ -309,25 +309,6 @@ namespace Arxx
 		 **/
 		auto GetBegin() const -> Arxx::Buffer::const_pointer;
         
-	protected:
-		/**
-		 * @brief A constant. Its value will be passed to ParentDataChanged() whenever data is to be updated.
-		 * @sa ParentDataChanged() for further details.
-		 **/
-		static const Arxx::Buffer::size_type m_DataUpdated;
-		
-		/**
-		 * @brief A constant. Its value will be passed to ParentDataChanged() whenever data was deleted.
-		 * @sa ParentDataChanged() for further details.
-		 **/
-		static const Arxx::Buffer::size_type m_DataDeleted;
-		
-		/**
-		 * @brief A constant. Its value will be passed to ParentDataChanged() whenever data was inserted.
-		 * @sa ParentDataChanged() for further details.
-		 **/
-		static const Arxx::Buffer::size_type m_DataInserted;
-        
 	private:
 		class SubBuffer;
 		
@@ -361,42 +342,42 @@ namespace Arxx
 		auto m_Insert(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position, Arxx::Buffer::size_type DataLength, Arxx::Buffer::const_pointer Data = nullptr) -> void;
 		
 		/**
-		 * @brief This function is called whenever the data of the sup buffer is changed in a way that also affects this buffer.
-		 * @param stChangeMode Categorizes the type of change that affects @em this buffer.
-		 * @param stPosition Indicates the location of the change inside @em this buffer.
-		 * @param stLength Specifies the length of the change inside @em this buffer.
-		 *
-		 * There are three kinds of changes that may occure:
-		 * - Updates
-		 * - Deletes
-		 * - Inserts
-		 *
-		 * Additionally there are two kinds of actions that need to be taken:
-		 * - changes to @em this buffer (local changes)
-		 * - changes to @em this buffer's sub buffers (structural changes).
-		 *
-		 * Updates are those changes that neither affect the length of @em this buffer nor its location inside the superior buffer. For that reason the parameters @a stPosition and @a stLength are not considered. The most probable reason why this change is issued is that the most superior buffer had to reallocate the memory for the buffer, because somewhere else so much data was inserted in the buffer that the capacity had to be enlarged.
-		 * - The only local action taken here is to reset the m_Begin pointer to the correct location inside the sup buffer (m_pSupBuffer->m_Begin + m_stPosition).
-		 * - The structural changes are equally simple: notify all sub buffers via vParentDataChanged(m_stDataUpdated, ?, ?). Position and length are not important here.
-		 *
-		 * Inserts are issued whenever the superior buffer inserts data. The @a stPosition indicates the location of the insert inside the sup buffer, so it is comparable with m_stPosition without further calculation. The @a stLength is the length of the portion of inserted data.
-		 * @note Notice that this function is called even if the insert was not inside @em this buffer. If the Insertion was @em before this buffer (stPosition < m_stPosition) we need to reset m_stPosition. (This SHOULD be changed.)
+		 * @brief This function is called whenever data has been deleted in the sup buffer, in a way that also affects @em this buffer.
+		 * @param Position Indicates the location of the deletion inside the sup buffer.
+		 * @param Length Specifies the length of the deletion.
 		 * 
-		 * - The local changes depend on the position of the insertion. If the data was inserted before this buffer we need to reset m_stPosition and m_Begin. If the data was inserted inside the buffer we need to reset m_stLength and possibly m_stIOPosition if (stPosition - m_stPosition) <= m_stIOPosition.
-		 * - The structural changes are easy enough: just pass the change to any sub buffer by calling vParentDataChanged(m_stDataInserted, stPosition - m_stPosition, stLength). There is one exception to this: If @em this buffer made the initial change and the change request was passed up to the most superior buffer and now the changes are passed down again we don't apply changes here. Once all the changes are done and we return to the initial insertion function it is done then.
-		 *
-		 * Deletes are emitted whenever the superior buffer has deleted a portion of its data. The @a stPosition inticates where the beginning of the deletion block inside the parent is. Because of its scope, stPosition is directly comparable with m_stPosition. The @a stLength defines the length of the deletion.
-		 * - The local changes is defined by the position and length of the deletion. There are six possibilities:
-		 *   - The deletion is completely before @em this buffer: only m_stPosition needs to be decremented by stLength.
-		 *   - The deletion begins before @em this buffer and overlaps the beginning: m_stPosition needs to be set to stPosition, m_stLength needs to be reduced by the overlapping.
-		 *   - The deletion is completely inside @em this buffer: m_stLength needs to be reduced by stLength.
-		 *   - The deletion begins inside @em this buffer and overlaps the end: m_stLength needs to be reduced by the size of the overlapping.
+         * Because of its scope, @a Position is comparable with @a m_Position.
+		 * 
+		 * - The local changes are defined by the position and length of the deletion. There are six possibilities:
+		 *   - The deletion is completely before @em this buffer: only @a m_Position needs to be decremented by stLength.
+		 *   - The deletion begins before @em this buffer and overlaps the beginning: @a m_Position needs to be set to @a Position, @a m_Length needs to be reduced by the overlapping.
+		 *   - The deletion is completely inside @em this buffer: @a m_Length needs to be reduced by @a Length.
+		 *   - The deletion begins inside @em this buffer and overlaps the end: @a m_Length needs to be reduced by the size of the overlapping.
 		 *   - The deletion is completely behind @em this buffer: nothing to be done.
-		 *   - The deletion overlaps @em this buffer completely: m_Length is set to 0 and m_Position is set to Position.
-		 * - The structural changes are very much the same as for Inserts. We just need to pass this change down to all sub buffers by calling vParentDataChanged(m_stDataDeleted, stPosition - m_stPosition, stLength).
+		 *   - The deletion overlaps @em this buffer completely: @a m_Length is set to 0 and @a m_Position is set to @a Position.
+		 * - To change any sub buffers, we just need to pass this change down to all sub buffers by calling m_ParentDataDeleted(Position - m_Position, Length).
 		 **/
-		auto m_ParentDataChanged(size_type ChangeMode, Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length) -> void;
-    
+        auto m_ParentDataDeleted(Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length) -> void;
+        
+		/**
+		 * @brief This function is called whenever data has been inserted in the sup buffer, in a way that also affects @em this buffer.
+		 * @param Position Indicates the location of the insertion inside the sup buffer.
+		 * @param Length Specifies the length of the insertion.
+		 * @note Notice that this function is called even if the insert was not inside @em this buffer. If the insertion was @em before this buffer (@a Position < @a m_Position) we need to reset @a m_Position.
+		 * 
+		 * - The local changes depend on the position of the insertion. If the data was inserted before this buffer we need to reset m_stPosition and m_Begin. If the data was inserted inside the buffer we need to reset m_Length.
+		 * - To change any sub buffers, we just pass the change by calling m_ParentDataInserted(Position - m_Position, Length). There is one exception to this: If @em this buffer made the initial change and the change request was passed up to the most superior buffer and now the changes are passed down again we don't apply changes here. Once all the changes are done and we return to the initial insertion function it is done then.
+		 **/
+        auto m_ParentDataInserted(Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length) -> void;
+        
+		/**
+		 * @brief This function is called whenever the data of the sup buffer has been updated.
+         * 
+         * Resets the m_Begin pointer to the correct location inside the sup buffer (m_SupBuffer->m_Begin + m_Position).
+		 * Notifies all sub buffers recursively.
+         **/
+        auto m_ParentDataUpdated() -> void;
+        
 		/**
 		 * @brief A pointer pointing to the superior buffer.
 		 *

@@ -21,10 +21,6 @@
 
 #include <arxx/buffer.h>
 
-const Arxx::Buffer::size_type Arxx::Buffer::m_DataUpdated = 0x01;
-const Arxx::Buffer::size_type Arxx::Buffer::m_DataDeleted = 0x02;
-const Arxx::Buffer::size_type Arxx::Buffer::m_DataInserted = 0x03;
-
 #ifdef DEBUG
 namespace Arxx
 {
@@ -296,13 +292,13 @@ void Arxx::Buffer::m_Insert(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Posit
 		{
 			if((SubBuffer->GetOrder() >= Order) && (InsertedData == true))
 			{
-				SubBuffer->GetBuffer().m_ParentDataChanged(m_DataInserted, Position, DataLength);
+				SubBuffer->GetBuffer().m_ParentDataInserted(Position, DataLength);
 			}
 			else
 			{
 				if(m_Begin != OldBegin)
 				{
-					SubBuffer->GetBuffer().m_ParentDataChanged(m_DataUpdated, 0, 0);
+					SubBuffer->GetBuffer().m_ParentDataUpdated();
 				}
 			}
 		}
@@ -339,13 +335,13 @@ void Arxx::Buffer::m_Insert(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Posit
 		{
 			if(SubBuffer->GetOrder() >= Order)
 			{
-				SubBuffer->GetBuffer().m_ParentDataChanged(m_DataInserted, Position, DataLength);
+				SubBuffer->GetBuffer().m_ParentDataInserted(Position, DataLength);
 			}
 			else
 			{
 				if(m_Begin != OldBegin)
 				{
-					SubBuffer->GetBuffer().m_ParentDataChanged(m_DataUpdated, 0, 0);
+					SubBuffer->GetBuffer().m_ParentDataUpdated();
 				}
 			}
 		}
@@ -374,7 +370,7 @@ void Arxx::Buffer::Delete(size_type Position, size_type Length)
 		}
 		for(auto SubBuffer : m_SubBuffers)
 		{
-			SubBuffer->GetBuffer().m_ParentDataChanged(m_DataDeleted, Position, Length);
+			SubBuffer->GetBuffer().m_ParentDataDeleted(Position, Length);
 		}
 	}
 	else
@@ -389,162 +385,158 @@ Arxx::Buffer::const_pointer Arxx::Buffer::GetBegin() const
 {
 	return m_Begin;
 }
-
-void Arxx::Buffer::m_ParentDataChanged(size_type ChangeMode, size_type Position, size_type Length)
+        
+auto Arxx::Buffer::m_ParentDataDeleted(Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length) -> void
 {
 #ifdef DEBUG
-	std::cerr << this << Indentation(this) << " ParentDataChanged(ChangeMode = " << ChangeMode << ", Position = " << Position << ", Length = " << Length << ")   ---   Status: Position = " << m_Position << ", Length = " << m_Length << ", Changing = " << m_Changing << std::endl;
+	std::cerr << this << Indentation(this) << " ParentDataDeleted(Position = " << Position << ", Length = " << Length << ")   ---   Status: Position = " << m_Position << ", Length = " << m_Length << ", Changing = " << m_Changing << std::endl;
 #endif
-	switch(ChangeMode)
-	{
-	case m_DataUpdated:
-		{
-			m_Begin = m_SupBuffer->m_Begin + m_Position;
-			for(auto SubBuffer : m_SubBuffers)
-			{
-				SubBuffer->GetBuffer().m_ParentDataChanged(m_DataUpdated, 0, 0);
-			}
+    if(Position < m_Position)
+    {
+        if(Position + Length < m_Position)
+        {
+            // deleting completely before Buffer
+            m_Position -= Length;
+        }
+        else
+        {
+            // deletion and Buffer intersect
+            if(Position + Length < m_Position + m_Length)
+            {
+                // partly intersection
+                m_Length = m_Position + m_Length - (Position + Length);
+                for(auto Marker : m_Markers)
+                {
+                    if(m_Position + Marker->GetPosition() <= Position + Length)
+                    {
+                        Marker->SetPosition(0);
+                    }
+                    else
+                    {
+                        Marker->SetPosition(m_Position + Marker->GetPosition() - (Position + Length));
+                    }
+                }
+            }
+            else
+            {
+                // deletion covers Buffer
+                m_Length = 0;
+                for(auto Marker : m_Markers)
+                {
+                    Marker->SetPosition(0);
+                }
+            }
+            m_Position = Position;
+        }
+    }
+    else
+    {
+        // HERE: The deletion is after or at the begin of _this_ buffer
+        //    => The position of _this_ buffer must not change
+        if(Position < m_Position + m_Length)
+        {
+            // HERE: The deletion is NOT after the end of _this_ buffer
+            if(Position + Length > m_Position + m_Length)
+            {
+                // HERE: The deletion overlaps the end of _this_ buffer
+                //    => Reduce the size of _this_ buffer by the length of the overlapping
+                //
+                // Condition:
+                //                  Position >= m_Position
+                // =>  Position - m_Position >= 0
+                // =>  this difference is greater than/or equal zero and thus safe
+                m_Length = Position - m_Position;
+            }
+            else
+            {
+                // HERE: The deletion is completely inside _this_ buffer
+                //    => Reduce the size of _this_ buffer by the size of the deletion
+                //
+                // Condition 1:
+                //                  Position >= m_Position
+                // =>  Position - m_Position >= 0
+                //
+                // Condition 2:
+                //                    Position + Length <= m_Position + m_Length
+                // =>  (Position - m_Position) + Length <= m_Length
+                // =>                        X + Length <= m_Length
+                // =>                          m_Length >= Length + X
+                // =>  this difference is greater than/or equal zero and thus safe
+                m_Length -= Length;
+            }
+        }
+        else
+        {
+            // HERE: The deletion is after the end of _this_ buffer
+            //    => Nothing to be done
+        }
+    }
+    m_Begin = m_SupBuffer->m_Begin + m_Position;
+    for(auto SubBuffer : m_SubBuffers)
+    {
+        SubBuffer->GetBuffer().m_ParentDataDeleted(Position - m_Position, Length);
+    }
+}
 
-			break;
-		}
-	case m_DataDeleted:
-		{
-			if(Position < m_Position)
-			{
-				if(Position + Length < m_Position)
-				{
-					// deleting completely before Buffer
-					m_Position -= Length;
-				}
-				else
-				{
-					// deletion and Buffer intersect
-					if(Position + Length < m_Position + m_Length)
-					{
-						// partly intersection
-						m_Length = m_Position + m_Length - (Position + Length);
-						for(auto Marker : m_Markers)
-						{
-							if(m_Position + Marker->GetPosition() <= Position + Length)
-							{
-								Marker->SetPosition(0);
-							}
-							else
-							{
-								Marker->SetPosition(m_Position + Marker->GetPosition() - (Position + Length));
-							}
-						}
-					}
-					else
-					{
-						// deletion covers Buffer
-						m_Length = 0;
-						for(auto Marker : m_Markers)
-						{
-							Marker->SetPosition(0);
-						}
-					}
-					m_Position = Position;
-				}
-			}
-			else
-			{
-				// HERE: The deletion is after or at the begin of _this_ buffer
-				//    => The position of _this_ buffer must not change
-				if(Position < m_Position + m_Length)
-				{
-					// HERE: The deletion is NOT after the end of _this_ buffer
-					if(Position + Length > m_Position + m_Length)
-					{
-						// HERE: The deletion overlaps the end of _this_ buffer
-						//    => Reduce the size of _this_ buffer by the length of the overlapping
-						//
-						// Condition:
-						//                  Position >= m_Position
-						// =>  Position - m_Position >= 0
-						// =>  this difference is greater than/or equal zero and thus safe
-						m_Length = Position - m_Position;
-					}
-					else
-					{
-						// HERE: The deletion is completely inside _this_ buffer
-						//    => Reduce the size of _this_ buffer by the size of the deletion
-						//
-						// Condition 1:
-						//                  Position >= m_Position
-						// =>  Position - m_Position >= 0
-						//
-						// Condition 2:
-						//                    Position + Length <= m_Position + m_Length
-						// =>  (Position - m_Position) + Length <= m_Length
-						// =>                        X + Length <= m_Length
-						// =>                          m_Length >= Length + X
-						// =>  this difference is greater than/or equal zero and thus safe
-						m_Length -= Length;
-					}
-				}
-				else
-				{
-					// HERE: The deletion is after the end of _this_ buffer
-					//    => Nothing to be done
-				}
-			}
-			m_Begin = m_SupBuffer->m_Begin + m_Position;
-			for(auto SubBuffer : m_SubBuffers)
-			{
-				SubBuffer->GetBuffer().m_ParentDataChanged(m_DataDeleted, Position - m_Position, Length);
-			}
+auto Arxx::Buffer::m_ParentDataInserted(Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length) -> void
+{
+#ifdef DEBUG
+	std::cerr << this << Indentation(this) << " ParentDataInserted(Position = " << Position << ", Length = " << Length << ")   ---   Status: Position = " << m_Position << ", Length = " << m_Length << ", Changing = " << m_Changing << std::endl;
+#endif
+    if((Position == m_Position) && (m_Changing == true))
+    {
+        // prepending
+        m_Length += Length;
+    }
+    else
+    {
+        if(Position <= m_Position)
+        {
+            // data inserted; we are not prepending; inserting position is before this buffer
+            m_Position += Length;
+        }
+        else
+        {
+            if((Position <= m_Position + m_Length) && (m_Changing == true))
+            {
+                m_Length += Length;
+            }
+        }
+    }
+    // data inserted; we are not prepending; inserting position is after the begin of this buffer
+    // update markers
+    for(auto Marker : m_Markers)
+    {
+        if(((m_Position + Marker->GetPosition() == Position) && (Marker->GetAlignment() == Arxx::Buffer::Marker::Alignment::Right)) || (Marker->GetPosition() > Position))
+        {
+            // only if the data was inserted BEFORE or AT the marker position
+            Marker->SetPosition(Marker->GetPosition() + Length);
+        }
+    }
+    m_Begin = m_SupBuffer->m_Begin + m_Position;
+    // NEXT: because, if we are changing there is an order, which must be followed.
+    if(m_Changing == false)
+    {
+        for(auto SubBuffer : m_SubBuffers)
+        {
+            if(Position >= m_Position)
+            {
+                SubBuffer->GetBuffer().m_ParentDataInserted(Position - m_Position, Length);
+            }
+        }
+    }
+}
 
-			break;
-		}
-	case m_DataInserted:
-		{
-			if((Position == m_Position) && (m_Changing == true))
-			{
-				// prepending
-				m_Length += Length;
-			}
-			else
-			{
-				if(Position <= m_Position)
-				{
-					// data inserted; we are not prepending; inserting position is before this buffer
-					m_Position += Length;
-				}
-				else
-				{
-					if((Position <= m_Position + m_Length) && (m_Changing == true))
-					{
-						m_Length += Length;
-					}
-				}
-			}
-			// data inserted; we are not prepending; inserting position is after the begin of this buffer
-			// update markers
-			for(auto Marker : m_Markers)
-			{
-				if(((m_Position + Marker->GetPosition() == Position) && (Marker->GetAlignment() == Arxx::Buffer::Marker::Alignment::Right)) || (Marker->GetPosition() > Position))
-				{
-					// only if the data was inserted BEFORE or AT the marker position
-					Marker->SetPosition(Marker->GetPosition() + Length);
-				}
-			}
-			m_Begin = m_SupBuffer->m_Begin + m_Position;
-			// NEXT: because, if we are changing there is an order, which must be followed.
-			if(m_Changing == false)
-			{
-				for(auto SubBuffer : m_SubBuffers)
-				{
-					if(Position >= m_Position)
-					{
-						SubBuffer->GetBuffer().m_ParentDataChanged(m_DataInserted, Position - m_Position, Length);
-					}
-				}
-			}
-
-			break;
-		}
-	}
+auto Arxx::Buffer::m_ParentDataUpdated() -> void
+{
+#ifdef DEBUG
+	std::cerr << this << Indentation(this) << " ParentDataUpdate()   ---   Status: Position = " << m_Position << ", Length = " << m_Length << ", Changing = " << m_Changing << '\n';
+#endif
+    m_Begin = m_SupBuffer->m_Begin + m_Position;
+    for(auto SubBuffer : m_SubBuffers)
+    {
+        SubBuffer->GetBuffer().m_ParentDataUpdated();
+    }
 }
 
 Arxx::Buffer::value_type Arxx::Buffer::operator[](size_type Index) const
