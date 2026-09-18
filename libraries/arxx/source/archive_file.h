@@ -20,11 +20,11 @@
 #ifndef GALACTIC_FALL__LIBRARIES__ARXX__SOURCE__ARCHIVEFILE_H
 #define GALACTIC_FALL__LIBRARIES__ARXX__SOURCE__ARCHIVEFILE_H
 
-#include <netinet/in.h>
-
 #include <cstdint>
 
 #include <arxx/common.h>
+
+#include "io.h"
 
 /**
  * @file ArchiveFile.h
@@ -178,7 +178,7 @@ namespace Arxx
 		std::uint32_t StructureLength;
 	};
 #pragma pack()
-
+    
 	/**
 	 * @brief The output operator for a Arxx::ArchiveHeader struct.
 	 * 
@@ -186,18 +186,12 @@ namespace Arxx
 	 **/
 	inline std::ostream & operator<<(std::ostream & OStream, Arxx::ArchiveHeader & ArchiveHeader)
 	{
-		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.MajorVersionNumber), sizeof(std::uint8_t));
-		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.MinorVersionNumber), sizeof(std::uint8_t));
-		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.RevisionNumber), sizeof(std::uint8_t));
-		OStream.write(reinterpret_cast<char const *>(&ArchiveHeader.CandidateNumber), sizeof(std::uint8_t));
-		
-		auto RootItemIdentifier = htonl(ArchiveHeader.RootItemIdentifier);
-		
-		OStream.write(reinterpret_cast<char const *>(&RootItemIdentifier), sizeof(std::uint32_t));
-		
-		auto NumberOfItems = htonl(ArchiveHeader.NumberOfItems);
-		
-		OStream.write(reinterpret_cast<char const *>(&NumberOfItems), sizeof(std::uint32_t));
+        ARX::WriteUnsignedInteger8Bit(OStream, ArchiveHeader.MajorVersionNumber);
+		ARX::WriteUnsignedInteger8Bit(OStream, ArchiveHeader.MinorVersionNumber);
+		ARX::WriteUnsignedInteger8Bit(OStream, ArchiveHeader.RevisionNumber);
+		ARX::WriteUnsignedInteger8Bit(OStream, ArchiveHeader.CandidateNumber);
+		ARX::WriteUnsignedInteger32Bit(OStream, ArchiveHeader.RootItemIdentifier);
+		ARX::WriteUnsignedInteger32Bit(OStream, ArchiveHeader.NumberOfItems);
 	
 		return OStream;
 	}
@@ -209,42 +203,18 @@ namespace Arxx
 	 **/
 	inline std::ostream & operator<<(std::ostream & OStream, Arxx::ItemHeader & ItemHeader)
 	{
-		auto Identifier = htonl(ItemHeader.Identifier);
-		
-		OStream.write(reinterpret_cast<char const *>(&Identifier), sizeof(std::uint32_t));
-		
-		auto Type = htonl(ItemHeader.Type);
-		
-		OStream.write(reinterpret_cast<char const *>(&Type), sizeof(std::uint32_t));
-		
-		auto SubType = htonl(ItemHeader.SubType);
-		
-		OStream.write(reinterpret_cast<char const *>(&SubType), sizeof(std::uint32_t));
-		
-		OStream.write(reinterpret_cast<char const *>(&ItemHeader.MajorVersionNumber), sizeof(std::uint8_t));
-		OStream.write(reinterpret_cast<char const *>(&ItemHeader.MinorVersionNumber), sizeof(std::uint8_t));
-		OStream.write(reinterpret_cast<char const *>(&ItemHeader.RevisionNumber), sizeof(std::uint8_t));
-		OStream.write(reinterpret_cast<char const *>(&ItemHeader.CandidateNumber), sizeof(std::uint8_t));
-		
-		auto DataCompressionType = htonl(ItemHeader.DataCompressionType);
-		
-		OStream.write(reinterpret_cast<char const *>(&DataCompressionType), sizeof(std::uint32_t));
-		
-		auto NameLength = htonl(ItemHeader.NameLength);
-		
-		OStream.write(reinterpret_cast<char const *>(&NameLength), sizeof(std::uint32_t));
-		
-		auto DataDecompressedLength = htonl(ItemHeader.DataDecompressedLength);
-		
-		OStream.write(reinterpret_cast<char const *>(&DataDecompressedLength), sizeof(std::uint32_t));
-		
-		auto DataCompressedLength = htonl(ItemHeader.DataCompressedLength);
-		
-		OStream.write(reinterpret_cast<char const *>(&DataCompressedLength), sizeof(std::uint32_t));
-		
-		auto StructureLength = htonl(ItemHeader.StructureLength);
-		
-		OStream.write(reinterpret_cast<char const *>(&StructureLength), sizeof(std::uint32_t));
+		ARX::WriteUnsignedInteger32Bit(OStream, ItemHeader.Identifier);
+		ARX::WriteUnsignedInteger32Bit(OStream, ItemHeader.Type);
+		ARX::WriteUnsignedInteger32Bit(OStream, ItemHeader.SubType);
+        ARX::WriteUnsignedInteger8Bit(OStream, ItemHeader.MajorVersionNumber);
+		ARX::WriteUnsignedInteger8Bit(OStream, ItemHeader.MinorVersionNumber);
+		ARX::WriteUnsignedInteger8Bit(OStream, ItemHeader.RevisionNumber);
+		ARX::WriteUnsignedInteger8Bit(OStream, ItemHeader.CandidateNumber);
+		ARX::WriteUnsignedInteger32Bit(OStream, ItemHeader.DataCompressionType);
+		ARX::WriteUnsignedInteger32Bit(OStream, ItemHeader.NameLength);
+		ARX::WriteUnsignedInteger32Bit(OStream, ItemHeader.DataDecompressedLength);
+		ARX::WriteUnsignedInteger32Bit(OStream, ItemHeader.DataCompressedLength);
+		ARX::WriteUnsignedInteger32Bit(OStream, ItemHeader.StructureLength);
 	
 		return OStream;
 	}
@@ -256,20 +226,12 @@ namespace Arxx
 	 **/
 	inline std::istream & operator>>(std::istream & IStream, Arxx::ArchiveHeader & ArchiveHeader)
 	{
-		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.MajorVersionNumber), sizeof(std::uint8_t));
-		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.MinorVersionNumber), sizeof(std::uint8_t));
-		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.RevisionNumber), sizeof(std::uint8_t));
-		IStream.read(reinterpret_cast<char *>(&ArchiveHeader.CandidateNumber), sizeof(std::uint8_t));
-		
-		std::uint32_t RootItemIdentifier;
-		
-		IStream.read(reinterpret_cast<char *>(&RootItemIdentifier), sizeof(std::uint32_t));
-		ArchiveHeader.RootItemIdentifier = ntohl(RootItemIdentifier);
-		
-		std::uint32_t NumberOfItems;
-		
-		IStream.read(reinterpret_cast<char *>(&NumberOfItems), sizeof(std::uint32_t));
-		ArchiveHeader.NumberOfItems = ntohl(NumberOfItems);
+		ArchiveHeader.MajorVersionNumber = ARX::ReadUnsignedInteger8Bit(IStream);
+		ArchiveHeader.MinorVersionNumber = ARX::ReadUnsignedInteger8Bit(IStream);
+		ArchiveHeader.RevisionNumber = ARX::ReadUnsignedInteger8Bit(IStream);
+		ArchiveHeader.CandidateNumber = ARX::ReadUnsignedInteger8Bit(IStream);
+		ArchiveHeader.RootItemIdentifier = ARX::ReadUnsignedInteger32Bit(IStream);
+		ArchiveHeader.NumberOfItems = ARX::ReadUnsignedInteger32Bit(IStream);
 		
 		return IStream;
 	}
@@ -281,49 +243,18 @@ namespace Arxx
 	 **/
 	inline std::istream & operator>>(std::istream & IStream, Arxx::ItemHeader & ItemHeader)
 	{
-		std::uint32_t Identifier;
-		
-		IStream.read(reinterpret_cast<char *>(&Identifier), sizeof(std::uint32_t));
-		ItemHeader.Identifier = ntohl(Identifier);
-		
-		std::uint32_t Type;
-		
-		IStream.read(reinterpret_cast<char *>(&Type), sizeof(std::uint32_t));
-		ItemHeader.Type = ntohl(Type);
-		
-		std::uint32_t SubType;
-		
-		IStream.read(reinterpret_cast<char *>(&SubType), sizeof(std::uint32_t));
-		ItemHeader.SubType = ntohl(SubType);
-		IStream.read(reinterpret_cast<char *>(&ItemHeader.MajorVersionNumber), sizeof(std::uint8_t));
-		IStream.read(reinterpret_cast<char *>(&ItemHeader.MinorVersionNumber), sizeof(std::uint8_t));
-		IStream.read(reinterpret_cast<char *>(&ItemHeader.RevisionNumber), sizeof(std::uint8_t));
-		IStream.read(reinterpret_cast<char *>(&ItemHeader.CandidateNumber), sizeof(std::uint8_t));
-		
-		std::uint32_t DataCompressionType;
-		
-		IStream.read(reinterpret_cast<char *>(&DataCompressionType), sizeof(std::uint32_t));
-		ItemHeader.DataCompressionType = ntohl(DataCompressionType);
-		
-		std::uint32_t NameLength;
-		
-		IStream.read(reinterpret_cast<char *>(&NameLength), sizeof(std::uint32_t));
-		ItemHeader.NameLength = ntohl(NameLength);
-		
-		std::uint32_t DataDecompressedLength;
-		
-		IStream.read(reinterpret_cast<char *>(&DataDecompressedLength), sizeof(std::uint32_t));
-		ItemHeader.DataDecompressedLength = ntohl(DataDecompressedLength);
-		
-		std::uint32_t DataCompressedLength;
-		
-		IStream.read(reinterpret_cast<char *>(&DataCompressedLength), sizeof(std::uint32_t));
-		ItemHeader.DataCompressedLength = ntohl(DataCompressedLength);
-		
-		std::uint32_t StructureLength;
-		
-		IStream.read(reinterpret_cast<char *>(&StructureLength), sizeof(std::uint32_t));
-		ItemHeader.StructureLength = ntohl(StructureLength);
+		ItemHeader.Identifier = ARX::ReadUnsignedInteger32Bit(IStream);
+		ItemHeader.Type = ARX::ReadUnsignedInteger32Bit(IStream);
+		ItemHeader.SubType = ARX::ReadUnsignedInteger32Bit(IStream);
+		ItemHeader.MajorVersionNumber = ARX::ReadUnsignedInteger8Bit(IStream);
+		ItemHeader.MinorVersionNumber = ARX::ReadUnsignedInteger8Bit(IStream);
+		ItemHeader.RevisionNumber = ARX::ReadUnsignedInteger8Bit(IStream);
+		ItemHeader.CandidateNumber = ARX::ReadUnsignedInteger8Bit(IStream);
+		ItemHeader.DataCompressionType = ARX::ReadUnsignedInteger32Bit(IStream);
+		ItemHeader.NameLength = ARX::ReadUnsignedInteger32Bit(IStream);
+		ItemHeader.DataDecompressedLength = ARX::ReadUnsignedInteger32Bit(IStream);
+		ItemHeader.DataCompressedLength = ARX::ReadUnsignedInteger32Bit(IStream);
+		ItemHeader.StructureLength = ARX::ReadUnsignedInteger32Bit(IStream);
 		
 		return IStream;
 	}

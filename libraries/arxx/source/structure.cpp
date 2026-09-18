@@ -17,8 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <netinet/in.h>
-
 #include <cassert>
 #include <iostream>
 
@@ -26,6 +24,8 @@
 #include <arxx/buffer_writer.h>
 #include <arxx/reference.h>
 #include <arxx/structure.h>
+
+#include "io.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -125,36 +125,6 @@ auto Arxx::Structure::end() const -> Arxx::Structure::const_iterator
 	return m_Relations.end();
 }
 
-static auto GetU4Byte(std::istream & IStream) -> std::uint32_t
-{
-	auto Result = 0UL;
-	
-	IStream.read(reinterpret_cast<std::istream::char_type *>(&Result), sizeof(std::uint32_t));
-	Result = ntohl(Result);
-	
-	return Result;
-}
-
-static auto GetString(std::istream & IStream) -> std::string
-{
-	auto Result = std::string{};
-	auto Char = '\0';
-	
-	while(IStream.get(Char))
-	{
-		if(Char != '\0')
-		{
-			Result += Char;
-		}
-		else
-		{
-			break;
-		}
-	}
-	
-	return Result;
-}
-
 auto Arxx::Structure::m_RemoveRelation(Arxx::Structure::Relation * Relation) -> void
 {
     std::erase_if(m_Relations, [Relation](auto const & Item)
@@ -172,18 +142,18 @@ auto Arxx::Structure::m_ReadFromStream(std::uint32_t StructureDataLength, std::i
 {
 	while(StructureDataLength > 0)
 	{
-		auto Relation = GetString(IStream);
+		auto Relation = ARX::ReadStringWithTermination(IStream);
 		
 		assert(IStream);
 		StructureDataLength -= Relation.length() + 1;
 		
-		auto ItemCount = GetU4Byte(IStream);
+		auto ItemCount = ARX::ReadUnsignedInteger32Bit(IStream);
 		
 		assert(IStream);
 		StructureDataLength -= 4;
 		while(ItemCount > 0)
 		{
-			auto ItemIdentifier = GetU4Byte(IStream);
+			auto ItemIdentifier = ARX::ReadUnsignedInteger32Bit(IStream);
 			
 			assert(IStream);
 			StructureDataLength -= 4;
@@ -200,10 +170,10 @@ auto Arxx::Structure::m_WriteToBuffer(Arxx::Buffer & Buffer) const -> void
     for(auto & [RelationName, Relation] : m_Relations)
     {
 		BufferWriter << RelationName;
-		BufferWriter << static_cast<std::uint32_t>(htonl(Relation.size()));
+		BufferWriter << ARX::ToNetworkByteOrder(Relation.size());
 		for(auto Reference : Relation)
         {
-			BufferWriter << static_cast<std::uint32_t>(htonl(Reference.GetItemIdentifier()));
+			BufferWriter << ARX::ToNetworkByteOrder(Reference.GetItemIdentifier());
         }
     }
 }
