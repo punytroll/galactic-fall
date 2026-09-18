@@ -1,5 +1,5 @@
 /**
- * libarxx - Advanced Resource files in C++
+ * ARX - Advanced Resource Archives
  * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
@@ -27,9 +27,9 @@
 #include "io.h"
 
 /**
- * @file ArchiveFile.h
+ * @file archive_file.h
  * 
- * A hidden header file with Arxx internal structs and function definitions for reading an ARX archive file.
+ * An internal header file with structs and function definitions for reading ARX archive files.
  **/
 
 namespace Arxx

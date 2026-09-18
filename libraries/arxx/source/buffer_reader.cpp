@@ -1,5 +1,5 @@
 /**
- * libarxx - Advanced Resource files in C++
+ * ARX - Advanced Resource Archives
  * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or

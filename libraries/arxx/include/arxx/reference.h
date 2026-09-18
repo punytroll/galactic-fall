@@ -1,5 +1,5 @@
 /**
- * libarxx - Advanced Resource files in C++
+ * ARX - Advanced Resource Archives
  * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #include <arxx/common.h>
 
 /**
- * @file Reference.h
+ * @file reference.h
  * 
  * This file declares the Arxx::Reference class, a class for unified Arxx::Item access in resolved and unresolved environments.
  **/

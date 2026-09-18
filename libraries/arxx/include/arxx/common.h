@@ -1,5 +1,5 @@
 /**
- * libarxx - Advanced Resource files in C++
+ * ARX - Advanced Resource Archives
  * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
@@ -25,9 +25,9 @@
 #include <string>
 
 /**
- * @file Common.h
+ * @file common.h
  * 
- * The Common.h include file contains the most basic set of declarations for libarxx.
+ * Contains the most basic set of declarations for libarxx.
  * 
  * The declarations in this file are intended to be self-satisfactory except for system includes so that every other include file can include them without care of forward declarations.
  **/

@@ -1,5 +1,5 @@
 /**
- * libarxx - Advanced Resource files in C++
+ * ARX - Advanced Resource Archives
  * Copyright (C) 2005-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 #include <arxx/common.h>
 
 /**
- * @file Archive.h
+ * @file archive.h
  * 
  * This file declares the Arxx::Archive class and Arxx::Archive::iterator and Arxx::Archive::const_iterator iterator classes.
  **/
