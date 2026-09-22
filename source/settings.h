@@ -20,6 +20,10 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include <list>
+#include <optional>
+#include <string>
+
 #include <algebra/vector2f.h>
 
 namespace Arxx
@@ -33,37 +37,31 @@ public:
 	struct KeyBinding
 	{
 		// constructor
-		KeyBinding(int Code, const std::string & Event, const std::string & Action);
+		KeyBinding(int Code, std::string Event, std::string Action);
 		// fields
 		std::string Action;
 		int Code;
 		std::string Event;
 	};
 	
-	// constructor and destructor
-	Settings(void);
-	~Settings(void);
 	// getters
-	std::list< Settings::KeyBinding > const * GetKeyBindings(void) const;
-	Vector2f const * GetWindowDimensions(void) const;
-	// setters
-	void SetKeyBindings(const std::list< Settings::KeyBinding > & KeyBindings);
-	void SetWindowDimensions(const Vector2f & WindowDimensions);
+	auto GetKeyBindings() const -> std::list<Settings::KeyBinding> const *;
+	auto GetWindowDimensions() const -> Vector2f const *;
 	// modifiers
-	void LoadFromItem(Arxx::Item * Item);
+	auto LoadFromItem(Arxx::Item * Item) -> void;
 private:
-	std::list< Settings::KeyBinding > * _KeyBindings;
-	Vector2f * _WindowDimensions;
+	std::optional<std::list<Settings::KeyBinding>> m_KeyBindings;
+	std::optional<Vector2f> m_WindowDimensions;
 };
 
-inline std::list< Settings::KeyBinding > const * Settings::GetKeyBindings(void) const
+inline auto Settings::GetKeyBindings() const -> std::list<Settings::KeyBinding> const *
 {
-	return _KeyBindings;
+	return ((m_KeyBindings.has_value() == true) ? (std::addressof(m_KeyBindings.value())) : (nullptr));
 }
 
-inline Vector2f const * Settings::GetWindowDimensions(void) const
+inline auto Settings::GetWindowDimensions() const -> Vector2f const *
 {
-	return _WindowDimensions;
+	return ((m_WindowDimensions.has_value() == true) ? (std::addressof(m_WindowDimensions.value())) : (nullptr));
 }
 
 #endif

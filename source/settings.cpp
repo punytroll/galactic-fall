@@ -50,54 +50,27 @@ static void MakeItemAvailable(Arxx::Item * Item)
 	}
 }
 
-Settings::KeyBinding::KeyBinding(int Code, const std::string & Event, const std::string & Action) :
-	Action(Action),
+Settings::KeyBinding::KeyBinding(int Code, std::string Event, std::string Action) :
+	Action{std::move(Action)},
 	Code(Code),
-	Event(Event)
+	Event{std::move(Event)}
 {
 }
 
-Settings::Settings(void) :
-	_KeyBindings(nullptr),
-	_WindowDimensions(nullptr)
-{
-}
-
-Settings::~Settings(void)
-{
-	delete _KeyBindings;
-	_KeyBindings = nullptr;
-	delete _WindowDimensions;
-	_WindowDimensions = nullptr;
-}
-
-void Settings::SetKeyBindings(const std::list< KeyBinding > & KeyBindings)
-{
-	delete _KeyBindings;
-	_KeyBindings = new std::list< KeyBinding >(KeyBindings);
-}
-
-void Settings::SetWindowDimensions(const Vector2f & WindowDimensions)
-{
-	delete _WindowDimensions;
-	_WindowDimensions = new Vector2f(WindowDimensions);
-}
-
-void Settings::LoadFromItem(Arxx::Item * Item)
+auto Settings::LoadFromItem(Arxx::Item * Item) -> void
 {
 	if(Item->GetStructure().HasRelation("child") == false)
 	{
 		throw std::runtime_error("The item '" + Item->GetName() + "' does not contain a 'child' relation.");
 	}
 	
-	Arxx::Structure::Relation & ChildRelation(Item->GetStructure().GetRelation("child"));
-	
+	auto & ChildRelation = Item->GetStructure().GetRelation("child");
 	// read key binding profile
-	std::list< Arxx::Item * > KeyBindingProfileItems(ChildRelation.GetItems("Key Binding Profile"));
+	auto KeyBindingProfileItems = ChildRelation.GetItems("Key Binding Profile");
 	
 	if(KeyBindingProfileItems.size() > 0)
 	{
-		Arxx::Item * KeyBindingProfileItem(KeyBindingProfileItems.front());
+		auto KeyBindingProfileItem = KeyBindingProfileItems.front();
 		
 		if(KeyBindingProfileItem->GetType() != DATA_TYPE_KEY_BINDING_PROFILE)
 		{
@@ -109,29 +82,29 @@ void Settings::LoadFromItem(Arxx::Item * Item)
 		}
 		MakeItemAvailable(KeyBindingProfileItem);
 		
-		Arxx::BufferReader Reader(*KeyBindingProfileItem);
-		std::uint32_t NumberOfKeyBindings;
-		std::list< KeyBinding > KeyBindings;
+		auto Reader = Arxx::BufferReader{*KeyBindingProfileItem};
+		auto NumberOfKeyBindings = std::uint32_t{0};
+		auto KeyBindings = std::list<Settings::KeyBinding>{};
 		
 		Reader >> NumberOfKeyBindings;
 		for(auto KeyBindingIndex = 0ul; KeyBindingIndex < NumberOfKeyBindings; ++KeyBindingIndex)
 		{
-			std::uint32_t Code;
-			std::string Event;
-			std::string Action;
+			auto Code = std::uint32_t{0};
+			auto Event = std::string{};
+			auto Action = std::string{};
 			
 			Reader >> Code >> Event >> Action;
 			KeyBindings.push_back(KeyBinding(Code, Event, Action));
 		}
-		SetKeyBindings(KeyBindings);
+		m_KeyBindings = KeyBindings;
 	}
 	
 	// read window dimensions
-	std::list< Arxx::Item * > WindowDimensionsItems(ChildRelation.GetItems("Window Dimensions"));
+	auto WindowDimensionsItems = ChildRelation.GetItems("Window Dimensions");
 	
 	if(WindowDimensionsItems.size() > 0)
 	{
-		Arxx::Item * WindowDimensionsItem(WindowDimensionsItems.front());
+		auto WindowDimensionsItem = WindowDimensionsItems.front();
 		
 		if(WindowDimensionsItem->GetType() != DATA_TYPE_DIMENSIONS)
 		{
@@ -143,10 +116,10 @@ void Settings::LoadFromItem(Arxx::Item * Item)
 		}
 		MakeItemAvailable(WindowDimensionsItem);
 		
-		Arxx::BufferReader Reader(*WindowDimensionsItem);
-		Vector2f WindowDimensions;
+		auto Reader = Arxx::BufferReader{*WindowDimensionsItem};
+		auto WindowDimensions = Vector2f{};
 		
 		Reader >> WindowDimensions;
-		SetWindowDimensions(WindowDimensions);
+		m_WindowDimensions = WindowDimensions;
 	}
 }
