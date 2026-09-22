@@ -84,22 +84,22 @@ auto Arxx::Structure::Relation::size() const -> Arxx::Structure::Relation::size_
 
 auto Arxx::Structure::Relation::begin() -> Arxx::Structure::Relation::iterator
 {
-	return m_References.begin();
+	return Arxx::Structure::Relation::iterator{m_References.begin()};
 }
 
 auto Arxx::Structure::Relation::end() -> Arxx::Structure::Relation::iterator
 {
-	return m_References.end();
+	return Arxx::Structure::Relation::iterator{m_References.end()};
 }
 
 auto Arxx::Structure::Relation::begin() const -> Arxx::Structure::Relation::const_iterator
 {
-	return m_References.begin();
+	return Arxx::Structure::Relation::const_iterator{m_References.begin()};
 }
 
 auto Arxx::Structure::Relation::end() const -> Arxx::Structure::Relation::const_iterator
 {
-	return m_References.end();
+	return Arxx::Structure::Relation::const_iterator{m_References.end()};
 }
 
 auto Arxx::Structure::Relation::GetName() const -> std::string const &

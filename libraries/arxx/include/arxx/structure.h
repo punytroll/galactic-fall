@@ -58,7 +58,8 @@ namespace Arxx
 		/**
 		 * @brief The object that holds references to other items.
 		 * 
-		 * A Relation is a container for Arxx::Reference objects, which are identified by the unique ID of the referenced Arxx::Item. A Relation is a multiset so that one Arxx::Item may be referenced multiple times.
+		 * A Relation is a container for Arxx::Reference objects, which are identified by the unique ID of the referenced Arxx::Item.
+         * A Relation is a multiset so that one Arxx::Item may be referenced multiple times.
 		 **/
 		class Relation
 		{
@@ -71,8 +72,10 @@ namespace Arxx
 			
 			/**
 			 * @brief An iterator class defining basic operations to iterate the Reference objects in a Relation.
-			 *
-			 * This iterator class encapsules the internal form of Reference storage in a Relation. By using this iterator class, which is what you have to do, you are safe from changes in implementation detail as the container used to store Reference objects. Additionally it is the prefered way to make a visit to each Reference in a Relation.
+			 * 
+			 * This iterator class encapsules the internal form of Reference storage in a Relation.
+             * By using this iterator class, which is what you have to do, you are safe from changes in implementation detail as the container used to store Reference objects.
+             * Additionally it is the prefered way to make a visit to each Reference in a Relation.
 			 **/
 			class iterator
 			{
@@ -81,30 +84,30 @@ namespace Arxx
                 
 				/**
 				 * @brief The constructor of a Reference iterator.
-				 * @param iReference The STL iterator from the Relation's aggregated Reference container. The internal representation of the iterator.
-				 *
-				 * This constructor creates a Reference iterator from an STL iterator.
+				 * @param Iterator An iterator from the Relation's aggregated Reference container.
 				 **/
-				iterator(std::multimap<std::uint32_t, Arxx::Reference>::iterator Iterator);
+				explicit iterator(std::multimap<std::uint32_t, Arxx::Reference>::iterator Iterator);
 				
 				/**
 				 * @brief Advances the iterator.
 				 *
-				 * Advances the Reference iterator. It is not defined which will be the next Reference the iterator points to. It is only assured that every Reference in the Relation will be passed once.
+				 * Advances the Reference iterator.
+                 * It is not defined which will be the next Reference the iterator points to.
+                 * It is only assured that every Reference in the Relation will be passed once.
 				 **/
 				auto operator++() -> Arxx::Structure::Relation::iterator &;
 				
 				/**
 				 * @brief This will return the Reference that this iterator points to.
 				 * 
-				 * This is the non-const version of the operator*() so it returns a non-const Reference.
+				 * This is the non-const version of the operator*(), so it returns a non-const Reference.
 				 **/
 				auto operator*() -> Arxx::Reference &;
 				
 				/**
 				 * @brief This will return the Reference that this iterator points to.
 				 * 
-				 * This is the const version of the operator*() thus the returned Reference is const as well.
+				 * This is the const version of the operator*(), thus the returned Reference is const as well.
 				 **/
 				auto operator*() const -> Arxx::Reference const &;
 				
@@ -115,33 +118,31 @@ namespace Arxx
 				
 				/**
 				 * @brief Tests two iterators for equality.
-				 * @param iReference The iterator to check against.
+				 * @param Other The iterator to check against.
 				 **/
 				auto operator==(Arxx::Structure::Relation::iterator const & Other) const -> bool;
 				
 				/**
 				 * @brief Tests two iterators for inequality.
-				 * @param iReference The iterator to check against.
+				 * @param Other The iterator to check against.
 				 **/
 				auto operator!=(Arxx::Structure::Relation::iterator const & Other) const -> bool;
 				
 				/**
 				 * @brief Tests two iterators for equality.
-				 * @param iReference The iterator to check against.
+				 * @param Other The const_iterator to check against.
 				 **/
 				auto operator==(Arxx::Structure::Relation::const_iterator const & Other) const -> bool;
 				
 				/**
 				 * @brief Tests two iterators for inequality.
-				 * @param iReference The iterator to check against.
+				 * @param Other The const_iterator to check against.
 				 **/
 				auto operator!=(Arxx::Structure::Relation::const_iterator const & Other) const -> bool;
                 
 			private:
 				/**
-				 * @brief The internal STL iterator.
-				 * 
-				 * This is an iterator into the Relation's internal Reference map.
+				 * @brief The iterator into the Relation's reference container.
 				 **/
 				std::multimap<std::uint32_t, Arxx::Reference>::iterator m_Iterator;
                 
@@ -150,7 +151,9 @@ namespace Arxx
 			/**
 			 * @brief An iterator class defining basic operations to iterate the Reference objects in a Relation.
 			 *
-			 * This iterator class encapsules the internal form of Reference storage in a Relation. By using this iterator class, which is what you have to do, you are safe from changes in implementation detail as the container used to store Reference objects. Additionally it is the prefered way to make a visit to each Reference in a Relation.
+			 * This iterator class encapsules the internal form of Reference storage in a Relation.
+             * By using this iterator class, which is what you have to do, you are safe from changes in implementation detail as the container used to store Reference objects.
+             * Additionally it is the prefered way to make a visit to each Reference in a Relation.
 			 **/
 			class const_iterator
 			{
@@ -159,15 +162,13 @@ namespace Arxx
                 
 				/**
 				 * @brief The constructor of a const Reference iterator.
-				 * @param iReference The STL iterator from the Relation's aggregated Reference container. The internal representation of the iterator.
-				 *
-				 * This constructor creates a const Reference iterator from an STL iterator.
+				 * @param Iterator An iterator from the Relation's aggregated Reference container.
 				 **/
-				const_iterator(std::multimap<std::uint32_t, Arxx::Reference>::const_iterator Iterator);
+				explicit const_iterator(std::multimap<std::uint32_t, Arxx::Reference>::const_iterator Iterator);
 				
 				/**
 				 * @brief The constructor of a const Reference iterator from a non-const iterator.
-				 * @param iIterator An iterator of a Reference.
+				 * @param Iterator An iterator of a Reference.
 				 *
 				 * This constructor creates a const Reference iterator from a non-const Reference iterator.
 				 **/
@@ -176,14 +177,16 @@ namespace Arxx
 				/**
 				 * @brief Advances the iterator.
 				 *
-				 * Advances the Reference iterator. It is not defined which will be the next Reference the iterator points to. It is only assured that every Reference in the Relation will be passed once.
+				 * Advances the Reference iterator.
+                 * It is not defined which will be the next Reference the iterator points to.
+                 * It is only assured that every Reference in the Relation will be passed once.
 				 **/
 				auto operator++() -> Arxx::Structure::Relation::const_iterator &;
 				
 				/**
 				 * @brief This will return the Arxx::Reference that this iterator points to.
 				 * 
-				 * This is the const version of the operator*() thus the returned Reference is const as well.
+				 * This is the const version of the operator*(), thus the returned Reference is const as well.
 				 **/
 				auto operator*() const -> Arxx::Reference const &;
 				
@@ -194,21 +197,19 @@ namespace Arxx
 				
 				/**
 				 * @brief Tests two iterators for equality.
-				 * @param iReference The iterator to check against.
+				 * @param Other The iterator to check against.
 				 **/
 				auto operator==(Arxx::Structure::Relation::const_iterator const & Other) const -> bool;
 				
 				/**
 				 * @brief Tests two iterators for inequality.
-				 * @param iReference The iterator to check against.
+				 * @param Other The iterator to check against.
 				 **/
 				auto operator!=(Arxx::Structure::Relation::const_iterator const & Other) const -> bool;
                 
 			private:
 				/**
-				 * @brief The internal STL iterator.
-				 * 
-				 * This is an iterator into a Relation's internal Reference map.
+				 * @brief The iterator into the Relation's reference container.
 				 **/
 				std::multimap<std::uint32_t, Arxx::Reference>::const_iterator m_Iterator;
                 
@@ -238,8 +239,8 @@ namespace Arxx
 			 * @note All unresolved item references will be skipped.
 			 * 
 			 * This function can be used to retrieve a pointers to items that are linked to in this relation.
-			 * 
-			 * Relations contain items without regard of their names. Therefore multiple items inside a relation may have the same name and all these items are returned.
+			 * Relations contain items without regard of their names.
+             * Therefore multiple items inside a relation may have the same name and all these items are returned.
 			 **/
 			auto GetItems(std::string const & Name) -> std::list<Arxx::Item *>;
 			
@@ -284,7 +285,8 @@ namespace Arxx
 			/**
 			 * @brief The related Structure object.
 			 * 
-			 * This is set by the constructor and cannot be changed. Every Relation object is strictly bound to exactly one Structure at creation time.
+			 * This is set by the constructor and cannot be changed.
+             * Every Relation object is strictly bound to exactly one Structure at creation time.
 			 **/
 			Arxx::Structure & m_Structure;
 			
@@ -296,7 +298,7 @@ namespace Arxx
 			/**
 			 * @brief The name of the relation.
 			 **/
-			std::string m_Name;
+			std::string const m_Name;
             
 		};
 		
@@ -306,8 +308,10 @@ namespace Arxx
 		
 		/**
 		 * @brief An iterator class defining basic operations to iterate the Relation objects in a Structure.
-		 *
-		 * This iterator class encapsules the internal form of Relation storage in a Structure. By using this iterator class, which is what you have to do, you are safe from changes in implementation detail as the container used to store Relation objects. Additionally it is the prefered way to make a visit to each Relation in a Structure.
+		 * 
+		 * This iterator class encapsules the internal form of Relation storage in a Structure.
+         * By using this iterator class, which is what you have to do, you are safe from changes in implementation detail as the container used to store Relation objects.
+         * Additionally it is the prefered way to make a visit to each Relation in a Structure.
 		 **/
 		class iterator
 		{
@@ -316,30 +320,30 @@ namespace Arxx
             
 			/**
 			 * @brief The constructor of a Relation iterator.
-			 * @param iRelation The STL iterator from the Structure's aggregated Relation container. The internal representation of the iterator.
-			 *
-			 * This constructor creates a Relation iterator from an STL iterator.
+             * @param Iterator An iterator from the Structure's aggregated Relation container.
 			 **/
-			iterator(std::map<std::string, Arxx::Structure::Relation>::iterator Iterator);
+			explicit iterator(std::map<std::string, Arxx::Structure::Relation>::iterator Iterator);
 			
 			/**
 			 * @brief Advances the iterator.
 			 *
-			 * Advances the Relation iterator. It is not defined which will be the next Relation the iterator points to. It is only assured that every Relation in the Structure will be passed once.
+			 * Advances the Relation iterator.
+             * It is not defined which will be the next Relation the iterator points to.
+             * It is only assured that every Relation in the Structure will be passed once.
 			 **/
 			auto operator++() -> Arxx::Structure::iterator &;
 			
 			/**
 			 * @brief This will return the Relation that this iterator points to.
 			 * 
-			 * This is the non-const version of the operator*() so it returns a non-const Relation.
+			 * This is the non-const version of the operator*(), so it returns a non-const Relation.
 			 **/
 			auto operator*() -> Arxx::Structure::Relation &;
 			
 			/**
 			 * @brief This will return the Relation that this iterator points to.
 			 * 
-			 * This is the const version of the operator*() thus the returned Relation is const as well.
+			 * This is the const version of the operator*(), thus the returned Relation is const as well.
 			 **/
 			auto operator*() const -> Arxx::Structure::Relation const &;
 			
@@ -350,34 +354,32 @@ namespace Arxx
 			
 			/**
 			 * @brief Tests two iterators for equality.
-			 * @param iRelation The iterator to check against.
+			 * @param Other An iterator to check against.
 			 **/
 			auto operator==(Arxx::Structure::iterator const & Other) const -> bool;
 			
 			/**
 			 * @brief Tests two iterators for inequality.
-			 * @param iRelation The iterator to check against.
+			 * @param Other An iterator to check against.
 			 **/
 			auto operator!=(Arxx::Structure::iterator const & Other) const -> bool;
 			
 			/**
 			 * @brief Tests two iterators for equality.
-			 * @param iRelation The iterator to check against.
+			 * @param Other A const iterator to check against.
 			 **/
 			auto operator==(Arxx::Structure::const_iterator const & Other) const -> bool;
 			
 			/**
 			 * @brief Tests two iterators for inequality.
-			 * @param iRelation The iterator to check against.
+			 * @param Other A const iterator to check against.
 			 **/
 			auto operator!=(Arxx::Structure::const_iterator const & Other) const -> bool;
             
 		private:
-			/**
-			 * @brief The internal STL iterator.
-			 * 
-			 * This is an iterator into the Structure's internal Relation map.
-			 **/
+            /**
+             * @brief The iterator into the Structure's relation container.
+             **/
 			std::map<std::string, Arxx::Structure::Relation>::iterator m_Iterator;
             
 		};
@@ -398,7 +400,7 @@ namespace Arxx
 			 *
 			 * This constructor creates a const Relation iterator from an STL iterator.
 			 **/
-			const_iterator(std::map<std::string, Arxx::Structure::Relation>::const_iterator Iterator);
+			explicit const_iterator(std::map<std::string, Arxx::Structure::Relation>::const_iterator Iterator);
 			
 			/**
 			 * @brief The constructor of a const Relation iterator from a non-const Relation iterator.
@@ -455,7 +457,7 @@ namespace Arxx
 		 * @brief This constructor binds the structure to a specific Arxx::Item.
 		 * @param Item The Arxx::Item that this structure is linked to.
 		 **/
-		Structure(Arxx::Item & Item);
+		explicit Structure(Arxx::Item & Item);
 		
 		/**
 		 * @brief Adds an unresolved item reference to a relation.
@@ -466,7 +468,7 @@ namespace Arxx
 		 * This function will add the item identifier @a ItemIdentifier to the relation identified by @a Relation.
 		 * 
 		 * There are two things to consider:
-		 * - The item identifier may not be invalid, i.e. equal to g_u4InvalidItemIdentifier.
+		 * - The item identifier may not be invalid, i.e. equal to g_InvalidItemIdentifier.
 		 * - You cannot change the "reference" relation with this function.
 		 * 
 		 * Violating one of these conditions will abort the call and return without having done anything.

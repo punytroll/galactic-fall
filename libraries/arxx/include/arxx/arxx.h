@@ -27,13 +27,19 @@
 /**
  * @mainpage
  *
- * Welcome to Advanced Resource file for C++. This library provides classes and functions to open, modify and save ARX archives.
+ * Welcome to Advanced Resource file for C++.
+ * This library provides classes and functions to open, modify and save ARX archives.
+ * 
+ * ARX is just another file format.
+ * It is designed to contain an arbitrary amount of data chunks in a compressed state.
+ * Additionally the data chunks may be named, typed, versioned and structured in a directory tree.
+ * It therefore very much resembles any form of tar.bz2, tar.gz, rar or zip with the files beeing the data chunks.
+ * 
+ * From a pragmatic point of view this very much covers the functionality, but I wouldn't have done this library if it didn't provide at least some advantage or additional feature.
  *
- * ARX is just another file format. It is designed to contain an arbitrary amount of data chunks in a compressed state. Additionally the data chunks may be named, typed, versioned and structured in a directory tree. It therefore very much resembles any form of tar.bz2, tar.gz, rar or zip with the files beeing the data chunks.
- *
- * From a pragmatic point of view this very much covers the functionality but I wouldn't have done this library if it didn't provide at least some advantage or additional feature.
- *
- * To start reading and learning about libarxx you could start with Arxx::Archive which is the entry point for almost every Arxx session. Also the Arxx::Item is very important. Additionally the Modules page is recommended for reading.
+ * To start reading and learning about libarxx you could start with Arxx::Archive which is the entry point for almost every Arxx session.
+ * Also the Arxx::Item is very important.
+ * Additionally the Modules page is recommended for reading.
  **/
 
 /**

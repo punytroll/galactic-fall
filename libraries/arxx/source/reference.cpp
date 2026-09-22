@@ -101,7 +101,7 @@ auto Arxx::Reference::Detach() -> bool
 	return true;
 }
 
-auto Arxx::Reference::DecoupleFromArchive() -> void
+auto Arxx::Reference::m_DecoupleFromArchive() -> void
 {
 	m_ReferenceCore->DecoupleFromArchive();
 }

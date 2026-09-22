@@ -107,22 +107,22 @@ auto Arxx::Structure::size() const -> Arxx::Structure::size_type
 
 auto Arxx::Structure::begin() -> Arxx::Structure::iterator
 {
-	return m_Relations.begin();
+	return Arxx::Structure::iterator{m_Relations.begin()};
 }
 
 auto Arxx::Structure::end() -> Arxx::Structure::iterator
 {
-	return m_Relations.end();
+	return Arxx::Structure::iterator{m_Relations.end()};
 }
 
 auto Arxx::Structure::begin() const -> Arxx::Structure::const_iterator
 {
-	return m_Relations.begin();
+	return Arxx::Structure::const_iterator{m_Relations.begin()};
 }
 
 auto Arxx::Structure::end() const -> Arxx::Structure::const_iterator
 {
-	return m_Relations.end();
+	return Arxx::Structure::const_iterator{m_Relations.end()};
 }
 
 auto Arxx::Structure::m_RemoveRelation(Arxx::Structure::Relation * Relation) -> void

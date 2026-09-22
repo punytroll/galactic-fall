@@ -200,7 +200,7 @@ auto Arxx::Archive::Unregister(Arxx::Item * Item) -> void
 	m_Items.erase(ItemIterator);
 	Item->m_Archive = nullptr;
 	ReferenceIterator->second.Unresolve();
-	ReferenceIterator->second.DecoupleFromArchive();
+	ReferenceIterator->second.m_DecoupleFromArchive();
 	m_References.erase(ReferenceIterator);
 }
 
@@ -511,26 +511,22 @@ auto Arxx::Archive::Save(std::string const & FilePath, bool AutoCompress) -> voi
 
 auto Arxx::Archive::begin() -> Arxx::Archive::iterator
 {
-	// will be fed into an implicite constructor for Arxx::Archive::iterator
-	return m_Items.begin();
+	return Arxx::Archive::iterator{m_Items.begin()};
 }
 
 auto Arxx::Archive::end() -> Arxx::Archive::iterator
 {
-	// will be fed into an implicite constructor for Arxx::Archive::iterator
-	return m_Items.end();
+	return Arxx::Archive::iterator{m_Items.end()};
 }
 
 auto Arxx::Archive::begin() const -> Arxx::Archive::const_iterator
 {
-	// will be fed into an implicite constructor for Arxx::Archive::const_iterator
-	return m_Items.begin();
+	return Arxx::Archive::const_iterator{m_Items.begin()};
 }
 
 auto Arxx::Archive::end() const -> Arxx::Archive::const_iterator
 {
-	// will be fed into an implicite constructor for Arxx::Archive::const_iterator
-	return m_Items.end();
+	return Arxx::Archive::const_iterator{m_Items.end()};
 }
 
 auto Arxx::Archive::size() const -> Arxx::Archive::size_type

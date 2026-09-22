@@ -17,25 +17,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef GALACTIC_FALL__LIBRARIES__ARXX__SOURCE__REFERENCEIMPLEMENTATION_H
-#define GALACTIC_FALL__LIBRARIES__ARXX__SOURCE__REFERENCEIMPLEMENTATION_H
+#ifndef GALACTIC_FALL__LIBRARIES__ARXX__SOURCE__REFERENCE_CORE_H
+#define GALACTIC_FALL__LIBRARIES__ARXX__SOURCE__REFERENCE_CORE_H
 
 #include <arxx/common.h>
 
 namespace Arxx
 {
 	class Item;
-	
 	class Archive;
 	
 	/**
-	 * @brief The real Arxx::Item reference used by Arxx::Reference to implement shared references.
+	 * @brief The core of an Arxx::Reference, which contains a reference counter, the item identifier, the item pointer, if it has been resolved and a library pointer.
 	 **/
 	class ReferenceCore
 	{
 	public:
 		/**
-		 * @brief Returns a new ReferenceImplementation instance created from a Arxx::Item.
+		 * @brief Returns a new ReferenceCore instance created from a Arxx::Item.
 		 * @param Item The Arxx::Item that the new reference should refer to.
 		 * 
 		 * Of course, the new reference is resolved.
@@ -43,8 +42,8 @@ namespace Arxx
 		static auto Create(Arxx::Item & Item) -> Arxx::ReferenceCore *;
 		
 		/**
-		 * @brief Returns a new ReferenceImplementation instance created from a unique ID.
-		 * @param UniqueID The unique ID that the new reference shoud refer to.
+		 * @brief Returns a new ReferenceCore instance created from an item identifier and an archive.
+		 * @param ItemIdentifier The unique ID that the new reference shoud refer to.
 		 * @param Archive Since unique IDs are not strictly bound to but only sensible in Archives, this lets you pass the appropriate Archive.
 		 * 
 		 * The new reference of course is unresolved.
@@ -53,28 +52,28 @@ namespace Arxx
 		
 		/**
 		 * @brief Increases the reference counter and conveniently returns the parameter.
-		 * @param pReference The ReferenceImplementation object that you want to reference.
+		 * @param ReferenceCore The ReferenceCore object that you want to reference.
 		 * 
 		 * Since the new reference is equal to the old reference its resolved status is equal as well.
 		 **/
 		static auto Create(Arxx::ReferenceCore * ReferenceCore) -> Arxx::ReferenceCore *;
 		
 		/**
-		 * @brief Decreases the reference counter and possible deletes the reference.
-		 * @param pReference The ReferenceImplementation object that you want to release.
+		 * @brief Decreases the reference counter and possibly deletes the reference.
+		 * @param ReferenceCore The ReferenceCore object that you want to release.
 		 * @return A boolean value indicating whether the reference was deleted or not.
 		 * 
-		 * If decreasing the reference counter of @a pReference make it equal to zero, the object pReference is deleted.
+		 * If decreasing the reference counter of @a ReferenceCore make it equal to zero, the ReferenceCore is deleted.
 		 **/
 		static auto Release(Arxx::ReferenceCore * ReferenceCore) -> bool;
 		
 		/**
-		 * @brief No copy semantic for ReferenceImplementation objects.
+		 * @brief No copy semantic for ReferenceCore objects.
 		 **/
 		ReferenceCore(Arxx::ReferenceCore const & Reference) = delete;
 		
 		/**
-		 * @brief No assigment semantic for ReferenceImplementation objects.
+		 * @brief No assigment semantic for ReferenceCore objects.
 		 **/
 		auto operator=(Arxx::ReferenceCore const & Reference) -> Arxx::ReferenceCore & = delete;
 		
@@ -88,19 +87,21 @@ namespace Arxx
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
 		 * 
-		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is `nullptr`.
+		 * If the reference is resolved this correctly returns the Arxx::Item's pointer.
+         * In case of an unresolved reference the returned pointer is `nullptr`.
 		 **/
 		auto GetItem() -> Arxx::Item *;
 		
 		/**
 		 * @brief Returns the Arxx::Item pointer of the reference.
 		 * 
-		 * If the reference is resolved this correctly returns the Arxx::Item's pointer. In case of an unresolved reference the returned pointer is `nullptr`.
+		 * If the reference is resolved this correctly returns the Arxx::Item's pointer.
+         * In case of an unresolved reference the returned pointer is `nullptr`.
 		 **/
 		auto GetItem() const -> Arxx::Item const *;
 		
 		/**
-		 * @brief Returns m_u4ReferenceCounter, the number of Arxx::Reference objects that hold @em this ReferenceCore object.
+		 * @brief Returns m_ReferenceCounter, the number of Arxx::Reference objects that hold @em this ReferenceCore object.
 		 **/
 		auto GetReferenceCount() const -> std::uint32_t;
 		
@@ -125,18 +126,19 @@ namespace Arxx
 		 * @brief This function sets m_Archive to `nullptr`.
 		 **/
 		auto DecoupleFromArchive() -> void;
+        
 	private:
 		/**
 		 * @brief The constructor of a ReferenceImplementation object.
 		 * 
-		 * Instances of this class are only created via the pGetReference() calls.
+		 * Instances of this class are only created via calls to the static Create() functions.
 		 **/
 		ReferenceCore() = default;
 		
 		/**
 		 * @brief The destructor of a ReferenceImplementation object.
 		 * 
-		 * Instances of this class may only be destroyed using the vRelease() call.
+		 * Instances of this class may only be destroyed via calls to the static Release() function.
 		 **/
 		~ReferenceCore();
 		

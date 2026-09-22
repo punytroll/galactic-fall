@@ -42,7 +42,8 @@ namespace Arxx
 	 *
 	 * It adds the basics of ARX to the data storage: Names, IDs, Types, SubTypes and a connection to a parenting Arxx::Archive.
 	 *
-	 * Additionally, at the moment it provides basic functionality for the structure, but that is about to change. Structure should only be handled by external structure classes.
+	 * Additionally, at the moment it provides basic functionality for the structure, but that is about to change.
+     * Structure should only be handled by external structure classes.
 	 **/
 	class Item : public Arxx::Data
 	{
@@ -70,7 +71,8 @@ namespace Arxx
 		/**
 		 * @brief This function returns the identifier of @em this Arxx::Item.
 		 * 
-		 * Returns the identifier of @em this item. Remember that it is unique inside the associated archive.
+		 * Returns the identifier of @em this item.
+         * Remember that it is unique inside the associated archive.
 		 **/
 		auto GetIdentifier() const -> std::uint32_t;
 		
@@ -78,7 +80,8 @@ namespace Arxx
 		 * @brief Sets @em this item's unique identifier inside the library.
 		 * @param Identifier The new identifier of this item.
 		 * 
-		 * This function is trivial for items that don't belong to any library. The unique identifier has no meaning there and will just get assigned.
+		 * This function is trivial for items that don't belong to any library.
+         * The unique identifier has no meaning there and will just get assigned.
 		 * 
 		 * If @em this Arxx::Item is inside an Arxx:Archive the function is responsible for checking that the new identifier is not used yet.
 		 **/
@@ -102,8 +105,8 @@ namespace Arxx
 		/**
 		 * @brief Returns the type identifier of @em this item.
 		 * 
-		 * The type identifier has no sematic meaning to ARX or libarxx. It only serves the purpose of getting a meaning by the application.
-		 *
+		 * The type identifier has no sematic meaning to ARX or libarxx.
+         * It only serves the purpose of getting a meaning by the application.
 		 * The default value for the type is 0xFFFFFFFF.
 		 **/
 		auto GetType() const -> std::uint32_t;
@@ -111,9 +114,9 @@ namespace Arxx
 		/**
 		 * @brief Returns the sub-type identifier of @em this item.
 		 * 
-		 * As the type the sub-type identifier has no sematic meaning to ARX or libarxx. It is meant to be placed into meaning by the application.
-		 *
-		 * The default value for the sub type is 0xFFFFFFFF.
+		 * As the type the sub-type identifier has no sematic meaning to ARX or libarxx.
+         * It is meant to be placed into meaning by the application.
+         * The default value for the sub type is 0xFFFFFFFF.
 		 **/
 		auto GetSubType() const -> std::uint32_t;
 		
@@ -141,7 +144,8 @@ namespace Arxx
 		 * @brief Enables you to set the type identifier of @em this item.
 		 * @param Type The type identifier you whish to set for @em this item.
 		 * 
-		 * The type identifier has no sematic meaning to ARX or libarxx. It only serves the purpose of getting a meaning by the application.
+		 * The type identifier has no sematic meaning to ARX or libarxx.
+         * It only serves the purpose of getting a meaning by the application.
 		 **/
 		auto SetType(std::uint32_t Type) -> void;
 		
@@ -149,7 +153,8 @@ namespace Arxx
 		 * @brief Enables you to set the sub-type identifier of @em this item.
 		 * @param SubType The sub-type identifier you whish to set for @em this item.
 		 * 
-		 * As the type the sub-type identifier has no sematic meaning to ARX or libarxx. It is meant to be placed into meaning by the application.
+		 * As the type the sub-type identifier has no sematic meaning to ARX or libarxx.
+         * It is meant to be placed into meaning by the application.
 		 **/
 		auto SetSubType(std::uint32_t SubType) -> void;
 		
@@ -201,8 +206,8 @@ namespace Arxx
 		/**
 		 * @brief The item's identifier to identify it inside a library.
 		 * 
-		 * The item's identifier will identify the item in a library. The identifier allows access to the item in O(log(n)).
-		 * 
+		 * The item's identifier will identify the item in a library.
+         * The identifier allows access to the item in O(log(n)).
 		 * Depending on the constructor this field is either initialized with 0xFFFFFFFF or with the identifier passed to the constructor.
 		 **/
 		std::uint32_t m_Identifier{g_InvalidItemIdentifier};
@@ -210,8 +215,8 @@ namespace Arxx
 		/**
 		 * @brief The item's name in string form.
 		 * 
-		 * The name is in no way meant to identify the item. It's just used to have a short description of the item (although no length restriction is given).
-		 * 
+		 * The name is in no way meant to identify the item.
+         * It's just used to have a short description of the item (although no length restriction is given).
 		 * Despite this, the name can be used to build paths over the items of the library.
 		 * 
 		 * Paths look like this:
@@ -231,8 +236,10 @@ namespace Arxx
 		/**
 		 * @brief A type identifier for @em this item.
 		 * 
-		 * The type of an item has no semantic meaning inside ARX or libarxx. It exists only to be used by applications to identify the type of the data of @em this item. Think of it as a replacement for extensions.
-		 * 
+		 * The type of an item has no semantic meaning inside ARX or libarxx.
+         * It exists only to be used by applications to identify the type of the data of @em this item.
+         * Think of it as a replacement for extensions.
+         * 
 		 * After creating an Item this value is intentionally 0xFFFFFFFF.
 		 **/
 		std::uint32_t m_Type{g_InvalidItemIdentifier};
@@ -240,8 +247,11 @@ namespace Arxx
 		/**
 		 * @brief A subtype identifier for @em this item.
 		 * 
-		 * Like the type the subtype has no semantic meaning  inside ARX or libarxx. Ite exists only to be used by the application to identify subtypes of types. This is useful for example to distinguish between different versions of data format that belong to the same type. It can also be used to highlight semantic meaning of a general data format on filesystem layer, like identifying all kinds of log files with a certain type and distinguishing between error, info, debug and critical with different subtypes.
-		 * 
+		 * Like the type the subtype has no semantic meaning  inside ARX or libarxx.
+         * It exists only to be used by the application to identify subtypes of types.
+         * This is useful for example to distinguish between different versions of data format that belong to the same type.
+         * It can also be used to highlight semantic meaning of a general data format on filesystem layer, like identifying all kinds of log files with a certain type and distinguishing between error, info, debug and critical with different subtypes.
+         * 
 		 * After creating an Item this value is intentionally 0xFFFFFFFF.
 		 **/
 		std::uint32_t m_SubType{g_InvalidItemIdentifier};
@@ -270,8 +280,7 @@ namespace Arxx
 		 * @brief A pointer to the Archive.
 		 * 
 		 * Depending on the constructor this field is either initialized with `nullptr` or with the address of the archive passed to the constructor.
-		 * 
-		 * It is changed in conjuction with the Arxx::Archive::vRegisterItem() and Arxx::Archive::vUnregisterItem() functions.
+		 * It is changed in conjuction with the @a Arxx::Archive::RegisterItem() and @a Arxx::Archive::UnregisterItem() functions.
 		 **/
 		Arxx::Archive * m_Archive{nullptr};
 		
@@ -279,7 +288,6 @@ namespace Arxx
 		 * @brief The structural information of an item.
 		 **/
 		Arxx::Structure m_Structure;
-        
 	};
 }
 

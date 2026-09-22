@@ -34,10 +34,13 @@ namespace Arxx
 	/**
 	 * @brief A buffer with compression, decompression and external data referencing features.
 	 *
-	 * This is the component underlying the Arxx::Item class. It delivers the ability to compress and decompress the data. Because of the public inhertitance from Arxx::Buffer it is still possible to call Buffer::stGetLength() but be aware that it will give you the state of the buffer which might not be what you want for two reasons:
+	 * This is the component underlying the Arxx::Item class.
+     * It delivers the ability to compress and decompress the data.
+     * Because of the public inhertitance from Arxx::Buffer it is still possible to call Buffer::GetLength() but be aware that it will give you the state of the buffer which might not be what you want for two reasons:
 	 * - the buffer content might be compressed or decompressed
 	 * - the data might not be fetched yet, which makes Arxx::Buffer::GetLength() return `0` since there is nothing in the buffer
-	 * - the data might not be fetched yet, but you have written something in the buffer. Arxx::Buffer::stGetLength() will of course return the length of that data instead of the length of the Item's data, be it compressed or decompressed.
+	 * - the data might not be fetched yet, but you have written something in the buffer.
+     *   Arxx::Buffer::GetLength() will of course return the length of that data instead of the length of the Item's data, be it compressed or decompressed.
 	 **/
 	class Data : public Arxx::Buffer
 	{
@@ -101,33 +104,37 @@ namespace Arxx
 		 * 
 		 * Note that fetching the data does not automatically internalize it.
 		 * 
-		 * In order to only try to fetch the data m_URI must be valid and bIsFetched() and bIsFetching() must be false. Otherwise the function will return false.
+		 * In order to only try to fetch the data m_URI must be valid and bIsFetched() and bIsFetching() must be false.
+         * Otherwise the function will return false.
 		 * 
-		 * For asynchronous fetches the return value may be true because an Arxx::DataChannel could be found but the actuall fetching may fail. This information may be retrieved via Arxx::Data::GetFetchStatus().
+		 * For asynchronous fetches the return value may be true because an Arxx::DataChannel could be found but the actuall fetching may fail.
+         * This information may be retrieved via Arxx::Data::GetFetchStatus().
 		 **/
 		auto Fetch() -> bool;
 		
 		/**
 		 * @brief Unfetching the data generally means deleting the data thus releasing the memory in the buffer.
 		 * 
-		 * This function will empty the data buffer and release the memory associated with it. So why an extra function if this could be done with Buffers::Buffer::vDelete()?
-		 * 
-		 * Because if you vDelete the content of the buffer you change the data. Hence you don't change the flag whether the data is fetched and will not be able the refetch the data using vFetch() again.
-		 * 
-		 * This function requires the bIsFetched() to be true.
-		 * 
-		 * This function sets @a m_FetchStatus to Arxx::UNFETCHED.
+		 * This function will empty the data buffer and release the memory associated with it.
+         * So why an extra function if this could be done with @a Buffers::Buffer::Delete()?
+         * 
+		 * Because if you delete the content of the buffer you change the data.
+         * Hence you don't change the flag whether the data is fetched and will not be able the refetch the data using @a Fetch() again.
+		 * Thus, this function requires the bIsFetched() to be true.
 		 **/
 		auto Unfetch() -> void;
 		
 		/**
 		 * @brief Sets fetch information for the data object.
 		 * @param Offset The offset of the fetchable data.
-		 * @param Compression The state of the data. If this value if greater than 0 the fake data is considered compressed.
-		 * @param DecompressedLength The length of the data if in decompressed state. Elsewise the value which Arxx::Buffer::u4GetDecompressedLength() will return and this data will serve no internal functionality, so you may use it as you like.
-		 * @param CompressedLength The length of the data if in compressed state. Elsewise the value which Arxx::Buffer::u4GetCompressedDataLength() will return and this data will serve no internal functionality, so you may use it as you like.
+		 * @param Compression The state of the data.
+         *                    If this value if greater than 0 the fake data is considered compressed.
+		 * @param DecompressedLength The length of the data if in decompressed state.
+         *                           Elsewise the value which @a Arxx::Buffer::GetDecompressedLength() will return and this data will serve no internal functionality, so you may use it as you like.
+		 * @param CompressedLength The length of the data if in compressed state.
+         *                         Elsewise the value which Arxx::Buffer::GetCompressedDataLength() will return and this data will serve no internal functionality, so you may use it as you like.
 		 * 
-		 * This function will set @a _Fetched to false.
+		 * This function will set @a m_Fetched to false.
 		 **/
 		auto SetFetchInformation(std::uint32_t Offset, Arxx::Data::Compression Compression, std::uint32_t DecompressedLength, std::uint32_t CompressedLength) -> void;
 		

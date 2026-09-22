@@ -43,20 +43,23 @@ namespace Arxx
  * @brief This class represents a sub buffer and its maintainance information inside a superior buffer.
  *
  * Whenever a sub buffer is created the superior buffer will add this informative structure to its m_SubBuffers vector.
- *
  * Currently there is only one piece of information given here: the order.
- *
- * The order of a sub buffer is a numeric value related to the time when it was created as a sub buffer. It actually is not a time value. It only supports the one relation:
- * - Buffer1.stGetOrder() > Buffer2.stGetOrder()  <=>  Buffer1 was created before Buffer2.
+ * The order of a sub buffer is a numeric value related to the time when it was created as a sub buffer.
+ * It actually is not a time value.
+ * It only supports the one relation:
+ * - Buffer1.GetOrder() > Buffer2.GetOrder()  <=>  Buffer1 was created before Buffer2.
  * 
  * Why would anybody need such a thing?
  *
- * Imagine an arbitrary buffer, filled or empty, that doesn't matter. Now mentally create three sub buffers of length 0 at the same position, one after another so that they get different orders. Now consider the three (different) scenarios of inserting an amount of data into one of those buffers.
+ * Imagine an arbitrary buffer, filled or empty, that doesn't matter.
+ * Now mentally create three sub buffers of length 0 at the same position, one after another so that they get different orders.
+ * Now consider the three (different) scenarios of inserting an amount of data into one of those buffers.
  * - When inserting into the first buffer (the one, you created first which got the lowest order) it would be nice to have the two remaining buffers at the end of the first buffer, not overlapping.
  * - When inserting into the second buffer it would be nice if the first buffer would still be in front of the second one and the third would be at its end.
  * - When inserting into the third buffer it would be nice if the two remaining buffer would be in front of the third.
  * 
- * Now, since all three buffer share the same values concerning their physical structure (position and length) there is no way of differentiating these three scenarios. What we need is the only difference they have: their times of creation.
+ * Now, since all three buffer share the same values concerning their physical structure (position and length) there is no way of differentiating these three scenarios.
+ * What we need is the only difference they have: their times of creation.
  **/
 class Arxx::Buffer::SubBuffer
 {
@@ -64,9 +67,10 @@ public:
 	/**
 	 * @brief The constructor of a SubBuffer structure.
 	 * @param Buffer The associated buffer which actually is the sub buffer.
-	 * @param stOrder The order this sub buffer was inserted in the superior buffer.
+	 * @param Order The order this sub buffer was inserted in the superior buffer.
 	 * 
-	 * This constructor creates a SubBuffer. The parameters are the information the superior buffer whishes to associate with the sub buffer.
+	 * This constructor creates a SubBuffer.
+     * The parameters are the information the superior buffer whishes to associate with the sub buffer.
 	 **/
 	SubBuffer(Arxx::Buffer & Buffer, size_type Order) :
 		m_Buffer{Buffer},
@@ -97,14 +101,18 @@ private:
 	/**
 	 * @brief The associated Buffer.
 	 *
-	 * A reference to the associated Buffer. As it is a reference it cannot be re-set or left unspecified. This class is only valid if there actually is such a sub buffer. It must be set with the constructor and may be retrieved with GetBuffer().
+	 * A reference to the associated Buffer.
+     * As it is a reference it cannot be re-set or left unspecified.
+     * This class is only valid if there actually is such a sub buffer.
+     * It must be set with the constructor and may be retrieved with @a GetBuffer().
 	 **/
 	Buffer & m_Buffer;
 
 	/**
 	 * @brief The associated order of the sub buffer.
 	 *
-	 * A numeric value describing the order of the associated buffer (m_Buffer) inside the superior buffer. It may be retrieved via stGetOrder().
+	 * A numeric value describing the order of the associated buffer (@a m_Buffer) inside the superior buffer.
+     * It may be retrieved via @a GetOrder().
 	 **/
 	size_type m_Order;
 };

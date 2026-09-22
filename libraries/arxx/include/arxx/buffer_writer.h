@@ -37,7 +37,10 @@ namespace Arxx
 	 * 
 	 * The BufferWriter is implemented using a Arxx::Buffer::Marker to indicate the position at which the data is to be inserted into the buffer.
 	 * 
-	 * @note This also means that a BufferWriter is not referring to an index into the buffer but to a position in the data inside the buffer. Whenever changes occure to the data the input position will change in the same way that a Arxx::Buffer::Marker would. The default alignment of the Marker representing the insert position is LEFT, so that data changes at the insert position of the BufferWriter will not affect the marker. However if you insert data using the BufferWriter, the Alignment of the marker is set to RIGHT for the time of the insert thus moving the insert position behind the inserted data.
+	 * @note This also means that a BufferWriter is not referring to an index into the buffer but to a position in the data inside the buffer.
+     *       Whenever changes occure to the data the input position will change in the same way that a Arxx::Buffer::Marker would.
+     *       The default alignment of the Marker representing the insert position is Left, so that data changes at the insert position of the BufferWriter will not affect the marker.
+     *       However if you insert data using the BufferWriter, the Alignment of the marker is set to Right for the time of the insert thus moving the insert position behind the inserted data.
 	 **/
 	class BufferWriter
 	{
@@ -45,27 +48,29 @@ namespace Arxx
         
 		/**
 		 * @brief The BufferWriter constructor.
-		 * @note Sets the Buffers IO position to the end of the buffer.
+		 * @note Sets the write position to the end of the buffer.
 		 **/
-		BufferWriter(Arxx::Buffer & Buffer);
+		explicit BufferWriter(Arxx::Buffer & Buffer);
         
 		/**
 		 * @brief The BufferWriter constructor.
-		 * @note Sets the Buffers IO position to the indicated position.
+		 * @note Sets the write position to the indicated position.
 		 **/
 		BufferWriter(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position);
 		
 		/**
 		 * @brief A copy constructor for the BufferWriter.
 		 * 
-		 * This constructor creates a second BufferWriter which refers to the same Buffer but using an own marker. The new BufferWriter behaves as if created on its own.
+		 * This constructor creates a second BufferWriter which refers to the same Buffer but using an own marker.
+         * The new BufferWriter behaves as if created on its own.
 		 **/
 		BufferWriter(Arxx::BufferWriter const & Other);
 		
 		/**
 		 * @brief Write a block of data at the writer's position in the buffer.
-		 * @param stDataLength The length of the data block @a Data
-		 * @param Data The data block to insert at the writer's position. May be omitted to insert @a stDataLength zeroed bytes.
+		 * @param DataLength The length of the data block @a Data
+		 * @param Data The data block to insert at the writer's position.
+         *             May be omitted to insert @a DataLength zeroed bytes.
 		 **/
 		auto Write(Arxx::Buffer::size_type DataLength, Arxx::Buffer::const_pointer Data = nullptr) -> void;
 		
@@ -103,7 +108,10 @@ namespace Arxx
 	 * @param String The string which is about to be stored.
 	 * @return The BufferWriter after the input execution.
 	 *
-	 * This helper function stores the std::string @a String in the buffer @a Buffer. It uses the Buffers::Buffer::vInput function so that the buffer current I/O position will be used as the insertion position. Therefore also the overwrite state of the buffer will be adhered. Afterwards the I/O position will be set to the end of the insertion by Buffer::Buffer::vInput().
+	 * This helper function stores the std::string @a String in the buffer @a Buffer.
+     * It uses the Buffers::Buffer::Input function so that the buffer current I/O position will be used as the insertion position.
+     * Therefore also the overwrite state of the buffer will be adhered.
+     * Afterwards the I/O position will be set to the end of the insertion by Buffer::Buffer::Input().
 	 *
 	 * @note The string will be stored as a zero-terminated string so that a trailing zero will be appended.
 	 **/
@@ -116,7 +124,6 @@ namespace Arxx
 	 * @return The BufferWriter after the input execution.
 	 *
 	 * This helper function stores the C string @a String in the buffer @a Buffer.
-	 * 
 	 * The function uses strlen(3) to determine the length of the string.
 	 *
 	 * @note The string will be stored as a zero-terminated string so that a trailing zero will be appended.
@@ -189,7 +196,10 @@ namespace Arxx
 	 * @param Stream A std::pair which's first component describes the amount of bytes to be read from the stream specified in its second component.
 	 * @return The BufferWriter after the input execution.
 	 * 
-	 * This function will append the stream content at the I/O position of the buffer. It will read @a Stream.first bytes from the stream. In case the stream end before that amount of bytes the buffer will contain only as much bytes as could be read from the stream. This function is an I/O operation and thus will modify the I/O position of the buffer to point after the last byte read.
+	 * This function will append the stream content at the I/O position of the buffer.
+     * It will read @a Stream.first bytes from the stream.
+     * In case the stream end before that amount of bytes the buffer will contain only as much bytes as could be read from the stream.
+     * This function is an I/O operation and thus will modify the I/O position of the buffer to point after the last byte read.
 	 **/
 	auto operator<<(Arxx::BufferWriter & BufferWriter, std::pair<Arxx::Buffer::size_type, std::istream *> const & Stream) -> Arxx::BufferWriter &;
 }

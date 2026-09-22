@@ -38,24 +38,39 @@ namespace Arxx
 	/**
 	 * @brief The core class of the Buffer.
 	 *
-	 * This class provides the concept of nested buffers. That means: you create one main buffer and it will behave like any other ordinary buffer you know. It is autoresizing as you add data, it provides prepend and append function, it has a position pointer which can be placed anywhere in the buffer to allow appending to that particular position.
+	 * This class provides the concept of nested buffers.
+     * That means: you create one main buffer and it will behave like any other ordinary buffer you know.
+     * It is autoresizing as you add data, it provides prepend and append function, it has a position pointer which can be placed anywhere in the buffer to allow appending to that particular position.
 	 *
 	 * Additionally to that the nested buffers allow you to create compositions of buffers all acting on the same data block.
 	 *
-	 * Imagine a buffer of the size 16 bytes (name: Superior). Although this data may be handled as one entity, you, as the user of the Buffers library, know the semantics of this buffer: It may actually be three entities of data:
+	 * Imagine a buffer of the size 16 bytes (name: Superior).
+     * Although this data may be handled as one entity, you, as the user of the Buffers library, know the semantics of this buffer.
+     * It may actually be three entities of data:
 	 * - a 7-byte long block
 	 * - a 5-byte long block
 	 * - a 4-byte long block
 	 * 
-	 * Suppose now, that there is a library which (in any way) allows handling of a certain kind of data blocks. In our example it may be the first block of length 7. What you have to do is pass the buffer to the library, but this will violate the information hiding principle since this library now has access to the other datablock as well, maybe not even realizing that it isn't meant to meddle with them.
+	 * Suppose now, that there is a library which (in any way) allows handling of a certain kind of data blocks.
+     * In our example it may be the first block of length 7.
+     * What you have to do is pass the buffer to the library, but this will violate the information hiding principle since this library now has access to the other datablock as well, maybe not even realizing that it isn't meant to meddle with them.
 	 *
-	 * Here comes the Buffers library which allows you to create sub buffers of our Superior buffer. By creating a buffer via Buffer(Superior, 0, 7)  you get a sub buffer with length 7 and I/O position at 0 which you may pass to the library. The content of this sub buffer is a reference to the superior buffer and thus contains exactly what is in the superior buffer from 0 to 7 at any given time. Now the library is only able to access the content it is meant to see.
+	 * Here comes the Buffers library which allows you to create sub buffers of our Superior buffer.
+     * By creating a buffer via Buffer(Superior, 0, 7)  you get a sub buffer with length 7 and I/O position at 0 which you may pass to the library.
+     * The content of this sub buffer is a reference to the superior buffer and thus contains exactly what is in the superior buffer from 0 to 7 at any given time.
+     * Now the library is only able to access the content it is meant to see.
 	 *
-	 * But this concept strives for more functionality. So it is also possible to perform any operations like appending, inserting and deleting. Using these operations will affect the content of the superior buffer but the effect will be limited to the region of the sub buffer. Any increases of the size of the sub buffer will also expand the superior buffer by the same amount.
+	 * But this concept strives for more functionality.
+     * So it is also possible to perform any operations like appending, inserting and deleting.
+     * Using these operations will affect the content of the superior buffer but the effect will be limited to the region of the sub buffer.
+     * Any increases of the size of the sub buffer will also expand the superior buffer by the same amount.
 	 * 
-	 * The concept of buffers doesn't end at the first level of depth. They allow you to nest sub buffers in sub buffers, thus creating a buffer structure of arbitrary depth and complexity.
+	 * The concept of buffers doesn't end at the first level of depth.
+     * They allow you to nest sub buffers in sub buffers, thus creating a buffer structure of arbitrary depth and complexity.
 	 * 
-	 * For that reason all operations that work on the buffer have to be implemented recursively. If you change a portion of data in a sub buffer, that change has to be propagated to the most superior buffer, which actually owns the associated memory. Only this sup buffer is allowed to change the content of the memory and in turn it has to ensure that the effect of any such change will be passed down to the leaf childs.
+	 * For that reason all operations that work on the buffer have to be implemented recursively.
+     * If you change a portion of data in a sub buffer, that change has to be propagated to the most superior buffer, which actually owns the associated memory.
+     * Only this sup buffer is allowed to change the content of the memory and in turn it has to ensure that the effect of any such change will be passed down to the leaf childs.
 	 **/
 	class Buffer
 	{
@@ -123,7 +138,7 @@ namespace Arxx
 			 * 
 			 * The position is truncated at Buffer.GetLength() if greater than that.
 			 **/
-			Marker(const Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position = 0, Arxx::Buffer::Marker::Alignment Alignment = Arxx::Buffer::Marker::Alignment::Left);
+			explicit Marker(const Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position = 0, Arxx::Buffer::Marker::Alignment Alignment = Arxx::Buffer::Marker::Alignment::Left);
 			
 			/**
 			 * @brief The Marker's destructor.
@@ -192,11 +207,15 @@ namespace Arxx
 			/**
 			 * @brief The marker's alignment.
 			 * 
-			 * The alignment of a marker can be LEFT or RIGHT and indicates where the marker moves if data is inserted at the marker's position.
-			 * - LEFT alignment means, that the marker will be at the beginning of the inserted data.
-			 * - RIGHT alignments means, that the marker will stay where it is and the data is inserted after it.
+			 * The alignment of a marker can be @em Left or @em Right and indicates where the marker moves if data is inserted at the marker's position.
+			 * - @em Left alignment means, that the marker will be at the beginning of the inserted data.
+             *   The byte at the position of the marker will be the first byte of the inserted data.
+             *   The old data at the position of the marker will be pushed to the back of the buffer by the new data.
+			 * - @em Right alignments means, that the marker will be behind the end of the inserted data.
+             *   The byte at the position of the marker will remain the same.
+             *   The new data will be before the marker position.
 			 * 
-			 * The Alignment property is only of relevance if data is inserted directly at the marker's position.
+			 * @note The Alignment property is only relevant if data is inserted directly at the marker's position.
 			 **/
 			Arxx::Buffer::Marker::Alignment m_Alignment;
                 
@@ -214,10 +233,11 @@ namespace Arxx
 		/**
 		 * @brief The sub buffer constructor.
 		 * @param Buffer The superior buffer.
-		 * @param stPosition The sub buffer's begining position in the superior buffer.
-		 * @param stLength The length that should be covered inside the superior buffer starting from @a u4Position.
+		 * @param Position The sub buffer's begining position in the superior buffer.
+		 * @param Length The length that should be covered inside the superior buffer starting from @a Position.
 		 *
-		 * Use this constructor if you want to have a sub buffer of the superior buffer @a Buffer. It may be of length 0 to get an insertion spot at a later time.
+		 * Use this constructor if you want to have a sub buffer of the superior buffer @a Buffer.
+         * It may be of length 0 to get an insertion spot at a later time.
 		 **/
 		Buffer(Buffer & Buffer, Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length);
         
@@ -229,9 +249,12 @@ namespace Arxx
 		/**
 		 * @brief The destructor of a buffer. It is virtual since the Buffer may be overloaded to support external data.
 		 * 
-		 * The destructor of a buffer deletes it's content if it is the most superior buffer. Otherwise it will unregister itself from its superior buffer.
+		 * The destructor of a buffer deletes it's content if it is the most superior buffer.
+         * Otherwise it will unregister itself from its superior buffer.
 		 *
-		 * @note The destructor of a buffer will not touch its sub buffers (e.g. to delete them). Currently it will not even notify them that their reference buffers are dead. That will be changed later.
+		 * @note The destructor of a buffer will not touch its sub buffers (e.g. to delete them).
+         * Currently it will not even notify them that their reference buffers are dead.
+         * That should change.
 		 **/
 		virtual ~Buffer();
 		
@@ -249,63 +272,67 @@ namespace Arxx
 		
 		/**
 		 * @brief Sets the length of the data actually in the buffer.
-		 * @param stLength The new length of the data.
+		 * @param Length The new length of the data.
 		 *
 		 * This is a convenience function as explained below:
 		 * 
-		 * - If the specified length is greater than the current length the buffer will be expanded to this length. The call is then equivalent to:
-		 * @code vInsert(stGetLength(), stLength - stGetLength()); @endcode
+		 * - If the specified length is greater than the current length the buffer will be expanded to this length.
+         *   The call is then equivalent to:
+		 *   @code Insert(GetLength(), Length - GetLength()); @endcode
 		 *
-		 * - If the specified length is smaller than the current length the buffer will be shrunken to this length. This will happen back to front, so all child buffers which reside anywhere between stLength and stGetLength() will be modified as well. This call is then equivalent to:
-		 * @code vDelete(stLength, stGetLength() - stLength); @endcode
+		 * - If the specified length is smaller than the current length the buffer will be shrunken to this length.
+         *   This will happen back to front, so all child buffers which reside anywhere between @a Length and @a GetLength() will be modified as well.
+         *   This call is then equivalent to:
+         *   @code Delete(Length, GetLength() - Length); @endcode
 		 **/
 		auto SetLength(Arxx::Buffer::size_type Length = 0) -> void;
 		
 		/**
 		 * @brief Insert a given amount of data at a specified postion.
-		 * @param stPosition The position inside the buffer.
-		 * @param stDataLength The length of the data block identified by @a Data.
-		 * @param Data The block of data to be inserted in the buffer. This parameter may be omitted which will result in a null-pointer, indicating that the inserted block of data will be filled with Zeros.
+		 * @param Position The position inside the buffer.
+		 * @param DataLength The length of the data block identified by @a Data.
+		 * @param Data The block of data to be inserted in the buffer.
+         *        This parameter may be omitted which will result in a null-pointer, indicating that the inserted block of data will be filled with Zeros.
 		 *
-		 * The data which is defined by @a Data will be inserted at position @a stPosition. The data is taken to be of length @a stDataLength at minimum. The buffer will be expanded to contain stGetLength() + @a stDataLength bytes.
+		 * The data which is defined by @a Data will be inserted at position @a Position.
+         * The data is taken to be of length @a DataLength at minimum.
+         * The buffer will be expanded to contain @a GetLength() + @a DataLength bytes.
 		 *
-		 * @note This function directly calls the private function vWrite(), so this function throws the same exceptions as vWrite().
+		 * @note This function directly calls the private function @a Write(), so this function throws the same exceptions as @a Write().
 		 **/
 		auto Insert(Arxx::Buffer::size_type Position, Arxx::Buffer::size_type DataLength, Arxx::Buffer::const_pointer Data = nullptr) -> void;
 		
 		/**
 		 * @brief Deletes a given amount of data at a specified position.
-		 * @param stPosition The position inside the buffer.
-		 * @param stLength The length of the block that should be deleted.
+		 * @param Position The position inside the buffer.
+		 * @param Length The length of the block that should be deleted.
 		 * 
-		 * This function deletes stLength elements at position stPosition.
+		 * This function deletes @a Length elements at position @a Position.
 		 **/
 		auto Delete(Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length) -> void;
 		
 		/**
 		 * @brief Allows read-only access to indexed data members for const buffers.
-		 * @param stIndex The index of the data member to access. Begining with zero.
+		 * @param Index The index of the data member to access.
+         *              Begining with zero.
 		 *
-		 * Returns a copy of the data member with index @a stIndex. This function will throw a std::out_of_range error if stIndex is beyond stGetLength().
-		 *
-		 * @note Since this function addresses data in the buffer it will call vAssureDataPresence().
+		 * Returns a copy of the data member with index @a Index.
+         * This function will throw a std::out_of_range error if @a Index is beyond @a GetLength().
 		 **/
 		auto operator[](Arxx::Buffer::size_type Index) const -> Arxx::Buffer::value_type;
 		
 		/**
 		 * @brief Allows read/write access to indexed data members.
-		 * @param stIndex The index of the data member to access. Begining with zero.
+		 * @param Index The index of the data member to access.
+         *              Begining with zero.
 		 *
-		 * Returns a refernece to the data member with index @a stIndex. This function will throw a std::out_of_range error if stIndex is beyond stGetLength().
-		 *
-		 * @note Since this function addresses data in the buffer it will call vAssureDataPresence().
+		 * Returns a refernece to the data member with index @a Index.
+         * This function will throw a std::out_of_range error if @a Index is beyond @a GetLength().
 		 **/
 		auto operator[](Arxx::Buffer::size_type Index) -> Arxx::Buffer::reference;
 		
 		/**
 		 * @brief Retreives a const pointer to the data of this buffer.
-		 * 
-		 * There is no public way to access the content of the buffer directly. m_Begin is private so only the Buffers library may access the content directly for read/write access. To fill the gap between no public access and full private access lies the read-only access for derivatives.
 		 **/
 		auto GetBegin() const -> Arxx::Buffer::const_pointer;
         
@@ -315,14 +342,16 @@ namespace Arxx
 		/**
 		 * @brief This function registers a buffer to be a sub buffer of @em this buffer.
 		 *
-		 * This function handles the necessary steps to organise the control structure which contains all the sub buffers. This structure is needed to propagate changes.
+		 * This function handles the necessary steps to organise the control structure which contains all the sub buffers.
+         * This structure is needed to propagate changes.
 		 **/
 		auto m_Register(Arxx::Buffer & SubBuffer) -> void;
 		
 		/**
 		 * @brief This function removes a buffer from the list of all sub buffer of @em this buffer.
 		 *
-		 * This function handles the necessary steps to organise the control structure which contains all the sub buffers. This structure is needed to propagate changes.
+		 * This function handles the necessary steps to organise the control structure which contains all the sub buffers.
+         * This structure is needed to propagate changes.
 		 **/
 		auto m_Unregister(Arxx::Buffer & SubBuffer) -> void;
 		
@@ -363,10 +392,16 @@ namespace Arxx
 		 * @brief This function is called whenever data has been inserted in the sup buffer, in a way that also affects @em this buffer.
 		 * @param Position Indicates the location of the insertion inside the sup buffer.
 		 * @param Length Specifies the length of the insertion.
-		 * @note Notice that this function is called even if the insert was not inside @em this buffer. If the insertion was @em before this buffer (@a Position < @a m_Position) we need to reset @a m_Position.
+		 * @note Notice that this function is called even if the insert was not inside @em this buffer.
+         *       If the insertion was @em before this buffer (@a Position < @a m_Position) we need to reset @a m_Position.
 		 * 
-		 * - The local changes depend on the position of the insertion. If the data was inserted before this buffer we need to reset m_stPosition and m_Begin. If the data was inserted inside the buffer we need to reset m_Length.
-		 * - To change any sub buffers, we just pass the change by calling m_ParentDataInserted(Position - m_Position, Length). There is one exception to this: If @em this buffer made the initial change and the change request was passed up to the most superior buffer and now the changes are passed down again we don't apply changes here. Once all the changes are done and we return to the initial insertion function it is done then.
+		 * - The local changes depend on the position of the insertion.
+         *   If the data was inserted before this buffer we need to reset m_Position and m_Begin.
+         *   If the data was inserted inside the buffer we need to reset m_Length.
+		 * - To change any sub buffers, we just pass the change by calling m_ParentDataInserted(Position - m_Position, Length).
+         * There is one exception to this:
+         * If @em this buffer made the initial change and the change request was passed up to the most superior buffer and now the changes are passed down again we don't apply changes here.
+         * Once all the changes are done and we return to the initial insertion function it is done then.
 		 **/
         auto m_ParentDataInserted(Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length) -> void;
         

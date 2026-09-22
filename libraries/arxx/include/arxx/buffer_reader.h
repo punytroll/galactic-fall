@@ -38,26 +38,36 @@ namespace Arxx
 	class BufferReader
 	{
 	public:
-		BufferReader(Arxx::Buffer const & Buffer);
+		/**
+		 * @brief The BufferReader constructor.
+		 * @note Sets the read position to the beginning of the buffer.
+		 **/
+		explicit BufferReader(Arxx::Buffer const & Buffer);
+        
+		/**
+		 * @brief The BufferReader constructor.
+		 * @note Sets the read position to the indicated position.
+		 **/
 		BufferReader(Arxx::Buffer const & Buffer, Arxx::Buffer::size_type Position);
 		
 		/**
 		 * @brief A copy constructor for the BufferReader.
 		 * 
-		 * This constructor creates a second BufferReader which refers to the same Buffer but using its own marker at the same location. The new BufferReader behaves as if created on its own.
+		 * This constructor creates a second BufferReader which refers to the same Buffer but using its own marker at the same location.
+         * The new BufferReader behaves as if created on its own.
 		 **/
 		BufferReader(Arxx::BufferReader const & Other);
 		
 		/**
 		 * @brief This functions allows to get more than one byte at a time from the buffer.
-		 * @param stLength The length of the chunk of data you wish to read from the buffer.
+		 * @param Length The length of the chunk of data you wish to read from the buffer.
 		 * @param Buffer Not a Buffer but a buffer, an address of a block of memory.
 		 *
-		 * This function reads stLength bytes from @em this Buffer starting at the I/O position and writes them to the memory specified by Buffer.
-		 *
+		 * This function reads @am Length bytes from @em this Buffer starting at the I/O position and writes them to the memory specified by @am Buffer.
 		 * This function does not give you access to the content of the buffer but creates of copy of it.
 		 *
-		 * @note This function refuses to read more elements than there are from the I/O position to the end. It will throw a std::out_of_range exception in this case.
+		 * @note This function refuses to read more elements than there are from the I/O position to the end.
+         *       It will throw a std::out_of_range exception in this case.
 		 **/
 		auto Read(Arxx::Buffer::size_type Length, Arxx::Buffer::pointer Buffer) -> Arxx::Buffer::size_type;
 		
@@ -87,7 +97,8 @@ namespace Arxx
 	 * @param BufferReader The BufferReader from which the string will be read.
 	 * @param String A std::string which will be filled with the string from the buffer.
 	 *
-	 * This function reads a string from the @a BufferReader. The string may be either null-terminated or end at the end of the buffer.
+	 * This function reads a string from the @a BufferReader.
+     * The string may be either null-terminated or end at the end of the buffer.
 	 *
 	 * @note This function will read until it finds either the first null character in the buffer or the end of the buffer so that the string itself cannot contain a null character.
 	 **/
