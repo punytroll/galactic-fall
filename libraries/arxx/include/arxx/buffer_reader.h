@@ -27,13 +27,13 @@
 /**
  * @file buffer_reader.h
  * 
- * This file declares the interface for the Arxx::BufferReader class.
+ * This file declares the interface for the ARX::BufferReader class.
  **/
 
-namespace Arxx
+namespace ARX
 {
 	/**
-	 * @brief Implements a convenient output interface for Arxx::Buffer.
+	 * @brief Implements a convenient output interface for ARX::Buffer.
 	 **/
 	class BufferReader
 	{
@@ -42,13 +42,13 @@ namespace Arxx
 		 * @brief The BufferReader constructor.
 		 * @note Sets the read position to the beginning of the buffer.
 		 **/
-		explicit BufferReader(Arxx::Buffer const & Buffer);
+		explicit BufferReader(ARX::Buffer const & Buffer);
         
 		/**
 		 * @brief The BufferReader constructor.
 		 * @note Sets the read position to the indicated position.
 		 **/
-		BufferReader(Arxx::Buffer const & Buffer, Arxx::Buffer::size_type Position);
+		BufferReader(ARX::Buffer const & Buffer, ARX::Buffer::size_type Position);
 		
 		/**
 		 * @brief A copy constructor for the BufferReader.
@@ -56,7 +56,7 @@ namespace Arxx
 		 * This constructor creates a second BufferReader which refers to the same Buffer but using its own marker at the same location.
          * The new BufferReader behaves as if created on its own.
 		 **/
-		BufferReader(Arxx::BufferReader const & Other);
+		BufferReader(ARX::BufferReader const & Other);
 		
 		/**
 		 * @brief This functions allows to get more than one byte at a time from the buffer.
@@ -69,26 +69,26 @@ namespace Arxx
 		 * @note This function refuses to read more elements than there are from the I/O position to the end.
          *       It will throw a std::out_of_range exception in this case.
 		 **/
-		auto Read(Arxx::Buffer::size_type Length, Arxx::Buffer::pointer Buffer) -> Arxx::Buffer::size_type;
+		auto Read(ARX::Buffer::size_type Length, ARX::Buffer::pointer Buffer) -> ARX::Buffer::size_type;
 		
 		/**
-		 * @brief Returns the associated Arxx::Buffer object.
+		 * @brief Returns the associated ARX::Buffer object.
 		 **/
-		auto GetBuffer() const -> Arxx::Buffer const &;
+		auto GetBuffer() const -> ARX::Buffer const &;
 		
 		/**
 		 * @brief Returns the marker's position.
 		 **/
-		auto GetPosition() const -> Arxx::Buffer::size_type;
+		auto GetPosition() const -> ARX::Buffer::size_type;
 		
 		/**
 		 * @brief Sets the marker's position.
 		 **/
-		auto SetPosition(Arxx::Buffer::size_type Position) -> void;
+		auto SetPosition(ARX::Buffer::size_type Position) -> void;
         
 	private:
-		Arxx::Buffer const & m_Buffer;
-		Arxx::Buffer::Marker m_Marker;
+		ARX::Buffer const & m_Buffer;
+		ARX::Buffer::Marker m_Marker;
         
 	};
 	
@@ -102,7 +102,7 @@ namespace Arxx
 	 *
 	 * @note This function will read until it finds either the first null character in the buffer or the end of the buffer so that the string itself cannot contain a null character.
 	 **/
-	auto operator>>(Arxx::BufferReader & BufferReader, std::string & String) -> Arxx::BufferReader &;
+	auto operator>>(ARX::BufferReader & BufferReader, std::string & String) -> ARX::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading float values from a buffer.
@@ -112,7 +112,7 @@ namespace Arxx
 	 * 
 	 * This function reads a float value from the buffer storing it in @a Value .
 	 **/
-	auto operator>>(Arxx::BufferReader & BufferReader, float & Value) -> Arxx::BufferReader &;
+	auto operator>>(ARX::BufferReader & BufferReader, float & Value) -> ARX::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading 1 byte unsigned integer values from a buffer.
@@ -122,7 +122,7 @@ namespace Arxx
 	 * 
 	 * This function reads a 1 byte unsigned integer value from the buffer storing it in @a Value .
 	 **/
-	auto operator>>(Arxx::BufferReader & BufferReader, std::uint8_t & Value) -> Arxx::BufferReader &;
+	auto operator>>(ARX::BufferReader & BufferReader, std::uint8_t & Value) -> ARX::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading 4 byte unsigned integer values from a buffer.
@@ -132,7 +132,7 @@ namespace Arxx
 	 * 
 	 * This function reads a 4 byte unsigned integer value from the buffer storing it in @a Value .
 	 **/
-	auto operator>>(Arxx::BufferReader & BufferReader, std::uint32_t & Value) -> Arxx::BufferReader &;
+	auto operator>>(ARX::BufferReader & BufferReader, std::uint32_t & Value) -> ARX::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading 8 byte unsigned integer values from a buffer.
@@ -142,7 +142,7 @@ namespace Arxx
 	 * 
 	 * This function reads an 8 byte unsigned integer value from the buffer, storing it in @a Value .
 	 **/
-	auto operator>>(Arxx::BufferReader & BufferReader, std::uint64_t & Value) -> Arxx::BufferReader &;
+	auto operator>>(ARX::BufferReader & BufferReader, std::uint64_t & Value) -> ARX::BufferReader &;
 	
 	/**
 	 * @brief A helper function for reading bool objects from a buffer.
@@ -152,7 +152,7 @@ namespace Arxx
 	 * 
 	 * This function reads the bool value @a Value from the buffer using an output function.
 	 **/
-	auto operator>>(Arxx::BufferReader & BufferReader, bool & Value) -> Arxx::BufferReader &;
+	auto operator>>(ARX::BufferReader & BufferReader, bool & Value) -> ARX::BufferReader &;
 }
 
 #endif

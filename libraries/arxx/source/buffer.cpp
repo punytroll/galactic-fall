@@ -22,9 +22,9 @@
 #include <arxx/buffer.h>
 
 #ifdef DEBUG
-namespace Arxx
+namespace ARX
 {
-	std::string Indentation(Arxx::Buffer * Buffer)
+	std::string Indentation(ARX::Buffer * Buffer)
 	{
 		std::string Pad = "";
 
@@ -61,7 +61,7 @@ namespace Arxx
  * Now, since all three buffer share the same values concerning their physical structure (position and length) there is no way of differentiating these three scenarios.
  * What we need is the only difference they have: their times of creation.
  **/
-class Arxx::Buffer::SubBuffer
+class ARX::Buffer::SubBuffer
 {
 public:
 	/**
@@ -72,7 +72,7 @@ public:
 	 * This constructor creates a SubBuffer.
      * The parameters are the information the superior buffer whishes to associate with the sub buffer.
 	 **/
-	SubBuffer(Arxx::Buffer & Buffer, size_type Order) :
+	SubBuffer(ARX::Buffer & Buffer, size_type Order) :
 		m_Buffer{Buffer},
 		m_Order{Order}
 	{
@@ -117,7 +117,7 @@ private:
 	size_type m_Order;
 };
 
-Arxx::Buffer::Buffer(Arxx::Buffer & Buffer, size_type Position, size_type Length) :
+ARX::Buffer::Buffer(ARX::Buffer & Buffer, size_type Position, size_type Length) :
 	m_SupBuffer{&Buffer},
 	m_Position{(Buffer.GetLength() < Position) ? (Buffer.GetLength()) : (Position)}
 {
@@ -136,7 +136,7 @@ Arxx::Buffer::Buffer(Arxx::Buffer & Buffer, size_type Position, size_type Length
 	Buffer.m_Register(*this);
 }
 
-Arxx::Buffer::~Buffer()
+ARX::Buffer::~Buffer()
 {
 	if(m_SupBuffer == nullptr)
 	{
@@ -156,7 +156,7 @@ Arxx::Buffer::~Buffer()
 	}
 }
 
-void Arxx::Buffer::m_Register(Arxx::Buffer & Buffer)
+void ARX::Buffer::m_Register(ARX::Buffer & Buffer)
 {
 	auto Order = 1U;
 
@@ -164,10 +164,10 @@ void Arxx::Buffer::m_Register(Arxx::Buffer & Buffer)
 	{
 		Order = (*(m_SubBuffers.end() - 1))->GetOrder() + 1;
 	}
-	m_SubBuffers.push_back(new Arxx::Buffer::SubBuffer{Buffer, Order});
+	m_SubBuffers.push_back(new ARX::Buffer::SubBuffer{Buffer, Order});
 }
 
-void Arxx::Buffer::m_Unregister(Arxx::Buffer & Buffer)
+void ARX::Buffer::m_Unregister(ARX::Buffer & Buffer)
 {
 	auto SubBufferIterator = m_SubBuffers.begin();
 	auto SubBufferEnd = m_SubBuffers.end();
@@ -183,22 +183,22 @@ void Arxx::Buffer::m_Unregister(Arxx::Buffer & Buffer)
 	}
 }
 
-void Arxx::Buffer::m_Register(Arxx::Buffer::Marker & Marker) const
+void ARX::Buffer::m_Register(ARX::Buffer::Marker & Marker) const
 {
 	m_Markers.insert(&Marker);
 }
 
-void Arxx::Buffer::m_Unregister(Arxx::Buffer::Marker & Marker) const
+void ARX::Buffer::m_Unregister(ARX::Buffer::Marker & Marker) const
 {
 	m_Markers.erase(m_Markers.find(&Marker));
 }
 
-Arxx::Buffer::size_type Arxx::Buffer::GetLength(void) const
+ARX::Buffer::size_type ARX::Buffer::GetLength(void) const
 {
 	return m_Length;
 }
 
-void Arxx::Buffer::SetLength(size_type Length)
+void ARX::Buffer::SetLength(size_type Length)
 {
 	if(Length != m_Length)
 	{
@@ -213,12 +213,12 @@ void Arxx::Buffer::SetLength(size_type Length)
 	}
 }
 
-void Arxx::Buffer::Insert(size_type Position, size_type DataLength, const_pointer Data)
+void ARX::Buffer::Insert(size_type Position, size_type DataLength, const_pointer Data)
 {
 	m_Insert(*this, Position, DataLength, Data);
 }
 
-void Arxx::Buffer::m_Insert(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Position, size_type DataLength, const_pointer Data)
+void ARX::Buffer::m_Insert(ARX::Buffer & Buffer, ARX::Buffer::size_type Position, size_type DataLength, const_pointer Data)
 {
 #ifdef DEBUG
 	std::cerr << this << Indentation(this) << " Insert(Buffer = " << &Buffer << ", Position = " << Position << ", DataLength = " << DataLength << ")   ---   Status: Position = " << m_Position << ", Length = " << m_Length << ", Capacity = " << m_Capacity << ", ParentBuffer = " << m_SupBuffer << std::endl;
@@ -270,7 +270,7 @@ void Arxx::Buffer::m_Insert(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Posit
 		m_Length += DataLength;
 		for(auto Marker : m_Markers)
 		{
-			if(((Marker->GetPosition() == Position) && (Marker->GetAlignment() == Arxx::Buffer::Marker::Alignment::Right)) || (Marker->GetPosition() > Position))
+			if(((Marker->GetPosition() == Position) && (Marker->GetAlignment() == ARX::Buffer::Marker::Alignment::Right)) || (Marker->GetPosition() > Position))
 			{
 				Marker->SetPosition(Marker->GetPosition() + DataLength);
 			}
@@ -356,7 +356,7 @@ void Arxx::Buffer::m_Insert(Arxx::Buffer & Buffer, Arxx::Buffer::size_type Posit
 	}
 }
 
-void Arxx::Buffer::Delete(size_type Position, size_type Length)
+void ARX::Buffer::Delete(size_type Position, size_type Length)
 {
 #ifdef DEBUG
 	std::cerr << this << Indentation(this) << " Delete(Position = " << Position << ", Length = " << Length << ")   ---   Status: Position = " << m_Position << ", Length = " << m_Length << std::endl;
@@ -389,12 +389,12 @@ void Arxx::Buffer::Delete(size_type Position, size_type Length)
 	}
 }
 
-Arxx::Buffer::const_pointer Arxx::Buffer::GetBegin() const
+ARX::Buffer::const_pointer ARX::Buffer::GetBegin() const
 {
 	return m_Begin;
 }
         
-auto Arxx::Buffer::m_ParentDataDeleted(Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length) -> void
+auto ARX::Buffer::m_ParentDataDeleted(ARX::Buffer::size_type Position, ARX::Buffer::size_type Length) -> void
 {
 #ifdef DEBUG
 	std::cerr << this << Indentation(this) << " ParentDataDeleted(Position = " << Position << ", Length = " << Length << ")   ---   Status: Position = " << m_Position << ", Length = " << m_Length << ", Changing = " << m_Changing << std::endl;
@@ -486,7 +486,7 @@ auto Arxx::Buffer::m_ParentDataDeleted(Arxx::Buffer::size_type Position, Arxx::B
     }
 }
 
-auto Arxx::Buffer::m_ParentDataInserted(Arxx::Buffer::size_type Position, Arxx::Buffer::size_type Length) -> void
+auto ARX::Buffer::m_ParentDataInserted(ARX::Buffer::size_type Position, ARX::Buffer::size_type Length) -> void
 {
 #ifdef DEBUG
 	std::cerr << this << Indentation(this) << " ParentDataInserted(Position = " << Position << ", Length = " << Length << ")   ---   Status: Position = " << m_Position << ", Length = " << m_Length << ", Changing = " << m_Changing << std::endl;
@@ -515,7 +515,7 @@ auto Arxx::Buffer::m_ParentDataInserted(Arxx::Buffer::size_type Position, Arxx::
     // update markers
     for(auto Marker : m_Markers)
     {
-        if(((m_Position + Marker->GetPosition() == Position) && (Marker->GetAlignment() == Arxx::Buffer::Marker::Alignment::Right)) || (Marker->GetPosition() > Position))
+        if(((m_Position + Marker->GetPosition() == Position) && (Marker->GetAlignment() == ARX::Buffer::Marker::Alignment::Right)) || (Marker->GetPosition() > Position))
         {
             // only if the data was inserted BEFORE or AT the marker position
             Marker->SetPosition(Marker->GetPosition() + Length);
@@ -535,7 +535,7 @@ auto Arxx::Buffer::m_ParentDataInserted(Arxx::Buffer::size_type Position, Arxx::
     }
 }
 
-auto Arxx::Buffer::m_ParentDataUpdated() -> void
+auto ARX::Buffer::m_ParentDataUpdated() -> void
 {
 #ifdef DEBUG
 	std::cerr << this << Indentation(this) << " ParentDataUpdate()   ---   Status: Position = " << m_Position << ", Length = " << m_Length << ", Changing = " << m_Changing << '\n';
@@ -547,7 +547,7 @@ auto Arxx::Buffer::m_ParentDataUpdated() -> void
     }
 }
 
-Arxx::Buffer::value_type Arxx::Buffer::operator[](size_type Index) const
+ARX::Buffer::value_type ARX::Buffer::operator[](size_type Index) const
 {
 	if(Index >= m_Length)
 	{
@@ -557,7 +557,7 @@ Arxx::Buffer::value_type Arxx::Buffer::operator[](size_type Index) const
 	return m_Begin[Index];
 }
 
-Arxx::Buffer::reference Arxx::Buffer::operator[](size_type Index)
+ARX::Buffer::reference ARX::Buffer::operator[](size_type Index)
 {
 	if(Index >= m_Length)
 	{
@@ -567,7 +567,7 @@ Arxx::Buffer::reference Arxx::Buffer::operator[](size_type Index)
 	return m_Begin[Index];
 }
 
-std::ostream & Arxx::operator<<(std::ostream & OStream, const Arxx::Buffer & Buffer)
+std::ostream & ARX::operator<<(std::ostream & OStream, const ARX::Buffer & Buffer)
 {
 	OStream.write(const_cast<char *>(reinterpret_cast<char const *>(Buffer.GetBegin())), Buffer.GetLength());
 	
@@ -576,10 +576,10 @@ std::ostream & Arxx::operator<<(std::ostream & OStream, const Arxx::Buffer & Buf
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// Arxx::Buffer::Marker                                                                          //
+// ARX::Buffer::Marker                                                                          //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Buffer::Marker::Marker(Arxx::Buffer const & Buffer, Arxx::Buffer::size_type Position, Arxx::Buffer::Marker::Alignment Alignment) :
+ARX::Buffer::Marker::Marker(ARX::Buffer const & Buffer, ARX::Buffer::size_type Position, ARX::Buffer::Marker::Alignment Alignment) :
 	m_Buffer{&Buffer},
 	m_Position{(m_Buffer->GetLength() > Position) ? (Position) : (m_Buffer->GetLength())},
 	m_Alignment{Alignment}
@@ -587,37 +587,37 @@ Arxx::Buffer::Marker::Marker(Arxx::Buffer const & Buffer, Arxx::Buffer::size_typ
 	m_Buffer->m_Register(*this);
 }
 
-Arxx::Buffer::Marker::~Marker()
+ARX::Buffer::Marker::~Marker()
 {
 	m_Buffer->m_Unregister(*this);
 }
 
-Arxx::Buffer::size_type Arxx::Buffer::Marker::GetPosition() const
+ARX::Buffer::size_type ARX::Buffer::Marker::GetPosition() const
 {
 	return m_Position;
 }
 
-void Arxx::Buffer::Marker::SetPosition(Arxx::Buffer::size_type Position)
+void ARX::Buffer::Marker::SetPosition(ARX::Buffer::size_type Position)
 {
 	m_Position = (m_Buffer->GetLength() > Position) ? (Position) : (m_Buffer->GetLength());
 }
 
-Arxx::Buffer::Marker::Alignment Arxx::Buffer::Marker::GetAlignment() const
+ARX::Buffer::Marker::Alignment ARX::Buffer::Marker::GetAlignment() const
 {
 	return m_Alignment;
 }
 
-void Arxx::Buffer::Marker::SetAlignment(Arxx::Buffer::Marker::Alignment Alignment)
+void ARX::Buffer::Marker::SetAlignment(ARX::Buffer::Marker::Alignment Alignment)
 {
 	m_Alignment = Alignment;
 }
 
-bool Arxx::Buffer::Marker::IsValid() const
+bool ARX::Buffer::Marker::IsValid() const
 {
 	return m_Buffer != nullptr;
 }
 
-void Arxx::Buffer::Marker::m_InvalidateBuffer()
+void ARX::Buffer::Marker::m_InvalidateBuffer()
 {
 	m_Buffer = nullptr;
 }

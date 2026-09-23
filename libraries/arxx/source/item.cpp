@@ -24,36 +24,36 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// Arxx::Item                                                                                    //
+// ARX::Item                                                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-auto Arxx::Item::Create() -> Arxx::Item *
+auto ARX::Item::Create() -> ARX::Item *
 {
-	return Arxx::Item::Create(nullptr, g_InvalidItemIdentifier);
+	return ARX::Item::Create(nullptr, g_InvalidItemIdentifier);
 }
 
-auto Arxx::Item::Create(std::uint32_t Identifier) -> Arxx::Item *
+auto ARX::Item::Create(std::uint32_t Identifier) -> ARX::Item *
 {
-	return Arxx::Item::Create(nullptr, Identifier);
+	return ARX::Item::Create(nullptr, Identifier);
 }
 
-auto Arxx::Item::Create(Arxx::Archive & Archive) -> Arxx::Item *
+auto ARX::Item::Create(ARX::Archive & Archive) -> ARX::Item *
 {
-	return Arxx::Item::Create(&Archive);
+	return ARX::Item::Create(&Archive);
 }
 
-auto Arxx::Item::Create(Arxx::Archive & Archive, std::uint32_t Identifier) -> Arxx::Item *
+auto ARX::Item::Create(ARX::Archive & Archive, std::uint32_t Identifier) -> ARX::Item *
 {
-	return Arxx::Item::Create(&Archive, Identifier);
+	return ARX::Item::Create(&Archive, Identifier);
 }
 
-auto Arxx::Item::Create(Arxx::Archive * Archive) -> Arxx::Item *
+auto ARX::Item::Create(ARX::Archive * Archive) -> ARX::Item *
 {
-	return Arxx::Item::Create(Archive, g_InvalidItemIdentifier);
+	return ARX::Item::Create(Archive, g_InvalidItemIdentifier);
 }
 
-auto Arxx::Item::Create(Arxx::Archive * Archive, std::uint32_t Identifier) -> Arxx::Item *
+auto ARX::Item::Create(ARX::Archive * Archive, std::uint32_t Identifier) -> ARX::Item *
 {
-	auto Result = new Arxx::Item{};
+	auto Result = new ARX::Item{};
 	
 	Result->SetIdentifier(Identifier);
 	if(Archive != nullptr)
@@ -64,7 +64,7 @@ auto Arxx::Item::Create(Arxx::Archive * Archive, std::uint32_t Identifier) -> Ar
 	return Result;
 }
 
-auto Arxx::Item::Delete(Arxx::Item * Item) -> void
+auto ARX::Item::Delete(ARX::Item * Item) -> void
 {
 	if(Item->m_Archive != nullptr)
 	{
@@ -74,22 +74,22 @@ auto Arxx::Item::Delete(Arxx::Item * Item) -> void
 	delete Item;
 }
 
-Arxx::Item::Item() :
+ARX::Item::Item() :
 	m_Structure{*this}
 {
 }
 
-Arxx::Item::~Item()
+ARX::Item::~Item()
 {
 	assert(m_Archive == nullptr);
 }
 
-auto Arxx::Item::GetIdentifier() const -> std::uint32_t
+auto ARX::Item::GetIdentifier() const -> std::uint32_t
 {
 	return m_Identifier;
 }
 
-auto Arxx::Item::SetIdentifier(std::uint32_t Identifier) -> void
+auto ARX::Item::SetIdentifier(std::uint32_t Identifier) -> void
 {
 	if(m_Archive == nullptr)
 	{
@@ -115,7 +115,7 @@ auto Arxx::Item::SetIdentifier(std::uint32_t Identifier) -> void
 		{
 			Archive->Register(this);
 		}
-		catch(Arxx::id_not_unique & Exception)
+		catch(ARX::id_not_unique & Exception)
 		{
 			m_Identifier = OldIdentifier;
 			m_Archive->Register(this);
@@ -124,57 +124,57 @@ auto Arxx::Item::SetIdentifier(std::uint32_t Identifier) -> void
 	}
 }
 
-auto Arxx::Item::GetName() const -> std::string const &
+auto ARX::Item::GetName() const -> std::string const &
 {
 	return m_Name;
 }
 
-auto Arxx::Item::SetName(std::string const & Name) -> void
+auto ARX::Item::SetName(std::string const & Name) -> void
 {
 	m_Name = Name;
 }
 
-auto Arxx::Item::GetType() const -> std::uint32_t
+auto ARX::Item::GetType() const -> std::uint32_t
 {
 	return m_Type;
 }
 
-auto Arxx::Item::SetType(std::uint32_t Type) -> void
+auto ARX::Item::SetType(std::uint32_t Type) -> void
 {
 	m_Type = Type;
 }
 
-auto Arxx::Item::GetSubType() const -> std::uint32_t
+auto ARX::Item::GetSubType() const -> std::uint32_t
 {
 	return m_SubType;
 }
 
-auto Arxx::Item::SetSubType(std::uint32_t SubType) -> void
+auto ARX::Item::SetSubType(std::uint32_t SubType) -> void
 {
 	m_SubType = SubType;
 }
 
-auto Arxx::Item::GetMajorVersionNumber() const -> std::uint8_t
+auto ARX::Item::GetMajorVersionNumber() const -> std::uint8_t
 {
 	return m_MajorVersionNumber;
 }
 
-auto Arxx::Item::GetMinorVersionNumber() const -> std::uint8_t
+auto ARX::Item::GetMinorVersionNumber() const -> std::uint8_t
 {
 	return m_MinorVersionNumber;
 }
 
-auto Arxx::Item::GetRevisionNumber() const -> std::uint8_t
+auto ARX::Item::GetRevisionNumber() const -> std::uint8_t
 {
 	return m_RevisionNumber;
 }
 
-auto Arxx::Item::GetCandidateNumber() const -> std::uint8_t
+auto ARX::Item::GetCandidateNumber() const -> std::uint8_t
 {
 	return m_CandidateNumber;
 }
 
-auto Arxx::Item::SetVersionNumbers(std::uint8_t MajorVersionNumber, std::uint8_t MinorVersionNumber, std::uint8_t RevisionNumber, std::uint8_t CandidateNumber) -> void
+auto ARX::Item::SetVersionNumbers(std::uint8_t MajorVersionNumber, std::uint8_t MinorVersionNumber, std::uint8_t RevisionNumber, std::uint8_t CandidateNumber) -> void
 {
 	m_MajorVersionNumber = MajorVersionNumber;
 	m_MinorVersionNumber = MinorVersionNumber;
@@ -182,22 +182,22 @@ auto Arxx::Item::SetVersionNumbers(std::uint8_t MajorVersionNumber, std::uint8_t
 	m_CandidateNumber = CandidateNumber;
 }
 
-auto Arxx::Item::GetArchive() const -> Arxx::Archive *
+auto ARX::Item::GetArchive() const -> ARX::Archive *
 {
 	return m_Archive;
 }
 
-auto Arxx::Item::GetStructure() -> Arxx::Structure &
+auto ARX::Item::GetStructure() -> ARX::Structure &
 {
 	return m_Structure;
 }
 
-auto Arxx::Item::GetStructure() const -> Arxx::Structure const &
+auto ARX::Item::GetStructure() const -> ARX::Structure const &
 {
 	return m_Structure;
 }
 
-auto Arxx::Item::m_Fetch(std::uint32_t Offset, std::uint32_t Length) -> bool
+auto ARX::Item::m_Fetch(std::uint32_t Offset, std::uint32_t Length) -> bool
 {
 	if(m_Archive != nullptr)
 	{

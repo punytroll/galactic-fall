@@ -20,28 +20,28 @@
 #include <arxx/buffer.h>
 #include <arxx/buffer_reader.h>
 
-Arxx::BufferReader::BufferReader(Arxx::Buffer const & Buffer) :
+ARX::BufferReader::BufferReader(ARX::Buffer const & Buffer) :
 	m_Buffer{Buffer},
-	m_Marker{Buffer, 0, Arxx::Buffer::Marker::Alignment::Left}
+	m_Marker{Buffer, 0, ARX::Buffer::Marker::Alignment::Left}
 {
 }
 
-Arxx::BufferReader::BufferReader(Arxx::Buffer const & Buffer, Arxx::Buffer::size_type Position) :
+ARX::BufferReader::BufferReader(ARX::Buffer const & Buffer, ARX::Buffer::size_type Position) :
 	m_Buffer{Buffer},
-	m_Marker{Buffer, Position, Arxx::Buffer::Marker::Alignment::Left}
+	m_Marker{Buffer, Position, ARX::Buffer::Marker::Alignment::Left}
 {
 }
 
-Arxx::BufferReader::BufferReader(Arxx::BufferReader const & Other) :
-    Arxx::BufferReader::BufferReader{Other.m_Buffer, Other.GetPosition()}
+ARX::BufferReader::BufferReader(ARX::BufferReader const & Other) :
+    ARX::BufferReader::BufferReader{Other.m_Buffer, Other.GetPosition()}
 {
 }
 
-auto Arxx::BufferReader::Read(Arxx::Buffer::size_type Length, Arxx::Buffer::pointer Buffer) -> Arxx::Buffer::size_type
+auto ARX::BufferReader::Read(ARX::Buffer::size_type Length, ARX::Buffer::pointer Buffer) -> ARX::Buffer::size_type
 {
 	if(m_Marker.IsValid() == false)
 	{
-		throw std::runtime_error{"Arxx::BufferWriter::Write: Buffer was destroyed."};
+		throw std::runtime_error{"ARX::BufferWriter::Write: Buffer was destroyed."};
 	}
 	if(m_Marker.GetPosition() + Length > m_Buffer.GetLength())
 	{
@@ -53,22 +53,22 @@ auto Arxx::BufferReader::Read(Arxx::Buffer::size_type Length, Arxx::Buffer::poin
 	return Length;
 }
 
-auto Arxx::BufferReader::GetBuffer() const -> Arxx::Buffer const &
+auto ARX::BufferReader::GetBuffer() const -> ARX::Buffer const &
 {
 	return m_Buffer;
 }
 
-auto Arxx::BufferReader::GetPosition() const -> Arxx::Buffer::size_type
+auto ARX::BufferReader::GetPosition() const -> ARX::Buffer::size_type
 {
 	return m_Marker.GetPosition();
 }
 
-auto Arxx::BufferReader::SetPosition(Arxx::Buffer::size_type Position) -> void
+auto ARX::BufferReader::SetPosition(ARX::Buffer::size_type Position) -> void
 {
 	return m_Marker.SetPosition(Position);
 }
 
-auto Arxx::operator>>(Arxx::BufferReader & BufferReader, std::string & String) -> Arxx::BufferReader &
+auto ARX::operator>>(ARX::BufferReader & BufferReader, std::string & String) -> ARX::BufferReader &
 {
 	auto const & Buffer = BufferReader.GetBuffer();
 	auto Index = BufferReader.GetPosition();
@@ -90,37 +90,37 @@ auto Arxx::operator>>(Arxx::BufferReader & BufferReader, std::string & String) -
 	return BufferReader;
 }
 
-auto Arxx::operator>>(Arxx::BufferReader & BufferReader, float & Value) -> Arxx::BufferReader &
+auto ARX::operator>>(ARX::BufferReader & BufferReader, float & Value) -> ARX::BufferReader &
 {
-	BufferReader.Read(sizeof(float), reinterpret_cast<Arxx::Buffer::pointer>(&Value));
+	BufferReader.Read(sizeof(float), reinterpret_cast<ARX::Buffer::pointer>(&Value));
 	
 	return BufferReader;
 }
 
-auto Arxx::operator>>(Arxx::BufferReader & BufferReader, std::uint8_t & Value) -> Arxx::BufferReader &
+auto ARX::operator>>(ARX::BufferReader & BufferReader, std::uint8_t & Value) -> ARX::BufferReader &
 {
-	BufferReader.Read(sizeof(std::uint8_t), reinterpret_cast<Arxx::Buffer::pointer>(&Value));
+	BufferReader.Read(sizeof(std::uint8_t), reinterpret_cast<ARX::Buffer::pointer>(&Value));
 	
 	return BufferReader;
 }
 
-auto Arxx::operator>>(Arxx::BufferReader & BufferReader, std::uint32_t & Value) -> Arxx::BufferReader &
+auto ARX::operator>>(ARX::BufferReader & BufferReader, std::uint32_t & Value) -> ARX::BufferReader &
 {
-	BufferReader.Read(sizeof(std::uint32_t), reinterpret_cast<Arxx::Buffer::pointer>(&Value));
+	BufferReader.Read(sizeof(std::uint32_t), reinterpret_cast<ARX::Buffer::pointer>(&Value));
 	
 	return BufferReader;
 }
 
-auto Arxx::operator>>(Arxx::BufferReader & BufferReader, std::uint64_t & Value) -> Arxx::BufferReader &
+auto ARX::operator>>(ARX::BufferReader & BufferReader, std::uint64_t & Value) -> ARX::BufferReader &
 {
-	BufferReader.Read(sizeof(std::uint64_t), reinterpret_cast<Arxx::Buffer::pointer>(&Value));
+	BufferReader.Read(sizeof(std::uint64_t), reinterpret_cast<ARX::Buffer::pointer>(&Value));
 	
 	return BufferReader;
 }
 
-auto Arxx::operator>>(Arxx::BufferReader & BufferReader, bool & Value) -> Arxx::BufferReader &
+auto ARX::operator>>(ARX::BufferReader & BufferReader, bool & Value) -> ARX::BufferReader &
 {
-	BufferReader.Read(sizeof(bool), reinterpret_cast<Arxx::Buffer::pointer>(&Value));
+	BufferReader.Read(sizeof(bool), reinterpret_cast<ARX::Buffer::pointer>(&Value));
 	
 	return BufferReader;
 }

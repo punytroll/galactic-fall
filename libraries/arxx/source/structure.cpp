@@ -29,15 +29,15 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// Arxx::Structure                                                                                //
+// ARX::Structure                                                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Structure::Structure(Arxx::Item & Item) :
+ARX::Structure::Structure(ARX::Item & Item) :
 	m_Item{Item}
 {
 }
 
-auto Arxx::Structure::Add(std::uint32_t ItemIdentifier, std::string const & Relation) -> bool
+auto ARX::Structure::Add(std::uint32_t ItemIdentifier, std::string const & Relation) -> bool
 {
 	if((Relation == "reference") || (ItemIdentifier == g_InvalidItemIdentifier))
 	{
@@ -48,14 +48,14 @@ auto Arxx::Structure::Add(std::uint32_t ItemIdentifier, std::string const & Rela
 	
 	if(RelationIterator == m_Relations.end())
 	{
-		RelationIterator = m_Relations.insert(std::make_pair(Relation, Arxx::Structure::Relation(*this, Relation))).first;
+		RelationIterator = m_Relations.insert(std::make_pair(Relation, ARX::Structure::Relation(*this, Relation))).first;
 	}
 	RelationIterator->second.Add(ItemIdentifier);
 	
 	return true;
 }
 
-auto Arxx::Structure::Delete(std::uint32_t ItemIdentifier, std::string const & Relation) -> bool
+auto ARX::Structure::Delete(std::uint32_t ItemIdentifier, std::string const & Relation) -> bool
 {
 	if((Relation == "reference") || (ItemIdentifier == g_InvalidItemIdentifier))
 	{
@@ -72,7 +72,7 @@ auto Arxx::Structure::Delete(std::uint32_t ItemIdentifier, std::string const & R
 	return RelationIterator->second.Delete(ItemIdentifier);
 }
 
-auto Arxx::Structure::GetRelation(std::string const & Relation) const -> Arxx::Structure::Relation const &
+auto ARX::Structure::GetRelation(std::string const & Relation) const -> ARX::Structure::Relation const &
 {
 	auto RelationIterator = m_Relations.find(Relation);
 	
@@ -86,7 +86,7 @@ auto Arxx::Structure::GetRelation(std::string const & Relation) const -> Arxx::S
 	}
 }
 
-auto Arxx::Structure::GetRelation(std::string const & Relation) -> Arxx::Structure::Relation &
+auto ARX::Structure::GetRelation(std::string const & Relation) -> ARX::Structure::Relation &
 {
 	auto RelationIterator = m_Relations.find(Relation);
 	
@@ -100,32 +100,32 @@ auto Arxx::Structure::GetRelation(std::string const & Relation) -> Arxx::Structu
 	}
 }
 
-auto Arxx::Structure::size() const -> Arxx::Structure::size_type
+auto ARX::Structure::size() const -> ARX::Structure::size_type
 {
 	return m_Relations.size();
 }
 
-auto Arxx::Structure::begin() -> Arxx::Structure::iterator
+auto ARX::Structure::begin() -> ARX::Structure::iterator
 {
-	return Arxx::Structure::iterator{m_Relations.begin()};
+	return ARX::Structure::iterator{m_Relations.begin()};
 }
 
-auto Arxx::Structure::end() -> Arxx::Structure::iterator
+auto ARX::Structure::end() -> ARX::Structure::iterator
 {
-	return Arxx::Structure::iterator{m_Relations.end()};
+	return ARX::Structure::iterator{m_Relations.end()};
 }
 
-auto Arxx::Structure::begin() const -> Arxx::Structure::const_iterator
+auto ARX::Structure::begin() const -> ARX::Structure::const_iterator
 {
-	return Arxx::Structure::const_iterator{m_Relations.begin()};
+	return ARX::Structure::const_iterator{m_Relations.begin()};
 }
 
-auto Arxx::Structure::end() const -> Arxx::Structure::const_iterator
+auto ARX::Structure::end() const -> ARX::Structure::const_iterator
 {
-	return Arxx::Structure::const_iterator{m_Relations.end()};
+	return ARX::Structure::const_iterator{m_Relations.end()};
 }
 
-auto Arxx::Structure::m_RemoveRelation(Arxx::Structure::Relation * Relation) -> void
+auto ARX::Structure::m_RemoveRelation(ARX::Structure::Relation * Relation) -> void
 {
     std::erase_if(m_Relations, [Relation](auto const & Item)
                                {
@@ -133,12 +133,12 @@ auto Arxx::Structure::m_RemoveRelation(Arxx::Structure::Relation * Relation) -> 
                                });
 }
 
-auto Arxx::Structure::HasRelation(std::string const & Relation) const -> bool
+auto ARX::Structure::HasRelation(std::string const & Relation) const -> bool
 {
 	return m_Relations.find(Relation) != m_Relations.end();
 }
 
-auto Arxx::Structure::m_ReadFromStream(std::uint32_t StructureDataLength, std::istream & IStream) -> void
+auto ARX::Structure::m_ReadFromStream(std::uint32_t StructureDataLength, std::istream & IStream) -> void
 {
 	while(StructureDataLength > 0)
 	{
@@ -163,9 +163,9 @@ auto Arxx::Structure::m_ReadFromStream(std::uint32_t StructureDataLength, std::i
 	}
 }
 
-auto Arxx::Structure::m_WriteToBuffer(Arxx::Buffer & Buffer) const -> void
+auto ARX::Structure::m_WriteToBuffer(ARX::Buffer & Buffer) const -> void
 {
-	auto BufferWriter = Arxx::BufferWriter{Buffer};
+	auto BufferWriter = ARX::BufferWriter{Buffer};
     
     for(auto & [RelationName, Relation] : m_Relations)
     {
@@ -180,99 +180,99 @@ auto Arxx::Structure::m_WriteToBuffer(Arxx::Buffer & Buffer) const -> void
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// Arxx::Structure::iterator                                                                     //
+// ARX::Structure::iterator                                                                     //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Structure::iterator::iterator(std::map<std::string, Arxx::Structure::Relation>::iterator Iterator) :
+ARX::Structure::iterator::iterator(std::map<std::string, ARX::Structure::Relation>::iterator Iterator) :
 	m_Iterator{Iterator}
 {
 }
 
-auto Arxx::Structure::iterator::operator++() -> Arxx::Structure::iterator &
+auto ARX::Structure::iterator::operator++() -> ARX::Structure::iterator &
 {
 	++m_Iterator;
 	
 	return *this;
 }
 
-auto Arxx::Structure::iterator::operator*() -> Arxx::Structure::Relation &
+auto ARX::Structure::iterator::operator*() -> ARX::Structure::Relation &
 {
 	return m_Iterator->second;
 }
 
-auto Arxx::Structure::iterator::operator*() const -> Arxx::Structure::Relation const &
+auto ARX::Structure::iterator::operator*() const -> ARX::Structure::Relation const &
 {
 	return m_Iterator->second;
 }
 
-auto Arxx::Structure::iterator::operator->() -> Arxx::Structure::Relation *
+auto ARX::Structure::iterator::operator->() -> ARX::Structure::Relation *
 {
 	return std::addressof(m_Iterator->second);
 }
 
-auto Arxx::Structure::iterator::operator==(Arxx::Structure::iterator const & Other) const -> bool
+auto ARX::Structure::iterator::operator==(ARX::Structure::iterator const & Other) const -> bool
 {
 	return m_Iterator == Other.m_Iterator;
 }
 
-auto Arxx::Structure::iterator::operator!=(Arxx::Structure::iterator const & Other) const -> bool
+auto ARX::Structure::iterator::operator!=(ARX::Structure::iterator const & Other) const -> bool
 {
 	return m_Iterator != Other.m_Iterator;
 }
 
-auto Arxx::Structure::iterator::operator==(Arxx::Structure::const_iterator const & Other) const -> bool
+auto ARX::Structure::iterator::operator==(ARX::Structure::const_iterator const & Other) const -> bool
 {
 	return m_Iterator == Other.m_Iterator;
 }
 
-auto Arxx::Structure::iterator::operator!=(Arxx::Structure::const_iterator const & Other) const -> bool
+auto ARX::Structure::iterator::operator!=(ARX::Structure::const_iterator const & Other) const -> bool
 {
 	return m_Iterator != Other.m_Iterator;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// Arxx::Structure::const_iterator                                                               //
+// ARX::Structure::const_iterator                                                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Structure::const_iterator::const_iterator(std::map<std::string, Arxx::Structure::Relation>::const_iterator Iterator) :
+ARX::Structure::const_iterator::const_iterator(std::map<std::string, ARX::Structure::Relation>::const_iterator Iterator) :
 	m_Iterator{Iterator}
 {
 }
 
-Arxx::Structure::const_iterator::const_iterator(Arxx::Structure::iterator Iterator) :
+ARX::Structure::const_iterator::const_iterator(ARX::Structure::iterator Iterator) :
 	m_Iterator{Iterator.m_Iterator}
 {
 }
 
-auto Arxx::Structure::const_iterator::operator++() -> Arxx::Structure::const_iterator &
+auto ARX::Structure::const_iterator::operator++() -> ARX::Structure::const_iterator &
 {
 	++m_Iterator;
 	
 	return *this;
 }
 
-auto Arxx::Structure::const_iterator::operator*() const -> Arxx::Structure::Relation const &
+auto ARX::Structure::const_iterator::operator*() const -> ARX::Structure::Relation const &
 {
 	return m_Iterator->second;
 }
 
-auto Arxx::Structure::const_iterator::operator->() -> Arxx::Structure::Relation const *
+auto ARX::Structure::const_iterator::operator->() -> ARX::Structure::Relation const *
 {
 	return std::addressof(m_Iterator->second);
 }
 
-auto Arxx::Structure::const_iterator::operator==(Arxx::Structure::const_iterator const & Other) const -> bool
+auto ARX::Structure::const_iterator::operator==(ARX::Structure::const_iterator const & Other) const -> bool
 {
 	return m_Iterator == Other.m_Iterator;
 }
 
-auto Arxx::Structure::const_iterator::operator!=(Arxx::Structure::const_iterator const & Other) const -> bool
+auto ARX::Structure::const_iterator::operator!=(ARX::Structure::const_iterator const & Other) const -> bool
 {
 	return m_Iterator != Other.m_Iterator;
 }
 
-auto Arxx::operator<<(Arxx::Buffer & Buffer, Arxx::Structure const & Structure) -> Arxx::Buffer &
+auto ARX::operator<<(ARX::Buffer & Buffer, ARX::Structure const & Structure) -> ARX::Buffer &
 {
 	Structure.m_WriteToBuffer(Buffer);
 	

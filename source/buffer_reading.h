@@ -20,7 +20,7 @@
 #ifndef BUFFER_READING_H
 #define BUFFER_READING_H
 
-namespace Arxx
+namespace ARX
 {
     class BufferReader;
 }
@@ -36,11 +36,11 @@ class Vector2f;
 class Vector3f;
 class VisualizationPrototype;
 
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Graphics::ColorRGB & Color);
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Graphics::ColorRGBO & Color);
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Quaternion & Quaternion);
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Vector2f & Vector);
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Vector3f & Vector);
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, VisualizationPrototype & VisualizationPrototype);
+ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, Graphics::ColorRGB & Color);
+ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, Graphics::ColorRGBO & Color);
+ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, Quaternion & Quaternion);
+ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, Vector2f & Vector);
+ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, Vector3f & Vector);
+ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, VisualizationPrototype & VisualizationPrototype);
 
 #endif

@@ -26,23 +26,23 @@
 /**
  * @file data.h
  * 
- * Declares the interface of Arxx::Data.
+ * Declares the interface of ARX::Data.
  **/
 
-namespace Arxx
+namespace ARX
 {
 	/**
 	 * @brief A buffer with compression, decompression and external data referencing features.
 	 *
-	 * This is the component underlying the Arxx::Item class.
+	 * This is the component underlying the ARX::Item class.
      * It delivers the ability to compress and decompress the data.
-     * Because of the public inhertitance from Arxx::Buffer it is still possible to call Buffer::GetLength() but be aware that it will give you the state of the buffer which might not be what you want for two reasons:
+     * Because of the public inhertitance from ARX::Buffer it is still possible to call Buffer::GetLength() but be aware that it will give you the state of the buffer which might not be what you want for two reasons:
 	 * - the buffer content might be compressed or decompressed
-	 * - the data might not be fetched yet, which makes Arxx::Buffer::GetLength() return `0` since there is nothing in the buffer
+	 * - the data might not be fetched yet, which makes ARX::Buffer::GetLength() return `0` since there is nothing in the buffer
 	 * - the data might not be fetched yet, but you have written something in the buffer.
-     *   Arxx::Buffer::GetLength() will of course return the length of that data instead of the length of the Item's data, be it compressed or decompressed.
+     *   ARX::Buffer::GetLength() will of course return the length of that data instead of the length of the Item's data, be it compressed or decompressed.
 	 **/
-	class Data : public Arxx::Buffer
+	class Data : public ARX::Buffer
 	{
 	public:
 		typedef enum
@@ -61,7 +61,7 @@ namespace Arxx
 			BZLIB = 11
 		} Compression;
 		
-		static Arxx::Data::Compression m_DefaultCompression;
+		static ARX::Data::Compression m_DefaultCompression;
 		
 		/**
 		 * @brief Decompresses the data of the buffer.
@@ -71,7 +71,7 @@ namespace Arxx
 		/**
 		 * @brief Compresses the data of the buffer.
 		 **/
-		auto Compress(Arxx::Data::Compression Compression = Arxx::Data::m_DefaultCompression) -> void;
+		auto Compress(ARX::Data::Compression Compression = ARX::Data::m_DefaultCompression) -> void;
 		
 		/**
 		 * @brief Returns true if the data inside the buffer is compressed.
@@ -86,7 +86,7 @@ namespace Arxx
 		/**
 		 * @brief Returns the compression information, which will equal the compression rate of the zlib library.
 		 **/
-		auto GetCompression() const -> Arxx::Data::Compression;
+		auto GetCompression() const -> ARX::Data::Compression;
 		
 		/**
 		 * @brief Gets the length of the decompressed data.
@@ -107,8 +107,8 @@ namespace Arxx
 		 * In order to only try to fetch the data m_URI must be valid and bIsFetched() and bIsFetching() must be false.
          * Otherwise the function will return false.
 		 * 
-		 * For asynchronous fetches the return value may be true because an Arxx::DataChannel could be found but the actuall fetching may fail.
-         * This information may be retrieved via Arxx::Data::GetFetchStatus().
+		 * For asynchronous fetches the return value may be true because an ARX::DataChannel could be found but the actuall fetching may fail.
+         * This information may be retrieved via ARX::Data::GetFetchStatus().
 		 **/
 		auto Fetch() -> bool;
 		
@@ -130,13 +130,13 @@ namespace Arxx
 		 * @param Compression The state of the data.
          *                    If this value if greater than 0 the fake data is considered compressed.
 		 * @param DecompressedLength The length of the data if in decompressed state.
-         *                           Elsewise the value which @a Arxx::Buffer::GetDecompressedLength() will return and this data will serve no internal functionality, so you may use it as you like.
+         *                           Elsewise the value which @a ARX::Buffer::GetDecompressedLength() will return and this data will serve no internal functionality, so you may use it as you like.
 		 * @param CompressedLength The length of the data if in compressed state.
-         *                         Elsewise the value which Arxx::Buffer::GetCompressedDataLength() will return and this data will serve no internal functionality, so you may use it as you like.
+         *                         Elsewise the value which ARX::Buffer::GetCompressedDataLength() will return and this data will serve no internal functionality, so you may use it as you like.
 		 * 
 		 * This function will set @a m_Fetched to false.
 		 **/
-		auto SetFetchInformation(std::uint32_t Offset, Arxx::Data::Compression Compression, std::uint32_t DecompressedLength, std::uint32_t CompressedLength) -> void;
+		auto SetFetchInformation(std::uint32_t Offset, ARX::Data::Compression Compression, std::uint32_t DecompressedLength, std::uint32_t CompressedLength) -> void;
 		
 		/**
 		 * @brief Returns wether the data is fetched.
@@ -159,7 +159,7 @@ namespace Arxx
 		 * 
 		 * Is set to either 0 for to indicate no compression or some value greater than 0 to indicate the compression level of the data as in the zlib library.
 		 **/
-		Arxx::Data::Compression m_CompressionType{Arxx::Data::Compression::NONE};
+		ARX::Data::Compression m_CompressionType{ARX::Data::Compression::NONE};
 		
 		/**
 		 * @brief The length of the data if decompressed.

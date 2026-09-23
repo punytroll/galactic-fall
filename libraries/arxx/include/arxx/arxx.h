@@ -37,17 +37,17 @@
  * 
  * From a pragmatic point of view this very much covers the functionality, but I wouldn't have done this library if it didn't provide at least some advantage or additional feature.
  *
- * To start reading and learning about libarxx you could start with Arxx::Archive which is the entry point for almost every Arxx session.
- * Also the Arxx::Item is very important.
+ * To start reading and learning about libarxx you could start with ARX::Archive which is the entry point for almost every ARX session.
+ * Also the ARX::Item is very important.
  * Additionally the Modules page is recommended for reading.
  **/
 
 /**
- * @brief The Arxx namespace which contains all the C++ classes you need to work with ARX archives.
+ * @brief The ARX namespace which contains all the C++ classes you need to work with ARX archives.
  *
- * In this namespace the most important classes are Arxx::Item and Arxx::Archive.
+ * In this namespace the most important classes are ARX::Item and ARX::Archive.
  **/
-namespace Arxx
+namespace ARX
 {
 };
 

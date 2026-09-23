@@ -65,27 +65,27 @@
 #include "system.h"
 #include "visualization_prototype.h"
 
-static auto Resolve(Arxx::Reference & Reference) -> Arxx::Item *;
-static auto ReadAmmunitionClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager) -> void;
-static auto ReadBatteryClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager) -> void;
-static auto ReadCommodityClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager) -> void;
-static auto ReadEnergyProjectileWeaponClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager) -> void;
-static auto ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list<std::tuple<std::string, std::string, float>> & FactionStandings) -> void;
-static auto ReadGeneratorClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager) -> void;
-static auto ReadMesh(Arxx::Reference & Reference) -> void;
-static auto ReadModel(Arxx::Reference & Reference) -> void;
-static auto ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * System) -> void;
-static auto ReadProgram(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager) -> void;
-static auto ReadScenario(Arxx::Reference & Reference, ScenarioManager * ScenarioManager) -> void;
-static auto ReadShader(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager) -> void;
-static auto ReadShipClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager, ClassManager<SlotClass> * SlotClassManager) -> void;
-static auto ReadSlotClass(Arxx::Reference & Reference, ClassManager<SlotClass> * SlotClassManager) -> void;
-static auto ReadStar(Arxx::Reference & Reference, System * System) -> void;
-static auto ReadSystemLink(Arxx::Reference & Reference, System * System, std::multimap<std::string, std::string> & SystemLinks) -> void;
-static auto ReadTexture(Arxx::Reference & Reference) -> void;
-static auto ReadTurretClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager) -> void;
+static auto Resolve(ARX::Reference & Reference) -> ARX::Item *;
+static auto ReadAmmunitionClass(ARX::Reference & Reference, BlueprintManager * BlueprintManager) -> void;
+static auto ReadBatteryClass(ARX::Reference & Reference, BlueprintManager * BlueprintManager) -> void;
+static auto ReadCommodityClass(ARX::Reference & Reference, BlueprintManager * BlueprintManager) -> void;
+static auto ReadEnergyProjectileWeaponClass(ARX::Reference & Reference, BlueprintManager * BlueprintManager) -> void;
+static auto ReadFaction(ARX::Reference & Reference, Galaxy * Galaxy, std::list<std::tuple<std::string, std::string, float>> & FactionStandings) -> void;
+static auto ReadGeneratorClass(ARX::Reference & Reference, BlueprintManager * BlueprintManager) -> void;
+static auto ReadMesh(ARX::Reference & Reference) -> void;
+static auto ReadModel(ARX::Reference & Reference) -> void;
+static auto ReadPlanet(ARX::Reference & Reference, Galaxy * Galaxy, System * System) -> void;
+static auto ReadProgram(ARX::Reference & Reference, Graphics::ShadingManager * ShadingManager) -> void;
+static auto ReadScenario(ARX::Reference & Reference, ScenarioManager * ScenarioManager) -> void;
+static auto ReadShader(ARX::Reference & Reference, Graphics::ShadingManager * ShadingManager) -> void;
+static auto ReadShipClass(ARX::Reference & Reference, BlueprintManager * BlueprintManager, ClassManager<SlotClass> * SlotClassManager) -> void;
+static auto ReadSlotClass(ARX::Reference & Reference, ClassManager<SlotClass> * SlotClassManager) -> void;
+static auto ReadStar(ARX::Reference & Reference, System * System) -> void;
+static auto ReadSystemLink(ARX::Reference & Reference, System * System, std::multimap<std::string, std::string> & SystemLinks) -> void;
+static auto ReadTexture(ARX::Reference & Reference) -> void;
+static auto ReadTurretClass(ARX::Reference & Reference, BlueprintManager * BlueprintManager) -> void;
 
-static auto MakeItemAvailable(Arxx::Item * Item) -> void
+static auto MakeItemAvailable(ARX::Item * Item) -> void
 {
 	assert(Item != nullptr);
 	if(Item->IsFetched() == false)
@@ -109,7 +109,7 @@ static auto MakeItemAvailable(Arxx::Item * Item) -> void
 	}
 }
 
-static auto Resolve(Arxx::Reference & Reference) -> Arxx::Item *
+static auto Resolve(ARX::Reference & Reference) -> ARX::Item *
 {
 	auto Item(Reference.GetItem());
 	
@@ -125,7 +125,7 @@ static auto Resolve(Arxx::Reference & Reference) -> Arxx::Item *
 auto ResourceReader::LoadArchive(std::string const & ArchivePath) -> bool
 {
 	assert(m_Archive == nullptr);
-	m_Archive = std::make_unique<Arxx::Archive>();
+	m_Archive = std::make_unique<ARX::Archive>();
 	if(m_Archive->Load(ArchivePath) == false)
 	{
 		std::cerr << "Could not find or open \"" << ArchivePath << "\"." << std::endl;
@@ -138,7 +138,7 @@ auto ResourceReader::LoadArchive(std::string const & ArchivePath) -> bool
     }
 }
 
-auto ResourceReader::m_ReadItems(std::string const & Path, std::function<void(Arxx::Reference &)> ReaderFunction) -> void
+auto ResourceReader::m_ReadItems(std::string const & Path, std::function<void(ARX::Reference &)> ReaderFunction) -> void
 {
 	assert(m_Archive != nullptr);
 	
@@ -155,7 +155,7 @@ auto ResourceReader::m_ReadItems(std::string const & Path, std::function<void(Ar
 	m_ReadItems(Directory->GetStructure().GetRelation("child"), ReaderFunction);
 }
 
-auto ResourceReader::m_ReadItems(Arxx::Structure::Relation & Relation, std::function<void(Arxx::Reference &)> ReaderFunction) -> void
+auto ResourceReader::m_ReadItems(ARX::Structure::Relation & Relation, std::function<void(ARX::Reference &)> ReaderFunction) -> void
 {
 	for(auto & Child : Relation)
 	{
@@ -211,7 +211,7 @@ auto ResourceReader::ReadGalaxy(std::string const & GalaxyIdentifier) -> Galaxy 
 			throw std::runtime_error("Item sub type for galaxy '" + GalaxyItem->GetName() + "' should be '0' not '" + to_string_cast(GalaxyItem->GetSubType()) + "'.");
 		}
 		
-		auto Reader = Arxx::BufferReader{*GalaxyItem};
+		auto Reader = ARX::BufferReader{*GalaxyItem};
 		auto Identifier = std::string{};
 		
 		Reader >> Identifier;
@@ -298,7 +298,7 @@ auto ResourceReader::ReadSlotClasses(ClassManager<SlotClass> * SlotClassManager)
 	m_ReadItems("/Slot Classes", std::bind(ReadSlotClass, std::placeholders::_1, SlotClassManager));
 }
 
-auto ResourceReader::m_ReadSystem(Arxx::Reference & Reference, Galaxy * Galaxy, std::multimap<std::string, std::string> & SystemLinks) -> void
+auto ResourceReader::m_ReadSystem(ARX::Reference & Reference, Galaxy * Galaxy, std::multimap<std::string, std::string> & SystemLinks) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -311,7 +311,7 @@ auto ResourceReader::m_ReadSystem(Arxx::Reference & Reference, Galaxy * Galaxy, 
 		throw std::runtime_error("Item sub type for system '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
@@ -381,7 +381,7 @@ auto ResourceReader::ReadSavegameFromScenarioPath(std::string const & ScenarioPa
 	{
 		MakeItemAvailable(Item);
 		
-		auto Reader = Arxx::BufferReader{*Item};
+		auto Reader = ARX::BufferReader{*Item};
 		auto Identifier = std::string{};
 		auto Name = std::string{};
 		auto Description = std::string{};
@@ -392,7 +392,7 @@ auto ResourceReader::ReadSavegameFromScenarioPath(std::string const & ScenarioPa
 	return Result;
 }
 
-static auto ReadAmmunitionClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager) -> void
+static auto ReadAmmunitionClass(ARX::Reference & Reference, BlueprintManager * BlueprintManager) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -405,7 +405,7 @@ static auto ReadAmmunitionClass(Arxx::Reference & Reference, BlueprintManager * 
 		throw std::runtime_error("Item sub type for ammunition class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
@@ -434,7 +434,7 @@ static auto ReadAmmunitionClass(Arxx::Reference & Reference, BlueprintManager * 
 	NewAmmunitionClass->AddProperty("cartridge-size", CartridgeSize);
 }
 
-static auto ReadBatteryClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager) -> void
+static auto ReadBatteryClass(ARX::Reference & Reference, BlueprintManager * BlueprintManager) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -447,7 +447,7 @@ static auto ReadBatteryClass(Arxx::Reference & Reference, BlueprintManager * Blu
 		throw std::runtime_error("Item sub type for battery class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
@@ -481,7 +481,7 @@ static auto ReadBatteryClass(Arxx::Reference & Reference, BlueprintManager * Blu
 	NewBatteryClass->AddProperty("slot-class-identifier", SlotClassIdentifier);
 }
 
-static auto ReadCommodityClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager) -> void
+static auto ReadCommodityClass(ARX::Reference & Reference, BlueprintManager * BlueprintManager) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -494,7 +494,7 @@ static auto ReadCommodityClass(Arxx::Reference & Reference, BlueprintManager * B
 		throw std::runtime_error("Item sub type for commodity class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
@@ -520,7 +520,7 @@ static auto ReadCommodityClass(Arxx::Reference & Reference, BlueprintManager * B
 	NewCommodityClass->AddProperty("visualization-prototype", VisualizationPrototype);
 }
 
-static auto ReadEnergyProjectileWeaponClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager) -> void
+static auto ReadEnergyProjectileWeaponClass(ARX::Reference & Reference, BlueprintManager * BlueprintManager) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -533,7 +533,7 @@ static auto ReadEnergyProjectileWeaponClass(Arxx::Reference & Reference, Bluepri
 		throw std::runtime_error("Item sub type for energy projectile weapon class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
@@ -587,7 +587,7 @@ static auto ReadEnergyProjectileWeaponClass(Arxx::Reference & Reference, Bluepri
 	NewEnergyProjectileWeaponBlueprint->AddProperty("shot-visualization-prototype", ShotVisualizationPrototype);
 }
 
-static auto ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list<std::tuple<std::string, std::string, float>> & FactionStandings) -> void
+static auto ReadFaction(ARX::Reference & Reference, Galaxy * Galaxy, std::list<std::tuple<std::string, std::string, float>> & FactionStandings) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -600,7 +600,7 @@ static auto ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list<
 		throw std::runtime_error("Item sub type for faction '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
@@ -630,7 +630,7 @@ static auto ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list<
 	Galaxy->GetAspectObjectContainer()->AddContent(NewFaction);
 }
 
-static auto ReadGeneratorClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager) -> void
+static auto ReadGeneratorClass(ARX::Reference & Reference, BlueprintManager * BlueprintManager) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -643,7 +643,7 @@ static auto ReadGeneratorClass(Arxx::Reference & Reference, BlueprintManager * B
 		throw std::runtime_error("Item sub type for generator class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
@@ -673,7 +673,7 @@ static auto ReadGeneratorClass(Arxx::Reference & Reference, BlueprintManager * B
 	NewGeneratorClass->AddProperty("slot-class-identifier", SlotClassIdentifier);
 }
 
-static auto ReadMesh(Arxx::Reference & Reference) -> void
+static auto ReadMesh(ARX::Reference & Reference) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -686,7 +686,7 @@ static auto ReadMesh(Arxx::Reference & Reference) -> void
 		throw std::runtime_error("Item sub type for mesh '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
@@ -772,7 +772,7 @@ static auto ReadMesh(Arxx::Reference & Reference) -> void
 	NewMesh->BuildVertexArray();
 }
 
-static auto ReadModel(Arxx::Reference & Reference) -> void
+static auto ReadModel(ARX::Reference & Reference) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -785,7 +785,7 @@ static auto ReadModel(Arxx::Reference & Reference) -> void
 		throw std::runtime_error("Item sub type for model '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
@@ -819,7 +819,7 @@ static auto ReadModel(Arxx::Reference & Reference) -> void
 	}
 }
 
-static auto ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * System) -> void
+static auto ReadPlanet(ARX::Reference & Reference, Galaxy * Galaxy, System * System) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -832,7 +832,7 @@ static auto ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * Sy
 		throw std::runtime_error("Item sub type for planet '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
@@ -905,7 +905,7 @@ static auto ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * Sy
 	System->GetAspectObjectContainer()->AddContent(NewPlanet);
 }
 
-static auto ReadProgram(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager) -> void
+static auto ReadProgram(ARX::Reference & Reference, Graphics::ShadingManager * ShadingManager) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -914,7 +914,7 @@ static auto ReadProgram(Arxx::Reference & Reference, Graphics::ShadingManager * 
 		throw std::runtime_error("Item type for shader '" + Item->GetName() + "' should be '" + to_string_cast(DATA_TYPE_SHADER_PROGRAM) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
@@ -938,7 +938,7 @@ static auto ReadProgram(Arxx::Reference & Reference, Graphics::ShadingManager * 
 	}
 }
 
-static auto ReadScenario(Arxx::Reference & Reference, ScenarioManager * ScenarioManager) -> void
+static auto ReadScenario(ARX::Reference & Reference, ScenarioManager * ScenarioManager) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -951,7 +951,7 @@ static auto ReadScenario(Arxx::Reference & Reference, ScenarioManager * Scenario
 		throw std::runtime_error("Item sub type for scenario '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
@@ -972,7 +972,7 @@ static auto ReadScenario(Arxx::Reference & Reference, ScenarioManager * Scenario
 	NewScenario->SetDescription(Description);
 }
 
-static auto ReadShader(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager) -> void
+static auto ReadShader(ARX::Reference & Reference, Graphics::ShadingManager * ShadingManager) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -981,7 +981,7 @@ static auto ReadShader(Arxx::Reference & Reference, Graphics::ShadingManager * S
 		throw std::runtime_error("Item type for shader '" + Item->GetName() + "' should be '" + to_string_cast(DATA_TYPE_SHADER) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
@@ -1011,7 +1011,7 @@ static auto ReadShader(Arxx::Reference & Reference, Graphics::ShadingManager * S
 	Shader->SetSource(Source);
 }
 
-static auto ReadShipClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager, ClassManager<SlotClass> * SlotClassManager) -> void
+static auto ReadShipClass(ARX::Reference & Reference, BlueprintManager * BlueprintManager, ClassManager<SlotClass> * SlotClassManager) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -1024,7 +1024,7 @@ static auto ReadShipClass(Arxx::Reference & Reference, BlueprintManager * Bluepr
 		throw std::runtime_error("Item sub type for ship class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
@@ -1120,7 +1120,7 @@ static auto ReadShipClass(Arxx::Reference & Reference, BlueprintManager * Bluepr
 	NewShipClass->AddProperty("slots", Slots);
 }
 
-static auto ReadSlotClass(Arxx::Reference & Reference, ClassManager<SlotClass> * SlotClassManager) -> void
+static auto ReadSlotClass(ARX::Reference & Reference, ClassManager<SlotClass> * SlotClassManager) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -1133,7 +1133,7 @@ static auto ReadSlotClass(Arxx::Reference & Reference, ClassManager<SlotClass> *
 		throw std::runtime_error("Item sub type for slot class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
@@ -1159,7 +1159,7 @@ static auto ReadSlotClass(Arxx::Reference & Reference, ClassManager<SlotClass> *
 	}
 }
 
-static auto ReadStar(Arxx::Reference & Reference, System * System) -> void
+static auto ReadStar(ARX::Reference & Reference, System * System) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -1172,7 +1172,7 @@ static auto ReadStar(Arxx::Reference & Reference, System * System) -> void
 		throw std::runtime_error("Item sub type for star '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	auto Position = Vector2f{};
 	auto Color = Graphics::ColorRGB{};
@@ -1186,7 +1186,7 @@ static auto ReadStar(Arxx::Reference & Reference, System * System) -> void
 	System->GetAspectObjectContainer()->AddContent(NewStar);
 }
 
-static auto ReadSystemLink(Arxx::Reference & Reference, System * System, std::multimap<std::string, std::string> & SystemLinks) -> void
+static auto ReadSystemLink(ARX::Reference & Reference, System * System, std::multimap<std::string, std::string> & SystemLinks) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -1199,14 +1199,14 @@ static auto ReadSystemLink(Arxx::Reference & Reference, System * System, std::mu
 		throw std::runtime_error("Item sub type for system '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;
 	SystemLinks.insert(std::make_pair(System->GetSubTypeIdentifier(), Identifier));
 }
 
-static auto ReadTexture(Arxx::Reference & Reference) -> void
+static auto ReadTexture(ARX::Reference & Reference) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -1219,7 +1219,7 @@ static auto ReadTexture(Arxx::Reference & Reference) -> void
 		throw std::runtime_error("Item sub type for texture '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	auto Width = std::uint32_t{};
 	auto Height = std::uint32_t{};
@@ -1239,7 +1239,7 @@ static auto ReadTexture(Arxx::Reference & Reference) -> void
 	Texture->SetData(Width, Height, Format, Reader.GetBuffer().GetBegin() + Reader.GetPosition());
 }
 
-static auto ReadTurretClass(Arxx::Reference & Reference, BlueprintManager * BlueprintManager) -> void
+static auto ReadTurretClass(ARX::Reference & Reference, BlueprintManager * BlueprintManager) -> void
 {
 	auto Item = Resolve(Reference);
 	
@@ -1252,7 +1252,7 @@ static auto ReadTurretClass(Arxx::Reference & Reference, BlueprintManager * Blue
 		throw std::runtime_error("Item sub type for turret class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
-	auto Reader = Arxx::BufferReader{*Item};
+	auto Reader = ARX::BufferReader{*Item};
 	auto Identifier = std::string{};
 	
 	Reader >> Identifier;

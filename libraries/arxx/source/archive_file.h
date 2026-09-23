@@ -32,7 +32,7 @@
  * An internal header file with structs and function definitions for reading ARX archive files.
  **/
 
-namespace Arxx
+namespace ARX
 {
 #pragma pack(1)
 	/**
@@ -78,7 +78,7 @@ namespace Arxx
 		/**
 		 * @brief The unique identifier of the root item of the archive.
 		 *
-		 * This member might equal Arxx::g_u4InvalidID when there is no root item specified or this archive.
+		 * This member might equal ARX::g_u4InvalidID when there is no root item specified or this archive.
 		 **/
 		std::uint32_t RootItemIdentifier;
 		
@@ -180,11 +180,11 @@ namespace Arxx
 #pragma pack()
     
 	/**
-	 * @brief The output operator for a Arxx::ArchiveHeader struct.
+	 * @brief The output operator for a ARX::ArchiveHeader struct.
 	 * 
 	 * This function takes care of the correct output of a ArchiveHeader to any kind of std::ostream.
 	 **/
-	inline std::ostream & operator<<(std::ostream & OStream, Arxx::ArchiveHeader & ArchiveHeader)
+	inline std::ostream & operator<<(std::ostream & OStream, ARX::ArchiveHeader & ArchiveHeader)
 	{
         ARX::WriteUnsignedInteger8Bit(OStream, ArchiveHeader.MajorVersionNumber);
 		ARX::WriteUnsignedInteger8Bit(OStream, ArchiveHeader.MinorVersionNumber);
@@ -197,11 +197,11 @@ namespace Arxx
 	}
 	
 	/**
-	 * @brief The output operator for a Arxx::ItemHeader struct.
+	 * @brief The output operator for a ARX::ItemHeader struct.
 	 * 
 	 * This function takes care of the correct output of a ItemHeader to any kind of std::ostream.
 	 **/
-	inline std::ostream & operator<<(std::ostream & OStream, Arxx::ItemHeader & ItemHeader)
+	inline std::ostream & operator<<(std::ostream & OStream, ARX::ItemHeader & ItemHeader)
 	{
 		ARX::WriteUnsignedInteger32Bit(OStream, ItemHeader.Identifier);
 		ARX::WriteUnsignedInteger32Bit(OStream, ItemHeader.Type);
@@ -220,11 +220,11 @@ namespace Arxx
 	}
 	
 	/**
-	 * @brief The input operator for a Arxx::ArchiveHeader struct.
+	 * @brief The input operator for a ARX::ArchiveHeader struct.
 	 * 
 	 * This function takes care of the correct reading of a ArchiveHeader from any kind of std::istream.
 	 **/
-	inline std::istream & operator>>(std::istream & IStream, Arxx::ArchiveHeader & ArchiveHeader)
+	inline std::istream & operator>>(std::istream & IStream, ARX::ArchiveHeader & ArchiveHeader)
 	{
 		ArchiveHeader.MajorVersionNumber = ARX::ReadUnsignedInteger8Bit(IStream);
 		ArchiveHeader.MinorVersionNumber = ARX::ReadUnsignedInteger8Bit(IStream);
@@ -237,11 +237,11 @@ namespace Arxx
 	}
 	
 	/**
-	 * @brief The input operator for a Arxx::ItemHeader struct.
+	 * @brief The input operator for a ARX::ItemHeader struct.
 	 * 
 	 * This function takes care of the correct reading of a ItemHeader from any kind of std::istream.
 	 **/
-	inline std::istream & operator>>(std::istream & IStream, Arxx::ItemHeader & ItemHeader)
+	inline std::istream & operator>>(std::istream & IStream, ARX::ItemHeader & ItemHeader)
 	{
 		ItemHeader.Identifier = ARX::ReadUnsignedInteger32Bit(IStream);
 		ItemHeader.Type = ARX::ReadUnsignedInteger32Bit(IStream);

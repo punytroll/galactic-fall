@@ -36,7 +36,7 @@
 #include "globals.h"
 #include "visualization_prototype.h"
 
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Graphics::ColorRGB & Color)
+ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, Graphics::ColorRGB & Color)
 {
 	float Red;
 	float Green;
@@ -48,7 +48,7 @@ Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Graphics::Col
 	return BufferReader;
 }
 
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Graphics::ColorRGBO & Color)
+ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, Graphics::ColorRGBO & Color)
 {
 	float Red;
 	float Green;
@@ -61,7 +61,7 @@ Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Graphics::Col
 	return BufferReader;
 }
 
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Quaternion & Quaternion)
+ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, Quaternion & Quaternion)
 {
 	float W;
 	float X;
@@ -74,7 +74,7 @@ Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Quaternion & 
 	return BufferReader;
 }
 
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Vector2f & Vector)
+ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, Vector2f & Vector)
 {
 	float x;
 	float y;
@@ -85,7 +85,7 @@ Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Vector2f & Ve
 	return BufferReader;
 }
 
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Vector3f & Vector)
+ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, Vector3f & Vector)
 {
 	float x;
 	float y;
@@ -97,7 +97,7 @@ Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Vector3f & Ve
 	return BufferReader;
 }
 
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, VisualizationPrototype & VisualizationPrototype)
+ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, VisualizationPrototype & VisualizationPrototype)
 {
 	std::string ModelIdentifier;
 	

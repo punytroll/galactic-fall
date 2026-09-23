@@ -27,7 +27,7 @@
 #include "buffer_reading.h"
 #include "settings.h"
 
-static void MakeItemAvailable(Arxx::Item * Item)
+static void MakeItemAvailable(ARX::Item * Item)
 {
 	if(Item->IsFetched() == false)
 	{
@@ -57,7 +57,7 @@ Settings::KeyBinding::KeyBinding(int Code, std::string Event, std::string Action
 {
 }
 
-auto Settings::LoadFromItem(Arxx::Item * Item) -> void
+auto Settings::LoadFromItem(ARX::Item * Item) -> void
 {
 	if(Item->GetStructure().HasRelation("child") == false)
 	{
@@ -82,7 +82,7 @@ auto Settings::LoadFromItem(Arxx::Item * Item) -> void
 		}
 		MakeItemAvailable(KeyBindingProfileItem);
 		
-		auto Reader = Arxx::BufferReader{*KeyBindingProfileItem};
+		auto Reader = ARX::BufferReader{*KeyBindingProfileItem};
 		auto NumberOfKeyBindings = std::uint32_t{0};
 		auto KeyBindings = std::list<Settings::KeyBinding>{};
 		
@@ -116,7 +116,7 @@ auto Settings::LoadFromItem(Arxx::Item * Item) -> void
 		}
 		MakeItemAvailable(WindowDimensionsItem);
 		
-		auto Reader = Arxx::BufferReader{*WindowDimensionsItem};
+		auto Reader = ARX::BufferReader{*WindowDimensionsItem};
 		auto WindowDimensions = Vector2f{};
 		
 		Reader >> WindowDimensions;

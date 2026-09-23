@@ -28,48 +28,48 @@
 /**
  * @file utem.h
  * 
- * This file declares the interface of Arxx::Item.
+ * This file declares the interface of ARX::Item.
  **/
 
-namespace Arxx
+namespace ARX
 {
 	class Archive;
 	
 	/**
-	 * @brief The Arxx::Item is the basic class for any data storaging.
+	 * @brief The ARX::Item is the basic class for any data storaging.
 	 *
-	 * The Item is a thin wrapper around Arxx::Data but the inheritance ensures you can also treat it as an Arxx::Data object.
+	 * The Item is a thin wrapper around ARX::Data but the inheritance ensures you can also treat it as an ARX::Data object.
 	 *
-	 * It adds the basics of ARX to the data storage: Names, IDs, Types, SubTypes and a connection to a parenting Arxx::Archive.
+	 * It adds the basics of ARX to the data storage: Names, IDs, Types, SubTypes and a connection to a parenting ARX::Archive.
 	 *
 	 * Additionally, at the moment it provides basic functionality for the structure, but that is about to change.
      * Structure should only be handled by external structure classes.
 	 **/
-	class Item : public Arxx::Data
+	class Item : public ARX::Data
 	{
 	public:
-		friend class Arxx::Archive;
+		friend class ARX::Archive;
         
-		static auto Create() -> Arxx::Item *;
-		static auto Create(std::uint32_t Identifier) -> Arxx::Item *;
-		static auto Create(Arxx::Archive & Archive) -> Arxx::Item *;
-		static auto Create(Arxx::Archive & Archive, std::uint32_t Identifier) -> Arxx::Item *;
-		static auto Create(Arxx::Archive * Archive) -> Arxx::Item *;
-		static auto Create(Arxx::Archive * Archive, std::uint32_t Identifier) -> Arxx::Item *;
-		static auto Delete(Arxx::Item * Item) -> void;
+		static auto Create() -> ARX::Item *;
+		static auto Create(std::uint32_t Identifier) -> ARX::Item *;
+		static auto Create(ARX::Archive & Archive) -> ARX::Item *;
+		static auto Create(ARX::Archive & Archive, std::uint32_t Identifier) -> ARX::Item *;
+		static auto Create(ARX::Archive * Archive) -> ARX::Item *;
+		static auto Create(ARX::Archive * Archive, std::uint32_t Identifier) -> ARX::Item *;
+		static auto Delete(ARX::Item * Item) -> void;
 		
 		/**
 		 * @brief Deleted copy constructor, as items cannot be copied.
 		 **/
-		Item(Arxx::Item const & Item) = delete;
+		Item(ARX::Item const & Item) = delete;
 		
 		/**
 		 * @brief Deleted copy assignment operator, as items cannot be assigned to.
          **/
-		auto operator=(Arxx::Item const & Item) -> Arxx::Item & = delete;
+		auto operator=(ARX::Item const & Item) -> ARX::Item & = delete;
         
 		/**
-		 * @brief This function returns the identifier of @em this Arxx::Item.
+		 * @brief This function returns the identifier of @em this ARX::Item.
 		 * 
 		 * Returns the identifier of @em this item.
          * Remember that it is unique inside the associated archive.
@@ -83,7 +83,7 @@ namespace Arxx
 		 * This function is trivial for items that don't belong to any library.
          * The unique identifier has no meaning there and will just get assigned.
 		 * 
-		 * If @em this Arxx::Item is inside an Arxx:Archive the function is responsible for checking that the new identifier is not used yet.
+		 * If @em this ARX::Item is inside an ARX:Archive the function is responsible for checking that the new identifier is not used yet.
 		 **/
 		auto SetIdentifier(std::uint32_t Identifier) -> void;
 		
@@ -165,7 +165,7 @@ namespace Arxx
 		 * @param RevisionNumber The new revision number of the item.
 		 * @param CandidateNumber The new candidate number of the item.
 		 *
-		 * Sets the version numbers of the item. Note that this information is purely related to the content and in no way related to the components or structure of the Arxx::Item.
+		 * Sets the version numbers of the item. Note that this information is purely related to the content and in no way related to the components or structure of the ARX::Item.
 		 **/
 		auto SetVersionNumbers(std::uint8_t MajorVersionNumber, std::uint8_t MinorVersionNumber, std::uint8_t RevisionNumber, std::uint8_t CandidateNumber) -> void;
 		
@@ -174,17 +174,17 @@ namespace Arxx
 		 *
 		 * The function will return `nullptr` if this item belongs to no archive.
 		 **/
-		auto GetArchive() const -> Arxx::Archive *;
+		auto GetArchive() const -> ARX::Archive *;
 		
 		/**
 		 * @brief Returns the Structure component associated with this Item.
 		 **/
-		auto GetStructure() -> Arxx::Structure &;
+		auto GetStructure() -> ARX::Structure &;
 		
 		/**
 		 * @brief Returns the const Structure component associated with this Item.
 		 **/
-		auto GetStructure() const -> Arxx::Structure const &;
+		auto GetStructure() const -> ARX::Structure const &;
         
 	protected:
 		auto m_Fetch(std::uint32_t Offset, std::uint32_t Length) -> bool override;
@@ -192,14 +192,14 @@ namespace Arxx
 	private:
 		/**
 		 * @brief The default constructor is private.
-		 * @note Use Arxx::Item::Create() to create new items.
+		 * @note Use ARX::Item::Create() to create new items.
 		 **/
 		Item();
 		
 		/**
 		 * @brief The destructor is private.
 		 * 
-		 * This destructor is virtual so that you can savely derieve from the Arxx::Item.
+		 * This destructor is virtual so that you can savely derieve from the ARX::Item.
 		 **/
 		virtual ~Item();
 		
@@ -280,14 +280,14 @@ namespace Arxx
 		 * @brief A pointer to the Archive.
 		 * 
 		 * Depending on the constructor this field is either initialized with `nullptr` or with the address of the archive passed to the constructor.
-		 * It is changed in conjuction with the @a Arxx::Archive::RegisterItem() and @a Arxx::Archive::UnregisterItem() functions.
+		 * It is changed in conjuction with the @a ARX::Archive::RegisterItem() and @a ARX::Archive::UnregisterItem() functions.
 		 **/
-		Arxx::Archive * m_Archive{nullptr};
+		ARX::Archive * m_Archive{nullptr};
 		
 		/**
 		 * @brief The structural information of an item.
 		 **/
-		Arxx::Structure m_Structure;
+		ARX::Structure m_Structure;
 	};
 }
 

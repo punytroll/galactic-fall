@@ -25,61 +25,61 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// Arxx::Reference                                                                                //
+// ARX::Reference                                                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Reference::Reference(Arxx::Item & Item) :
-	m_ReferenceCore{Arxx::ReferenceCore::Create(Item)}
+ARX::Reference::Reference(ARX::Item & Item) :
+	m_ReferenceCore{ARX::ReferenceCore::Create(Item)}
 {
 }
 
-Arxx::Reference::Reference(std::uint32_t ItemIdentifier, Arxx::Archive * Archive) :
-	m_ReferenceCore{Arxx::ReferenceCore::Create(ItemIdentifier, Archive)}
+ARX::Reference::Reference(std::uint32_t ItemIdentifier, ARX::Archive * Archive) :
+	m_ReferenceCore{ARX::ReferenceCore::Create(ItemIdentifier, Archive)}
 {
 }
 
-Arxx::Reference::Reference(Arxx::Reference const & Reference) :
+ARX::Reference::Reference(ARX::Reference const & Reference) :
 	m_ReferenceCore{nullptr}
 {
 	m_SetCore(Reference.m_ReferenceCore);
 }
 
-Arxx::Reference::~Reference()
+ARX::Reference::~Reference()
 {
 	m_SetCore(nullptr);
 }
 
-auto Arxx::Reference::GetItemIdentifier() const -> std::uint32_t
+auto ARX::Reference::GetItemIdentifier() const -> std::uint32_t
 {
 	return m_ReferenceCore->GetItemIdentifier();
 }
 
-auto Arxx::Reference::GetItem() -> Arxx::Item *
+auto ARX::Reference::GetItem() -> ARX::Item *
 {
 	return m_ReferenceCore->GetItem();
 }
 
-auto Arxx::Reference::GetItem() const -> Arxx::Item const *
+auto ARX::Reference::GetItem() const -> ARX::Item const *
 {
 	return m_ReferenceCore->GetItem();
 }
 
-auto Arxx::Reference::GetReferenceCount() const -> std::uint32_t
+auto ARX::Reference::GetReferenceCount() const -> std::uint32_t
 {
 	return m_ReferenceCore->GetReferenceCount();
 }
 
-auto Arxx::Reference::Resolve(Arxx::Item & Item) -> void
+auto ARX::Reference::Resolve(ARX::Item & Item) -> void
 {
 	m_ReferenceCore->Resolve(Item);
 }
 
-auto Arxx::Reference::Unresolve() -> void
+auto ARX::Reference::Unresolve() -> void
 {
 	m_ReferenceCore->Unresolve();
 }
 
-auto Arxx::Reference::Attach(Arxx::Reference & Reference) -> bool
+auto ARX::Reference::Attach(ARX::Reference & Reference) -> bool
 {
 	if((Reference.GetItemIdentifier() != GetItemIdentifier()) || (Reference.GetItem() != nullptr))
 	{
@@ -90,31 +90,31 @@ auto Arxx::Reference::Attach(Arxx::Reference & Reference) -> bool
 	return true;
 }
 
-auto Arxx::Reference::Detach() -> bool
+auto ARX::Reference::Detach() -> bool
 {
-	auto ReferenceCore = Arxx::ReferenceCore::Create(GetItemIdentifier());
+	auto ReferenceCore = ARX::ReferenceCore::Create(GetItemIdentifier());
 	
 	m_SetCore(ReferenceCore);
 	// releasing the local pointer
-	Arxx::ReferenceCore::Release(ReferenceCore);
+	ARX::ReferenceCore::Release(ReferenceCore);
 	
 	return true;
 }
 
-auto Arxx::Reference::m_DecoupleFromArchive() -> void
+auto ARX::Reference::m_DecoupleFromArchive() -> void
 {
 	m_ReferenceCore->DecoupleFromArchive();
 }
 
-auto Arxx::Reference::m_SetCore(Arxx::ReferenceCore * ReferenceCore) -> void
+auto ARX::Reference::m_SetCore(ARX::ReferenceCore * ReferenceCore) -> void
 {
 	if(m_ReferenceCore != nullptr)
 	{
-		Arxx::ReferenceCore::Release(m_ReferenceCore);
+		ARX::ReferenceCore::Release(m_ReferenceCore);
 		m_ReferenceCore = nullptr;
 	}
 	if(ReferenceCore != nullptr)
 	{
-		m_ReferenceCore = Arxx::ReferenceCore::Create(ReferenceCore);
+		m_ReferenceCore = ARX::ReferenceCore::Create(ReferenceCore);
 	}
 }

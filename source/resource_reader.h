@@ -24,7 +24,7 @@
 
 #include <arxx/structure.h>
 
-namespace Arxx
+namespace ARX
 {
 	class Archive;
 	class Reference;
@@ -66,11 +66,11 @@ public:
 	auto ReadSavegameFromScenarioPath(std::string const & ScenarioPath) -> std::string;
     
 private:
-	auto m_ReadItems(std::string const & Path, std::function<void(Arxx::Reference &)> ReaderFunction) -> void;
-	auto m_ReadItems(Arxx::Structure::Relation & Relation, std::function<void(Arxx::Reference &)> ReaderFunction) -> void;
-	auto m_ReadSystem(Arxx::Reference & Reference, Galaxy * Galaxy, std::multimap<std::string, std::string> & SystemLinks) -> void;
+	auto m_ReadItems(std::string const & Path, std::function<void(ARX::Reference &)> ReaderFunction) -> void;
+	auto m_ReadItems(ARX::Structure::Relation & Relation, std::function<void(ARX::Reference &)> ReaderFunction) -> void;
+	auto m_ReadSystem(ARX::Reference & Reference, Galaxy * Galaxy, std::multimap<std::string, std::string> & SystemLinks) -> void;
     
-	std::unique_ptr<Arxx::Archive> m_Archive;
+	std::unique_ptr<ARX::Archive> m_Archive;
 };
 
 #endif

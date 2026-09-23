@@ -36,20 +36,20 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// Arxx::Archive                                                                                  //
+// ARX::Archive                                                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Archive::Archive()
+ARX::Archive::Archive()
 {
 	srand(time(0));
 }
 
-Arxx::Archive::~Archive()
+ARX::Archive::~Archive()
 {
 	Close();
 }
 
-auto Arxx::Archive::Load(std::string const & FilePath) -> bool
+auto ARX::Archive::Load(std::string const & FilePath) -> bool
 {
 	m_IStream = new std::ifstream{FilePath.c_str()};
 	if(m_IStream->fail())
@@ -59,7 +59,7 @@ auto Arxx::Archive::Load(std::string const & FilePath) -> bool
 	// this position I chose after only a few looks at the file => prove me wrong ;)
 	Close();
 	
-	auto ArchiveHeader =  Arxx::ArchiveHeader{};
+	auto ArchiveHeader =  ARX::ArchiveHeader{};
 	
 	(*m_IStream) >> ArchiveHeader;
 	if((ArchiveHeader.MajorVersionNumber == 2) && (ArchiveHeader.MinorVersionNumber == 1) && (ArchiveHeader.RevisionNumber == 0) && (ArchiveHeader.CandidateNumber == 0))
@@ -70,20 +70,20 @@ auto Arxx::Archive::Load(std::string const & FilePath) -> bool
 	else
 	{
 		std::cerr << "Unknown ARX archive format: version = " << static_cast<std::uint32_t>(ArchiveHeader.MajorVersionNumber) << '.' << static_cast<std::uint32_t>(ArchiveHeader.MinorVersionNumber) << '.' << static_cast<std::uint32_t>(ArchiveHeader.RevisionNumber) << '.' << static_cast<std::uint32_t>(ArchiveHeader.CandidateNumber) << '.' << std::endl;
-		throw Arxx::bad_file_format{FilePath};
+		throw ARX::bad_file_format{FilePath};
 	}
 	
 	return true;
 }
 
-auto Arxx::Archive::Close() -> void
+auto ARX::Archive::Close() -> void
 {
 	while(m_Items.begin() != m_Items.end())
 	{
 		auto Item = m_Items.begin()->second;
 		
 		Unregister(Item);
-		Arxx::Item::Delete(Item);
+		ARX::Item::Delete(Item);
 	}
 	m_RootItem = nullptr;
 	
@@ -96,7 +96,7 @@ auto Arxx::Archive::Close() -> void
 	}
 }
 
-auto Arxx::Archive::Register(Arxx::Item * Item) -> void
+auto ARX::Archive::Register(ARX::Item * Item) -> void
 {
 	if(Item == nullptr)
 	{
@@ -112,7 +112,7 @@ auto Arxx::Archive::Register(Arxx::Item * Item) -> void
 	}
 	if(Item->GetIdentifier() == g_InvalidItemIdentifier)
 	{
-		auto Iterator = std::map<std::uint32_t, Arxx::Item *>::iterator{};
+		auto Iterator = std::map<std::uint32_t, ARX::Item *>::iterator{};
 		auto NewIdentifier = std::uint32_t{};
 		
 		do
@@ -128,7 +128,7 @@ auto Arxx::Archive::Register(Arxx::Item * Item) -> void
 		
 		if(ItemIterator != m_Items.end())
 		{
-			throw Arxx::id_not_unique{std::to_string(Item->GetIdentifier())};
+			throw ARX::id_not_unique{std::to_string(Item->GetIdentifier())};
 		}
 		m_Items[Item->GetIdentifier()] = Item;
 		
@@ -136,7 +136,7 @@ auto Arxx::Archive::Register(Arxx::Item * Item) -> void
 		
 		if(ReferenceIterator == m_References.end())
 		{
-			m_References.insert(std::make_pair(Item->GetIdentifier(), Arxx::Reference(*Item)));
+			m_References.insert(std::make_pair(Item->GetIdentifier(), ARX::Reference(*Item)));
 		}
 		else
 		{
@@ -155,7 +155,7 @@ auto Arxx::Archive::Register(Arxx::Item * Item) -> void
 			while(ReferenceIterator != ReferenceEnd)
 			{
 				// use GetReference() to create or retrieve the Reference in the archive's Reference map and then attach the Item's Reference to it
-				auto Reference = Arxx::Reference{GetReference(ReferenceIterator->GetItemIdentifier())};
+				auto Reference = ARX::Reference{GetReference(ReferenceIterator->GetItemIdentifier())};
 				
 				Reference.Attach(*ReferenceIterator);
 				++ReferenceIterator;
@@ -165,7 +165,7 @@ auto Arxx::Archive::Register(Arxx::Item * Item) -> void
 	}
 }
 
-auto Arxx::Archive::Unregister(Arxx::Item * Item) -> void
+auto ARX::Archive::Unregister(ARX::Item * Item) -> void
 {
 	if(Item->m_Archive != this)
 	{
@@ -204,7 +204,7 @@ auto Arxx::Archive::Unregister(Arxx::Item * Item) -> void
 	m_References.erase(ReferenceIterator);
 }
 
-auto Arxx::Archive::SetRootItem(Arxx::Item * Item) -> void
+auto ARX::Archive::SetRootItem(ARX::Item * Item) -> void
 {
 	if((Item != nullptr) && (Item->m_Archive != this))
 	{
@@ -213,7 +213,7 @@ auto Arxx::Archive::SetRootItem(Arxx::Item * Item) -> void
 	m_RootItem = Item;
 }
 
-auto Arxx::Archive::GetItem(std::uint32_t ItemIdentifier) const -> Arxx::Item const *
+auto ARX::Archive::GetItem(std::uint32_t ItemIdentifier) const -> ARX::Item const *
 {
 	if(ItemIdentifier == g_InvalidItemIdentifier)
 	{
@@ -230,7 +230,7 @@ auto Arxx::Archive::GetItem(std::uint32_t ItemIdentifier) const -> Arxx::Item co
 	return ItemIterator->second;
 }
 
-auto Arxx::Archive::GetItem(std::uint32_t ItemIdentifier) -> Arxx::Item *
+auto ARX::Archive::GetItem(std::uint32_t ItemIdentifier) -> ARX::Item *
 {
 	if(ItemIdentifier == g_InvalidItemIdentifier)
 	{
@@ -247,7 +247,7 @@ auto Arxx::Archive::GetItem(std::uint32_t ItemIdentifier) -> Arxx::Item *
 	return ItemIterator->second;
 }
 
-auto Arxx::Archive::GetItem(std::string Path) -> Arxx::Item *
+auto ARX::Archive::GetItem(std::string Path) -> ARX::Item *
 {
 	if(Path[0] != '/')
 	{
@@ -310,7 +310,7 @@ auto Arxx::Archive::GetItem(std::string Path) -> Arxx::Item *
 	return Item;
 }
 
-auto Arxx::Archive::GetItem(std::string Path) const -> Arxx::Item const *
+auto ARX::Archive::GetItem(std::string Path) const -> ARX::Item const *
 {
 	if(Path[0] != '/')
 	{
@@ -373,23 +373,23 @@ auto Arxx::Archive::GetItem(std::string Path) const -> Arxx::Item const *
 	return Item;
 }
 
-auto Arxx::Archive::GetRootItem() -> Arxx::Item *
+auto ARX::Archive::GetRootItem() -> ARX::Item *
 {
 	return m_RootItem;
 }
 
-auto Arxx::Archive::GetRootItem() const -> Arxx::Item const *
+auto ARX::Archive::GetRootItem() const -> ARX::Item const *
 {
 	return m_RootItem;
 }
 
-auto Arxx::Archive::GetReference(std::uint32_t ItemIdentifier) -> Arxx::Reference
+auto ARX::Archive::GetReference(std::uint32_t ItemIdentifier) -> ARX::Reference
 {
 	auto ReferenceIterator = m_References.find(ItemIdentifier);
 	
 	if(ReferenceIterator == m_References.end())
 	{
-		return m_References.insert(std::make_pair(ItemIdentifier, Arxx::Reference(ItemIdentifier, this))).first->second;
+		return m_References.insert(std::make_pair(ItemIdentifier, ARX::Reference(ItemIdentifier, this))).first->second;
 	}
 	else
 	{
@@ -397,28 +397,28 @@ auto Arxx::Archive::GetReference(std::uint32_t ItemIdentifier) -> Arxx::Referenc
 	}
 }
 
-auto Arxx::Archive::ReleaseReferenceCore(Arxx::ReferenceCore * ReferenceCore) -> void
+auto ARX::Archive::ReleaseReferenceCore(ARX::ReferenceCore * ReferenceCore) -> void
 {
 	auto ReferenceIterator = m_References.find(ReferenceCore->GetItemIdentifier());
 	
 	if(ReferenceIterator == m_References.end())
 	{
-		throw std::runtime_error{"Arxx::Archive::vReleaseReference: Reference not found in the reference map."};
+		throw std::runtime_error{"ARX::Archive::vReleaseReference: Reference not found in the reference map."};
 	}
 	m_References.erase(ReferenceIterator);
 }
 
-auto Arxx::Archive::m_Read_2_1_0_0(std::uint32_t ItemCount) -> void
+auto ARX::Archive::m_Read_2_1_0_0(std::uint32_t ItemCount) -> void
 {
 	auto ItemIndex = 0UL;
 	
 	while(++ItemIndex <= ItemCount)
 	{
-        auto ItemHeader = Arxx::ItemHeader{};
+        auto ItemHeader = ARX::ItemHeader{};
         
 		(*m_IStream) >> ItemHeader;
 		
-		auto Item = Arxx::Item::Create(this, ItemHeader.Identifier);
+		auto Item = ARX::Item::Create(this, ItemHeader.Identifier);
 		
 		Item->SetType(ItemHeader.Type);
 		Item->SetSubType(ItemHeader.SubType);
@@ -430,34 +430,34 @@ auto Arxx::Archive::m_Read_2_1_0_0(std::uint32_t ItemCount) -> void
 		Name[ItemHeader.NameLength] = '\0';
 		Item->SetName(Name.data());
 		Item->GetStructure().m_ReadFromStream(ItemHeader.StructureLength, *m_IStream);
-		Item->SetFetchInformation(m_IStream->tellg(), static_cast<Arxx::Data::Compression>(ItemHeader.DataCompressionType), ItemHeader.DataDecompressedLength, ItemHeader.DataCompressedLength);
+		Item->SetFetchInformation(m_IStream->tellg(), static_cast<ARX::Data::Compression>(ItemHeader.DataCompressionType), ItemHeader.DataDecompressedLength, ItemHeader.DataCompressedLength);
 		m_IStream->seekg((ItemHeader.DataCompressionType == 0) ? (ItemHeader.DataDecompressedLength) : (ItemHeader.DataCompressedLength), std::ios_base::cur);
 	}
 }
 
-auto Arxx::Archive::Fetch(std::uint32_t Offset, std::uint32_t Length, Arxx::Buffer * Buffer) -> bool
+auto ARX::Archive::Fetch(std::uint32_t Offset, std::uint32_t Length, ARX::Buffer * Buffer) -> bool
 {
 	m_IStream->seekg(Offset, std::ios_base::beg);
 	Buffer->SetLength(0);
 	
-	auto BufferWriter = Arxx::BufferWriter{*Buffer};
+	auto BufferWriter = ARX::BufferWriter{*Buffer};
 	
-	BufferWriter << std::make_pair(static_cast<Arxx::Buffer::size_type>(Length), reinterpret_cast<std::istream *>(m_IStream));
+	BufferWriter << std::make_pair(static_cast<ARX::Buffer::size_type>(Length), reinterpret_cast<std::istream *>(m_IStream));
 	
 	return true;
 }
 
-auto Arxx::Archive::Save(std::string const & FilePath, bool AutoCompress) -> void
+auto ARX::Archive::Save(std::string const & FilePath, bool AutoCompress) -> void
 {
     auto TemporaryFilePath = std::filesystem::temp_directory_path() / ("ARX" + std::to_string(time(0)));
 	auto OStream = std::ofstream{TemporaryFilePath};
 	
 	if(!OStream)
 	{
-		throw Arxx::file_error{TemporaryFilePath};
+		throw ARX::file_error{TemporaryFilePath};
 	}
 	
-	Arxx::ArchiveHeader ArchiveHeader;
+	ARX::ArchiveHeader ArchiveHeader;
 	
 	ArchiveHeader.MajorVersionNumber = 2;
 	ArchiveHeader.MinorVersionNumber = 1;
@@ -477,7 +477,7 @@ auto Arxx::Archive::Save(std::string const & FilePath, bool AutoCompress) -> voi
 			Item->Compress();
 		}
 		
-		Arxx::ItemHeader ItemHeader;
+		ARX::ItemHeader ItemHeader;
 		
 		ItemHeader.Identifier = Item->GetIdentifier();
 		ItemHeader.Type = Item->GetType();
@@ -491,7 +491,7 @@ auto Arxx::Archive::Save(std::string const & FilePath, bool AutoCompress) -> voi
 		ItemHeader.DataDecompressedLength = Item->GetDecompressedLength();
 		ItemHeader.DataCompressedLength = Item->GetCompressedLength();
 		
-		Arxx::Data StructureBuffer;
+		ARX::Data StructureBuffer;
 		
 		StructureBuffer << Item->GetStructure();
 		ItemHeader.StructureLength = StructureBuffer.GetLength();
@@ -509,119 +509,119 @@ auto Arxx::Archive::Save(std::string const & FilePath, bool AutoCompress) -> voi
 	waitpid(ChildPID, &Return, 0);
 }
 
-auto Arxx::Archive::begin() -> Arxx::Archive::iterator
+auto ARX::Archive::begin() -> ARX::Archive::iterator
 {
-	return Arxx::Archive::iterator{m_Items.begin()};
+	return ARX::Archive::iterator{m_Items.begin()};
 }
 
-auto Arxx::Archive::end() -> Arxx::Archive::iterator
+auto ARX::Archive::end() -> ARX::Archive::iterator
 {
-	return Arxx::Archive::iterator{m_Items.end()};
+	return ARX::Archive::iterator{m_Items.end()};
 }
 
-auto Arxx::Archive::begin() const -> Arxx::Archive::const_iterator
+auto ARX::Archive::begin() const -> ARX::Archive::const_iterator
 {
-	return Arxx::Archive::const_iterator{m_Items.begin()};
+	return ARX::Archive::const_iterator{m_Items.begin()};
 }
 
-auto Arxx::Archive::end() const -> Arxx::Archive::const_iterator
+auto ARX::Archive::end() const -> ARX::Archive::const_iterator
 {
-	return Arxx::Archive::const_iterator{m_Items.end()};
+	return ARX::Archive::const_iterator{m_Items.end()};
 }
 
-auto Arxx::Archive::size() const -> Arxx::Archive::size_type
+auto ARX::Archive::size() const -> ARX::Archive::size_type
 {
 	return m_Items.size();
 }
 
-auto Arxx::Archive::GetNumberOfReferences() const -> std::uint32_t
+auto ARX::Archive::GetNumberOfReferences() const -> std::uint32_t
 {
 	return m_References.size();
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// Arxx::Archive::iterator                                                                        //
+// ARX::Archive::iterator                                                                        //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Archive::iterator::iterator(std::map<std::uint32_t, Arxx::Item *>::iterator Iterator) :
+ARX::Archive::iterator::iterator(std::map<std::uint32_t, ARX::Item *>::iterator Iterator) :
 	m_Iterator{Iterator}
 {
 }
 
-Arxx::Archive::iterator::~iterator()
+ARX::Archive::iterator::~iterator()
 {
 }
 
-auto Arxx::Archive::iterator::operator++() -> Arxx::Archive::iterator &
+auto ARX::Archive::iterator::operator++() -> ARX::Archive::iterator &
 {
 	++m_Iterator;
 
 	return *this;
 }
 
-auto Arxx::Archive::iterator::operator*() -> Arxx::Item *
+auto ARX::Archive::iterator::operator*() -> ARX::Item *
 {
 	return m_Iterator->second;
 }
 
-auto Arxx::Archive::iterator::operator*() const -> Arxx::Item const *
+auto ARX::Archive::iterator::operator*() const -> ARX::Item const *
 {
 	return m_Iterator->second;
 }
 
-auto Arxx::Archive::iterator::operator->() -> Arxx::Item *
+auto ARX::Archive::iterator::operator->() -> ARX::Item *
 {
 	return m_Iterator->second;
 }
 
-auto Arxx::Archive::iterator::operator==(Arxx::Archive::iterator const & Other) const -> bool
+auto ARX::Archive::iterator::operator==(ARX::Archive::iterator const & Other) const -> bool
 {
 	return m_Iterator == Other.m_Iterator;
 }
 
-auto Arxx::Archive::iterator::operator!=(Arxx::Archive::iterator const & Other) const -> bool
+auto ARX::Archive::iterator::operator!=(ARX::Archive::iterator const & Other) const -> bool
 {
 	return m_Iterator != Other.m_Iterator;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// Arxx::Archive::const_iterator                                                                  //
+// ARX::Archive::const_iterator                                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Arxx::Archive::const_iterator::const_iterator(std::map<std::uint32_t, Arxx::Item *>::const_iterator Iterator) :
+ARX::Archive::const_iterator::const_iterator(std::map<std::uint32_t, ARX::Item *>::const_iterator Iterator) :
 	m_Iterator{Iterator}
 {
 }
 
-Arxx::Archive::const_iterator::~const_iterator()
+ARX::Archive::const_iterator::~const_iterator()
 {
 }
 
-auto Arxx::Archive::const_iterator::operator++() -> Arxx::Archive::const_iterator &
+auto ARX::Archive::const_iterator::operator++() -> ARX::Archive::const_iterator &
 {
 	++m_Iterator;
 
 	return *this;
 }
 
-auto Arxx::Archive::const_iterator::operator*() const -> Arxx::Item const *
+auto ARX::Archive::const_iterator::operator*() const -> ARX::Item const *
 {
 	return m_Iterator->second;
 }
 
-auto Arxx::Archive::const_iterator::operator->() const -> Arxx::Item const *
+auto ARX::Archive::const_iterator::operator->() const -> ARX::Item const *
 {
 	return m_Iterator->second;
 }
 
-auto Arxx::Archive::const_iterator::operator==(Arxx::Archive::const_iterator const & Other) const -> bool
+auto ARX::Archive::const_iterator::operator==(ARX::Archive::const_iterator const & Other) const -> bool
 {
 	return m_Iterator == Other.m_Iterator;
 }
 
-auto Arxx::Archive::const_iterator::operator!=(Arxx::Archive::const_iterator const & Other) const -> bool
+auto ARX::Archive::const_iterator::operator!=(ARX::Archive::const_iterator const & Other) const -> bool
 {
 	return m_Iterator != Other.m_Iterator;
 }

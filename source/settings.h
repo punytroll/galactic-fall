@@ -26,7 +26,7 @@
 
 #include <algebra/vector2f.h>
 
-namespace Arxx
+namespace ARX
 {
 	class Item;
 }
@@ -48,7 +48,7 @@ public:
 	auto GetKeyBindings() const -> std::list<Settings::KeyBinding> const *;
 	auto GetWindowDimensions() const -> Vector2f const *;
 	// modifiers
-	auto LoadFromItem(Arxx::Item * Item) -> void;
+	auto LoadFromItem(ARX::Item * Item) -> void;
 private:
 	std::optional<std::list<Settings::KeyBinding>> m_KeyBindings;
 	std::optional<Vector2f> m_WindowDimensions;

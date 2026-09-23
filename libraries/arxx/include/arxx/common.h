@@ -32,19 +32,19 @@
  * The declarations in this file are intended to be self-satisfactory except for system includes so that every other include file can include them without care of forward declarations.
  **/
 
-namespace Arxx
+namespace ARX
 {
 	/**
 	 * @brief A libarxx wide constant that always stands for invalid or not specified unique or non-unique IDs.
 	 *
-	 * This value mainly serves as a return value. If you call a function that returns an Item's unique ID this value is sematically the same as if the Arxx::Item pointer was returned with `nullptr`.
+	 * This value mainly serves as a return value. If you call a function that returns an Item's unique ID this value is sematically the same as if the ARX::Item pointer was returned with `nullptr`.
 	 **/
 	std::uint32_t const g_InvalidItemIdentifier = 0xFFFFFFFF;
 	
 	/**
 	 * @brief An exception class indicating that a given ID is not unique.
 	 * 
-	 * This exception is thrown whenever you wish to assign a new ID to an item and that ID is not unique inside the corresponding Arxx::Archive.
+	 * This exception is thrown whenever you wish to assign a new ID to an item and that ID is not unique inside the corresponding ARX::Archive.
 	 **/
 	class id_not_unique : public std::invalid_argument
 	{
@@ -95,7 +95,7 @@ namespace Arxx
 	/**
 	 * @brief An exception class indicating an invalid file format in an ARX archive.
 	 *
-	 * This exception is thrown by the Arxx::Archive::bLoad() funtion to indicate that the archive that was to be opened is in an invalid format, could not be read as an ARX archive and thus wasn't loaded at all.
+	 * This exception is thrown by the ARX::Archive::bLoad() funtion to indicate that the archive that was to be opened is in an invalid format, could not be read as an ARX archive and thus wasn't loaded at all.
 	 **/
 	class bad_file_format : public std::logic_error
 	{

@@ -26,16 +26,16 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// Arxx::ReferenceCore                                                                           //
+// ARX::ReferenceCore                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-Arxx::ReferenceCore::~ReferenceCore()
+ARX::ReferenceCore::~ReferenceCore()
 {
 	assert(m_ReferenceCount == 0);
 }
 
-auto Arxx::ReferenceCore::Create(Arxx::Item & Item) -> Arxx::ReferenceCore *
+auto ARX::ReferenceCore::Create(ARX::Item & Item) -> ARX::ReferenceCore *
 {
-	auto ReferenceCore = new Arxx::ReferenceCore{};
+	auto ReferenceCore = new ARX::ReferenceCore{};
 	
 	ReferenceCore->m_Item = &Item;
 	ReferenceCore->m_ItemIdentifier = Item.GetIdentifier();
@@ -45,9 +45,9 @@ auto Arxx::ReferenceCore::Create(Arxx::Item & Item) -> Arxx::ReferenceCore *
 	return ReferenceCore;
 }
 
-auto Arxx::ReferenceCore::Create(std::uint32_t ItemIdentifier, Arxx::Archive * Archive) -> Arxx::ReferenceCore *
+auto ARX::ReferenceCore::Create(std::uint32_t ItemIdentifier, ARX::Archive * Archive) -> ARX::ReferenceCore *
 {
-	auto ReferenceCore = new Arxx::ReferenceCore{};
+	auto ReferenceCore = new ARX::ReferenceCore{};
 	
 	ReferenceCore->m_Item = nullptr;
 	ReferenceCore->m_ItemIdentifier = ItemIdentifier;
@@ -57,14 +57,14 @@ auto Arxx::ReferenceCore::Create(std::uint32_t ItemIdentifier, Arxx::Archive * A
 	return ReferenceCore;
 }
 
-auto Arxx::ReferenceCore::Create(Arxx::ReferenceCore * ReferenceCore) -> Arxx::ReferenceCore *
+auto ARX::ReferenceCore::Create(ARX::ReferenceCore * ReferenceCore) -> ARX::ReferenceCore *
 {
 	ReferenceCore->m_ReferenceCount++;
 	
 	return ReferenceCore;
 }
 
-auto Arxx::ReferenceCore::Release(Arxx::ReferenceCore * ReferenceCore) -> bool
+auto ARX::ReferenceCore::Release(ARX::ReferenceCore * ReferenceCore) -> bool
 {
 	assert(ReferenceCore->m_ReferenceCount != 0);
 	ReferenceCore->m_ReferenceCount--;
@@ -89,49 +89,49 @@ auto Arxx::ReferenceCore::Release(Arxx::ReferenceCore * ReferenceCore) -> bool
 	}
 }
 
-auto Arxx::ReferenceCore::GetItemIdentifier() const -> std::uint32_t
+auto ARX::ReferenceCore::GetItemIdentifier() const -> std::uint32_t
 {
 	return m_ItemIdentifier;
 }
 
-auto Arxx::ReferenceCore::GetItem() -> Arxx::Item *
+auto ARX::ReferenceCore::GetItem() -> ARX::Item *
 {
 	return m_Item;
 }
 
-auto Arxx::ReferenceCore::GetItem() const -> Arxx::Item const *
+auto ARX::ReferenceCore::GetItem() const -> ARX::Item const *
 {
 	return m_Item;
 }
 
-auto Arxx::ReferenceCore::GetReferenceCount() const -> std::uint32_t
+auto ARX::ReferenceCore::GetReferenceCount() const -> std::uint32_t
 {
 	return m_ReferenceCount;
 }
 
-auto Arxx::ReferenceCore::Resolve(Arxx::Item & Item) -> void
+auto ARX::ReferenceCore::Resolve(ARX::Item & Item) -> void
 {
 	if(GetItem() != nullptr)
 	{
-		throw std::runtime_error{"Arxx::ReferenceCore::Resolve: Trying to resolve a resolved reference."};
+		throw std::runtime_error{"ARX::ReferenceCore::Resolve: Trying to resolve a resolved reference."};
 	}
 	if(Item.GetIdentifier() != GetItemIdentifier())
 	{
-		throw std::runtime_error{"Arxx::ReferenceCore::Resolve: Trying to resolve a reference with different unique ID."};
+		throw std::runtime_error{"ARX::ReferenceCore::Resolve: Trying to resolve a reference with different unique ID."};
 	}
 	m_Item = std::addressof(Item);
 }
 
-auto Arxx::ReferenceCore::Unresolve() -> void
+auto ARX::ReferenceCore::Unresolve() -> void
 {
 	if(GetItem() == nullptr)
 	{
-		throw std::runtime_error{"Arxx::ReferenceCore::Unresolve: Trying to unresolve an unresolved reference."};
+		throw std::runtime_error{"ARX::ReferenceCore::Unresolve: Trying to unresolve an unresolved reference."};
 	}
 	m_Item = nullptr;
 }
 
-auto Arxx::ReferenceCore::DecoupleFromArchive() -> void
+auto ARX::ReferenceCore::DecoupleFromArchive() -> void
 {
 	m_Archive = nullptr;
 }
