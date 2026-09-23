@@ -34,6 +34,8 @@
 
 #include <GL/glx.h>
 
+#include <arxx/archive.h>
+
 #include <algebra/matrix4f.h>
 
 #include <graphics/camera.h>

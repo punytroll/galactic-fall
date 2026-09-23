@@ -20,6 +20,8 @@
 #ifndef RESOURCE_READER_H
 #define RESOURCE_READER_H
 
+#include <memory>
+
 #include <arxx/structure.h>
 
 namespace Arxx
@@ -33,7 +35,7 @@ namespace Graphics
 	class ShadingManager;
 }
 
-template< class Class >
+template<typename ClassType>
 class ClassManager;
 
 class BlueprintManager;
@@ -45,30 +47,30 @@ class SlotClass;
 class ResourceReader
 {
 public:
-	ResourceReader(void);
-	~ResourceReader(void);
-	bool LoadArchive(const std::string & Path);
-	void ReadAmmunitionClasses(BlueprintManager * BlueprintManager);
-	void ReadBatteryClasses(BlueprintManager * BlueprintManager);
-	void ReadCommodityClasses(BlueprintManager * BlueprintManager);
-	void ReadEnergyProjectileWeaponClasses(BlueprintManager * BlueprintManager);
-	Galaxy * ReadGalaxy(const std::string & GalaxyIdentifier);
-	void ReadGeneratorClasses(BlueprintManager * BlueprintManager);
-	void ReadMeshes(void);
-	void ReadModels(void);
-	void ReadScenarios(ScenarioManager * ScenarioManager);
-	void ReadSettings(Settings * Settings);
-	void ReadShadersAndPrograms(Graphics::ShadingManager * ShadingManager);
-	void ReadShipClasses(BlueprintManager * BlueprintManager, ClassManager< SlotClass > * SlotClassManager);
-	void ReadSlotClasses(ClassManager< SlotClass > * SlotClassManager);
-	void ReadTurretClasses(BlueprintManager * BlueprintManager);
-	void ReadTextures(void);
-	std::string ReadSavegameFromScenarioPath(const std::string & ScenarioPath);
+	auto LoadArchive(std::string const & Path) -> bool;
+	auto ReadAmmunitionClasses(BlueprintManager * BlueprintManager) -> void;
+	auto ReadBatteryClasses(BlueprintManager * BlueprintManager) -> void;
+	auto ReadCommodityClasses(BlueprintManager * BlueprintManager) -> void;
+	auto ReadEnergyProjectileWeaponClasses(BlueprintManager * BlueprintManager) -> void;
+	auto ReadGalaxy(std::string const & GalaxyIdentifier) -> Galaxy *;
+	auto ReadGeneratorClasses(BlueprintManager * BlueprintManager) -> void;
+	auto ReadMeshes() -> void;
+	auto ReadModels() -> void;
+	auto ReadScenarios(ScenarioManager * ScenarioManager) -> void;
+	auto ReadSettings(Settings * Settings) -> void;
+	auto ReadShadersAndPrograms(Graphics::ShadingManager * ShadingManager) -> void;
+	auto ReadShipClasses(BlueprintManager * BlueprintManager, ClassManager<SlotClass> * SlotClassManager) -> void;
+	auto ReadSlotClasses(ClassManager<SlotClass> * SlotClassManager) -> void;
+	auto ReadTurretClasses(BlueprintManager * BlueprintManager) -> void;
+	auto ReadTextures() -> void;
+	auto ReadSavegameFromScenarioPath(std::string const & ScenarioPath) -> std::string;
+    
 private:
-	void _ReadItems(const std::string & Path, std::function< void (Arxx::Reference &) > ReaderFunction);
-	void _ReadItems(Arxx::Structure::Relation & Relation, std::function< void (Arxx::Reference &) > ReaderFunction);
-	void _ReadSystem(Arxx::Reference & Reference, Galaxy * Galaxy, std::multimap< std::string, std::string > & SystemLinks);
-	Arxx::Archive * _Archive;
+	auto m_ReadItems(std::string const & Path, std::function<void(Arxx::Reference &)> ReaderFunction) -> void;
+	auto m_ReadItems(Arxx::Structure::Relation & Relation, std::function<void(Arxx::Reference &)> ReaderFunction) -> void;
+	auto m_ReadSystem(Arxx::Reference & Reference, Galaxy * Galaxy, std::multimap<std::string, std::string> & SystemLinks) -> void;
+    
+	std::unique_ptr<Arxx::Archive> m_Archive;
 };
 
 #endif
