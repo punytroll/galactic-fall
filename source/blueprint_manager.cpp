@@ -19,28 +19,14 @@
 
 #include <cassert>
 
-#include "blueprint.h"
 #include "blueprint_manager.h"
 #include "visualization_prototype.h"
 
-BlueprintManager::~BlueprintManager()
-{
-	while(m_Blueprints.size() > 0)
-	{
-		auto Blueprint = m_Blueprints.begin()->second;
-		
-		m_Blueprints.erase(m_Blueprints.begin());
-		delete Blueprint;
-	}
-}
-
 auto BlueprintManager::Create(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) -> Blueprint *
 {
-	auto Result = new Blueprint(TypeIdentifier, SubTypeIdentifier);
+	auto [Iterator, Success] = m_Blueprints.insert({{TypeIdentifier, SubTypeIdentifier}, std::make_unique<Blueprint>(TypeIdentifier, SubTypeIdentifier)});
 	
-	m_Blueprints.insert({{TypeIdentifier, SubTypeIdentifier}, Result});
-	
-	return Result;
+	return Iterator->second.get();
 }
 	
 auto BlueprintManager::Get(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> Blueprint const *
@@ -53,7 +39,7 @@ auto BlueprintManager::Get(std::string const & TypeIdentifier, std::string const
 	}
 	else
 	{
-		return Iterator->second;
+		return Iterator->second.get();
 	}
 }
 

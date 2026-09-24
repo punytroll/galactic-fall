@@ -21,18 +21,18 @@
 #define BLUEPRINT_MANAGER_H
 
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <unordered_map>
 
+#include "blueprint.h"
 #include "hashing.h"
 
-class Blueprint;
 class VisualizationPrototype;
 
 class BlueprintManager
 {
 public:
-	~BlueprintManager();
 	auto Get(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> Blueprint const *;
 	auto GetBasePrice(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> std::uint32_t;
 	auto GetDescription(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> std::string const &;
@@ -43,7 +43,7 @@ public:
 	auto Create(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) -> Blueprint *;
     
 private:
-	std::unordered_map<std::pair<std::string, std::string>, Blueprint *, PairHash> m_Blueprints;
+	std::unordered_map<std::pair<std::string, std::string>, std::unique_ptr<Blueprint>, PairHash> m_Blueprints;
 };
 
 #endif
