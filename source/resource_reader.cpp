@@ -22,9 +22,9 @@
 #include <functional>
 #include <iostream>
 
-#include <arxx/archive.h>
-#include <arxx/buffer_reader.h>
-#include <arxx/item.h>
+#include <arx/archive.h>
+#include <arx/buffer_reader.h>
+#include <arx/item.h>
 
 #include <graphics/engine.h>
 #include <graphics/mesh.h>

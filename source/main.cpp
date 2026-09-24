@@ -34,7 +34,7 @@
 
 #include <GL/glx.h>
 
-#include <arxx/archive.h>
+#include <arx/archive.h>
 
 #include <algebra/matrix4f.h>
 

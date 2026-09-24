@@ -119,7 +119,7 @@ galactic_fall_executable = executable(
   ],
   dependencies: [
     algebra_dependency,
-    arxx_dependency,
+    arx_dependency,
     events_dependency,
     expressions_dependency,
     graphics_dependency,

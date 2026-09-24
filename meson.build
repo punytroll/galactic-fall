@@ -13,6 +13,9 @@ project(
 
 python3_program = find_program('python3')
 
+arx_subproject = subproject('arx')
+arx_dependency = dependency('arx')
+
 algebra_subproject = subproject('algebra', version: '>=2.1.1')
 algebra_dependency = algebra_subproject.get_variable('algebra_library_dependency')
 

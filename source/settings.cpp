@@ -17,9 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <arxx/archive.h>
-#include <arxx/buffer_reader.h>
-#include <arxx/item.h>
+#include <arx/archive.h>
+#include <arx/buffer_reader.h>
+#include <arx/item.h>
 
 #include <string_cast/string_cast.h>
 

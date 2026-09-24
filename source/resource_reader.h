@@ -22,7 +22,7 @@
 
 #include <memory>
 
-#include <arxx/structure.h>
+#include <arx/structure.h>
 
 namespace ARX
 {

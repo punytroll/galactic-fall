@@ -1,0 +1,8 @@
+[wrap-file]
+directory = arx-1.0.0
+source_url = https://github.com/punytroll/arx/archive/refs/tags/1.0.0.tar.gz
+source_filename = arx-1.0.0.tar.gz
+source_hash = 4bb0e0cc8aa4d49b5f85312c35fb7c648c5d737c80843e5b1837130f0cee7872
+
+[provide]
+dependency_names = arx

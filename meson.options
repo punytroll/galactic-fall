@@ -1,2 +1,0 @@
-option('zlib', type: 'boolean', value: false)
-option('bzip2', type: 'boolean', value: false)
