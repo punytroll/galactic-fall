@@ -18,14 +18,9 @@
 **/
 
 #include "blueprint.h"
-#include "visualization_prototype.h"
 
-Blueprint::Blueprint(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) :
-	_SubTypeIdentifier(SubTypeIdentifier),
-	_TypeIdentifier(TypeIdentifier)
-{
-}
-
-Blueprint::~Blueprint(void)
+Blueprint::Blueprint(std::string TypeIdentifier, std::string SubTypeIdentifier) :
+	m_SubTypeIdentifier{std::move(SubTypeIdentifier)},
+	m_TypeIdentifier{std::move(TypeIdentifier)}
 {
 }

@@ -19,15 +19,7 @@
 
 #include "properties.h"
 
-Properties::Properties(void)
+auto Properties::GetPropertyAsList(std::string const & PropertyIdentifier) const -> std::list<Properties> const &
 {
-}
-
-Properties::~Properties(void)
-{
-}
-
-const std::list< Properties > & Properties::GetPropertyAsList(const std::string & PropertyIdentifier) const
-{
-	return std::experimental::any_cast< const std::list< Properties > & >(_Properties.at(PropertyIdentifier));
+	return std::any_cast<std::list<Properties> const &>(m_Properties.at(PropertyIdentifier));
 }

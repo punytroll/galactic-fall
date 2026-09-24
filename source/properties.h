@@ -20,7 +20,7 @@
 #ifndef PROPERTIES_H
 #define PROPERTIES_H
 
-#include <experimental/any>
+#include <any>
 #include <list>
 #include <string>
 #include <unordered_map>
@@ -29,29 +29,30 @@ class Properties
 {
 public:
 	// constructor & destructor
-	Properties(void);
-	virtual ~Properties(void);
-	// getters
-	template< typename ValueType >
-	const ValueType & GetValue(const std::string & PropertyIdentifier) const
+	Properties() = default;
+	virtual ~Properties() = default;
+    
+	template<typename ValueType>
+	auto GetValue(std::string const & PropertyIdentifier) const -> ValueType const &
 	{
-		return std::experimental::any_cast< const ValueType & >(_Properties.at(PropertyIdentifier));
+		return std::any_cast<ValueType const &>(m_Properties.at(PropertyIdentifier));
 	}
 	
-	const std::list< Properties > & GetPropertyAsList(const std::string & PropertyIdentifier) const;
-	// setters
-	void AddList(const std::string & PropertyIdentifier, const std::list< Properties > & PropertiesList)
+	auto GetPropertyAsList(std::string const & PropertyIdentifier) const -> std::list<Properties> const &;
+    
+	auto AddList(std::string const & PropertyIdentifier, std::list<Properties> const & PropertiesList) -> void
 	{
-		_Properties.insert({PropertyIdentifier, PropertiesList});
+		m_Properties.insert({PropertyIdentifier, PropertiesList});
 	}
 	
-	template< typename AnyType >
-	void AddProperty(const std::string & PropertyIdentifier, const AnyType & Value)
+	template<typename ValueType>
+	auto AddProperty(std::string const & PropertyIdentifier, ValueType const & Value) -> void
 	{
-		_Properties.insert({PropertyIdentifier, Value});
+		m_Properties.insert({PropertyIdentifier, Value});
 	}
+    
 private:
-	std::unordered_map< std::string, std::experimental::any > _Properties;
+	std::unordered_map<std::string, std::any> m_Properties;
 };
 
 #endif

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2018  Hagen Möbius
+ * Copyright (C) 2018-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,29 +24,28 @@
 
 #include "properties.h"
 
-class VisualizationPrototype;
-
 class Blueprint : public Properties
 {
 public:
 	// constructor & destructor
-	Blueprint(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier);
-	virtual ~Blueprint(void);
-	const std::string & GetSubTypeIdentifier(void) const;
-	const std::string & GetTypeIdentifier(void) const;
+	Blueprint(std::string TypeIdentifier, std::string SubTypeIdentifier);
+	virtual ~Blueprint() = default;
+	auto GetSubTypeIdentifier() const -> std::string const &;
+	auto GetTypeIdentifier() const -> std::string const &;
+    
 private:
-	std::string _SubTypeIdentifier;
-	std::string _TypeIdentifier;
+	std::string m_SubTypeIdentifier;
+	std::string m_TypeIdentifier;
 };
 
-inline const std::string & Blueprint::GetSubTypeIdentifier(void) const
+inline auto Blueprint::GetSubTypeIdentifier() const -> std::string const &
 {
-	return _SubTypeIdentifier;
+	return m_SubTypeIdentifier;
 }
 
-inline const std::string & Blueprint::GetTypeIdentifier(void) const
+inline auto Blueprint::GetTypeIdentifier() const -> std::string const &
 {
-	return _TypeIdentifier;
+	return m_TypeIdentifier;
 }
 
 #endif
