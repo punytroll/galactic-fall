@@ -52,7 +52,6 @@ galactic_fall_executable = executable(
     'physics/energy/network.cpp',
     'planet.cpp',
     'planet_assets.cpp',
-    'properties.cpp',
     'real_time.cpp',
     'resource_reader.cpp',
     'scenario.cpp',

@@ -242,7 +242,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewShip->GetAspectName()->SetName(ShipBlueprint->GetValue< std::string >("name"));
 		// set up outfitting aspect
 		assert(NewShip->GetAspectOutfitting() != nullptr);
-		for(auto SlotProperties : ShipBlueprint->GetPropertyAsList("slots"))
+		for(auto SlotProperties : ShipBlueprint->GetValue<std::list<Properties> const &>("slots"))
 		{
 			auto NewSlot{new Slot{SlotProperties.GetValue< const SlotClass * >("class"), SlotProperties.GetValue< std::string >("identifier")}};
 			

@@ -21,7 +21,6 @@
 #define PROPERTIES_H
 
 #include <any>
-#include <list>
 #include <string>
 #include <unordered_map>
 
@@ -32,13 +31,6 @@ public:
 	auto GetValue(std::string const & PropertyIdentifier) const -> ValueType const &
 	{
 		return std::any_cast<ValueType const &>(m_Properties.at(PropertyIdentifier));
-	}
-	
-	auto GetPropertyAsList(std::string const & PropertyIdentifier) const -> std::list<Properties> const &;
-    
-	auto AddList(std::string const & PropertyIdentifier, std::list<Properties> const & PropertiesList) -> void
-	{
-		m_Properties.insert({PropertyIdentifier, PropertiesList});
 	}
 	
 	template<typename ValueType>
