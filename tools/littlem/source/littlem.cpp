@@ -22,7 +22,7 @@
 
 #include <string_cast/string_cast.h>
 
-#include <xml_parser/xml_parser.h>
+#include <xml_parser/parser.h>
 
 #include <xml_stream/xml_stream.h>
 
@@ -307,16 +307,16 @@ XMLStream & operator<<(XMLStream & XMLStream, const Marker & Marker)
 	return XMLStream;
 }
 
-class MeshReader : public XMLParser
+class MeshReader : public XML::Parser
 {
 public:
 	MeshReader(std::istream & InputStream) :
-		XMLParser(InputStream),
-		_InMesh(false),
-		_CurrentMarker(nullptr),
-		_CurrentTrianglePoint(nullptr),
-		_CurrentTriangle(nullptr),
-		_TrianglePoint(0)
+		XML::Parser{InputStream},
+		_InMesh{false},
+		_CurrentMarker{nullptr},
+		_CurrentTrianglePoint{nullptr},
+		_CurrentTriangle{nullptr},
+		_TrianglePoint{0}
 	{
 	}
 	
@@ -324,7 +324,7 @@ public:
 	{
 	}
 	
-	virtual void ElementStart(const std::string & ElementName, const std::map< std::string, std::string > & Attributes) override
+	virtual void ElementStart(const std::string & ElementName, const std::map< std::string, std::string > & Attributes, [[maybe_unused]] XML::Location const & Location) override
 	{
 		// safe-guard: only accept geometry input if we entered a mesh definition
 		if(ElementName == "mesh")
@@ -842,7 +842,7 @@ public:
 	{
 	}
 	
-	virtual void ElementStart(const std::string & sElementName, const std::map< std::string, std::string > & Attributes) override
+	virtual void ElementStart(const std::string & sElementName, const std::map< std::string, std::string > & Attributes, XML::Location const & Location) override
 	{
 		if(sElementName == "light")
 		{
@@ -864,7 +864,7 @@ public:
 		}
 		else
 		{
-			MeshReader::ElementStart(sElementName, Attributes);
+			MeshReader::ElementStart(sElementName, Attributes, Location);
 		}
 	}
 	
