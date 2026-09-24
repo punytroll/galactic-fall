@@ -30,20 +30,18 @@ class VisualizationPrototype;
 class BlueprintManager
 {
 public:
-	// destructor
-	~BlueprintManager(void);
-	// getters
-	const Blueprint * Get(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
-	std::uint32_t GetBasePrice(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
-	const std::string & GetDescription(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
-	const std::string & GetName(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
-	std::uint32_t GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
-	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
-	bool Has(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
-	// modifiers
-	Blueprint * Create(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier);
+	~BlueprintManager();
+	auto Get(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> Blueprint const *;
+	auto GetBasePrice(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> std::uint32_t;
+	auto GetDescription(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> std::string const &;
+	auto GetName(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> std::string const &;
+	auto GetSpaceRequirement(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> std::uint32_t;
+	auto GetVisualizationPrototype(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> VisualizationPrototype const *;
+	auto Has(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> bool;
+	auto Create(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) -> Blueprint *;
+    
 private:
-	std::map< std::pair< std::string, std::string >, Blueprint * > _Blueprints;
+	std::map<std::pair<std::string, std::string>, Blueprint *> m_Blueprints;
 };
 
 #endif

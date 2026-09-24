@@ -23,31 +23,31 @@
 #include "blueprint_manager.h"
 #include "visualization_prototype.h"
 
-BlueprintManager::~BlueprintManager(void)
+BlueprintManager::~BlueprintManager()
 {
-	while(_Blueprints.size() > 0)
+	while(m_Blueprints.size() > 0)
 	{
-		auto Blueprint{_Blueprints.begin()->second};
+		auto Blueprint = m_Blueprints.begin()->second;
 		
-		_Blueprints.erase(_Blueprints.begin());
+		m_Blueprints.erase(m_Blueprints.begin());
 		delete Blueprint;
 	}
 }
 
-Blueprint * BlueprintManager::Create(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier)
+auto BlueprintManager::Create(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) -> Blueprint *
 {
-	auto Result{new Blueprint(TypeIdentifier, SubTypeIdentifier)};
+	auto Result = new Blueprint(TypeIdentifier, SubTypeIdentifier);
 	
-	_Blueprints.insert({{TypeIdentifier, SubTypeIdentifier}, Result});
+	m_Blueprints.insert({{TypeIdentifier, SubTypeIdentifier}, Result});
 	
 	return Result;
 }
 	
-const Blueprint * BlueprintManager::Get(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
+auto BlueprintManager::Get(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> Blueprint const *
 {
-	auto Iterator{_Blueprints.find({TypeIdentifier, SubTypeIdentifier})};
+	auto Iterator = m_Blueprints.find({TypeIdentifier, SubTypeIdentifier});
 	
-	if(Iterator == _Blueprints.end())
+	if(Iterator == m_Blueprints.end())
 	{
 		return nullptr;
 	}
@@ -57,52 +57,52 @@ const Blueprint * BlueprintManager::Get(const std::string & TypeIdentifier, cons
 	}
 }
 
-std::uint32_t BlueprintManager::GetBasePrice(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
+auto BlueprintManager::GetBasePrice(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> std::uint32_t
 {
-	auto Blueprint{Get(TypeIdentifier, SubTypeIdentifier)};
+	auto Blueprint = Get(TypeIdentifier, SubTypeIdentifier);
 	
 	assert(Blueprint != nullptr);
 	
-	return Blueprint->GetValue< std::uint32_t >("base-price");
+	return Blueprint->GetValue<std::uint32_t>("base-price");
 }
 
-const std::string & BlueprintManager::GetDescription(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
+auto BlueprintManager::GetDescription(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> std::string const &
 {
-	auto Blueprint{Get(TypeIdentifier, SubTypeIdentifier)};
+	auto Blueprint = Get(TypeIdentifier, SubTypeIdentifier);
 	
 	assert(Blueprint != nullptr);
 	
-	return Blueprint->GetValue< std::string >("description");
+	return Blueprint->GetValue<std::string>("description");
 }
 
-const std::string & BlueprintManager::GetName(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
+auto BlueprintManager::GetName(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> std::string const &
 {
-	auto Blueprint{Get(TypeIdentifier, SubTypeIdentifier)};
+	auto Blueprint = Get(TypeIdentifier, SubTypeIdentifier);
 	
 	assert(Blueprint != nullptr);
 	
-	return Blueprint->GetValue< std::string >("name");
+	return Blueprint->GetValue<std::string>("name");
 }
 
-std::uint32_t BlueprintManager::GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
+auto BlueprintManager::GetSpaceRequirement(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> std::uint32_t
 {
-	auto Blueprint{Get(TypeIdentifier, SubTypeIdentifier)};
+	auto Blueprint = Get(TypeIdentifier, SubTypeIdentifier);
 	
 	assert(Blueprint != nullptr);
 	
-	return Blueprint->GetValue< std::uint32_t >("space-requirement");
+	return Blueprint->GetValue<std::uint32_t>("space-requirement");
 }
 
-const VisualizationPrototype * BlueprintManager::GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
+auto BlueprintManager::GetVisualizationPrototype(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> VisualizationPrototype const *
 {
-	auto Blueprint{Get(TypeIdentifier, SubTypeIdentifier)};
+	auto Blueprint = Get(TypeIdentifier, SubTypeIdentifier);
 	
 	assert(Blueprint != nullptr);
 	
-	return &(Blueprint->GetValue< VisualizationPrototype >("visualization-prototype"));
+	return std::addressof(Blueprint->GetValue<VisualizationPrototype>("visualization-prototype"));
 }
 
-bool BlueprintManager::Has(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
+auto BlueprintManager::Has(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) const -> bool
 {
-	return _Blueprints.find({TypeIdentifier, SubTypeIdentifier}) != _Blueprints.end();
+	return m_Blueprints.find({TypeIdentifier, SubTypeIdentifier}) != m_Blueprints.end();
 }
