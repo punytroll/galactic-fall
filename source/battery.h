@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007-2019  Hagen Möbius
+ * Copyright (C) 2007-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,8 +26,8 @@
 class Battery : public Object, public Physics::Energy::Device
 {
 public:
-	Battery(void);
-	virtual ~Battery(void) override;
+	Battery();
+	virtual ~Battery() override = default;
 };
 
 #endif

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2018-2019  Hagen Möbius
+ * Copyright (C) 2018-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,10 +28,6 @@
 class Properties
 {
 public:
-	// constructor & destructor
-	Properties() = default;
-	virtual ~Properties() = default;
-    
 	template<typename ValueType>
 	auto GetValue(std::string const & PropertyIdentifier) const -> ValueType const &
 	{

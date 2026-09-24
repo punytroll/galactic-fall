@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2018  Hagen Möbius
+ * Copyright (C) 2018-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,37 +27,35 @@
 class Ammunition : public Object
 {
 public:
-	Ammunition(void);
-	virtual ~Ammunition(void) override;
-	// getters
-	std::uint32_t GetAmount(void) const;
-	std::uint32_t GetCapacity(void) const;
-	// setters
-	void SetAmount(std::uint32_t Amount);
-	void SetCapacity(std::uint32_t Capacity);
+	Ammunition();
+	virtual ~Ammunition() override = default;
+	auto GetAmount() const -> std::uint32_t;
+	auto GetCapacity() const -> std::uint32_t;
+	auto SetAmount(std::uint32_t Amount) -> void;
+	auto SetCapacity(std::uint32_t Capacity) -> void;
 private:
-	std::uint32_t _Amount;
-	std::uint32_t _Capacity;
+	std::uint32_t m_Amount{0};
+	std::uint32_t m_Capacity{0};
 };
 
-inline std::uint32_t Ammunition::GetAmount(void) const
+inline auto Ammunition::GetAmount() const -> std::uint32_t
 {
-	return _Amount;
+	return m_Amount;
 }
 
-inline std::uint32_t Ammunition::GetCapacity(void) const
+inline auto Ammunition::GetCapacity() const -> std::uint32_t
 {
-	return _Capacity;
+	return m_Capacity;
 }
 
-inline void Ammunition::SetAmount(std::uint32_t Amount)
+inline auto Ammunition::SetAmount(std::uint32_t Amount) -> void
 {
-	_Amount = Amount;
+	m_Amount = Amount;
 }
 
-inline void Ammunition::SetCapacity(std::uint32_t Capacity)
+inline auto Ammunition::SetCapacity(std::uint32_t Capacity) -> void
 {
-	_Capacity = Capacity;
+	m_Capacity = Capacity;
 }
 
 #endif

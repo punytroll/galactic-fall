@@ -27,9 +27,7 @@
 class Blueprint : public Properties
 {
 public:
-	// constructor & destructor
 	Blueprint(std::string TypeIdentifier, std::string SubTypeIdentifier);
-	virtual ~Blueprint() = default;
 	auto GetSubTypeIdentifier() const -> std::string const &;
 	auto GetTypeIdentifier() const -> std::string const &;
     

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2018  Hagen Möbius
+ * Copyright (C) 2018-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,15 +19,9 @@
 
 #include "ammunition.h"
 
-Ammunition::Ammunition(void) :
-	_Amount(0),
-	_Capacity(0)
+Ammunition::Ammunition()
 {
 	// initialize object aspects
 	AddAspectName();
 	AddAspectPhysical();
-}
-
-Ammunition::~Ammunition(void)
-{
 }
