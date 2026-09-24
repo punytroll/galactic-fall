@@ -21,8 +21,10 @@
 #define BLUEPRINT_MANAGER_H
 
 #include <cstdint>
-#include <map>
 #include <string>
+#include <unordered_map>
+
+#include "hashing.h"
 
 class Blueprint;
 class VisualizationPrototype;
@@ -41,7 +43,7 @@ public:
 	auto Create(std::string const & TypeIdentifier, std::string const & SubTypeIdentifier) -> Blueprint *;
     
 private:
-	std::map<std::pair<std::string, std::string>, Blueprint *> m_Blueprints;
+	std::unordered_map<std::pair<std::string, std::string>, Blueprint *, PairHash> m_Blueprints;
 };
 
 #endif
