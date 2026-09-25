@@ -26,30 +26,30 @@ from argparse import Action, ArgumentParser
 from arx import *
 
 def get_integer_from_hexadecimal_string(hexdecimal_string):
-	return int(hexdecimal_string, 16)
+    return int(hexdecimal_string, 16)
 
 def get_version_from_version_string(version_string):
-	result = None
-	parts = version_string.split(".")
-	if len(parts) == 4:
-		result = Version()
-		result.set_major_number(get_integer_from_hexadecimal_string(parts[0]))
-		result.set_minor_number(get_integer_from_hexadecimal_string(parts[1]))
-		result.set_revision_number(get_integer_from_hexadecimal_string(parts[2]))
-		result.set_candidate_number(get_integer_from_hexadecimal_string(parts[3]))
-	return result
+    result = None
+    parts = version_string.split(".")
+    if len(parts) == 4:
+        result = Version()
+        result.set_major_number(get_integer_from_hexadecimal_string(parts[0]))
+        result.set_minor_number(get_integer_from_hexadecimal_string(parts[1]))
+        result.set_revision_number(get_integer_from_hexadecimal_string(parts[2]))
+        result.set_candidate_number(get_integer_from_hexadecimal_string(parts[3]))
+    return result
 
 class HexadecimalString(Action):
-	def __call__(self, parser, namespace, values, option_string=None):
-		setattr(namespace, self.dest, get_integer_from_hexadecimal_string(values))
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, get_integer_from_hexadecimal_string(values))
 
 class VersionString(Action):
-	def __call__(self, parser, namespace, values, option_string=None):
-		version = get_version_from_version_string(values)
-		if version != None:
-			setattr(namespace, self.dest, version)
-		else:
-			raise ValueError("Version string is not valid.")
+    def __call__(self, parser, namespace, values, option_string=None):
+        version = get_version_from_version_string(values)
+        if version != None:
+            setattr(namespace, self.dest, version)
+        else:
+            raise ValueError("Version string is not valid.")
 
 default_version = Version()
 default_version.set_major_number(0)
@@ -69,47 +69,47 @@ parser.add_argument("--root-item", dest="root-item", action="store_true")
 parser.add_argument("--path", dest="item-path", help="Refers to an item in the archive which can be changed.")
 arguments = vars(parser.parse_args())
 if arguments["archive-file"] != None:
-	archive = Archive()
-	archive.load(arguments["archive-file"])
-	if arguments["item-path"] != None:
-		item = archive.get_item_by_path(arguments["item-path"])
-	else:
-		item = Item()
-	if arguments["item-identifier"] != None:
-		item.set_identifier(arguments["item-identifier"])
-	if arguments["item-name"] != None:
-		item.set_name(arguments["item-name"])
-	if arguments["item-type"] != None:
-		item.set_type(arguments["item-type"])
-	if arguments["item-sub-type"] != None:
-		item.set_sub_type(arguments["item-sub-type"])
-	if arguments["item-version"] != None:
-		item.get_version().set_major_number(arguments["item-version"].get_major_number())
-		item.get_version().set_minor_number(arguments["item-version"].get_minor_number())
-		item.get_version().set_revision_number(arguments["item-version"].get_revision_number())
-		item.get_version().set_candidate_number(arguments["item-version"].get_candidate_number())
-	if item.get_archive() == None:
-		archive.register_item(item)
-	for add_to_relation in arguments["item-relations"]:
-		if "::" in add_to_relation:
-			item_description, relation = add_to_relation.rsplit("::", 1)
-		else:
-			item_description = add_to_relation
-			relation = "child"
-		parent_item = None
-		try:
-			item_identifier = get_integer_from_hexadecimal_string(item_description)
-			parent_item = archive.get_item_by_identifier(item_identifier)
-		except ValueError as exception:
-			parent_item = archive.get_item_by_path(item_description)
-		if parent_item != None:
-			parent_item.add_item_identifier(relation, item.get_identifier())
-	if arguments["item-data-file"] != None:
-		file = open(arguments["item-data-file"], "rb")
-		item.set_decompressed_data(file.read())
-		file.close()
-	if arguments["root-item"] == True:
-		archive.set_root_item_identifier(item.get_identifier())
-	archive.save(arguments["archive-file"])
+    archive = Archive()
+    archive.load(arguments["archive-file"])
+    if arguments["item-path"] != None:
+        item = archive.get_item_by_path(arguments["item-path"])
+    else:
+        item = Item()
+    if arguments["item-identifier"] != None:
+        item.set_identifier(arguments["item-identifier"])
+    if arguments["item-name"] != None:
+        item.set_name(arguments["item-name"])
+    if arguments["item-type"] != None:
+        item.set_type(arguments["item-type"])
+    if arguments["item-sub-type"] != None:
+        item.set_sub_type(arguments["item-sub-type"])
+    if arguments["item-version"] != None:
+        item.get_version().set_major_number(arguments["item-version"].get_major_number())
+        item.get_version().set_minor_number(arguments["item-version"].get_minor_number())
+        item.get_version().set_revision_number(arguments["item-version"].get_revision_number())
+        item.get_version().set_candidate_number(arguments["item-version"].get_candidate_number())
+    if item.get_archive() == None:
+        archive.register_item(item)
+    for add_to_relation in arguments["item-relations"]:
+        if "::" in add_to_relation:
+            item_description, relation = add_to_relation.rsplit("::", 1)
+        else:
+            item_description = add_to_relation
+            relation = "child"
+        parent_item = None
+        try:
+            item_identifier = get_integer_from_hexadecimal_string(item_description)
+            parent_item = archive.get_item_by_identifier(item_identifier)
+        except ValueError as exception:
+            parent_item = archive.get_item_by_path(item_description)
+        if parent_item != None:
+            parent_item.add_item_identifier(relation, item.get_identifier())
+    if arguments["item-data-file"] != None:
+        file = open(arguments["item-data-file"], "rb")
+        item.set_decompressed_data(file.read())
+        file.close()
+    if arguments["root-item"] == True:
+        archive.set_root_item_identifier(item.get_identifier())
+    archive.save(arguments["archive-file"])
 else:
-	parser.error("No archive file name was given.")
+    parser.error("No archive file name was given.")

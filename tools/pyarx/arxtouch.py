@@ -27,20 +27,20 @@ import sys
 from arx import Archive
 
 def parse_arguments(arguments):
-	result = dict()
-	if len(arguments) == 0 or arguments[0] == "--help":
-		print("Usage: arxtouch.py <arx archive>")
-		print("       Calling this program creates an empty ARX archive.")
-		print("")
-		print("No warranty, whatsoever. Copyright by Hagen Möbius, 2012")
-		return None
-	else:
-		result["archive_file_path"] = os.path.abspath(arguments[0])
-		return result
+    result = dict()
+    if len(arguments) == 0 or arguments[0] == "--help":
+        print("Usage: arxtouch.py <arx archive>")
+        print("       Calling this program creates an empty ARX archive.")
+        print("")
+        print("No warranty, whatsoever. Copyright by Hagen Möbius, 2012")
+        return None
+    else:
+        result["archive_file_path"] = os.path.abspath(arguments[0])
+        return result
 
 if __name__ == "__main__":
-	arguments = parse_arguments(sys.argv[1:])
-	if arguments != None:
-		archive = Archive()
-		if arguments["archive_file_path"] != None:
-			archive.save(arguments["archive_file_path"])
+    arguments = parse_arguments(sys.argv[1:])
+    if arguments != None:
+        archive = Archive()
+        if arguments["archive_file_path"] != None:
+            archive.save(arguments["archive_file_path"])
