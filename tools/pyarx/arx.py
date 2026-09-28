@@ -392,6 +392,9 @@ class Archive(object):
         assert isinstance(self.__items, dict) == True
         return len(self.__items)
     
+    def get_root_item(self):
+        return self.get_item_by_identifier(self.__root_item_identifier)
+    
     def get_root_item_identifier(self):
         assert self.__root_item_identifier == None or isinstance(self.__root_item_identifier, int) == True
         return self.__root_item_identifier

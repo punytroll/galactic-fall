@@ -7,7 +7,7 @@ all: build all-recursive
 all-here:
 	meson compile -C build
 
-all-recursive: all-here data-all-recursive
+all-recursive: data-all-recursive all-here
 
 build:
 	meson setup build

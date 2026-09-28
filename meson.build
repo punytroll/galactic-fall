@@ -11,7 +11,8 @@ project(
   }
 )
 
-python3_program = find_program('python3')
+python_module = import('python')
+python3_program = python_module.find_installation('python3')
 
 arx_subproject = subproject('arx')
 arx_dependency = dependency('arx')

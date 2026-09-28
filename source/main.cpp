@@ -3353,7 +3353,7 @@ int main(int argc, char ** argv)
 	
 	std::vector< std::string > Arguments(argv, argv + argc);
 	std::string LoadSavegameFileName;
-	std::string DataFileName("data/data.arx");
+	std::string DataFileName("build/data/data.arx");
 	
 	for(auto Argument : Arguments)
 	{

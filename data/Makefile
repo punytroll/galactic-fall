@@ -293,14 +293,6 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Moon" --type=19 --sub-type=0 --relation="/Galaxies/Milky Way::systems/Sol::planets" --data-file=.data/galaxies/milky_way/planet_moon.data
 	$(command_arxadd) $@ --name="Tichel" --type=5 --sub-type=0 --relation="/Galaxies/Milky Way::systems" --data-file=.data/galaxies/milky_way/system_tichel.data
 	$(command_arxadd) $@ --name="Tichel" --type=18 --sub-type=0 --relation="/Galaxies/Milky Way::systems/Tichel::stars" --data-file=.data/galaxies/milky_way/star_tichel.data
-	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Alpha Centauri" --relation="/Galaxies/Milky Way::systems/Sol::linked-systems"
-	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Alpha Centauri" --relation="/Galaxies/Milky Way::systems/Tichel::linked-systems"
-	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Rigel" --relation="/Galaxies/Milky Way::systems/Sol::linked-systems"
-	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Rigel" --relation="/Galaxies/Milky Way::systems/Tichel::linked-systems"
-	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Sol" --relation="/Galaxies/Milky Way::systems/Alpha Centauri::linked-systems"
-	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Sol" --relation="/Galaxies/Milky Way::systems/Rigel::linked-systems"
-	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Tichel" --relation="/Galaxies/Milky Way::systems/Alpha Centauri::linked-systems"
-	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Tichel" --relation="/Galaxies/Milky Way::systems/Rigel::linked-systems"
 
 .data .data/galaxies .data/galaxies/milky_way:
 	mkdir $@
