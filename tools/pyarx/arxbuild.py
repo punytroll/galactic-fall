@@ -32,6 +32,7 @@ class MessageException(Exception):
 def first_pass(manifest_item, archive_item, archive):
     if archive_item is None:
         archive_item = Item()
+        archive.register_item(archive_item)
     if "name" in manifest_item:
         if archive_item.get_name() is None:
             archive_item.set_name(manifest_item["name"])
@@ -50,9 +51,9 @@ def first_pass(manifest_item, archive_item, archive):
     if "relations" in manifest_item:
         for manifest_relation in manifest_item["relations"]:
             if "name" in manifest_relation:
-                archive_relation = archive_item.get_relation_from_name(manifest_relation["name"])
-                if archive_relation is not None:
-                    if "items" in manifest_relation:
+                if "items" in manifest_relation:
+                    archive_relation = archive_item.get_relation_from_name(manifest_relation["name"])
+                    if archive_relation is not None:
                         archive_relation_items = [archive.get_item_by_identifier(item_identifier) for item_identifier in archive_relation.get_item_identifiers()]
                         archive_relation_items_by_name = {}
                         for archive_relation_item in archive_relation_items:
@@ -68,10 +69,33 @@ def first_pass(manifest_item, archive_item, archive):
                                         raise MessageException(f"archive relation has no items with name {manifest_relation_item["name"]}")
                                     else:
                                         raise MessageException(f"archive relation has multiple items with name {manifest_relation_item["name"]}")
+                                else:
+                                    archive_relation_item = first_pass(manifest_relation_item, None, archive)
+                                    print(f"Adding item \"{archive_relation_item.get_name()}\" to item \"{archive_item.get_name()}\" relation \"{manifest_relation["name"]}\".")
+                                    archive_item.add_item_identifier(manifest_relation["name"], archive_relation_item.get_identifier())
                             else:
                                 raise MessageException("manifest relation items must have a name")
+                    else:
+                        for manifest_relation_item in manifest_relation["items"]:
+                            archive_relation_item = first_pass(manifest_relation_item, None, archive)
+                            print(f"Adding item \"{archive_relation_item.get_name()}\" to item \"{archive_item.get_name()}\" relation \"{manifest_relation["name"]}\".")
+                            archive_item.add_item_identifier(manifest_relation["name"], archive_relation_item.get_identifier())
             else:
                 raise MessageException("manifest relation must have a name")
+    if "data" in manifest_item:
+        with open(manifest_item["data"], "rb") as manifest_item_data_file:
+            manifest_item_data = manifest_item_data_file.read()
+        archive_item_data = archive_item.get_data()
+        if archive_item_data.is_compressed() == True:
+            raise MessageException("compressed archive item data is not supported")
+        if archive_item_data.has_content() == True and archive_item_data.get_decompressed_length() > 0:
+            if archive_item_data.get_content() != manifest_item_data:
+                raise MessageException("archive item data differs from manifest item data")
+            else:
+                print(f"Data for item \"{archive_item.get_name()}\" matches.")
+        else:
+            print(f"Adding data to item \"{archive_item.get_name()}\".")
+            archive_item_data.set_decompressed_content(manifest_item_data)
     return archive_item
 
 def second_pass(manifest_item, archive_item, archive):
@@ -110,23 +134,24 @@ def second_pass(manifest_item, archive_item, archive):
                             raise MessageException("manifest relation items must have a name")
 
 parser = ArgumentParser()
-parser.add_argument("input_file")
-parser.add_argument("manifest_file")
-parser.add_argument("output_file")
+parser.add_argument("--input")
+parser.add_argument("--manifest")
+parser.add_argument("--output")
 arguments = vars(parser.parse_args())
-if arguments["input_file"] != None:
-    if arguments["manifest_file"] != None:
+if arguments["output"] is not None:
+    if arguments["manifest"] is not None:
         archive = Archive()
-        archive.load(arguments["input_file"])
-        with open(arguments["manifest_file"]) as manifest_file:
+        if arguments["input"] is not None:
+            archive.load(arguments["input"])
+        with open(arguments["manifest"]) as manifest_file:
             manifest_root_item = json.load(manifest_file)
         archive_root_item = archive.get_root_item()
         archive_root_item = first_pass(manifest_root_item, archive_root_item, archive)
         if archive.get_root_item() is None:
-            archive.set_root_item(archive_root_item)
+            archive.set_root_item_identifier(archive_root_item.get_identifier())
         second_pass(manifest_root_item, archive_root_item, archive)
-        archive.save(arguments["output_file"])
+        archive.save(arguments["output"])
     else:
-        parser.error("No manifest file name was given.")
+        parser.error("No manifest file name was given with --manifest.")
 else:
-    parser.error("No archive file name was given.")
+    parser.error("No output archive file name was given with --output.")

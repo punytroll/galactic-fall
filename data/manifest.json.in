@@ -1,0 +1,893 @@
+{
+	"name": "Root",
+	"type": 0,
+	"sub_type": 0,
+	"relations": [
+		{
+			"name": "child",
+			"items": [
+				{
+					"name": "Ammunition Classes",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Light Gauss Ammunition",
+									"type": 26,
+									"sub_type": 0,
+									"data": "@AMMUNITION_CLASSES_LIGHT_GAUSS_AMMUNITION@"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Battery Classes",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Light Battery",
+									"type": 12,
+									"sub_type": 0,
+									"data": "@BATTERY_CLASSES_LIGHT_BATTERY@"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Commodity Classes",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Equipment",
+									"type": 8,
+									"sub_type": 0,
+									"data": "@COMMODITY_CLASSES_EQUIPMENT@"
+								},
+								{
+									"name": "Food",
+									"type": 8,
+									"sub_type": 0,
+									"data": "@COMMODITY_CLASSES_FOOD@"
+								},
+								{
+									"name": "Fuel",
+									"type": 8,
+									"sub_type": 0,
+									"data": "@COMMODITY_CLASSES_FUEL@"
+								},
+								{
+									"name": "Industrial",
+									"type": 8,
+									"sub_type": 0,
+									"data": "@COMMODITY_CLASSES_INDUSTRIAL@"
+								},
+								{
+									"name": "Luxury Goods",
+									"type": 8,
+									"sub_type": 0,
+									"data": "@COMMODITY_CLASSES_LUXURY_GOODS@"
+								},
+								{
+									"name": "Medical Supplies",
+									"type": 8,
+									"sub_type": 0,
+									"data": "@COMMODITY_CLASSES_MEDICAL_SUPPLIES@"
+								},
+								{
+									"name": "Metal",
+									"type": 8,
+									"sub_type": 0,
+									"data": "@COMMODITY_CLASSES_METAL@"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Energy Projectile Weapon Classes",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Light Gauss Cannon",
+									"type": 7,
+									"sub_type": 0,
+									"data": "@ENERGY_PROJECTILE_WEAPON_CLASSES_LIGHT_GAUSS_CANNON@"
+								},
+								{
+									"name": "Light Laser",
+									"type": 7,
+									"sub_type": 0,
+									"data": "@ENERGY_PROJECTILE_WEAPON_CLASSES_LIGHT_LASER@"
+								},
+								{
+									"name": "Medium Laser",
+									"type": 7,
+									"sub_type": 0,
+									"data": "@ENERGY_PROJECTILE_WEAPON_CLASSES_MEDIUM_LASER@"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Galaxies",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Milky Way",
+									"type": 23,
+									"sub_type": 0,
+									"data": "@GALAXIES_MILKY_WAY@",
+									"relations": [
+										{
+											"name": "factions",
+											"items": [
+												{
+													"name": "Earth",
+													"type": 14,
+													"sub_type": 0,
+													"data": "@GALAXIES_MILKY_WAY_FACTIONS_EARTH@"
+												},
+												{
+													"name": "Neutral",
+													"type": 14,
+													"sub_type": 0,
+													"data": "@GALAXIES_MILKY_WAY_FACTIONS_NEUTRAL@"
+												},
+												{
+													"name": "Pirates",
+													"type": 14,
+													"sub_type": 0,
+													"data": "@GALAXIES_MILKY_WAY_FACTIONS_PIRATES@"
+												}
+											]
+										},
+										{
+											"name": "systems",
+											"items": [
+												{
+													"name": "Alpha Centauri",
+													"type": 5,
+													"sub_type": 0,
+													"data": "@GALAXIES_MILKY_WAY_ALPHA_CENTAURI@",
+													"relations": [
+														{
+															"name": "linked-systems",
+															"paths": [
+																"/Galaxies/Milky Way::systems/Sol",
+																"/Galaxies/Milky Way::systems/Tichel"
+															]
+														},
+														{
+															"name": "stars",
+															"items": [
+																{
+																	"name": "Alpha Centauri",
+																	"type": 24,
+																	"sub_type": 0,
+																	"data": "@GALAXIES_MILKY_WAY_ALPHA_CENTAURI_STAR_ALPHA_CENTAURI@"
+																}
+															]
+														},
+														{
+																"name": "planets",
+																"items": [
+																		{
+																				"name": "Tau Prime",
+																				"type": 25,
+																				"sub_type": 0,
+																				"data": "@GALAXIES_MILKY_WAY_ALPHA_CENTAURI_PLANET_TAU_PRIME@"
+																		},
+																		{
+																				"name": "Hephant",
+																				"type": 25,
+																				"sub_type": 0,
+																				"data": "@GALAXIES_MILKY_WAY_ALPHA_CENTAURI_PLANET_HEPHANT@"
+																		}
+																]
+														}
+													]
+												},
+												{
+													"name": "Rigel",
+													"type": 5,
+													"sub_type": 0,
+													"data": "@GALAXIES_MILKY_WAY_RIGEL@",
+													"relations": [
+														{
+															"name": "linked-systems",
+															"paths": [
+																"/Galaxies/Milky Way::systems/Sol",
+																"/Galaxies/Milky Way::systems/Tichel"
+															]
+														},
+														{
+															"name": "stars",
+															"items": [
+																{
+																	"name": "Rigel",
+																	"type": 24,
+																	"sub_type": 0,
+																	"data": "@GALAXIES_MILKY_WAY_RIGEL_STAR_RIGEL@"
+																}
+															]
+														},
+														{
+																"name": "planets",
+																"items": [
+																		{
+																				"name": "Rigel Guardian",
+																				"type": 25,
+																				"sub_type": 0,
+																				"data": "@GALAXIES_MILKY_WAY_RIGEL_PLANET_RIGEL_GUARDIAN@"
+																		}
+																]
+														}
+													]
+												},
+												{
+													"name": "Sol",
+													"type": 5,
+													"sub_type": 0,
+													"data": "@GALAXIES_MILKY_WAY_SOL@",
+													"relations": [
+														{
+															"name": "linked-systems",
+															"paths": [
+																"/Galaxies/Milky Way::systems/Alpha Centauri",
+																"/Galaxies/Milky Way::systems/Rigel"
+															]
+														},
+														{
+															"name": "stars",
+															"items": [
+																{
+																	"name": "Sol",
+																	"type": 24,
+																	"sub_type": 0,
+																	"data": "@GALAXIES_MILKY_WAY_SOL_STAR_SOL@"
+																}
+															]
+														},
+														{
+																"name": "planets",
+																"items": [
+																		{
+																				"name": "Earth",
+																				"type": 25,
+																				"sub_type": 0,
+																				"data": "@GALAXIES_MILKY_WAY_SOL_PLANET_EARTH@"
+																		},
+																		{
+																				"name": "Mars",
+																				"type": 25,
+																				"sub_type": 0,
+																				"data": "@GALAXIES_MILKY_WAY_SOL_PLANET_MARS@"
+																		},
+																		{
+																				"name": "Moon",
+																				"type": 25,
+																				"sub_type": 0,
+																				"data": "@GALAXIES_MILKY_WAY_SOL_PLANET_MOON@"
+																		}
+																]
+														}
+													]
+												},
+												{
+													"name": "Tichel",
+													"type": 5,
+													"sub_type": 0,
+													"data": "@GALAXIES_MILKY_WAY_TICHEL@",
+													"relations": [
+														{
+															"name": "linked-systems",
+															"paths": [
+																"/Galaxies/Milky Way::systems/Alpha Centauri",
+																"/Galaxies/Milky Way::systems/Rigel"
+															]
+														},
+														{
+															"name": "stars",
+															"items": [
+																{
+																	"name": "Tichel",
+																	"type": 24,
+																	"sub_type": 0,
+																	"data": "@GALAXIES_MILKY_WAY_TICHEL_STAR_TICHEL@"
+																}
+															]
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Generator Classes",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Small Generator",
+									"type": 13,
+									"sub_type": 0,
+									"data": "@GENERATOR_CLASSES_SMALL_GENERATOR@"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Meshes",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Cargo Cube",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_CARGO_CUBE@"
+								},
+								{
+									"name": "Fighter Cockpit",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_FIGHTER_COCKPIT@"
+								},
+								{
+									"name": "Fighter Faction",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_FIGHTER_FACTION@"
+								},
+								{
+									"name": "Fighter Hull",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_FIGHTER_HULL@"
+								},
+								{
+									"name": "Gauss Shell",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_GAUSS_SHELL@"
+								},
+								{
+									"name": "Laser Shot",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_LASER_SHOT@"
+								},
+								{
+									"name": "Light Battery",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_LIGHT_BATTERY@"
+								},
+								{
+									"name": "Light Gauss Ammunition",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_LIGHT_GAUSS_AMMUNITION@"
+								},
+								{
+									"name": "Light Gauss Cannon",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_LIGHT_GAUSS_CANNON@"
+								},
+								{
+									"name": "Light Laser",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_LIGHT_LASER@"
+								},
+								{
+									"name": "Light Laser Turret Base",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_LIGHT_LASER_TURRET_BASE@"
+								},
+								{
+									"name": "Light Laser Turret Gun",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_LIGHT_LASER_TURRET_GUN@"
+								},
+								{
+									"name": "Planet",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_PLANET@"
+								},
+								{
+									"name": "Shuttle Faction",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_SHUTTLE_FACTION@"
+								},
+								{
+									"name": "Shuttle Hull",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_SHUTTLE_HULL@"
+								},
+								{
+									"name": "Small Generator",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_SMALL_GENERATOR@"
+								},
+								{
+									"name": "Transporter Faction",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_TRANSPORTER_FACTION@"
+								},
+								{
+									"name": "Transporter Hull",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES_TRANSPORTER_HULL@"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Models",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Cargo Cube",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS_CARGO_CUBE@"
+								},
+								{
+									"name": "Fighter",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS_FIGHTER@"
+								},
+								{
+									"name": "Gauss Shell",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS_GAUSS_SHELL@"
+								},
+								{
+									"name": "Laser Shot",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS_LASER_SHOT@"
+								},
+								{
+									"name": "Light Battery",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS_LIGHT_BATTERY@"
+								},
+								{
+									"name": "Light Gauss Ammunition",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS_LIGHT_GAUSS_AMMUNITION@"
+								},
+								{
+									"name": "Light Gauss Cannon",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS_LIGHT_GAUSS_CANNON@"
+								},
+								{
+									"name": "Light Laser",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS_LIGHT_LASER@"
+								},
+								{
+									"name": "Light Laser Turret",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS_LIGHT_LASER_TURRET@"
+								},
+								{
+									"name": "Planet",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS_PLANET@"
+								},
+								{
+									"name": "Shuttle",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS_SHUTTLE@"
+								},
+								{
+									"name": "Small Generator",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS_SMALL_GENERATOR@"
+								},
+								{
+									"name": "Transporter",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS_TRANSPORTER@"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Programs",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Default Program",
+									"type": 20,
+									"sub_type": 0,
+									"data": "@PROGRAMS_DEFAULT@"
+								},
+								{
+									"name": "Flat Program",
+									"type": 20,
+									"sub_type": 0,
+									"data": "@PROGRAMS_FLAT@"
+								},
+								{
+									"name": "Font Program",
+									"type": 20,
+									"sub_type": 0,
+									"data": "@PROGRAMS_FONT@"
+								},
+								{
+									"name": "Font Without Clipping Program",
+									"type": 20,
+									"sub_type": 0,
+									"data": "@PROGRAMS_FONT_WITHOUT_CLIPPING@"
+								},
+								{
+									"name": "No Lighting Program",
+									"type": 20,
+									"sub_type": 0,
+									"data": "@PROGRAMS_NO_LIGHTING@"
+								},
+								{
+									"name": "Particle Program",
+									"type": 20,
+									"sub_type": 0,
+									"data": "@PROGRAMS_PARTICLE@"
+								},
+								{
+									"name": "UI Texture Program",
+									"type": 20,
+									"sub_type": 0,
+									"data": "@PROGRAMS_UI_TEXTURE@"
+								},
+								{
+									"name": "Widget Program",
+									"type": 20,
+									"sub_type": 0,
+									"data": "@PROGRAMS_WIDGET@"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Scenarios",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "New Game",
+									"type": 17,
+									"sub_type": 0,
+									"data": "@SCENARIOS_NEW_GAME@"
+								},
+								{
+									"name": "Rich Game",
+									"type": 17,
+									"sub_type": 0,
+									"data": "@SCENARIOS_RICH_GAME@"
+								},
+								{
+									"name": "Rigel Spectator",
+									"type": 17,
+									"sub_type": 0,
+									"data": "@SCENARIOS_RIGEL_SPECTATOR@"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Settings",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Key Binding Profile",
+									"type": 16,
+									"sub_type": 0,
+									"data": "@SETTINGS_KEY_BINDING_PROFILE@"
+								},
+								{
+									"name": "Window Dimensions",
+									"type": 15,
+									"sub_type": 0,
+									"data": "@SETTINGS_WINDOW_DIMENSIONS@"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Shaders",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Default Fragment Shader",
+									"type": 19,
+									"sub_type": 1,
+									"data": "@SHADERS_DEFAULT_FRAGMENT_SHADER@"
+								},
+								{
+									"name": "Default Vertex Shader",
+									"type": 19,
+									"sub_type": 0,
+									"data": "@SHADERS_DEFAULT_VERTEX_SHADER@"
+								},
+								{
+									"name": "Flat Fragment Shader",
+									"type": 19,
+									"sub_type": 1,
+									"data": "@SHADERS_FLAT_FRAGMENT_SHADER@"
+								},
+								{
+									"name": "Flat Vertex Shader",
+									"type": 19,
+									"sub_type": 0,
+									"data": "@SHADERS_FLAT_VERTEX_SHADER@"
+								},
+								{
+									"name": "Font Fragment Shader",
+									"type": 19,
+									"sub_type": 1,
+									"data": "@SHADERS_FONT_FRAGMENT_SHADER@"
+								},
+								{
+									"name": "Font Vertex Shader",
+									"type": 19,
+									"sub_type": 0,
+									"data": "@SHADERS_FONT_VERTEX_SHADER@"
+								},
+								{
+									"name": "Font Without Clipping Vertex Shader",
+									"type": 19,
+									"sub_type": 0,
+									"data": "@SHADERS_FONT_WITHOUT_CLIPPING_VERTEX_SHADER@"
+								},
+								{
+									"name": "No Lighting Fragment Shader",
+									"type": 19,
+									"sub_type": 1,
+									"data": "@SHADERS_NO_LIGHTING_FRAGMENT_SHADER@"
+								},
+								{
+									"name": "No Lighting Vertex Shader",
+									"type": 19,
+									"sub_type": 0,
+									"data": "@SHADERS_NO_LIGHTING_VERTEX_SHADER@"
+								},
+								{
+									"name": "Particle Fragment Shader",
+									"type": 19,
+									"sub_type": 1,
+									"data": "@SHADERS_PARTICLE_FRAGMENT_SHADER@"
+								},
+								{
+									"name": "Particle Vertex Shader",
+									"type": 19,
+									"sub_type": 0,
+									"data": "@SHADERS_PARTICLE_VERTEX_SHADER@"
+								},
+								{
+									"name": "UI Texture Fragment Shader",
+									"type": 19,
+									"sub_type": 1,
+									"data": "@SHADERS_UI_TEXTURE_FRAGMENT_SHADER@"
+								},
+								{
+									"name": "UI Texture Vertex Shader",
+									"type": 19,
+									"sub_type": 0,
+									"data": "@SHADERS_UI_TEXTURE_VERTEX_SHADER@"
+								},
+								{
+									"name": "Widget Fragment Shader",
+									"type": 19,
+									"sub_type": 1,
+									"data": "@SHADERS_WIDGET_FRAGMENT_SHADER@"
+								},
+								{
+									"name": "Widget Vertex Shader",
+									"type": 19,
+									"sub_type": 0,
+									"data": "@SHADERS_WIDGET_VERTEX_SHADER@"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Ship Classes",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Fighter",
+									"type": 3,
+									"sub_type": 0,
+									"data": "@SHIP_CLASSES_FIGHTER@"
+								},
+								{
+									"name": "Shuttle",
+									"type": 3,
+									"sub_type": 0,
+									"data": "@SHIP_CLASSES_SHUTTLE@"
+								},
+								{
+									"name": "Transporter",
+									"type": 3,
+									"sub_type": 0,
+									"data": "@SHIP_CLASSES_TRANSPORTER@"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Slot Classes",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Light Battery",
+									"type": 9,
+									"sub_type": 0,
+									"data": "@SLOT_CLASSES_LIGHT_BATTERY@"
+								},
+								{
+									"name": "Light Turret",
+									"type": 9,
+									"sub_type": 0,
+									"data": "@SLOT_CLASSES_LIGHT_TURRET@"
+								},
+								{
+									"name": "Light Weapon",
+									"type": 9,
+									"sub_type": 0,
+									"data": "@SLOT_CLASSES_LIGHT_WEAPON@"
+								},
+								{
+									"name": "Medium Weapon",
+									"type": 9,
+									"sub_type": 0,
+									"data": "@SLOT_CLASSES_MEDIUM_WEAPON@"
+								},
+								{
+									"name": "Small Generator",
+									"type": 9,
+									"sub_type": 0,
+									"data": "@SLOT_CLASSES_SMALL_GENERATOR@"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Textures",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Font",
+									"type": 10,
+									"sub_type": 0,
+									"data": "@TEXTURES_FONT@"
+								},
+								{
+									"name": "Particle",
+									"type": 10,
+									"sub_type": 0,
+									"data": "@TEXTURES_PARTICLE@"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Turret Classes",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Light Laser Turret",
+									"type": 22,
+									"sub_type": 0,
+									"data": "@TURRET_CLASSES_LIGHT_LASER_TURRET@"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}
