@@ -1,2 +1,0 @@
-xml_stream_dependencies = \
-	$(root)/tools/xml_stream/xml_stream.py

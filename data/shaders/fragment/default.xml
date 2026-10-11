@@ -1,0 +1,4 @@
+<fragment-shader>
+	<identifier>fragment_shader_default</identifier>
+	<source from-file="source/default"/>
+</fragment-shader>

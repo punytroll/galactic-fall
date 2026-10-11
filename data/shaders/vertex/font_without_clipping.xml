@@ -1,0 +1,4 @@
+<vertex-shader>
+	<identifier>vertex_shader_font_without_clipping</identifier>
+	<source from-file="source/font_without_clipping"/>
+</vertex-shader>

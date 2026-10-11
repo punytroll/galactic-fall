@@ -1,0 +1,4 @@
+<vertex-shader>
+	<identifier>vertex_shader_font</identifier>
+	<source from-file="source/font"/>
+</vertex-shader>

@@ -1,0 +1,4 @@
+<fragment-shader>
+	<identifier>fragment_shader_ui_texture</identifier>
+	<source from-file="source/ui_texture"/>
+</fragment-shader>

@@ -1,0 +1,4 @@
+<fragment-shader>
+	<identifier>fragment_shader_flat</identifier>
+	<source from-file="source/flat"/>
+</fragment-shader>

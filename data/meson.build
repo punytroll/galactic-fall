@@ -1,110 +1,188 @@
-subdir('tools')
-
-manifest_json_configuration = configuration_data(
-  {
-    'AMMUNITION_CLASSES_LIGHT_GAUSS_AMMUNITION': meson.current_source_dir() / '.data/ammunition_class_light_gauss_ammunition.data',
-    'BATTERY_CLASSES_LIGHT_BATTERY': meson.current_source_dir() / '.data/battery_class_light_battery.data',
-    'COMMODITY_CLASSES_EQUIPMENT': meson.current_source_dir() / '.data/commodity_class_equipment.data',
-    'COMMODITY_CLASSES_FOOD': meson.current_source_dir() / '.data/commodity_class_food.data',
-    'COMMODITY_CLASSES_FUEL': meson.current_source_dir() / '.data/commodity_class_fuel.data',
-    'COMMODITY_CLASSES_INDUSTRIAL': meson.current_source_dir() / '.data/commodity_class_industrial.data',
-    'COMMODITY_CLASSES_LUXURY_GOODS': meson.current_source_dir() / '.data/commodity_class_luxury_goods.data',
-    'COMMODITY_CLASSES_MEDICAL_SUPPLIES': meson.current_source_dir() / '.data/commodity_class_medical_supplies.data',
-    'COMMODITY_CLASSES_METAL': meson.current_source_dir() / '.data/commodity_class_metal.data',
-    'ENERGY_PROJECTILE_WEAPON_CLASSES_LIGHT_GAUSS_CANNON': meson.current_source_dir() / '.data/energy_projectile_weapon_class_light_gauss_cannon.data',
-    'ENERGY_PROJECTILE_WEAPON_CLASSES_LIGHT_LASER': meson.current_source_dir() / '.data/energy_projectile_weapon_class_light_laser.data',
-    'ENERGY_PROJECTILE_WEAPON_CLASSES_MEDIUM_LASER': meson.current_source_dir() / '.data/energy_projectile_weapon_class_medium_laser.data',
-    'GALAXIES_MILKY_WAY': meson.current_source_dir() / '.data/galaxies/milky_way/galaxy.data',
-    'GALAXIES_MILKY_WAY_FACTIONS_EARTH': meson.current_source_dir() / '.data/galaxies/milky_way/faction_earth.data',
-    'GALAXIES_MILKY_WAY_FACTIONS_NEUTRAL': meson.current_source_dir() / '.data/galaxies/milky_way/faction_neutral.data',
-    'GALAXIES_MILKY_WAY_FACTIONS_PIRATES': meson.current_source_dir() / '.data/galaxies/milky_way/faction_pirates.data',
-    'GALAXIES_MILKY_WAY_ALPHA_CENTAURI': meson.current_source_dir() / '.data/galaxies/milky_way/system_alpha_centauri.data',
-    'GALAXIES_MILKY_WAY_ALPHA_CENTAURI_STAR_ALPHA_CENTAURI': meson.current_source_dir() / '.data/galaxies/milky_way/star_alpha_centauri.data',
-    'GALAXIES_MILKY_WAY_ALPHA_CENTAURI_PLANET_TAU_PRIME': meson.current_source_dir() / '.data/galaxies/milky_way/planet_tau_prime.data',
-    'GALAXIES_MILKY_WAY_ALPHA_CENTAURI_PLANET_HEPHANT': meson.current_source_dir() / '.data/galaxies/milky_way/planet_hephant.data',
-    'GALAXIES_MILKY_WAY_RIGEL': meson.current_source_dir() / '.data/galaxies/milky_way/system_rigel.data',
-    'GALAXIES_MILKY_WAY_RIGEL_STAR_RIGEL': meson.current_source_dir() / '.data/galaxies/milky_way/star_rigel.data',
-    'GALAXIES_MILKY_WAY_RIGEL_PLANET_RIGEL_GUARDIAN': meson.current_source_dir() / '.data/galaxies/milky_way/planet_rigel_guardian.data',
-    'GALAXIES_MILKY_WAY_SOL': meson.current_source_dir() / '.data/galaxies/milky_way/system_sol.data',
-    'GALAXIES_MILKY_WAY_SOL_STAR_SOL': meson.current_source_dir() / '.data/galaxies/milky_way/star_sol.data',
-    'GALAXIES_MILKY_WAY_SOL_PLANET_EARTH': meson.current_source_dir() / '.data/galaxies/milky_way/planet_earth.data',
-    'GALAXIES_MILKY_WAY_SOL_PLANET_MARS': meson.current_source_dir() / '.data/galaxies/milky_way/planet_mars.data',
-    'GALAXIES_MILKY_WAY_SOL_PLANET_MOON': meson.current_source_dir() / '.data/galaxies/milky_way/planet_moon.data',
-    'GALAXIES_MILKY_WAY_TICHEL': meson.current_source_dir() / '.data/galaxies/milky_way/system_tichel.data',
-    'GALAXIES_MILKY_WAY_TICHEL_STAR_TICHEL': meson.current_source_dir() / '.data/galaxies/milky_way/star_tichel.data',
-    'GENERATOR_CLASSES_SMALL_GENERATOR': meson.current_source_dir() / '.data/generator_class_small_generator.data',
-    'MESHES_CARGO_CUBE': meson.current_source_dir() / '.data/mesh_cargo_cube.data',
-    'MESHES_FIGHTER_COCKPIT': meson.current_source_dir() / '.data/mesh_fighter_cockpit.data',
-    'MESHES_FIGHTER_FACTION': meson.current_source_dir() / '.data/mesh_fighter_faction.data',
-    'MESHES_FIGHTER_HULL': meson.current_source_dir() / '.data/mesh_fighter_hull.data',
-    'MESHES_GAUSS_SHELL': meson.current_source_dir() / '.data/mesh_gauss_shell.data',
-    'MESHES_LASER_SHOT': meson.current_source_dir() / '.data/mesh_laser_shot.data',
-    'MESHES_LIGHT_BATTERY': meson.current_source_dir() / '.data/mesh_light_battery.data',
-    'MESHES_LIGHT_GAUSS_AMMUNITION': meson.current_source_dir() / '.data/mesh_light_gauss_ammunition.data',
-    'MESHES_LIGHT_GAUSS_CANNON': meson.current_source_dir() / '.data/mesh_light_gauss_cannon.data',
-    'MESHES_LIGHT_LASER': meson.current_source_dir() / '.data/mesh_light_laser.data',
-    'MESHES_LIGHT_LASER_TURRET_BASE': meson.current_source_dir() / '.data/mesh_light_laser_turret_base.data',
-    'MESHES_LIGHT_LASER_TURRET_GUN': meson.current_source_dir() / '.data/mesh_light_laser_turret_gun.data',
-    'MESHES_PLANET': meson.current_source_dir() / '.data/mesh_planet.data',
-    'MESHES_SHUTTLE_FACTION': meson.current_source_dir() / '.data/mesh_shuttle_faction.data',
-    'MESHES_SHUTTLE_HULL': meson.current_source_dir() / '.data/mesh_shuttle_hull.data',
-    'MESHES_SMALL_GENERATOR': meson.current_source_dir() / '.data/mesh_small_generator.data',
-    'MESHES_TRANSPORTER_FACTION': meson.current_source_dir() / '.data/mesh_transporter_faction.data',
-    'MESHES_TRANSPORTER_HULL': meson.current_source_dir() / '.data/mesh_transporter_hull.data',
-    'MODELS_CARGO_CUBE': meson.current_source_dir() / '.data/model_cargo_cube.data',
-    'MODELS_FIGHTER': meson.current_source_dir() / '.data/model_fighter.data',
-    'MODELS_GAUSS_SHELL': meson.current_source_dir() / '.data/model_gauss_shell.data',
-    'MODELS_LASER_SHOT': meson.current_source_dir() / '.data/model_laser_shot.data',
-    'MODELS_LIGHT_BATTERY': meson.current_source_dir() / '.data/model_light_battery.data',
-    'MODELS_LIGHT_GAUSS_AMMUNITION': meson.current_source_dir() / '.data/model_light_gauss_ammunition.data',
-    'MODELS_LIGHT_GAUSS_CANNON': meson.current_source_dir() / '.data/model_light_gauss_cannon.data',
-    'MODELS_LIGHT_LASER': meson.current_source_dir() / '.data/model_light_laser.data',
-    'MODELS_LIGHT_LASER_TURRET': meson.current_source_dir() / '.data/model_light_laser_turret.data',
-    'MODELS_PLANET': meson.current_source_dir() / '.data/model_planet.data',
-    'MODELS_SHUTTLE': meson.current_source_dir() / '.data/model_shuttle.data',
-    'MODELS_SMALL_GENERATOR': meson.current_source_dir() / '.data/model_small_generator.data',
-    'MODELS_TRANSPORTER': meson.current_source_dir() / '.data/model_transporter.data',
-    'PROGRAMS_DEFAULT': meson.current_source_dir() / '.data/program_default.data',
-    'PROGRAMS_FLAT': meson.current_source_dir() / '.data/program_flat.data',
-    'PROGRAMS_FONT': meson.current_source_dir() / '.data/program_font.data',
-    'PROGRAMS_FONT_WITHOUT_CLIPPING': meson.current_source_dir() / '.data/program_font_without_clipping.data',
-    'PROGRAMS_NO_LIGHTING': meson.current_source_dir() / '.data/program_no_lighting.data',
-    'PROGRAMS_PARTICLE': meson.current_source_dir() / '.data/program_particle.data',
-    'PROGRAMS_UI_TEXTURE': meson.current_source_dir() / '.data/program_ui_texture.data',
-    'PROGRAMS_WIDGET': meson.current_source_dir() / '.data/program_widget.data',
-    'SCENARIOS_NEW_GAME': meson.current_source_dir() / '.data/scenario_new_game.data',
-    'SCENARIOS_RICH_GAME': meson.current_source_dir() / '.data/scenario_rich_game.data',
-    'SCENARIOS_RIGEL_SPECTATOR': meson.current_source_dir() / '.data/scenario_rigel_spectator.data',
-    'SETTINGS_KEY_BINDING_PROFILE': meson.current_source_dir() / '.data/setting_key_binding_profile.data',
-    'SETTINGS_WINDOW_DIMENSIONS': meson.current_source_dir() / '.data/setting_window_dimensions.data',
-    'SHADERS_DEFAULT_FRAGMENT_SHADER': meson.current_source_dir() / '.data/fragment_shader_default.data',
-    'SHADERS_DEFAULT_VERTEX_SHADER': meson.current_source_dir() / '.data/vertex_shader_default.data',
-    'SHADERS_FLAT_FRAGMENT_SHADER': meson.current_source_dir() / '.data/fragment_shader_flat.data',
-    'SHADERS_FLAT_VERTEX_SHADER': meson.current_source_dir() / '.data/vertex_shader_flat.data',
-    'SHADERS_FONT_FRAGMENT_SHADER': meson.current_source_dir() / '.data/fragment_shader_font.data',
-    'SHADERS_FONT_VERTEX_SHADER': meson.current_source_dir() / '.data/vertex_shader_font.data',
-    'SHADERS_FONT_WITHOUT_CLIPPING_VERTEX_SHADER': meson.current_source_dir() / '.data/vertex_shader_font_without_clipping.data',
-    'SHADERS_NO_LIGHTING_FRAGMENT_SHADER': meson.current_source_dir() / '.data/fragment_shader_no_lighting.data',
-    'SHADERS_NO_LIGHTING_VERTEX_SHADER': meson.current_source_dir() / '.data/vertex_shader_no_lighting.data',
-    'SHADERS_PARTICLE_FRAGMENT_SHADER': meson.current_source_dir() / '.data/fragment_shader_particle.data',
-    'SHADERS_PARTICLE_VERTEX_SHADER': meson.current_source_dir() / '.data/vertex_shader_particle.data',
-    'SHADERS_UI_TEXTURE_FRAGMENT_SHADER': meson.current_source_dir() / '.data/fragment_shader_ui_texture.data',
-    'SHADERS_UI_TEXTURE_VERTEX_SHADER': meson.current_source_dir() / '.data/vertex_shader_ui_texture.data',
-    'SHADERS_WIDGET_FRAGMENT_SHADER': meson.current_source_dir() / '.data/fragment_shader_widget.data',
-    'SHADERS_WIDGET_VERTEX_SHADER': meson.current_source_dir() / '.data/vertex_shader_widget.data',
-    'SHIP_CLASSES_FIGHTER': meson.current_source_dir() / '.data/ship_class_fighter.data',
-    'SHIP_CLASSES_SHUTTLE': meson.current_source_dir() / '.data/ship_class_shuttle.data',
-    'SHIP_CLASSES_TRANSPORTER': meson.current_source_dir() / '.data/ship_class_transporter.data',
-    'SLOT_CLASSES_LIGHT_BATTERY': meson.current_source_dir() / '.data/slot_class_light_battery.data',
-    'SLOT_CLASSES_LIGHT_TURRET': meson.current_source_dir() / '.data/slot_class_light_turret.data',
-    'SLOT_CLASSES_LIGHT_WEAPON': meson.current_source_dir() / '.data/slot_class_light_weapon.data',
-    'SLOT_CLASSES_MEDIUM_WEAPON': meson.current_source_dir() / '.data/slot_class_medium_weapon.data',
-    'SLOT_CLASSES_SMALL_GENERATOR': meson.current_source_dir() / '.data/slot_class_small_generator.data',
-    'TEXTURES_FONT': meson.current_source_dir() / '.data/texture_font.data',
-    'TEXTURES_PARTICLE': meson.current_source_dir() / '.data/texture_particle.data',
-    'TURRET_CLASSES_LIGHT_LASER_TURRET': meson.current_source_dir() / '.data/turret_class_light_laser.data',
-  }
+particle_tex = custom_target(
+  'particle.tex',
+  input: 'textures' / 'particle.vg',
+  output: 'particle.tex',
+  command: [
+    python3_program,
+    rasteriser_py_script,
+    '--in', '@INPUT@',
+    '--out', '@OUTPUT@',
+    '--sub-pixels', '3',
+    '--dimensions', '32x32',
+  ]
 )
+particle_xml = configure_file(
+  configuration: {
+    'TEXTURES__PARTICLE_TEX': particle_tex.full_path()
+  },
+  input: 'textures' / 'particle.xml.in',
+  output: 'particle.xml',
+)
+
+data_arx_items = [
+  ['classes' / 'ammunition' / 'light_gauss.xml', false, true],
+  ['classes' / 'battery' / 'light.xml', false, true],
+  ['classes' / 'commodity' / 'equipment.xml', false, true],
+  ['classes' / 'commodity' / 'food.xml', false, true],
+  ['classes' / 'commodity' / 'fuel.xml', false, true],
+  ['classes' / 'commodity' / 'industrial.xml', false, true],
+  ['classes' / 'commodity' / 'luxury_goods.xml', false, true],
+  ['classes' / 'commodity' / 'medical_supplies.xml', false, true],
+  ['classes' / 'commodity' / 'metal.xml', false, true],
+  ['classes' / 'energy_projectile_weapon' / 'light_gauss_cannon.xml', false, true],
+  ['classes' / 'energy_projectile_weapon' / 'light_laser.xml', false, true],
+  ['classes' / 'energy_projectile_weapon' / 'medium_laser.xml', false, true],
+  ['classes' / 'generator' / 'small.xml', false, true],
+  ['classes' / 'ship' / 'fighter.xml', false, true],
+  ['classes' / 'ship' / 'shuttle.xml', false, true],
+  ['classes' / 'ship' / 'transporter.xml', false, true],
+  ['classes' / 'slot' / 'light_battery.xml', false, true],
+  ['classes' / 'slot' / 'light_turret.xml', false, true],
+  ['classes' / 'slot' / 'light_weapon.xml', false, true],
+  ['classes' / 'slot' / 'medium_weapon.xml', false, true],
+  ['classes' / 'slot' / 'small_generator.xml', false, true],
+  ['classes' / 'turret' / 'light_laser.xml', false, true],
+  ['galaxies' / 'milky_way.xml', false, true],
+  ['galaxies' / 'milky_way' / 'factions' / 'earth.xml', false, true],
+  ['galaxies' / 'milky_way' / 'factions' / 'neutral.xml', false, true],
+  ['galaxies' / 'milky_way' / 'factions' / 'pirates.xml', false, true],
+  ['galaxies' / 'milky_way' / 'systems' / 'alpha_centauri.xml', false, true],
+  ['galaxies' / 'milky_way' / 'systems' / 'alpha_centauri' / 'planet_hephant.xml', false, true],
+  ['galaxies' / 'milky_way' / 'systems' / 'alpha_centauri' / 'planet_tau_prime.xml', false, true],
+  ['galaxies' / 'milky_way' / 'systems' / 'alpha_centauri' / 'star_alpha_centauri.xml', false, true],
+  ['galaxies' / 'milky_way' / 'systems' / 'rigel.xml', false, true],
+  ['galaxies' / 'milky_way' / 'systems' / 'rigel' / 'planet_rigel_guardian.xml', false, true],
+  ['galaxies' / 'milky_way' / 'systems' / 'rigel' / 'star_rigel.xml', false, true],
+  ['galaxies' / 'milky_way' / 'systems' / 'sol.xml', false, true],
+  ['galaxies' / 'milky_way' / 'systems' / 'sol' / 'planet_earth.xml', false, true],
+  ['galaxies' / 'milky_way' / 'systems' / 'sol' / 'planet_mars.xml', false, true],
+  ['galaxies' / 'milky_way' / 'systems' / 'sol' / 'planet_moon.xml', false, true],
+  ['galaxies' / 'milky_way' / 'systems' / 'sol' / 'star_sol.xml', false, true],
+  ['galaxies' / 'milky_way' / 'systems' / 'tichel.xml', false, true],
+  ['galaxies' / 'milky_way' / 'systems' / 'tichel' / 'star_tichel.xml', false, true],
+  ['meshes' / 'cargo_cube.xml', true, true],
+  ['meshes' / 'fighter_cockpit.xml', true, true],
+  ['meshes' / 'fighter_faction.xml', true, true],
+  ['meshes' / 'fighter_hull.xml', true, true],
+  ['meshes' / 'gauss_shell.xml', true, true],
+  ['meshes' / 'laser_shot.xml', true, true],
+  ['meshes' / 'light_battery.xml', true, true],
+  ['meshes' / 'light_gauss_ammunition.xml', true, true],
+  ['meshes' / 'light_gauss_cannon.xml', true, true],
+  ['meshes' / 'light_laser.xml', true, true],
+  ['meshes' / 'light_laser_turret_base.xml', true, true],
+  ['meshes' / 'light_laser_turret_gun.xml', true, true],
+  ['meshes' / 'planet.xml', true, true],
+  ['meshes' / 'shuttle_faction.xml', true, true],
+  ['meshes' / 'shuttle_hull.xml', true, true],
+  ['meshes' / 'small_generator.xml', true, true],
+  ['meshes' / 'transporter_faction.xml', true, true],
+  ['meshes' / 'transporter_hull.xml', true, true],
+  ['models' / 'cargo_cube.xml', false, true],
+  ['models' / 'fighter.xml', false, true],
+  ['models' / 'gauss_shell.xml', false, true],
+  ['models' / 'laser_shot.xml', false, true],
+  ['models' / 'light_battery.xml', false, true],
+  ['models' / 'light_gauss_ammunition.xml', false, true],
+  ['models' / 'light_gauss_cannon.xml', false, true],
+  ['models' / 'light_laser.xml', false, true],
+  ['models' / 'light_laser_turret.xml', false, true],
+  ['models' / 'planet.xml', false, true],
+  ['models' / 'shuttle.xml', false, true],
+  ['models' / 'small_generator.xml', false, true],
+  ['models' / 'transporter.xml', false, true],
+  ['programs' / 'default.xml', false, true],
+  ['programs' / 'flat.xml', false, true],
+  ['programs' / 'font.xml', false, true],
+  ['programs' / 'font_without_clipping.xml', false, true],
+  ['programs' / 'no_lighting.xml', false, true],
+  ['programs' / 'particle.xml', false, true],
+  ['programs' / 'ui_texture.xml', false, true],
+  ['programs' / 'widget.xml', false, true],
+  ['scenarios' / 'new_game.xml', false, true],
+  ['scenarios' / 'rich_game.xml', false, true],
+  ['scenarios' / 'rigel_spectator.xml', false, true],
+  ['settings' / 'key_binding_profile.xml', false, true],
+  ['settings' / 'window_dimensions.xml', false, true],
+  ['shaders' / 'fragment' / 'default.xml', false, true],
+  ['shaders' / 'fragment' / 'flat.xml', false, true],
+  ['shaders' / 'fragment' / 'font.xml', false, true],
+  ['shaders' / 'fragment' / 'no_lighting.xml', false, true],
+  ['shaders' / 'fragment' / 'particle.xml', false, true],
+  ['shaders' / 'fragment' / 'ui_texture.xml', false, true],
+  ['shaders' / 'fragment' / 'widget.xml', false, true],
+  ['shaders' / 'vertex' / 'default.xml', false, true],
+  ['shaders' / 'vertex' / 'flat.xml', false, true],
+  ['shaders' / 'vertex' / 'font.xml', false, true],
+  ['shaders' / 'vertex' / 'font_without_clipping.xml', false, true],
+  ['shaders' / 'vertex' / 'no_lighting.xml', false, true],
+  ['shaders' / 'vertex' / 'particle.xml', false, true],
+  ['shaders' / 'vertex' / 'ui_texture.xml', false, true],
+  ['shaders' / 'vertex' / 'widget.xml', false, true],
+  ['textures' / 'font.xml', false, true],
+]
+
+data_arx_files = []
+foreach data_arx_item : data_arx_items
+  data_arx_files += [[files(data_arx_item[0])[0], data_arx_item[0], [], data_arx_item[1], data_arx_item[2]]]
+endforeach
+data_arx_files += [[particle_xml, 'textures' / 'particle.xml', [particle_tex], false, true]]
+
+fs_module = import('fs')
+declarations_xml = files('declarations.xml')[0]
+data_arx_depends = []
+data_arx_depend_files = []
+manifest_json_configuration = configuration_data()
+
+foreach data_arx_file : data_arx_files
+  file = data_arx_file[0]
+  is_file = true
+  if data_arx_file[3] == true
+    file = custom_target(
+      data_arx_file[1].replace('/', '__') + '.xml',
+      input: file,
+      output: data_arx_file[1].replace('/', '__') + '.xml',
+      command: [
+        python3_program,
+        littlem_to_xml_py_script,
+        '--in', '@INPUT@',
+        '--out', '@OUTPUT@',
+      ],
+      env: {
+        'PYTHONPATH': xml_stream_module_path
+      },
+    )
+    is_file = false
+  endif
+  if data_arx_file[4] == true
+    file = custom_target(
+      data_arx_file[1].replace('/', '__') + '.data',
+      input: file,
+      output: data_arx_file[1].replace('/', '__') + '.data',
+      command: [
+        python3_program,
+        xml_to_data_py_script,
+        '--declarations', declarations_xml,
+        '--in', '@INPUT@',
+        '--out', '@OUTPUT@',
+        '--dependencies', '@DEPFILE@',
+      ],
+      depends: data_arx_file[2],
+      depfile: data_arx_file[1].replace('/', '__') + '.data.d',
+    )
+    is_file = false
+  endif
+  manifest_json_configuration.set(
+    fs_module.replace_suffix(data_arx_file[1].replace('/', '__'), '').to_upper(),
+    file.full_path()
+  )
+  if is_file == true
+    data_arx_depend_files += file
+  else
+    data_arx_depends += file
+  endif
+endforeach
+
 
 manifest_json = configure_file(
   configuration: manifest_json_configuration,
@@ -123,5 +201,7 @@ custom_target(
     manifest_json,
     '--output',
     '@OUTPUT@'
-  ]
+  ],
+  depend_files: data_arx_depend_files,
+  depends: data_arx_depends,
 )

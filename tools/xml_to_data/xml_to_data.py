@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 from itertools import zip_longest
-from os import remove
+import os
 from pprint import pprint
 from shutil import copyfileobj
 from struct import pack
@@ -28,18 +28,21 @@ class ConvertException(Exception):
 		return self.__message
 
 parser = OptionParser()
-parser.add_option("-d", "--declarations", dest="declarations", help="Load the declarations from the file.")
-parser.add_option("-i", "--in", dest="in_file", help="The file to convert to binary form.")
-parser.add_option("-o", "--out", dest="out_file", help="The file to put the binary form into.")
+parser.add_option("--declarations", dest="declarations", help="Load the declarations from the file.")
+parser.add_option("--in", dest="in_file", help="The file to convert to binary form.")
+parser.add_option("--out", dest="out_file", help="The file to put the binary form into.")
+parser.add_option("--dependencies", dest="dependency_file", help="The path to a file that all dependencies of the output are written to.")
 
 # read the options and validate
 (options, args) = parser.parse_args()
-if options.in_file == None:
+if options.in_file is None:
 	print(LightRed + "Usage" + White + ": Set the file to convert to binary form with " + LightYellow + "--in" + White + ".")
 	exit(1)
-if options.out_file == None:
+if options.out_file is None:
 	print(LightRed + "Usage" + White + ": Set the file to write the binary form to with " + LightYellow + "--out" + White + ".")
 	exit(1)
+in_file_path = os.path.dirname(options.in_file)
+dependencies = []
 
 class Declaration(object):
 	def __init__(self, name):
@@ -196,10 +199,12 @@ def out(data_type, node, element_type = None):
 	if data_type == "string":
 		if "from-file" in node.attributes:
 			try:
-				text_file = open(node.attributes.get("from-file").nodeValue, "rb")
-				out_file.write(text_file.read().decode("utf-8").encode("utf-8"))
+				from_file_path = os.path.join(in_file_path, node.attributes.get("from-file").nodeValue)
+				with open(from_file_path, "rb") as text_file:
+					out_file.write(text_file.read().decode("utf-8").encode("utf-8"))
+				dependencies.append(from_file_path)
 			except IOError:
-				raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I couldn't open the file: " + LightRed + inline_file_name + White)
+				raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I couldn't open the file: " + LightRed + from_file_path + White)
 		else:
 			if node.firstChild != None:
 				out_file.write(node.firstChild.nodeValue.encode("utf-8"))
@@ -241,10 +246,12 @@ def out(data_type, node, element_type = None):
 	elif data_type == "bytes":
 		if "from-file" in node.attributes:
 			try:
-				binary_file = open(node.attributes.get("from-file").nodeValue, "rb")
-				copyfileobj(binary_file, out_file)
+				from_file_path = os.path.join(in_file_path, node.attributes.get("from-file").nodeValue)
+				with open(from_file_path, "rb") as binary_file:
+					copyfileobj(binary_file, out_file)
+				dependencies.append(from_file_path)
 			except IOError:
-				raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I couldn't open the file: " + LightRed + inline_file_name + White)
+				raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I couldn't open the file: " + LightRed + from_file_path + White)
 		else:
 			raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " there was no \"from-file\" attribute which is required.")
 	elif data_type in declarations:
@@ -279,8 +286,12 @@ in_element = in_document.documentElement
 if in_element.nodeType == Node.ELEMENT_NODE:
 	try:
 		out(in_element.tagName, in_element)
+		if options.dependency_file is not None:
+			quoted_dependencies = [dependency.replace(" ", "\\ ") for dependency in dependencies]
+			with open(options.dependency_file, "w", encoding="utf-8") as dependency_file:
+				dependency_file.write(f"{options.out_file}: {" ".join(quoted_dependencies)}\n")
 	except ConvertException as exception:
 		print(exception)
 		out_file.close()
-		remove(options.out_file)
+		os.remove(options.out_file)
 		exit(1)

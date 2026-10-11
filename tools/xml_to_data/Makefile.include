@@ -1,4 +1,0 @@
-xml_to_data_dependencies = \
-	$(root)/tools/xml_to_data/xml_to_data.py
-
-command_xml_to_data = python3 $(root)/tools/xml_to_data/xml_to_data.py

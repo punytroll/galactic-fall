@@ -1,0 +1,6 @@
+<scenario>
+	<identifier>rich_game</identifier>
+	<name>Rich Game</name>
+	<description>Start the game with loads of resources at your disposal to test more involved features of the game instantaneously.</description>
+	<savegame from-file="savegames/rich_game.xml"/>
+</scenario>

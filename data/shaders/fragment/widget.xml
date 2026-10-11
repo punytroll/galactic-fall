@@ -1,0 +1,4 @@
+<fragment-shader>
+	<identifier>fragment_shader_widget</identifier>
+	<source from-file="source/widget"/>
+</fragment-shader>

@@ -1,4 +1,0 @@
-rasterizer_dependencies = \
-	$(root)/tools/rasterizer/rasterizer.py
-
-command_rasterizer = python3 $(root)/tools/rasterizer/rasterizer.py
