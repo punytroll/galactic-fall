@@ -61,6 +61,8 @@
 
 #include <string_cast/string_cast.h>
 
+#include <xml_parser/parser.h>
+
 #include <xml_puny_dom/xml_puny_dom.h>
 
 #include <xml_stream/xml_stream.h>
@@ -2104,29 +2106,30 @@ void LoadGameFromElement(const XML::Element * SaveElement)
 
 bool LoadGameFromInputStream(std::istream & InputStream)
 {
-	auto Document = XML::Document{InputStream};
+	auto Document = XML::Document{};
+    auto OrParseError = Document.LoadFromStream(InputStream);
 	
-	if(Document.GetDocumentElement() == nullptr)
-	{
-		std::cerr << "The game file does not seem to be parsable." << std::endl;
-		
-		return false;
-	}
-	else
-	{
+	if(OrParseError.has_value() == true)
+    {
 		try
 		{
 			LoadGameFromElement(Document.GetDocumentElement());
 		}
 		catch(std::runtime_error & Exception)
 		{
-			std::cerr << "The game file contains invalid data:\n\t" << Exception.what() << std::endl;
+			std::println(std::cerr, "The game file contains invalid data:\n\t{}", Exception.what());
 			
 			return false;
 		}
 		
 		return true;
-	}
+    }
+    else
+    {
+		std::println(std::cerr, "The game file does not seem to be parsable. (Error: {})", OrParseError.error().Code);
+		
+		return false;
+    }
 }
 
 bool LoadGameFromFileName(const std::string & FileName)

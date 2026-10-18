@@ -2857,17 +2857,24 @@ void ImportMesh(const std::string & FilePath)
 	std::ifstream InputFileStream(FilePath);
 	MeshReader MeshReader(InputFileStream);
 	
-	MeshReader.Parse();
-	
-	std::vector< Point * > Points(MeshReader.GetPoints());
-	std::vector< Triangle * > Triangles(MeshReader.GetTriangles());
-	
-	copy(Points.begin(), Points.end(), back_inserter(g_Points));
-	copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
-	for(auto Marker : MeshReader.GetMarkers())
-	{
-		Import(Marker);
-	}
+	auto OrParseError = MeshReader.Parse();
+    
+    if(OrParseError.has_value() == true)
+    {
+        std::vector< Point * > Points(MeshReader.GetPoints());
+        std::vector< Triangle * > Triangles(MeshReader.GetTriangles());
+        
+        copy(Points.begin(), Points.end(), back_inserter(g_Points));
+        copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
+        for(auto Marker : MeshReader.GetMarkers())
+        {
+            Import(Marker);
+        }
+    }
+    else
+    {
+        std::println(std::cerr, "Reading mesh file failed.");
+    }
 }
 
 inline long int GetRandomInteger(long int HighestValue)
@@ -3103,43 +3110,49 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 					
 					std::ifstream InputFileStream("scene.xml");
 					SceneReader SceneReader(InputFileStream);
+					auto OrParseError = SceneReader.Parse();
 					
-					SceneReader.Parse();
-					
-					std::vector< Point * > Points(SceneReader.GetPoints());
-					std::vector< Triangle * > Triangles(SceneReader.GetTriangles());
-					
-					copy(Points.begin(), Points.end(), back_inserter(g_Points));
-					copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
-					for(auto & LightDescription : SceneReader.GetLightDescriptions())
-					{
-						auto NewLight(new Light());
-						
-						NewLight->SetPosition(LightDescription.m_Position);
-						NewLight->SetDiffuseColor(LightDescription.m_DiffuseColor[0], LightDescription.m_DiffuseColor[1], LightDescription.m_DiffuseColor[2], LightDescription.m_DiffuseColor[3]);
-						if(LightDescription.m_bEnabled == true)
-						{
-							NewLight->Enable();
-						}
-					}
-					for(auto & CameraDescription : SceneReader.GetCameraDescriptions())
-					{
-						auto NewCamera(new Camera());
-						
-						NewCamera->SetPosition(CameraDescription.Position);
-						NewCamera->SetOrientation(CameraDescription.Orientation);
-						NewCamera->SetFieldOfViewY(CameraDescription.FieldOfViewY);
-						g_Cameras.push_back(NewCamera);
-					}
-					for(auto & Marker : SceneReader.GetMarkers())
-					{
-						Import(Marker);
-					}
-					if(g_Cameras.size() > 0)
-					{
-						g_CurrentCamera = g_Cameras.front();
-						vSetupProjection();
-					}
+                    if(OrParseError.has_value() == true)
+                    {
+                        std::vector< Point * > Points(SceneReader.GetPoints());
+                        std::vector< Triangle * > Triangles(SceneReader.GetTriangles());
+                        
+                        copy(Points.begin(), Points.end(), back_inserter(g_Points));
+                        copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
+                        for(auto & LightDescription : SceneReader.GetLightDescriptions())
+                        {
+                            auto NewLight(new Light());
+                            
+                            NewLight->SetPosition(LightDescription.m_Position);
+                            NewLight->SetDiffuseColor(LightDescription.m_DiffuseColor[0], LightDescription.m_DiffuseColor[1], LightDescription.m_DiffuseColor[2], LightDescription.m_DiffuseColor[3]);
+                            if(LightDescription.m_bEnabled == true)
+                            {
+                                NewLight->Enable();
+                            }
+                        }
+                        for(auto & CameraDescription : SceneReader.GetCameraDescriptions())
+                        {
+                            auto NewCamera(new Camera());
+                            
+                            NewCamera->SetPosition(CameraDescription.Position);
+                            NewCamera->SetOrientation(CameraDescription.Orientation);
+                            NewCamera->SetFieldOfViewY(CameraDescription.FieldOfViewY);
+                            g_Cameras.push_back(NewCamera);
+                        }
+                        for(auto & Marker : SceneReader.GetMarkers())
+                        {
+                            Import(Marker);
+                        }
+                        if(g_Cameras.size() > 0)
+                        {
+                            g_CurrentCamera = g_Cameras.front();
+                            vSetupProjection();
+                        }
+                    }
+                    else
+                    {
+                        std::println(std::cerr, "Reading the scene file failed.");
+                    }
 				}
 			}
 			else

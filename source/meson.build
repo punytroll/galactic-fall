@@ -125,6 +125,7 @@ galactic_fall_executable = executable(
     opengl_dependency,
     string_cast_dependency,
     x11_dependency,
+    xml_parser_dependency,
     xml_puny_dom_dependency,
     xml_stream_dependency
   ]
