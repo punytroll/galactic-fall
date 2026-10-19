@@ -122,13 +122,13 @@ static auto Resolve(ARX::Reference & Reference) -> ARX::Item *
 	return Item;
 }
 
-auto ResourceReader::LoadArchive(std::string const & ArchivePath) -> bool
+auto ResourceReader::LoadArchive(std::filesystem::path const & Path) -> bool
 {
 	assert(m_Archive == nullptr);
 	m_Archive = std::make_unique<ARX::Archive>();
-	if(m_Archive->Load(ArchivePath) == false)
+	if(m_Archive->Load(Path) == false)
 	{
-		std::cerr << "Could not find or open \"" << ArchivePath << "\"." << std::endl;
+		std::cerr << "Could not find or open \"" << Path << "\"." << std::endl;
 		
 		return false;
 	}

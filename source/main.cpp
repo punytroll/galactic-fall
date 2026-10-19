@@ -3356,7 +3356,7 @@ int main(int argc, char ** argv)
 	
 	std::vector< std::string > Arguments(argv, argv + argc);
 	std::string LoadSavegameFileName;
-	std::string DataFileName("build/data/data.arx");
+	auto DataFilePath = std::filesystem::path{"build/data/data.arx"};
 	
 	for(auto Argument : Arguments)
 	{
@@ -3371,7 +3371,7 @@ int main(int argc, char ** argv)
 		{
 			if(Argument.length() > 7)
 			{
-				DataFileName = Argument.substr(7);
+				DataFilePath = Argument.substr(7);
 			}
 		}
 		else if(Argument == "--echo-events")
@@ -3385,9 +3385,9 @@ int main(int argc, char ** argv)
 	}
 	
 	// try loading the game data archive
-	ON_DEBUG(std::cout << "Loading game archive \"" << DataFileName << "\"." << std::endl);
-	g_ResourceReader = new ResourceReader();
-	if(g_ResourceReader->LoadArchive(DataFileName) == false)
+	ON_DEBUG(std::cout << "Loading game archive \"" << DataFilePath.native() << "\"." << std::endl);
+	g_ResourceReader = new ResourceReader{};
+	if(g_ResourceReader->LoadArchive(DataFilePath) == false)
 	{
 		return 1;
 	}

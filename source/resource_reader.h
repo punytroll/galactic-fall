@@ -20,6 +20,7 @@
 #ifndef RESOURCE_READER_H
 #define RESOURCE_READER_H
 
+#include <filesystem>
 #include <memory>
 
 #include <arx/structure.h>
@@ -47,7 +48,7 @@ class SlotClass;
 class ResourceReader
 {
 public:
-	auto LoadArchive(std::string const & Path) -> bool;
+	auto LoadArchive(std::filesystem::path const & Path) -> bool;
 	auto ReadAmmunitionClasses(BlueprintManager * BlueprintManager) -> void;
 	auto ReadBatteryClasses(BlueprintManager * BlueprintManager) -> void;
 	auto ReadCommodityClasses(BlueprintManager * BlueprintManager) -> void;
