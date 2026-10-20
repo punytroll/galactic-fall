@@ -496,13 +496,9 @@ void Ship::OnAdded(Object * Content)
 		assert(TheCargoHold != nullptr);
 		_CargoHold = TheCargoHold;
 	}
-	
-	// polymorphic discovery
-	auto EnergyDevice{dynamic_cast< Physics::Energy::Device * >(Content)};
-	
-	if(EnergyDevice != nullptr)
+	if(auto EnergyDevice = dynamic_cast<Physics::Energy::Device *>(Content); EnergyDevice != nullptr)
 	{
-		_EnergyNetwork->AddDevice(EnergyDevice);
+		_EnergyNetwork->AddDevice(*EnergyDevice);
 	}
 }
 
@@ -514,13 +510,9 @@ void Ship::OnRemoved(Object * Content)
 		assert(_CargoHold == Content);
 		_CargoHold = nullptr;
 	}
-	
-	// polymorphic discovery
-	auto EnergyDevice{dynamic_cast< Physics::Energy::Device * >(Content)};
-	
-	if(EnergyDevice != nullptr)
+	if(auto EnergyDevice = dynamic_cast<Physics::Energy::Device *>(Content); EnergyDevice != nullptr)
 	{
-		_EnergyNetwork->RemoveDevice(EnergyDevice);
+		_EnergyNetwork->RemoveDevice(*EnergyDevice);
 	}
 }
 

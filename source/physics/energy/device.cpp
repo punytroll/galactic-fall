@@ -1,78 +1,65 @@
 /**
  * galactic-fall
- * Copyright (C) 2018-2019  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2018-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
 #include <cassert>
 
 #include "device.h"
 
-Physics::Energy::Device::Device(void) :
-	_Energy{0.0f},
-	_EnergyCapacity{0.0f},
-	_MaximumPowerInput{0.0f},
-	_MaximumPowerOutput{0.0f},
-	_Network(nullptr)
+Physics::Energy::Device::Device() :
+    m_Energy{0.0f},
+    m_EnergyCapacity{0.0f},
+    m_MaximumPowerInput{0.0f},
+    m_MaximumPowerOutput{0.0f},
+    m_Network(nullptr)
 {
 }
 
-Physics::Energy::Device::~Device(void)
+Physics::Energy::Device::~Device()
 {
-	assert(_Network == nullptr);
+    assert(m_Network == nullptr);
 }
 
-void Physics::Energy::Device::EnergyDelta(float EnergyDelta)
+auto Physics::Energy::Device::EnergyDelta(float EnergyDelta) -> void
 {
-	_Energy += EnergyDelta;
-	assert((_Energy >= 0.0f) && (_Energy <= _EnergyCapacity));
+    m_Energy += EnergyDelta;
+    assert((m_Energy >= 0.0f) && (m_Energy <= m_EnergyCapacity));
 }
 
-float Physics::Energy::Device::GetMaximumEnergyInput(float Seconds) const
+auto Physics::Energy::Device::GetMaximumEnergyInput(float Seconds) const -> float
 {
-	auto Result{Seconds * _MaximumPowerInput};
-	
-	if(Result + _Energy > _EnergyCapacity)
-	{
-		Result = _EnergyCapacity - _Energy;
-	}
-	
-	return Result;
+    auto Result = Seconds * m_MaximumPowerInput;
+    
+    if(Result + m_Energy > m_EnergyCapacity)
+    {
+        Result = m_EnergyCapacity - m_Energy;
+    }
+    
+    return Result;
 }
 
-float Physics::Energy::Device::GetMaximumEnergyOutput(float Seconds) const
+auto Physics::Energy::Device::GetMaximumEnergyOutput(float Seconds) const -> float
 {
-	auto Result{Seconds * _MaximumPowerOutput};
-	
-	if(Result > _Energy)
-	{
-		Result = _Energy;
-	}
-	
-	return Result;
+    auto Result = Seconds * m_MaximumPowerOutput;
+    
+    if(Result > m_Energy)
+    {
+        Result = m_Energy;
+    }
+    
+    return Result;
 }
 
-void Physics::Energy::Device::SetEnergy(float Energy)
+auto Physics::Energy::Device::SetEnergy(float Energy) -> void
 {
-	assert(Energy <= _EnergyCapacity);
-	_Energy = Energy;
+    assert(Energy <= m_EnergyCapacity);
+    m_Energy = Energy;
 }
 
-void Physics::Energy::Device::SetEnergyCapacity(float EnergyCapacity)
+auto Physics::Energy::Device::SetEnergyCapacity(float EnergyCapacity) -> void
 {
-	assert(EnergyCapacity >= _Energy);
-	_EnergyCapacity = EnergyCapacity;
+    assert(EnergyCapacity >= m_Energy);
+    m_EnergyCapacity = EnergyCapacity;
 }

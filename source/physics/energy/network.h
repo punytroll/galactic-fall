@@ -1,48 +1,65 @@
 /**
  * galactic-fall
- * Copyright (C) 2018  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2018-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
-#ifndef PHYSICS_ENERGY_NETWORK_H
-#define PHYSICS_ENERGY_NETWORK_H
+#ifndef GALACTIC_FALL__SOURCE__PHYSICS__ENERGY__NETWORK_H
+#define GALACTIC_FALL__SOURCE__PHYSICS__ENERGY__NETWORK_H
 
 #include <unordered_set>
 
 namespace Physics
 {
-	namespace Energy
-	{
-		class Device;
-		
-		class Network
-		{
-		public:
-			Network(void);
-			~Network(void);
-			void AddDevice(Physics::Energy::Device * Device);
-			void RemoveDevice(Physics::Energy::Device * Device);
-			void Update(float Seconds);
-			// static managmement
-			static void UpdateNetworks(float seconds);
-		private:
-			std::unordered_set< Physics::Energy::Device * > _Devices;
-			static std::unordered_set< Physics::Energy::Network * > _Networks;
-		};
-	}
+    namespace Energy
+    {
+        class Device;
+        
+        class Network
+        {
+        public:
+            /**
+             * @brief The constructor places the new network into the static (global) networks set.
+             **/
+            Network();
+            
+            /**
+             * @brief The destructor removed the network from the static (global) networks set.
+             **/
+            ~Network();
+            
+            /**
+             * @brief Adds a new energy device to the network.
+             **/
+            auto AddDevice(Physics::Energy::Device & Device) -> void;
+            
+            /**
+             * @brief Removes an energy device from the network.
+             **/
+            auto RemoveDevice(Physics::Energy::Device & Device) -> void;
+            
+            /**
+             * @brief Advances the energy network by a given amount of time.
+             **/
+            auto Update(float Seconds) -> void;
+            
+            /**
+             * @brief Advance all energy networks by a given amount of time.
+             **/
+            static auto UpdateNetworks(float Seconds) -> void;
+            
+        private:
+            /**
+             * @brief A set of all the devices in the energy network.
+             **/
+            std::unordered_set<Physics::Energy::Device *> m_Devices;
+            
+            /**
+             * @brief A set of all the energy networks.
+             **/
+            static std::unordered_set<Physics::Energy::Network *> m_Networks;
+        };
+    }
 }
 
 #endif

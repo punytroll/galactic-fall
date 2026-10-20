@@ -1,24 +1,11 @@
 /**
  * galactic-fall
- * Copyright (C) 2014-2025  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2014-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
-#ifndef GRAPHICS_SYSTEM_NODE_H
-#define GRAPHICS_SYSTEM_NODE_H
+#ifndef GALACTIC_FALL__SOURCE__GRAPHICS__SYSTEM_NODE_H
+#define GALACTIC_FALL__SOURCE__GRAPHICS__SYSTEM_NODE_H
 
 #include <graphics/node.h>
 
@@ -28,47 +15,48 @@ namespace Graphics
 	{
 	public:
 		// constructor & destructor
-		SystemNode(void);
-		virtual ~SystemNode(void);
+		SystemNode();
+		virtual ~SystemNode();
 		// getters
-		Graphics::Node * GetCommodityLayer(void);
-		Graphics::Node * GetParticleSystemLayer(void);
-		Graphics::Node * GetPlanetLayer(void);
-		Graphics::Node * GetShipLayer(void);
-		Graphics::Node * GetShotLayer(void);
+		auto GetCommodityLayer() -> Graphics::Node *;
+		auto GetParticleSystemLayer() -> Graphics::Node *;
+		auto GetPlanetLayer() -> Graphics::Node *;
+		auto GetShipLayer() -> Graphics::Node *;
+		auto GetShotLayer() -> Graphics::Node *;
 		// modifiers
-		virtual void Destroy(void) override;
+		virtual void Destroy() override;
+        
 	private:
-		Graphics::Node * _CommodityLayer;
-		Graphics::Node * _ParticleSystemLayer;
-		Graphics::Node * _PlanetLayer;
-		Graphics::Node * _ShipLayer;
-		Graphics::Node * _ShotLayer;
+		Graphics::Node * m_CommodityLayer;
+		Graphics::Node * m_ParticleSystemLayer;
+		Graphics::Node * m_PlanetLayer;
+		Graphics::Node * m_ShipLayer;
+		Graphics::Node * m_ShotLayer;
 	};
 	
-	inline Graphics::Node * SystemNode::GetCommodityLayer(void)
+	inline auto SystemNode::GetCommodityLayer() -> Graphics::Node *
 	{
-		return _CommodityLayer;
+		return m_CommodityLayer;
 	}
 	
-	inline Graphics::Node * SystemNode::GetParticleSystemLayer(void)
+	inline auto SystemNode::GetParticleSystemLayer() -> Graphics::Node *
 	{
-		return _ParticleSystemLayer;
+		return m_ParticleSystemLayer;
 	}
 	
-	inline Graphics::Node * SystemNode::GetPlanetLayer(void)
+	inline auto SystemNode::GetPlanetLayer() -> Graphics::Node *
 	{
-		return _PlanetLayer;
+		return m_PlanetLayer;
 	}
 	
-	inline Graphics::Node * SystemNode::GetShipLayer(void)
+	inline auto SystemNode::GetShipLayer() -> Graphics::Node *
 	{
-		return _ShipLayer;
+		return m_ShipLayer;
 	}
 	
-	inline Graphics::Node * SystemNode::GetShotLayer(void)
+	inline auto SystemNode::GetShotLayer() -> Graphics::Node *
 	{
-		return _ShotLayer;
+		return m_ShotLayer;
 	}
 }
 
