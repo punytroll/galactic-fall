@@ -851,19 +851,24 @@
 					"sub_type": 0,
 					"relations": [
 						{
-							"name": "child",
+							"name": "tex",
 							"items": [
 								{
 									"name": "Font",
 									"type": 10,
 									"sub_type": 0,
 									"data": "@TEXTURES__FONT@"
-								},
+								}
+							]
+						},
+						{
+							"name": "vg",
+							"items": [
 								{
 									"name": "Particle",
-									"type": 10,
+									"type": 27,
 									"sub_type": 0,
-									"data": "@TEXTURES__PARTICLE@"
+									"data": "@TEXTURES__VECTOR_GRAPHICS__PARTICLE@"
 								}
 							]
 						}

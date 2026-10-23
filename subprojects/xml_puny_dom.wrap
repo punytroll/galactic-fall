@@ -1,8 +1,8 @@
 [wrap-file]
-directory = xml_puny_dom-26.10.0
-source_url = https://github.com/punytroll/xml_puny_dom/archive/refs/tags/26.10.0.tar.gz
-source_filename = xml_puny_dom-26.10.0.tar.xz
-source_hash = 0c5b6c6af54ca912448ce02c5c52ce1d3b77604b3b8672e36ac84ce7ae9dfa4a
+directory = xml_puny_dom-26.10.1
+source_url = https://github.com/punytroll/xml_puny_dom/archive/refs/tags/26.10.1.tar.gz
+source_filename = xml_puny_dom-26.10.1.tar.xz
+source_hash = fab862bcbc0935cc3e02aca5c01edc4e3b1c97518746b6ec928b7deb314b015c
 
 [provide]
 dependency_names = xml_puny_dom

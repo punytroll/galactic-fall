@@ -1,0 +1,7 @@
+<vector-graphics>
+	<xml from-file="particle.vg"/>
+	<width>32</width>
+	<height>32</height>
+	<sub-pixels>3</sub-pixels>
+	<texture-identifier>particle</texture-identifier>
+</vector-graphics>

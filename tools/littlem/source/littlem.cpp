@@ -22,7 +22,7 @@
 
 #include <string_cast/string_cast.h>
 
-#include <xml_parser/parser.h>
+#include <xml_parser/xml_parser.h>
 
 #include <xml_stream/xml_stream.h>
 

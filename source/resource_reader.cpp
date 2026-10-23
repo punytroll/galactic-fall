@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2015-2015  Hagen Möbius
+ * Copyright (C) 2015-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,6 +21,7 @@
 
 #include <functional>
 #include <iostream>
+#include <utility>
 
 #include <arx/archive.h>
 #include <arx/buffer_reader.h>
@@ -37,6 +38,9 @@
 #include <graphics/style.h>
 #include <graphics/texture.h>
 #include <graphics/texture_manager.h>
+
+#include <rasteriser/rasteriser.h>
+#include <rasteriser/scene.h>
 
 #include <string_cast/string_cast.h>
 
@@ -84,6 +88,7 @@ static auto ReadStar(ARX::Reference & Reference, System * System) -> void;
 static auto ReadSystemLink(ARX::Reference & Reference, System * System, std::multimap<std::string, std::string> & SystemLinks) -> void;
 static auto ReadTexture(ARX::Reference & Reference) -> void;
 static auto ReadTurretClass(ARX::Reference & Reference, BlueprintManager * BlueprintManager) -> void;
+static auto ReadVectorGraphics(ARX::Reference & Reference) -> void;
 
 static auto MakeItemAvailable(ARX::Item * Item) -> void
 {
@@ -364,7 +369,16 @@ auto ResourceReader::m_ReadSystem(ARX::Reference & Reference, Galaxy * Galaxy, s
 
 auto ResourceReader::ReadTextures() -> void
 {
-	m_ReadItems("/Textures", ReadTexture);
+	assert(m_Archive != nullptr);
+	
+	auto Directory(m_Archive->GetItem("/Textures"));
+	
+	if(Directory == nullptr)
+	{
+		throw std::runtime_error("Could not find an item at the path '/Textures'.");
+	}
+	m_ReadItems(Directory->GetStructure().GetRelation("tex"), ReadTexture);
+	m_ReadItems(Directory->GetStructure().GetRelation("vg"), ReadVectorGraphics);
 }
 
 auto ResourceReader::ReadTurretClasses(BlueprintManager * BlueprintManager) -> void
@@ -1304,4 +1318,49 @@ static auto ReadTurretClass(ARX::Reference & Reference, BlueprintManager * Bluep
 	NewTurretClass->AddProperty("shot-damage", ShotDamage);
 	NewTurretClass->AddProperty("shot-life-time", ShotLifeTime);
 	NewTurretClass->AddProperty("shot-visualization-prototype", ShotVisualizationPrototype);
+}
+
+static auto ReadVectorGraphics(ARX::Reference & Reference) -> void
+{
+	auto Item = Resolve(Reference);
+	
+	if(Item->GetType() != DATA_TYPE_VECTOR_GRAPHICS)
+	{
+		throw std::runtime_error("Item type for texture '" + Item->GetName() + "' should be '" + to_string_cast(DATA_TYPE_VECTOR_GRAPHICS) + "' not '" + to_string_cast(Item->GetType()) + "'.");
+	}
+	if(Item->GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for texture '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
+	}
+	
+	auto Reader = ARX::BufferReader{*Item};
+	auto XML = std::string{};
+	auto Width = std::uint32_t{};
+	auto Height = std::uint32_t{};
+	auto SubPixels = std::uint32_t{};
+    auto TextureIdentifier = std::string{};
+	
+	Reader >> XML >> Width >> Height >> SubPixels >> TextureIdentifier;
+	
+    auto SceneOrError = Rasteriser::ParseScene(XML);
+    
+    if(SceneOrError.has_value() == false)
+    {
+        throw std::runtime_error{"Could not parse scene for vector graphics in item '" + Item->GetName() + "'."};
+    }
+    
+    auto ImageOrError = Rasteriser::Rasterise(SceneOrError.value(), Rasteriser::RenderOptions{Width, Height, SubPixels});
+    
+    if(SceneOrError.has_value() == false)
+    {
+        throw std::runtime_error{"Could not rasterise scene for vector graphics in item '" + Item->GetName() + "'."};
+    }
+    
+	auto Texture = g_GraphicsEngine->GetTextureManager()->Create(TextureIdentifier);
+	
+	if(Texture == nullptr)
+	{
+		throw std::runtime_error("Could not create texture '" + TextureIdentifier + "'.");
+	}
+	Texture->SetData(ImageOrError->Width, ImageOrError->Height, std::to_underlying(ImageOrError->Format), ImageOrError->Data.data());
 }

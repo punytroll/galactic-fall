@@ -14,7 +14,7 @@ project(
 python_module = import('python')
 python3_program = python_module.find_installation('python3')
 
-arx_subproject = subproject('arx')
+subproject('arx')
 arx_dependency = dependency('arx')
 
 algebra_subproject = subproject('algebra', version: '>=2.1.1')
@@ -23,14 +23,17 @@ algebra_dependency = algebra_subproject.get_variable('algebra_library_dependency
 expressions_subproject = subproject('expressions', version: '>=0.7.1')
 expressions_dependency = expressions_subproject.get_variable('expressions_library_dependency')
 
+subproject('xml_parser')
+xml_parser_dependency = dependency('xml_parser', version: '>=26.10.2')
+
+subproject('rasteriser')
+rasteriser_dependency = dependency('rasteriser', version: '>=26.10.0')
+
 string_cast_subproject = subproject('string_cast', version: '>=2.0.2')
 string_cast_dependency = string_cast_subproject.get_variable('string_cast_library_dependency')
 
-xml_parser_subproject = subproject('xml_parser')
-xml_parser_dependency = dependency('xml_parser', version: '>=26.10.1')
-
-xml_puny_dom_subproject = subproject('xml_puny_dom')
-xml_puny_dom_dependency = dependency('xml_puny_dom', version: '>=26.10.0')
+subproject('xml_puny_dom')
+xml_puny_dom_dependency = dependency('xml_puny_dom', version: '>=26.10.1')
 
 xml_stream_subproject = subproject('xml_stream', version: '>=2.0.0')
 xml_stream_dependency = xml_stream_subproject.get_variable('xml_stream_library_dependency')

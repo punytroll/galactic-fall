@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006-2019  Hagen Möbius
+ * Copyright (C) 2006-2026  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -61,7 +61,7 @@
 
 #include <string_cast/string_cast.h>
 
-#include <xml_parser/parser.h>
+#include <xml_parser/xml_parser.h>
 
 #include <xml_puny_dom/xml_puny_dom.h>
 

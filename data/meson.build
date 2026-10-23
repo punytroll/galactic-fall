@@ -1,24 +1,3 @@
-particle_tex = custom_target(
-  'particle.tex',
-  input: 'textures' / 'particle.vg',
-  output: 'particle.tex',
-  command: [
-    python3_program,
-    rasteriser_py_script,
-    '--in', '@INPUT@',
-    '--out', '@OUTPUT@',
-    '--sub-pixels', '3',
-    '--dimensions', '32x32',
-  ]
-)
-particle_xml = configure_file(
-  configuration: {
-    'TEXTURES__PARTICLE_TEX': particle_tex.full_path()
-  },
-  input: 'textures' / 'particle.xml.in',
-  output: 'particle.xml',
-)
-
 data_arx_items = [
   ['classes' / 'ammunition' / 'light_gauss.xml', false, true],
   ['classes' / 'battery' / 'light.xml', false, true],
@@ -120,13 +99,13 @@ data_arx_items = [
   ['shaders' / 'vertex' / 'ui_texture.xml', false, true],
   ['shaders' / 'vertex' / 'widget.xml', false, true],
   ['textures' / 'font.xml', false, true],
+  ['textures' / 'vector_graphics' / 'particle.xml', false, true]
 ]
 
 data_arx_files = []
 foreach data_arx_item : data_arx_items
-  data_arx_files += [[files(data_arx_item[0])[0], data_arx_item[0], [], data_arx_item[1], data_arx_item[2]]]
+  data_arx_files += [[files(data_arx_item[0])[0], data_arx_item[0], data_arx_item[1], data_arx_item[2]]]
 endforeach
-data_arx_files += [[particle_xml, 'textures' / 'particle.xml', [particle_tex], false, true]]
 
 fs_module = import('fs')
 declarations_xml = files('declarations.xml')[0]
@@ -137,7 +116,7 @@ manifest_json_configuration = configuration_data()
 foreach data_arx_file : data_arx_files
   file = data_arx_file[0]
   is_file = true
-  if data_arx_file[3] == true
+  if data_arx_file[2] == true
     file = custom_target(
       data_arx_file[1].replace('/', '__') + '.xml',
       input: file,
@@ -154,7 +133,7 @@ foreach data_arx_file : data_arx_files
     )
     is_file = false
   endif
-  if data_arx_file[4] == true
+  if data_arx_file[3] == true
     file = custom_target(
       data_arx_file[1].replace('/', '__') + '.data',
       input: file,
@@ -167,7 +146,6 @@ foreach data_arx_file : data_arx_files
         '--out', '@OUTPUT@',
         '--dependencies', '@DEPFILE@',
       ],
-      depends: data_arx_file[2],
       depfile: data_arx_file[1].replace('/', '__') + '.data.d',
     )
     is_file = false

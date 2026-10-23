@@ -332,6 +332,14 @@
 	
 	<vector type="1"/>
 	
+	<vector-graphics type="27" sub-type="0">
+		<string identifier="xml"/>
+		<unsigned-integer-32bit identifier="width"/>
+		<unsigned-integer-32bit identifier="height"/>
+		<unsigned-integer-32bit identifier="sub-pixels"/>
+		<string identifier="texture-identifier"/>
+	</vector-graphics>
+	
 	<vector2f type="1" sub-type="0">
 		<float identifier="x"/>
 		<float identifier="y"/>
