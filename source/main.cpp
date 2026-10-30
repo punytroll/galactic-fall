@@ -186,7 +186,7 @@ bool g_EchoResizes(false);
 bool g_TakeScreenShot(false);
 ResourceReader * g_ResourceReader(nullptr);
 Settings * g_Settings(nullptr);
-void (*g_KeyboardLookupTable[128][2])(void);
+void (*g_KeyboardLookupTable[128][2])(void) = {};
 
 std::vector< std::string > SplitString(const std::string & String, char Delimiter)
 {
@@ -3143,198 +3143,194 @@ void DestroyWindow(void)
 	g_Display = 0;
 }
 
-void LoadKeyboardLookupTable(const std::list< Settings::KeyBinding > * KeyBindings)
+void LoadKeyboardLookupTable(std::optional<std::list<Settings::KeyBinding>> const & KeyBindings)
 {
-	assert(KeyBindings != nullptr);
-	assert(g_KeyboardLookupTable != nullptr);
-	for(auto Index = 0; Index < 128; ++Index)
-	{
-		g_KeyboardLookupTable[Index][0] = nullptr;
-		g_KeyboardLookupTable[Index][1] = nullptr;
-	}
-	for(auto & KeyBinding : (*KeyBindings))
-	{
-		if((KeyBinding.Code >= 0) && (KeyBinding.Code < 128))
-		{
-			auto EventIndex{-1};
-			
-			if(KeyBinding.Event == "down")
-			{
-				EventIndex = 0;
-			}
-			else if(KeyBinding.Event == "up")
-			{
-				EventIndex = 1;
-			}
-			if(EventIndex != -1)
-			{
-				if(KeyBinding.Action == "decrease_field_of_view")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDecreaseFieldOfView;
-				}
-				else if(KeyBinding.Action == "decrease_time_warp")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDecreaseTimeWarp;
-				}
-				else if(KeyBinding.Action == "delete_observed_object")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDeleteObservedObject;
-				}
-				else if(KeyBinding.Action == "disable_accelerate")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDisableAccelerate;
-				}
-				else if(KeyBinding.Action == "disable_fire")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDisableFire;
-				}
-				else if(KeyBinding.Action == "disable_turn_left")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDisableTurnLeft;
-				}
-				else if(KeyBinding.Action == "disable_turn_right")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDisableTurnRight;
-				}
-				else if(KeyBinding.Action == "enable_accelerate")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionEnableAccelerate;
-				}
-				else if(KeyBinding.Action == "enable_fire")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionEnableFire;
-				}
-				else if(KeyBinding.Action == "enable_turn_left")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionEnableTurnLeft;
-				}
-				else if(KeyBinding.Action == "enable_turn_right")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionEnableTurnRight;
-				}
-				else if(KeyBinding.Action == "increase_field_of_view")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionIncreaseFieldOfView;
-				}
-				else if(KeyBinding.Action == "increase_time_warp")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionIncreaseTimeWarp;
-				}
-				else if(KeyBinding.Action == "jettison_cargo")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionJettisonCargo;
-				}
-				else if(KeyBinding.Action == "jump")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionJump;
-				}
-				else if(KeyBinding.Action == "land")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionLand;
-				}
-				else if(KeyBinding.Action == "observe_next_character")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionObserveNextCharacter;
-				}
-				else if(KeyBinding.Action == "observe_previous_character")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionObservePreviousCharacter;
-				}
-				else if(KeyBinding.Action == "open_main_menu_window")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionOpenMainMenuWindow;
-				}
-				else if(KeyBinding.Action == "open_map_dialog")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionOpenMapDialog;
-				}
-				else if(KeyBinding.Action == "open_object_information_dialog")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionOpenObjectInformationDialog;
-				}
-				else if(KeyBinding.Action == "open_outfit_ship_dialog")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionOpenOutfitShipDialog;
-				}
-				else if(KeyBinding.Action == "purge_game")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionPurgeGame;
-				}
-				else if(KeyBinding.Action == "refuel")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionRefuel;
-				}
-				else if(KeyBinding.Action == "reset_camera_position")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionResetCameraPosition;
-				}
-				else if(KeyBinding.Action == "reset_time_warp")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionResetTimeWarp;
-				}
-				else if(KeyBinding.Action == "scoop")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionScoop;
-				}
-				else if(KeyBinding.Action == "spawn_fighter")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionSpawnFighter;
-				}
-				else if(KeyBinding.Action == "take_screen_shot")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTakeScreenShot;
-				}
-				else if(KeyBinding.Action == "target_nearest_cargo")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetNearestCargo;
-				}
-				else if(KeyBinding.Action == "target_next_cargo")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetNextCargo;
-				}
-				else if(KeyBinding.Action == "target_next_planet")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetNextPlanet;
-				}
-				else if(KeyBinding.Action == "target_next_ship")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetNextShip;
-				}
-				else if(KeyBinding.Action == "target_previous_cargo")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetPreviousCargo;
-				}
-				else if(KeyBinding.Action == "target_previous_planet")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetPreviousPlanet;
-				}
-				else if(KeyBinding.Action == "target_previous_ship")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetPreviousShip;
-				}
-				else if(KeyBinding.Action == "toggle_first_person_camera_mode")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionToggleFirstPersonCameraMode;
-				}
-				else if(KeyBinding.Action == "toggle_timing_dialog")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionToggleTimingDialog;
-				}
-				else if(KeyBinding.Action == "select_next_linked_system")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionSelectNextLinkedSystem;
-				}
-				else if(KeyBinding.Action == "spawn_random_ship")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionSpawnRandomShip;
-				}
-				else
-				{
-					throw std::runtime_error("The action '" + KeyBinding.Action + "' is unknown.");
-				}
-			}
-		}
-	}
+    if(KeyBindings.has_value() == true)
+    {
+        for(auto const & KeyBinding : KeyBindings.value())
+        {
+            if((KeyBinding.Code >= 0) && (KeyBinding.Code < 128))
+            {
+                auto EventIndex{-1};
+                
+                if(KeyBinding.Event == "down")
+                {
+                    EventIndex = 0;
+                }
+                else if(KeyBinding.Event == "up")
+                {
+                    EventIndex = 1;
+                }
+                if(EventIndex != -1)
+                {
+                    if(KeyBinding.Action == "decrease_field_of_view")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDecreaseFieldOfView;
+                    }
+                    else if(KeyBinding.Action == "decrease_time_warp")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDecreaseTimeWarp;
+                    }
+                    else if(KeyBinding.Action == "delete_observed_object")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDeleteObservedObject;
+                    }
+                    else if(KeyBinding.Action == "disable_accelerate")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDisableAccelerate;
+                    }
+                    else if(KeyBinding.Action == "disable_fire")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDisableFire;
+                    }
+                    else if(KeyBinding.Action == "disable_turn_left")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDisableTurnLeft;
+                    }
+                    else if(KeyBinding.Action == "disable_turn_right")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDisableTurnRight;
+                    }
+                    else if(KeyBinding.Action == "enable_accelerate")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionEnableAccelerate;
+                    }
+                    else if(KeyBinding.Action == "enable_fire")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionEnableFire;
+                    }
+                    else if(KeyBinding.Action == "enable_turn_left")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionEnableTurnLeft;
+                    }
+                    else if(KeyBinding.Action == "enable_turn_right")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionEnableTurnRight;
+                    }
+                    else if(KeyBinding.Action == "increase_field_of_view")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionIncreaseFieldOfView;
+                    }
+                    else if(KeyBinding.Action == "increase_time_warp")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionIncreaseTimeWarp;
+                    }
+                    else if(KeyBinding.Action == "jettison_cargo")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionJettisonCargo;
+                    }
+                    else if(KeyBinding.Action == "jump")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionJump;
+                    }
+                    else if(KeyBinding.Action == "land")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionLand;
+                    }
+                    else if(KeyBinding.Action == "observe_next_character")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionObserveNextCharacter;
+                    }
+                    else if(KeyBinding.Action == "observe_previous_character")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionObservePreviousCharacter;
+                    }
+                    else if(KeyBinding.Action == "open_main_menu_window")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionOpenMainMenuWindow;
+                    }
+                    else if(KeyBinding.Action == "open_map_dialog")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionOpenMapDialog;
+                    }
+                    else if(KeyBinding.Action == "open_object_information_dialog")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionOpenObjectInformationDialog;
+                    }
+                    else if(KeyBinding.Action == "open_outfit_ship_dialog")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionOpenOutfitShipDialog;
+                    }
+                    else if(KeyBinding.Action == "purge_game")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionPurgeGame;
+                    }
+                    else if(KeyBinding.Action == "refuel")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionRefuel;
+                    }
+                    else if(KeyBinding.Action == "reset_camera_position")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionResetCameraPosition;
+                    }
+                    else if(KeyBinding.Action == "reset_time_warp")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionResetTimeWarp;
+                    }
+                    else if(KeyBinding.Action == "scoop")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionScoop;
+                    }
+                    else if(KeyBinding.Action == "spawn_fighter")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionSpawnFighter;
+                    }
+                    else if(KeyBinding.Action == "take_screen_shot")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTakeScreenShot;
+                    }
+                    else if(KeyBinding.Action == "target_nearest_cargo")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetNearestCargo;
+                    }
+                    else if(KeyBinding.Action == "target_next_cargo")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetNextCargo;
+                    }
+                    else if(KeyBinding.Action == "target_next_planet")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetNextPlanet;
+                    }
+                    else if(KeyBinding.Action == "target_next_ship")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetNextShip;
+                    }
+                    else if(KeyBinding.Action == "target_previous_cargo")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetPreviousCargo;
+                    }
+                    else if(KeyBinding.Action == "target_previous_planet")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetPreviousPlanet;
+                    }
+                    else if(KeyBinding.Action == "target_previous_ship")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetPreviousShip;
+                    }
+                    else if(KeyBinding.Action == "toggle_first_person_camera_mode")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionToggleFirstPersonCameraMode;
+                    }
+                    else if(KeyBinding.Action == "toggle_timing_dialog")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionToggleTimingDialog;
+                    }
+                    else if(KeyBinding.Action == "select_next_linked_system")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionSelectNextLinkedSystem;
+                    }
+                    else if(KeyBinding.Action == "spawn_random_ship")
+                    {
+                        g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionSpawnRandomShip;
+                    }
+                    else
+                    {
+                        throw std::runtime_error("The action '" + KeyBinding.Action + "' is unknown.");
+                    }
+                }
+            }
+        }
+    }
 }
 
 void PrintSettings(void)
@@ -3510,6 +3506,13 @@ int main(int argc, char ** argv)
 		g_MainMenuWindow->SetDestroyOnESCAPEKey(false);
 	}
 	
+	// the keyboard lookup table should be zeroed initially
+    assert(g_KeyboardLookupTable != nullptr);
+    for(auto Index = 0; Index < 128; ++Index)
+    {
+        assert(g_KeyboardLookupTable[Index][0] == nullptr);
+        assert(g_KeyboardLookupTable[Index][1] == nullptr);
+    }
 	// transform the key binding profile from the settings into a lookup table for fast execution
 	LoadKeyboardLookupTable(g_Settings->GetKeyBindings());
 	

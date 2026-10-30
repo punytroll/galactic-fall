@@ -1,24 +1,11 @@
 /**
  * galactic-fall
- * Copyright (C) 2009  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2009-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef GALACTIC_FALL__SOURCE__SETTINGS_H
+#define GALACTIC_FALL__SOURCE__SETTINGS_H
 
 #include <list>
 #include <optional>
@@ -45,8 +32,8 @@ public:
 	};
 	
 	// getters
-	auto GetKeyBindings() const -> std::list<Settings::KeyBinding> const *;
-	auto GetWindowDimensions() const -> Vector2f const *;
+	auto GetKeyBindings() const -> std::optional<std::list<Settings::KeyBinding>> const &;
+	auto GetWindowDimensions() const -> std::optional<Vector2f> const &;
 	// modifiers
 	auto LoadFromItem(ARX::Item * Item) -> void;
 private:
@@ -54,14 +41,14 @@ private:
 	std::optional<Vector2f> m_WindowDimensions;
 };
 
-inline auto Settings::GetKeyBindings() const -> std::list<Settings::KeyBinding> const *
+inline auto Settings::GetKeyBindings() const -> std::optional<std::list<Settings::KeyBinding>> const &
 {
-	return ((m_KeyBindings.has_value() == true) ? (std::addressof(m_KeyBindings.value())) : (nullptr));
+	return m_KeyBindings;
 }
 
-inline auto Settings::GetWindowDimensions() const -> Vector2f const *
+inline auto Settings::GetWindowDimensions() const -> std::optional<Vector2f> const &
 {
-	return ((m_WindowDimensions.has_value() == true) ? (std::addressof(m_WindowDimensions.value())) : (nullptr));
+	return m_WindowDimensions;
 }
 
 #endif
