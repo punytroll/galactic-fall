@@ -284,13 +284,60 @@ auto ResourceReader::ReadScenarios(ScenarioManager * ScenarioManager) -> void
 
 auto ResourceReader::ReadSettings(Settings * Settings) -> void
 {
-    auto Item = m_Archive->GetItem("/Settings");
-    
-    if(Item == nullptr)
+    if(auto SettingsItem = m_Archive->GetItem("/Settings"); SettingsItem != nullptr)
+    {
+        if(SettingsItem->GetStructure().HasRelation("child") == true)
+        {
+            auto & ChildRelation = SettingsItem->GetStructure().GetRelation("child");
+            // read key binding profile
+            auto KeyBindingProfileItems = ChildRelation.GetItems("Key Binding Profile");
+            
+            if(KeyBindingProfileItems.size() > 0)
+            {
+                auto KeyBindingProfileItem = KeyBindingProfileItems.front();
+                
+                GalacticFall::CheckItemTypeAndSubType(*KeyBindingProfileItem, DATA_TYPE_KEY_BINDING_PROFILE, 0);
+                GalacticFall::FetchAndDecompress(*KeyBindingProfileItem);
+                
+                auto BufferReader = GalacticFall::BufferReader{*KeyBindingProfileItem};
+                auto KeyBindingCount = BufferReader.ReadUnsignedInteger32Bit();
+                auto KeyBindings = std::list<Settings::KeyBinding>{};
+                
+                for(auto KeyBindingIndex = std::uint32_t{0}; KeyBindingIndex < KeyBindingCount; ++KeyBindingIndex)
+                {
+                    auto Code = BufferReader.ReadUnsignedInteger32Bit();
+                    auto Event = BufferReader.ReadString();
+                    auto Action = BufferReader.ReadString();
+                    
+                    KeyBindings.push_back(Settings::KeyBinding{Code, Event, Action});
+                }
+                Settings->SetKeyBindings(std::move(KeyBindings));
+            }
+            
+            // read window dimensions
+            auto WindowDimensionsItems = ChildRelation.GetItems("Window Dimensions");
+            
+            if(WindowDimensionsItems.size() > 0)
+            {
+                auto WindowDimensionsItem = WindowDimensionsItems.front();
+                
+                GalacticFall::CheckItemTypeAndSubType(*WindowDimensionsItem, DATA_TYPE_DIMENSIONS, DATA_TYPE_DIMENSIONS_SUB_TYPE_DIMENSIONS2F);
+                GalacticFall::FetchAndDecompress(*WindowDimensionsItem);
+                
+                auto BufferReader = GalacticFall::BufferReader{*WindowDimensionsItem};
+                
+                Settings->SetWindowDimensions(BufferReader.ReadVector2f());
+            }
+        }
+        else
+        {
+            throw std::runtime_error("The item '" + SettingsItem->GetName() + "' does not contain a 'child' relation.");
+        }
+    }
+    else
     {
         throw std::runtime_error("Could not find an item at the path '/Settings'.");
     }
-    Settings->LoadFromItem(Item);
 }
 
 auto ResourceReader::ReadShadersAndPrograms(Graphics::ShadingManager * ShadingManager) -> void
@@ -316,41 +363,33 @@ auto ResourceReader::m_ReadSystem(ARX::Item & Item, Galaxy * Galaxy, std::multim
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_SYSTEM, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto NewSystem = dynamic_cast<System *>(g_ObjectFactory->Create("system", Identifier, false));
     
     if(NewSystem == nullptr)
     {
         throw std::runtime_error("Could not create system '" + Identifier + "'.");
     }
+    NewSystem->GetAspectName()->SetName(BufferReader.ReadString());
     
-    auto Name = std::string{};
-    auto Position = Vector2f{};
-    auto TrafficDensity = float{};
-    auto FactionInfluencesCount = std::uint32_t{};
+    auto Position = BufferReader.ReadVector2f();
     
-    Reader >> Name >> Position >> TrafficDensity >> FactionInfluencesCount;
-    NewSystem->GetAspectName()->SetName(Name);
     NewSystem->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(Position[0], Position[1], 0.0f));
-    NewSystem->SetTrafficDensity(TrafficDensity);
+    NewSystem->SetTrafficDensity(BufferReader.ReadFloat());
+    
+    auto FactionInfluencesCount = BufferReader.ReadUnsignedInteger32Bit();
+    
     for(auto FactionInfluenceIndex = std::uint32_t{0}; FactionInfluenceIndex < FactionInfluencesCount; ++FactionInfluenceIndex)
     {
-        auto FactionIdentifier = std::string{};
-        auto FactionInfluence = float{};
-        
-        Reader >> FactionIdentifier >> FactionInfluence;
-        
-        auto Faction{Galaxy->GetFaction(FactionIdentifier)};
+        auto FactionIdentifier = BufferReader.ReadString();
+        auto Faction = Galaxy->GetFaction(FactionIdentifier);
         
         if(Faction == nullptr)
         {
             throw std::runtime_error("Could not find faction '" + FactionIdentifier + "'.");
         }
-        NewSystem->AddFactionInfluence(Faction, FactionInfluence);
+        NewSystem->AddFactionInfluence(Faction, BufferReader.ReadFloat());
     }
     Galaxy->GetAspectObjectContainer()->AddContent(NewSystem);
     if(Item.GetStructure().HasRelation("stars") == true)
@@ -395,12 +434,12 @@ auto ResourceReader::ReadSavegameFromScenarioPath(std::string const & ScenarioPa
     {
         GalacticFall::FetchAndDecompress(*Item);
         
-        auto Reader = ARX::BufferReader{*Item};
-        auto Identifier = std::string{};
-        auto Name = std::string{};
-        auto Description = std::string{};
+        auto BufferReader = GalacticFall::BufferReader{*Item};
+        auto Identifier = BufferReader.ReadString();
+        auto Name = BufferReader.ReadString();
+        auto Description = BufferReader.ReadString();
         
-        Reader >> Identifier >> Name >> Description >> Result;
+        Result = BufferReader.ReadString();
     }
     
     return Result;
@@ -410,190 +449,127 @@ static auto ReadAmmunitionClass(ARX::Item & Item, BlueprintManager * BlueprintMa
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_AMMUNITION_CLASS, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto NewAmmunitionClass = BlueprintManager->Create("ammunition", Identifier);
     
     if(NewAmmunitionClass == nullptr)
     {
         throw std::runtime_error("Could not create ammunition class '" + Identifier + "'.");
     }
-    
-    auto Name = std::string{};
-    auto Description = std::string{};
-    auto BasePrice = std::uint32_t{};
-    auto SpaceRequirement = std::uint32_t{};
-    VisualizationPrototype VisualizationPrototype{};
-    auto CartridgeSize = std::uint32_t{};
-    
-    Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> CartridgeSize;
-    
-    NewAmmunitionClass->AddProperty("name", Name);
-    NewAmmunitionClass->AddProperty("description", Description);
-    NewAmmunitionClass->AddProperty("base-price", BasePrice);
-    NewAmmunitionClass->AddProperty("space-requirement", SpaceRequirement);
-    NewAmmunitionClass->AddProperty("visualization-prototype", VisualizationPrototype);
-    NewAmmunitionClass->AddProperty("cartridge-size", CartridgeSize);
+    NewAmmunitionClass->AddProperty("name", BufferReader.ReadString());
+    NewAmmunitionClass->AddProperty("description", BufferReader.ReadString());
+    NewAmmunitionClass->AddProperty("base-price", BufferReader.ReadUnsignedInteger32Bit());
+    NewAmmunitionClass->AddProperty("space-requirement", BufferReader.ReadUnsignedInteger32Bit());
+    NewAmmunitionClass->AddProperty("visualization-prototype", BufferReader.ReadVisualisationPrototype());
+    NewAmmunitionClass->AddProperty("cartridge-size", BufferReader.ReadUnsignedInteger32Bit());
 }
 
 static auto ReadBatteryClass(ARX::Item & Item, BlueprintManager * BlueprintManager) -> void
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_BATTERY_CLASS, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto NewBatteryClass = BlueprintManager->Create("battery", Identifier);
     
     if(NewBatteryClass == nullptr)
     {
         throw std::runtime_error("Could not create battery class '" + Identifier + "'.");
     }
-    
-    auto Name = std::string{};
-    auto Description = std::string{};
-    auto BasePrice = std::uint32_t{};
-    auto SpaceRequirement = std::uint32_t{};
-    VisualizationPrototype VisualizationPrototype{};
-    auto EnergyCapacity = float{};
-    auto MaximumPowerInput = float{};
-    auto MaximumPowerOutput = float{};
-    auto SlotClassIdentifier = std::string{};
-    
-    Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> EnergyCapacity >> MaximumPowerInput >> MaximumPowerOutput >> SlotClassIdentifier;
-    NewBatteryClass->AddProperty("name", Name);
-    NewBatteryClass->AddProperty("description", Description);
-    NewBatteryClass->AddProperty("base-price", BasePrice);
-    NewBatteryClass->AddProperty("space-requirement", SpaceRequirement);
-    NewBatteryClass->AddProperty("visualization-prototype", VisualizationPrototype);
-    NewBatteryClass->AddProperty("energy-capacity", EnergyCapacity);
-    NewBatteryClass->AddProperty("maximum-power-input", MaximumPowerInput);
-    NewBatteryClass->AddProperty("maximum-power-output", MaximumPowerOutput);
-    NewBatteryClass->AddProperty("slot-class-identifier", SlotClassIdentifier);
+    NewBatteryClass->AddProperty("name", BufferReader.ReadString());
+    NewBatteryClass->AddProperty("description", BufferReader.ReadString());
+    NewBatteryClass->AddProperty("base-price", BufferReader.ReadUnsignedInteger32Bit());
+    NewBatteryClass->AddProperty("space-requirement", BufferReader.ReadUnsignedInteger32Bit());
+    NewBatteryClass->AddProperty("visualization-prototype", BufferReader.ReadVisualisationPrototype());
+    NewBatteryClass->AddProperty("energy-capacity", BufferReader.ReadFloat());
+    NewBatteryClass->AddProperty("maximum-power-input", BufferReader.ReadFloat());
+    NewBatteryClass->AddProperty("maximum-power-output", BufferReader.ReadFloat());
+    NewBatteryClass->AddProperty("slot-class-identifier", BufferReader.ReadString());
 }
 
 static auto ReadCommodityClass(ARX::Item & Item, BlueprintManager * BlueprintManager) -> void
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_COMMODITY_CLASS, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto NewCommodityClass = BlueprintManager->Create("commodity", Identifier);
     
     if(NewCommodityClass == nullptr)
     {
         throw std::runtime_error("Could not create commodity class '" + Identifier + "'.");
     }
-    
-    auto Name = std::string{};
-    auto Description = std::string{};
-    auto BasePrice = std::uint32_t{};
-    auto SpaceRequirement = std::uint32_t{};
-    VisualizationPrototype VisualizationPrototype{};
-    
-    Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype;
-    NewCommodityClass->AddProperty("name", Name);
-    NewCommodityClass->AddProperty("description", Description);
-    NewCommodityClass->AddProperty("base-price", BasePrice);
-    NewCommodityClass->AddProperty("space-requirement", SpaceRequirement);
-    NewCommodityClass->AddProperty("visualization-prototype", VisualizationPrototype);
+    NewCommodityClass->AddProperty("name", BufferReader.ReadString());
+    NewCommodityClass->AddProperty("description", BufferReader.ReadString());
+    NewCommodityClass->AddProperty("base-price", BufferReader.ReadUnsignedInteger32Bit());
+    NewCommodityClass->AddProperty("space-requirement", BufferReader.ReadUnsignedInteger32Bit());
+    NewCommodityClass->AddProperty("visualization-prototype", BufferReader.ReadVisualisationPrototype());
 }
 
 static auto ReadEnergyProjectileWeaponClass(ARX::Item & Item, BlueprintManager * BlueprintManager) -> void
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_ENERGY_PROJECTILE_WEAPON_CLASS, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto NewEnergyProjectileWeaponBlueprint = BlueprintManager->Create("energy-projectile-weapon", Identifier);
     
     if(NewEnergyProjectileWeaponBlueprint == nullptr)
     {
         throw std::runtime_error("Could not create energy projectile weapon blueprint '" + Identifier + "'.");
     }
+    NewEnergyProjectileWeaponBlueprint->AddProperty("name", BufferReader.ReadString());
+    NewEnergyProjectileWeaponBlueprint->AddProperty("description", BufferReader.ReadString());
+    NewEnergyProjectileWeaponBlueprint->AddProperty("base-price", BufferReader.ReadUnsignedInteger32Bit());
+    NewEnergyProjectileWeaponBlueprint->AddProperty("space-requirement", BufferReader.ReadUnsignedInteger32Bit());
     
-    auto Name = std::string{};
-    auto Description = std::string{};
-    auto BasePrice = std::uint32_t{};
-    auto SpaceRequirement = std::uint32_t{};
-    auto EnergyProjectileWeaponVisualizationPrototype = VisualizationPrototype{};
-    auto SlotClassIdentifier = std::string{};
-    auto Orientation = Quaternion{};
-    auto MaximumPowerInput = float{};
-    auto MaximumPowerOutput = float{};
-    auto EnergyUsagePerShot = float{};
-    auto MuzzlePositionPartIdentifier = std::string{};
-    auto MuzzlePositionMarkerIdentifier = std::string{};
-    auto ShotExitSpeed = float{};
-    auto ShotDamage = float{};
-    auto ShotLifeTime = float{};
-    auto ShotVisualizationPrototype = VisualizationPrototype{};
+    auto EnergyProjectileWeaponVisualisationPrototype = BufferReader.ReadVisualisationPrototype();
     
-    Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> EnergyProjectileWeaponVisualizationPrototype >> SlotClassIdentifier >> Orientation >> MaximumPowerInput >> MaximumPowerOutput >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
-    NewEnergyProjectileWeaponBlueprint->AddProperty("name", Name);
-    NewEnergyProjectileWeaponBlueprint->AddProperty("description", Description);
-    NewEnergyProjectileWeaponBlueprint->AddProperty("base-price", BasePrice);
-    NewEnergyProjectileWeaponBlueprint->AddProperty("visualization-prototype", EnergyProjectileWeaponVisualizationPrototype);
-    NewEnergyProjectileWeaponBlueprint->AddProperty("slot-class-identifier", SlotClassIdentifier);
-    NewEnergyProjectileWeaponBlueprint->AddProperty("orientation", Orientation);
-    NewEnergyProjectileWeaponBlueprint->AddProperty("maximum-power-input", MaximumPowerInput);
-    NewEnergyProjectileWeaponBlueprint->AddProperty("maximum-power-output", MaximumPowerOutput);
-    NewEnergyProjectileWeaponBlueprint->AddProperty("space-requirement", SpaceRequirement);
-    NewEnergyProjectileWeaponBlueprint->AddProperty("energy-usage-per-shot", EnergyUsagePerShot);
+    NewEnergyProjectileWeaponBlueprint->AddProperty("visualization-prototype", EnergyProjectileWeaponVisualisationPrototype);
+    NewEnergyProjectileWeaponBlueprint->AddProperty("slot-class-identifier", BufferReader.ReadString());
+    NewEnergyProjectileWeaponBlueprint->AddProperty("orientation", BufferReader.ReadQuaternion());
+    NewEnergyProjectileWeaponBlueprint->AddProperty("maximum-power-input", BufferReader.ReadFloat());
+    NewEnergyProjectileWeaponBlueprint->AddProperty("maximum-power-output", BufferReader.ReadFloat());
+    NewEnergyProjectileWeaponBlueprint->AddProperty("energy-usage-per-shot", BufferReader.ReadFloat());
     
-    auto MuzzlePosition = EnergyProjectileWeaponVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier);
+    auto MuzzlePositionPartIdentifier = BufferReader.ReadString();
+    auto MuzzlePositionMarkerIdentifier = BufferReader.ReadString();
+    auto MuzzlePosition = EnergyProjectileWeaponVisualisationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier);
     
     if(MuzzlePosition == nullptr)
     {
         throw std::runtime_error("For the energy projectile weapon '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
     }
     NewEnergyProjectileWeaponBlueprint->AddProperty("muzzle-position", *MuzzlePosition);
-    NewEnergyProjectileWeaponBlueprint->AddProperty("shot-exit-speed", ShotExitSpeed);
-    NewEnergyProjectileWeaponBlueprint->AddProperty("shot-damage", ShotDamage);
-    NewEnergyProjectileWeaponBlueprint->AddProperty("shot-life-time", ShotLifeTime);
-    NewEnergyProjectileWeaponBlueprint->AddProperty("shot-visualization-prototype", ShotVisualizationPrototype);
+    NewEnergyProjectileWeaponBlueprint->AddProperty("shot-exit-speed", BufferReader.ReadFloat());
+    NewEnergyProjectileWeaponBlueprint->AddProperty("shot-damage", BufferReader.ReadFloat());
+    NewEnergyProjectileWeaponBlueprint->AddProperty("shot-life-time", BufferReader.ReadFloat());
+    NewEnergyProjectileWeaponBlueprint->AddProperty("shot-visualization-prototype", BufferReader.ReadVisualisationPrototype());
 }
 
 static auto ReadFaction(ARX::Item & Item, Galaxy * Galaxy, std::list<std::tuple<std::string, std::string, float>> & FactionStandings) -> void
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_FACTION, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto NewFaction = dynamic_cast<Faction *>(g_ObjectFactory->Create("faction", Identifier, false));
     
     if(NewFaction == nullptr)
     {
         throw std::runtime_error("Could not create faction '" + Identifier + "'.");
     }
+    NewFaction->GetAspectName()->SetName(BufferReader.ReadString());
+    NewFaction->SetColor(BufferReader.ReadColourRGBO());
     
-    auto Name = std::string{};
-    auto FactionColor = Graphics::ColorRGBO{};
-    auto StandingsCount = std::uint32_t{};
+    auto StandingsCount = BufferReader.ReadUnsignedInteger32Bit();
     
-    Reader >> Name >> FactionColor >> StandingsCount;
-    NewFaction->GetAspectName()->SetName(Name);
-    NewFaction->SetColor(FactionColor);
     for(auto StandingsIndex = std::uint32_t{0}; StandingsIndex < StandingsCount; ++StandingsIndex)
     {
-        auto FactionIdentifier = std::string{};
-        auto FactionStanding = float{};
+        auto FactionIdentifier = BufferReader.ReadString();
+        auto FactionStanding = BufferReader.ReadFloat();
         
-        Reader >> FactionIdentifier >> FactionStanding;
         FactionStandings.push_back(std::make_tuple(Identifier, FactionIdentifier, FactionStanding));
     }
     Galaxy->GetAspectObjectContainer()->AddContent(NewFaction);
@@ -603,45 +579,29 @@ static auto ReadGeneratorClass(ARX::Item & Item, BlueprintManager * BlueprintMan
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_GENERATOR_CLASS, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto NewGeneratorClass = BlueprintManager->Create("generator", Identifier);
     
     if(NewGeneratorClass == nullptr)
     {
         throw std::runtime_error("Could not create generator class '" + Identifier + "'.");
     }
-    
-    auto Name = std::string{};
-    auto Description = std::string{};
-    auto BasePrice = std::uint32_t{};
-    auto SpaceRequirement = std::uint32_t{};
-    VisualizationPrototype VisualizationPrototype{};
-    auto MaximumPowerOutput = float{};
-    auto SlotClassIdentifier = std::string{};
-    
-    Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> MaximumPowerOutput >> SlotClassIdentifier;
-    NewGeneratorClass->AddProperty("name", Name);
-    NewGeneratorClass->AddProperty("description", Description);
-    NewGeneratorClass->AddProperty("base-price", BasePrice);
-    NewGeneratorClass->AddProperty("space-requirement", SpaceRequirement);
-    NewGeneratorClass->AddProperty("visualization-prototype", VisualizationPrototype);
-    NewGeneratorClass->AddProperty("maximum-power-output", MaximumPowerOutput);
-    NewGeneratorClass->AddProperty("slot-class-identifier", SlotClassIdentifier);
+    NewGeneratorClass->AddProperty("name", BufferReader.ReadString());
+    NewGeneratorClass->AddProperty("description", BufferReader.ReadString());
+    NewGeneratorClass->AddProperty("base-price", BufferReader.ReadUnsignedInteger32Bit());
+    NewGeneratorClass->AddProperty("space-requirement", BufferReader.ReadUnsignedInteger32Bit());
+    NewGeneratorClass->AddProperty("visualization-prototype", BufferReader.ReadVisualisationPrototype());
+    NewGeneratorClass->AddProperty("maximum-power-output", BufferReader.ReadFloat());
+    NewGeneratorClass->AddProperty("slot-class-identifier", BufferReader.ReadString());
 }
 
 static auto ReadMesh(ARX::Item & Item) -> void
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_MESH, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto NewMesh = g_GraphicsEngine->GetMeshManager()->Create(Identifier);
     
     if(NewMesh == nullptr)
@@ -650,62 +610,54 @@ static auto ReadMesh(ARX::Item & Item) -> void
     }
     
     auto Points = std::map<std::string, std::vector<Vector3f>::size_type>{};
-    auto PointCount = std::uint32_t{};
+    auto PointCount = BufferReader.ReadUnsignedInteger32Bit();
     
-    Reader >> PointCount;
     for(auto PointIndex = std::uint32_t{0}; PointIndex < PointCount; ++PointIndex)
     {
-        auto PointIdentifier = std::string{};
-        auto PointName = std::string{};
-        auto PointCoordinates = Vector3f{};
+        auto PointIdentifier = BufferReader.ReadString();
+        auto PointName = BufferReader.ReadString();
+        auto PointCoordinates = BufferReader.ReadVector3f();
         
-        Reader >> PointIdentifier >> PointName >> PointCoordinates;
         Points[PointIdentifier] = NewMesh->AddPoint(PointCoordinates);
     }
     
     auto TrianglePoints = std::map<std::string, std::pair<std::vector<Vector3f >::size_type, Vector3f>>{};
-    auto TrianglePointCount = std::uint32_t{};
+    auto TrianglePointCount = BufferReader.ReadUnsignedInteger32Bit();
     
-    Reader >> TrianglePointCount;
     for(auto TrianglePointIndex = std::uint32_t{0}; TrianglePointIndex < TrianglePointCount; ++TrianglePointIndex)
     {
-        auto TrianglePointIdentifier = std::string{};
-        auto TrianglePointNormal = Vector3f{};
-        auto PointIdentifier = std::string{};
+        auto TrianglePointIdentifier = BufferReader.ReadString();
+        auto TrianglePointNormal = BufferReader.ReadVector3f();
+        auto PointIdentifier = BufferReader.ReadString();
         
-        Reader >> TrianglePointIdentifier >> TrianglePointNormal >> PointIdentifier;
         TrianglePoints[TrianglePointIdentifier] = std::make_pair(Points[PointIdentifier], TrianglePointNormal);
     }
     
-    auto TriangleCount = std::uint32_t{};
+    auto TriangleCount = BufferReader.ReadUnsignedInteger32Bit();
     
-    Reader >> TriangleCount;
     for(auto TriangleIndex = std::uint32_t{0}; TriangleIndex < TriangleCount; ++TriangleIndex)
     {
-        auto TriangleIdentifier = std::string{};
-        auto TriangleName = std::string{};
-        auto TrianglePoint1Identifier = std::string{};
-        auto TrianglePoint2Identifier = std::string{};
-        auto TrianglePoint3Identifier = std::string{};
+        auto TriangleIdentifier = BufferReader.ReadString();
+        auto TriangleName = BufferReader.ReadString();
+        auto TrianglePoint1Identifier = BufferReader.ReadString();
+        auto TrianglePoint2Identifier = BufferReader.ReadString();
+        auto TrianglePoint3Identifier = BufferReader.ReadString();
         
-        Reader >> TriangleIdentifier >> TriangleName >> TrianglePoint1Identifier >> TrianglePoint2Identifier >> TrianglePoint3Identifier;
         NewMesh->AddTriangle(TrianglePoints[TrianglePoint1Identifier].first, TrianglePoints[TrianglePoint1Identifier].second, TrianglePoints[TrianglePoint2Identifier].first, TrianglePoints[TrianglePoint2Identifier].second, TrianglePoints[TrianglePoint3Identifier].first, TrianglePoints[TrianglePoint3Identifier].second);
     }
     
-    auto MarkerCount = std::uint32_t{};
+    auto MarkerCount = BufferReader.ReadUnsignedInteger32Bit();
     
-    Reader >> MarkerCount;
     for(auto MarkerIndex = std::uint32_t{0}; MarkerIndex < MarkerCount; ++MarkerIndex)
     {
-        auto MarkerIdentifier = std::string{};
-        auto MarkerLengthValid = bool{};
-        auto MarkerLength = float{};
-        auto MarkerPositionValid = bool{};
-        auto MarkerPosition = Vector3f{};
-        auto MarkerOrientationValid = bool{};
-        auto MarkerOrientation = Quaternion{};
+        auto MarkerIdentifier = BufferReader.ReadString();
+        auto MarkerLengthValid = BufferReader.ReadBoolean();
+        auto MarkerLength = BufferReader.ReadFloat();
+        auto MarkerPositionValid = BufferReader.ReadBoolean();
+        auto MarkerPosition = BufferReader.ReadVector3f();
+        auto MarkerOrientationValid = BufferReader.ReadBoolean();
+        auto MarkerOrientation = BufferReader.ReadQuaternion();
         
-        Reader >> MarkerIdentifier >> MarkerLengthValid >> MarkerLength >> MarkerPositionValid >> MarkerPosition >> MarkerOrientationValid >> MarkerOrientation;
         NewMesh->AddMarker(MarkerIdentifier);
         if(MarkerLengthValid == true)
         {
@@ -727,11 +679,8 @@ static auto ReadModel(ARX::Item & Item) -> void
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_MODEL, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto NewModel = g_GraphicsEngine->GetModelManager()->Create(Identifier);
     
     if(NewModel == nullptr)
@@ -739,18 +688,14 @@ static auto ReadModel(ARX::Item & Item) -> void
         throw std::runtime_error("Could not create model '" + Identifier + "'.");
     }
     
-    auto PartCount = std::uint32_t{};
+    auto PartCount = BufferReader.ReadUnsignedInteger32Bit();
     
-    Reader >> PartCount;
     for(auto PartIndex = std::uint32_t{0}; PartIndex < PartCount; ++PartIndex)
     {
-        auto PartIdentifier = std::string{};
-        auto PartMeshIdentifier = std::string{};
-        auto PartPosition = Vector3f{};
-        auto PartOrientation = Quaternion{};
-        
-        Reader >> PartIdentifier >> PartMeshIdentifier >> PartPosition >> PartOrientation;
-        
+        auto PartIdentifier = BufferReader.ReadString();
+        auto PartMeshIdentifier = BufferReader.ReadString();
+        auto PartPosition = BufferReader.ReadVector3f();
+        auto PartOrientation = BufferReader.ReadQuaternion();
         auto PartMesh = g_GraphicsEngine->GetMeshManager()->Get(PartMeshIdentifier);
         
         if(PartMesh == nullptr)
@@ -765,43 +710,33 @@ static auto ReadPlanet(ARX::Item & Item, Galaxy * Galaxy, System * System) -> vo
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_PLANET, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto NewPlanet = dynamic_cast<Planet *>(g_ObjectFactory->Create("planet", Identifier, false));
     
     if(NewPlanet == nullptr)
     {
         throw std::runtime_error("Could not create planet '" + Identifier + "'.");
     }
-    
-    auto Name = std::string{};
-    auto Description = std::string{};
-    VisualizationPrototype VisualizationPrototype{};
-    
-    Reader >> Name >> Description >> VisualizationPrototype;
-    NewPlanet->GetAspectName()->SetName(Name);
-    NewPlanet->SetDescription(Description);
+    NewPlanet->GetAspectName()->SetName(BufferReader.ReadString());
+    NewPlanet->SetDescription(BufferReader.ReadString());
     assert(NewPlanet->GetAspectVisualization() != nullptr);
     assert(NewPlanet->GetAspectVisualization()->GetVisualizationPrototype() == nullptr);
-    NewPlanet->GetAspectVisualization()->SetVisualizationPrototype(VisualizationPrototype);
+    NewPlanet->GetAspectVisualization()->SetVisualizationPrototype(BufferReader.ReadVisualisationPrototype());
     
-    auto PlanetPosition = Vector2f{};
-    auto Size = float{};
-    auto PlanetAssetsCount = std::uint32_t{};
+    auto PlanetPosition = BufferReader.ReadVector2f();
     
-    Reader >> PlanetPosition >> Size >> PlanetAssetsCount;
     NewPlanet->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(PlanetPosition[0], PlanetPosition[1], 0.0f));
-    NewPlanet->SetSize(Size);
+    NewPlanet->SetSize(BufferReader.ReadFloat());
+    
+    auto PlanetAssetsCount = BufferReader.ReadUnsignedInteger32Bit();
+    
     for(auto PlanetAssetsIndex = std::uint32_t{0}; PlanetAssetsIndex < PlanetAssetsCount; ++PlanetAssetsIndex)
     {
-        auto AssetsTypeIdentifier = std::string{};
-        auto AssetsSubTypeIdentifier = std::string{};
-        auto BasePriceModifier = float{};
+        auto AssetsTypeIdentifier = BufferReader.ReadString();
+        auto AssetsSubTypeIdentifier = BufferReader.ReadString();
+        auto BasePriceModifier = BufferReader.ReadFloat();
         
-        Reader >> AssetsTypeIdentifier >> AssetsSubTypeIdentifier >> BasePriceModifier;
         if(g_BlueprintManager->Has(AssetsTypeIdentifier, AssetsSubTypeIdentifier) == true)
         {
             auto NewPlanetAssets = NewPlanet->CreatePlanetAssets(AssetsTypeIdentifier, AssetsSubTypeIdentifier);
@@ -810,24 +745,16 @@ static auto ReadPlanet(ARX::Item & Item, Galaxy * Galaxy, System * System) -> vo
         }
         else
         {
-            throw std::runtime_error("For the assets of planet \"" + Name + "\", don't know a class of type '" + AssetsTypeIdentifier + "' and sub type '" + AssetsSubTypeIdentifier + "'.");
+            throw std::runtime_error("For the assets of planet \"" + Identifier + "\", don't know a class of type '" + AssetsTypeIdentifier + "' and sub type '" + AssetsSubTypeIdentifier + "'.");
         }
     }
+    NewPlanet->SetLandingFeePerSpace(BufferReader.ReadFloat() / 1000.0f);
+    NewPlanet->SetOffersRecharging(BufferReader.ReadBoolean());
+    NewPlanet->SetRechargingFeePerEnergy(BufferReader.ReadFloat());
+    NewPlanet->SetOffersRepairing(BufferReader.ReadBoolean());
+    NewPlanet->SetRepairingFeePerHull(BufferReader.ReadFloat());
     
-    auto LandingFeePerSpace = float{};
-    auto OffersRecharging = bool{};
-    auto RechargingFeePerEnergy = float{};
-    auto OffersRepairing = bool{};
-    auto RepairingFeePerHull = float{};
-    auto FactionIdentifier = std::string{};
-    
-    Reader >> LandingFeePerSpace >> OffersRecharging >> RechargingFeePerEnergy >> OffersRepairing >> RepairingFeePerHull >> FactionIdentifier;
-    NewPlanet->SetLandingFeePerSpace(LandingFeePerSpace / 1000.0f);
-    NewPlanet->SetOffersRecharging(OffersRecharging);
-    NewPlanet->SetRechargingFeePerEnergy(RechargingFeePerEnergy);
-    NewPlanet->SetOffersRepairing(OffersRepairing);
-    NewPlanet->SetRepairingFeePerHull(RepairingFeePerHull);
-    
+    auto FactionIdentifier = BufferReader.ReadString();
     auto Faction = Galaxy->GetFaction(FactionIdentifier);
     
     if(Faction == nullptr)
@@ -842,11 +769,8 @@ static auto ReadProgram(ARX::Item & Item, Graphics::ShadingManager * ShadingMana
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_SHADER_PROGRAM, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto Program = ShadingManager->CreateProgram(Identifier);
     
     if(Program == nullptr)
@@ -854,15 +778,11 @@ static auto ReadProgram(ARX::Item & Item, Graphics::ShadingManager * ShadingMana
         throw std::runtime_error("Could not create program '" + Identifier + "'.");
     }
     
-    auto NumberOfShaders = std::uint32_t{};
+    auto ShaderCount = BufferReader.ReadUnsignedInteger32Bit();
     
-    Reader >> NumberOfShaders;
-    for(auto ShaderNumber = std::uint32_t{1}; ShaderNumber <= NumberOfShaders; ++ShaderNumber)
+    for(auto ShaderIndex = std::uint32_t{0}; ShaderIndex < ShaderCount; ++ShaderIndex)
     {
-        auto ShaderIdentifier = std::string{};
-        
-        Reader >> ShaderIdentifier;
-        Program->AddShaderIdentifier(ShaderIdentifier);
+        Program->AddShaderIdentifier(BufferReader.ReadString());
     }
 }
 
@@ -870,11 +790,8 @@ static auto ReadScenario(ARX::Item & Item, ScenarioManager * ScenarioManager) ->
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_SCENARIO, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto NewScenario = ScenarioManager->Create(Identifier);
     
     if(NewScenario == nullptr)
@@ -882,24 +799,16 @@ static auto ReadScenario(ARX::Item & Item, ScenarioManager * ScenarioManager) ->
         throw std::runtime_error("Could not create scenario '" + Identifier + "'.");
     }
     NewScenario->SetResourcePath("/Scenarios/" + Item.GetName());
-    
-    auto Name = std::string{};
-    auto Description = std::string{};
-    
-    Reader >> Name >> Description;
-    NewScenario->SetName(Name);
-    NewScenario->SetDescription(Description);
+    NewScenario->SetName(BufferReader.ReadString());
+    NewScenario->SetDescription(BufferReader.ReadString());
 }
 
 static auto ReadShader(ARX::Item & Item, Graphics::ShadingManager * ShadingManager) -> void
 {
     GalacticFall::CheckItemType(Item, DATA_TYPE_SHADER);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto Shader = ShadingManager->CreateShader(Identifier);
     
     if(Shader == nullptr)
@@ -918,76 +827,52 @@ static auto ReadShader(ARX::Item & Item, Graphics::ShadingManager * ShadingManag
     {
         throw std::runtime_error("Unknown sub type '" + std::to_string(Item.GetType()) + "' for shader '" + Item.GetName() + ".");
     }
-    
-    auto Source = std::string{};
-    
-    Reader >> Source;
-    Shader->SetSource(Source);
+    Shader->SetSource(BufferReader.ReadString());
 }
 
 static auto ReadShipClass(ARX::Item & Item, BlueprintManager * BlueprintManager, ClassManager<SlotClass> * SlotClassManager) -> void
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_SHIP_CLASS, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto NewShipClass = BlueprintManager->Create("ship", Identifier);
     
     if(NewShipClass == nullptr)
     {
         throw std::runtime_error("Could not create ship class '" + Identifier + "'.");
     }
+    NewShipClass->AddProperty("name", BufferReader.ReadString());
+    NewShipClass->AddProperty("description", BufferReader.ReadString());
+    NewShipClass->AddProperty("base-price", BufferReader.ReadUnsignedInteger32Bit());
+    NewShipClass->AddProperty("space-requirement", BufferReader.ReadUnsignedInteger32Bit());
     
-    auto Name = std::string{};
-    auto Description = std::string{};
-    auto BasePrice = std::uint32_t{};
-    auto SpaceRequirement = std::uint32_t{};
-    VisualizationPrototype VisualizationPrototype{};
-    auto FuelCapacity = float{};
-    auto ForwardThrust = float{};
-    auto TurnSpeed = float{};
-    auto MaximumSpeed = float{};
-    auto MaximumAvailableSpace = std::uint32_t{};
-    auto JumpFuel = float{};
-    auto ForwardFuel = float{};
-    auto TurnFuel = float{};
-    auto Hull = float{};
-    auto ExhaustMarkerPartIdentifier = std::string{};
-    auto ExhaustMarkerIdentifier = std::string{};
-    auto SlotCount = std::uint32_t{};
+    auto VisualisationPrototype = BufferReader.ReadVisualisationPrototype();
     
-    Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelCapacity >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustMarkerPartIdentifier >> ExhaustMarkerIdentifier >> SlotCount;
-    NewShipClass->AddProperty("name", Name);
-    NewShipClass->AddProperty("description", Description);
-    NewShipClass->AddProperty("base-price", BasePrice);
-    NewShipClass->AddProperty("space-requirement", SpaceRequirement);
-    NewShipClass->AddProperty("visualization-prototype", VisualizationPrototype);
-    NewShipClass->AddProperty("fuel-capacity", FuelCapacity);
-    NewShipClass->AddProperty("forward-thrust", ForwardThrust);
-    NewShipClass->AddProperty("jump-fuel", JumpFuel);
-    NewShipClass->AddProperty("maximum-speed", MaximumSpeed);
-    NewShipClass->AddProperty("maximum-available-space", MaximumAvailableSpace);
-    NewShipClass->AddProperty("turn-speed", TurnSpeed);
-    NewShipClass->AddProperty("forward-fuel", ForwardFuel);
-    NewShipClass->AddProperty("turn-fuel", TurnFuel);
-    NewShipClass->AddProperty("hull", Hull);
-    NewShipClass->AddProperty("exhaust-marker-part-identifier", ExhaustMarkerPartIdentifier);
-    NewShipClass->AddProperty("exhaust-marker-identifier", ExhaustMarkerIdentifier);
+    NewShipClass->AddProperty("visualization-prototype", VisualisationPrototype);
+    NewShipClass->AddProperty("forward-thrust", BufferReader.ReadFloat());
+    NewShipClass->AddProperty("turn-speed", BufferReader.ReadFloat());
+    NewShipClass->AddProperty("maximum-speed", BufferReader.ReadFloat());
+    NewShipClass->AddProperty("maximum-available-space", BufferReader.ReadUnsignedInteger32Bit());
+    NewShipClass->AddProperty("fuel-capacity", BufferReader.ReadFloat());
+    NewShipClass->AddProperty("jump-fuel", BufferReader.ReadFloat());
+    NewShipClass->AddProperty("forward-fuel", BufferReader.ReadFloat());
+    NewShipClass->AddProperty("turn-fuel", BufferReader.ReadFloat());
+    NewShipClass->AddProperty("hull", BufferReader.ReadFloat());
+    NewShipClass->AddProperty("exhaust-marker-part-identifier", BufferReader.ReadString());
+    NewShipClass->AddProperty("exhaust-marker-identifier", BufferReader.ReadString());
     
+    auto SlotCount = BufferReader.ReadUnsignedInteger32Bit();
     auto Slots = std::list<Properties>{};
     
     for(auto SlotIndex = std::uint32_t{0}; SlotIndex < SlotCount; ++SlotIndex)
     {
         auto NewSlot = Properties{};
-        auto SlotIdentifier = std::string{};
-        auto SlotClassIdentifier = std::string{};
+        auto SlotIdentifier = BufferReader.ReadString();
         
-        Reader >> SlotIdentifier >> SlotClassIdentifier;
         NewSlot.AddProperty("identifier", SlotIdentifier);
         
+        auto SlotClassIdentifier = BufferReader.ReadString();
         auto SlotClass = SlotClassManager->Get(SlotClassIdentifier);
         
         if(SlotClass == nullptr)
@@ -995,31 +880,26 @@ static auto ReadShipClass(ARX::Item & Item, BlueprintManager * BlueprintManager,
             throw std::runtime_error("Could not get slot class '" + SlotClassIdentifier + "' for slot '" + SlotIdentifier + "' of ship class '" + Identifier + "'.");
         }
         NewSlot.AddProperty("class", SlotClass);
+        NewSlot.AddProperty("name", BufferReader.ReadString());
         
-        auto SlotName = std::string{};
-        auto SlotMarkerPartIdentifier = std::string{};
-        auto SlotMarkerIdentifier = std::string{};
-        auto VisualizeAccessory = bool{};
-        
-        Reader >> SlotName >> SlotMarkerPartIdentifier >> SlotMarkerIdentifier >> VisualizeAccessory;
-        NewSlot.AddProperty("name", SlotName);
-    
-        auto SlotPosition = VisualizationPrototype.GetMarkerPosition(SlotMarkerPartIdentifier, SlotMarkerIdentifier);
+        auto SlotMarkerPartIdentifier = BufferReader.ReadString();
+        auto SlotMarkerIdentifier = BufferReader.ReadString();
+        auto SlotPosition = VisualisationPrototype.GetMarkerPosition(SlotMarkerPartIdentifier, SlotMarkerIdentifier);
 
         if(SlotPosition == nullptr)
         {
-            throw std::runtime_error("For the ship '" + Identifier + "' and slot '" + SlotName + "', could not find the marker or its position for the slot position '" + SlotMarkerIdentifier + "' on the part '" + SlotMarkerPartIdentifier + "'.");
+            throw std::runtime_error("For the ship '" + Identifier + "' and slot '" + SlotIdentifier + "', could not find the marker or its position for the slot position '" + SlotMarkerIdentifier + "' on the part '" + SlotMarkerPartIdentifier + "'.");
         }
         NewSlot.AddProperty("position", *SlotPosition);
     
-        auto SlotOrientation = VisualizationPrototype.GetMarkerOrientation(SlotMarkerPartIdentifier, SlotMarkerIdentifier);
+        auto SlotOrientation = VisualisationPrototype.GetMarkerOrientation(SlotMarkerPartIdentifier, SlotMarkerIdentifier);
 
         if(SlotOrientation == nullptr)
         {
-            throw std::runtime_error("For the ship '" + Identifier + "' and slot '" + SlotName + "', could not find the marker or its orientation for the slot position '" + SlotMarkerIdentifier + "' on the part '" + SlotMarkerPartIdentifier + "'.");
+            throw std::runtime_error("For the ship '" + Identifier + "' and slot '" + SlotIdentifier + "', could not find the marker or its orientation for the slot position '" + SlotMarkerIdentifier + "' on the part '" + SlotMarkerPartIdentifier + "'.");
         }
         NewSlot.AddProperty("orientation", *SlotOrientation);
-        NewSlot.AddProperty("visualize-accessory", VisualizeAccessory);
+        NewSlot.AddProperty("visualize-accessory", BufferReader.ReadBoolean());
         Slots.push_back(NewSlot);
     }
     NewShipClass->AddProperty("slots", Slots);
@@ -1029,29 +909,21 @@ static auto ReadSlotClass(ARX::Item & Item, ClassManager<SlotClass> * SlotClassM
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_SLOT_CLASS, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto NewSlotClass = SlotClassManager->Create(Identifier);
     
     if(NewSlotClass == nullptr)
     {
         throw std::runtime_error("Could not create slot class '" + Identifier + "'.");
     }
+    NewSlotClass->SetName(BufferReader.ReadString());
     
-    auto Name = std::string{};
-    auto AcceptedSlotClassIdentifierCount = std::uint32_t{};
+    auto AcceptedSlotClassIdentifierCount = BufferReader.ReadUnsignedInteger32Bit();
     
-    Reader >> Name >> AcceptedSlotClassIdentifierCount;
-    NewSlotClass->SetName(Name);
     for(auto AcceptedSlotClassIdentifierIndex = std::uint32_t{0}; AcceptedSlotClassIdentifierIndex < AcceptedSlotClassIdentifierCount; ++AcceptedSlotClassIdentifierIndex)
     {
-        auto AcceptedSlotClassIdentifier = std::string{};
-        
-        Reader >> AcceptedSlotClassIdentifier;
-        NewSlotClass->AddAcceptedSlotClassIdentifier(AcceptedSlotClassIdentifier);
+        NewSlotClass->AddAcceptedSlotClassIdentifier(BufferReader.ReadString());
     }
 }
 
@@ -1059,17 +931,19 @@ static auto ReadStar(ARX::Item & Item, System * System) -> void
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_STAR, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    auto Position = Vector2f{};
-    auto Color = Graphics::ColorRGB{};
-    
-    Reader >> Identifier >> Position >> Color;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto NewStar = dynamic_cast<Star *>(g_ObjectFactory->Create("star", Identifier, false));
     
+    if(NewStar == nullptr)
+    {
+        throw std::runtime_error("Could not create star '" + Identifier + "'.");
+    }
+    
+    auto Position = BufferReader.ReadVector2f();
+    
     NewStar->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(Position[0], Position[1], 0.0f));
-    NewStar->SetColor(Color);
+    NewStar->SetColor(BufferReader.ReadColourRGB());
     System->GetAspectObjectContainer()->AddContent(NewStar);
 }
 
@@ -1077,108 +951,82 @@ static auto ReadSystemLink(ARX::Item & Item, System * System, std::multimap<std:
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_SYSTEM, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
+    auto BufferReader = GalacticFall::BufferReader{Item};
     
-    Reader >> Identifier;
-    SystemLinks.insert(std::make_pair(System->GetSubTypeIdentifier(), Identifier));
+    SystemLinks.insert(std::make_pair(System->GetSubTypeIdentifier(), BufferReader.ReadString()));
 }
 
 static auto ReadTexture(ARX::Item & Item) -> void
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_TEXTURE, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    auto Width = std::uint32_t{};
-    auto Height = std::uint32_t{};
-    auto Format = std::uint32_t{};
-    
-    Reader >> Identifier >> Width >> Height >> Format;
-    Width = ntohl(Width);
-    Height = ntohl(Height);
-    Format = ntohl(Format);
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto Texture = g_GraphicsEngine->GetTextureManager()->Create(Identifier);
     
     if(Texture == nullptr)
     {
         throw std::runtime_error("Could not create texture '" + Identifier + "'.");
     }
-    Texture->SetData(Width, Height, Format, Reader.GetBuffer().GetBegin() + Reader.GetPosition());
+    
+    auto Width = ntohl(BufferReader.ReadUnsignedInteger32Bit());
+    auto Height = ntohl(BufferReader.ReadUnsignedInteger32Bit());
+    auto Format = ntohl(BufferReader.ReadUnsignedInteger32Bit());
+    
+    Texture->SetData(Width, Height, Format, BufferReader.GetCurrentData());
 }
 
 static auto ReadTurretClass(ARX::Item & Item, BlueprintManager * BlueprintManager) -> void
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_TURRET_CLASS, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto Identifier = std::string{};
-    
-    Reader >> Identifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
     auto NewTurretClass = BlueprintManager->Create("turret", Identifier);
     
     if(NewTurretClass == nullptr)
     {
         throw std::runtime_error("Could not create turret class '" + Identifier + "'.");
     }
+    NewTurretClass->AddProperty("name", BufferReader.ReadString());
+    NewTurretClass->AddProperty("description", BufferReader.ReadString());
+    NewTurretClass->AddProperty("base-price", BufferReader.ReadUnsignedInteger32Bit());
+    NewTurretClass->AddProperty("space-requirement", BufferReader.ReadUnsignedInteger32Bit());
     
-    auto Name = std::string{};
-    auto Description = std::string{};
-    auto BasePrice = std::uint32_t{};
-    auto SpaceRequirement = std::uint32_t{};
-    VisualizationPrototype TurretVisualizationPrototype{};
-    auto SlotClassIdentifier = std::string{};
-    auto Orientation = Quaternion{};
-    auto MaximumPowerInput = float{};
-    auto MaximumPowerOutput = float{};
-    auto EnergyUsagePerShot = float{};
-    auto MuzzlePositionPartIdentifier = std::string{};
-    auto MuzzlePositionMarkerIdentifier = std::string{};
-    auto ShotExitSpeed = float{};
-    auto ShotDamage = float{};
-    auto ShotLifeTime = float{};
-    VisualizationPrototype ShotVisualizationPrototype{};
+    auto TurretVisualisationPrototype = BufferReader.ReadVisualisationPrototype();
     
-    Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> TurretVisualizationPrototype >> SlotClassIdentifier >> Orientation >> MaximumPowerInput >> MaximumPowerOutput >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
-    NewTurretClass->AddProperty("name", Name);
-    NewTurretClass->AddProperty("description", Description);
-    NewTurretClass->AddProperty("base-price", BasePrice);
-    NewTurretClass->AddProperty("space-requirement", SpaceRequirement);
-    NewTurretClass->AddProperty("visualization-prototype", TurretVisualizationPrototype);
-    NewTurretClass->AddProperty("slot-class-identifier", SlotClassIdentifier);
-    NewTurretClass->AddProperty("orientation", Orientation);
-    NewTurretClass->AddProperty("maximum-power-input", MaximumPowerInput);
-    NewTurretClass->AddProperty("maximum-power-output", MaximumPowerOutput);
-    NewTurretClass->AddProperty("energy-usage-per-shot", EnergyUsagePerShot);
+    NewTurretClass->AddProperty("visualization-prototype", TurretVisualisationPrototype);
+    NewTurretClass->AddProperty("slot-class-identifier", BufferReader.ReadString());
+    NewTurretClass->AddProperty("orientation", BufferReader.ReadQuaternion());
+    NewTurretClass->AddProperty("maximum-power-input", BufferReader.ReadFloat());
+    NewTurretClass->AddProperty("maximum-power-output", BufferReader.ReadFloat());
+    NewTurretClass->AddProperty("energy-usage-per-shot", BufferReader.ReadFloat());
     
-    auto MuzzlePosition = TurretVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier);
+    auto MuzzlePositionPartIdentifier = BufferReader.ReadString();
+    auto MuzzlePositionMarkerIdentifier = BufferReader.ReadString();
+    auto MuzzlePosition = TurretVisualisationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier);
     
     if(MuzzlePosition == nullptr)
     {
         throw std::runtime_error("For the turret '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
     }
     NewTurretClass->AddProperty("muzzle-position", *MuzzlePosition);
-    NewTurretClass->AddProperty("shot-exit-speed", ShotExitSpeed);
-    NewTurretClass->AddProperty("shot-damage", ShotDamage);
-    NewTurretClass->AddProperty("shot-life-time", ShotLifeTime);
-    NewTurretClass->AddProperty("shot-visualization-prototype", ShotVisualizationPrototype);
+    NewTurretClass->AddProperty("shot-exit-speed", BufferReader.ReadFloat());
+    NewTurretClass->AddProperty("shot-damage", BufferReader.ReadFloat());
+    NewTurretClass->AddProperty("shot-life-time", BufferReader.ReadFloat());
+    NewTurretClass->AddProperty("shot-visualization-prototype", BufferReader.ReadVisualisationPrototype());
 }
 
 static auto ReadVectorGraphics(ARX::Item & Item) -> void
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_VECTOR_GRAPHICS, 0);
     
-    auto Reader = ARX::BufferReader{Item};
-    auto XML = std::string{};
-    auto Width = std::uint32_t{};
-    auto Height = std::uint32_t{};
-    auto SubPixels = std::uint32_t{};
-    auto TextureIdentifier = std::string{};
-    
-    Reader >> XML >> Width >> Height >> SubPixels >> TextureIdentifier;
-    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto XML = BufferReader.ReadString();
+    auto Width = BufferReader.ReadUnsignedInteger32Bit();
+    auto Height = BufferReader.ReadUnsignedInteger32Bit();
+    auto SubPixels = BufferReader.ReadUnsignedInteger32Bit();
+    auto TextureIdentifier = BufferReader.ReadString();
     auto SceneOrError = Rasteriser::ParseScene(XML);
     
     if(SceneOrError.has_value() == false)

@@ -1,26 +1,14 @@
 /**
  * galactic-fall
- * Copyright (C) 2006-2019  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2006-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
 #include <cassert>
 #include <cstdint>
 
 #include <arx/buffer_reader.h>
+#include <arx/item.h>
 
 #include <algebra/quaternion.h>
 #include <algebra/vector2f.h>
@@ -36,113 +24,155 @@
 #include "globals.h"
 #include "visualization_prototype.h"
 
-ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, Graphics::ColorRGB & Color)
+GalacticFall::BufferReader::BufferReader(ARX::Item & Item) :
+    m_BufferReader{Item}
 {
-	float Red;
-	float Green;
-	float Blue;
-	
-	BufferReader >> Red >> Green >> Blue;
-	Color.Set(Red, Green, Blue);
-	
-	return BufferReader;
 }
 
-ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, Graphics::ColorRGBO & Color)
+auto GalacticFall::BufferReader::GetCurrentData() -> std::byte const *
 {
-	float Red;
-	float Green;
-	float Blue;
-	float Opacity;
-	
-	BufferReader >> Red >> Green >> Blue >> Opacity;
-	Color.Set(Red, Green, Blue, Opacity);
-	
-	return BufferReader;
+    return m_BufferReader.GetBuffer().GetBegin() + m_BufferReader.GetPosition();
 }
 
-ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, Quaternion & Quaternion)
+auto GalacticFall::BufferReader::ReadBoolean() -> bool
 {
-	float W;
-	float X;
-	float Y;
-	float Z;
-	
-	BufferReader >> W >> X >> Y >> Z;
-	Quaternion.Set(W, X, Y, Z);
-	
-	return BufferReader;
+    auto Result = bool{};
+    
+    m_BufferReader.Read(sizeof(bool), reinterpret_cast<ARX::Buffer::pointer>(&Result));
+    
+    return Result;
 }
 
-ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, Vector2f & Vector)
+auto GalacticFall::BufferReader::ReadColourRGB() -> Graphics::ColorRGB
 {
-	float x;
-	float y;
+	auto Red = ReadFloat();
+	auto Green = ReadFloat();
+	auto Blue = ReadFloat();
 	
-	BufferReader >> x >> y;
-	Vector.Set(x, y);
-	
-	return BufferReader;
+	return Graphics::ColorRGB{Red, Green, Blue};
 }
 
-ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, Vector3f & Vector)
+auto GalacticFall::BufferReader::ReadColourRGBO() -> Graphics::ColorRGBO
 {
-	float x;
-	float y;
-	float z;
+	auto Red = ReadFloat();
+	auto Green = ReadFloat();
+	auto Blue = ReadFloat();
+	auto Opacity = ReadFloat();
 	
-	BufferReader >> x >> y >> z;
-	Vector.Set(x, y, z);
-	
-	return BufferReader;
+	return Graphics::ColorRGBO{Red, Green, Blue, Opacity};
 }
 
-ARX::BufferReader & operator>>(ARX::BufferReader & BufferReader, VisualizationPrototype & VisualizationPrototype)
+auto GalacticFall::BufferReader::ReadFloat() -> float
 {
-	std::string ModelIdentifier;
-	
-	BufferReader >> ModelIdentifier;
-	
+    auto Result = float{};
+    
+    m_BufferReader.Read(sizeof(float), reinterpret_cast<ARX::Buffer::pointer>(&Result));
+    
+    return Result;
+}
+
+auto GalacticFall::BufferReader::ReadQuaternion() -> Quaternion
+{
+	auto W = ReadFloat();
+	auto X = ReadFloat();
+	auto Y = ReadFloat();
+	auto Z = ReadFloat();
+    
+    return Quaternion{W, X, Y, Z};
+}
+
+auto GalacticFall::BufferReader::ReadString() -> std::string
+{
+    auto Result = std::string{};
+    auto const & Buffer = m_BufferReader.GetBuffer();
+    auto Index = m_BufferReader.GetPosition();
+    auto Length = Buffer.GetLength();
+    
+    while(Length > Index)
+    {
+        if(auto Byte = Buffer[Index++]; Byte == std::byte{0})
+        {
+            break;
+        }
+        else
+        {
+            Result += static_cast<std::string::value_type>(Byte);
+        }
+    }
+    m_BufferReader.SetPosition(Index);
+    
+    return Result;
+}
+
+auto GalacticFall::BufferReader::ReadUnsignedInteger32Bit() -> std::uint32_t
+{
+    auto Result = std::uint32_t{};
+    
+    m_BufferReader.Read(sizeof(std::uint32_t), reinterpret_cast<ARX::Buffer::pointer>(&Result));
+    
+    return Result;
+}
+
+auto GalacticFall::BufferReader::ReadVector2f() -> Vector2f
+{
+	auto X = ReadFloat();
+	auto Y = ReadFloat();
+    
+    return Vector2f{X, Y};
+}
+
+auto GalacticFall::BufferReader::ReadVector3f() -> Vector3f
+{
+	auto X = ReadFloat();
+	auto Y = ReadFloat();
+	auto Z = ReadFloat();
+    
+    return Vector3f::CreateFromComponents(X, Y, Z);
+}
+
+auto GalacticFall::BufferReader::ReadVisualisationPrototype() -> VisualizationPrototype
+{
+    auto Result = VisualizationPrototype{};
+	auto ModelIdentifier = ReadString();
+    
 	assert(g_GraphicsEngine != nullptr);
 	assert(g_GraphicsEngine->GetModelManager() != nullptr);
 	
-	auto Model(g_GraphicsEngine->GetModelManager()->Get(ModelIdentifier));
+	auto Model = g_GraphicsEngine->GetModelManager()->Get(ModelIdentifier);
 	
 	if(Model == nullptr)
 	{
 		throw std::runtime_error("Could not find the model \"" + ModelIdentifier + "\".");
 	}
-	VisualizationPrototype.SetModel(Model);
+	Result.SetModel(Model);
 	
-	std::uint32_t VisualizationPartCount;
+	auto VisualisationPartCount = ReadUnsignedInteger32Bit();
 	
-	BufferReader >> VisualizationPartCount;
-	for(auto VisualizationPartIndex = 0ul; VisualizationPartIndex < VisualizationPartCount; ++VisualizationPartIndex)
+	for(auto VisualisationPartIndex = std::uint32_t{0}; VisualisationPartIndex < VisualisationPartCount; ++VisualisationPartIndex)
 	{
-		std::string PartIdentifier;
-		Graphics::ColorRGBO PartDiffuseColor;
-		bool PartValidSpecularColor;
-		Graphics::ColorRGBO PartSpecularColor;
-		bool PartValidShininess;
-		float PartShininess;
-		std::string PartProgramIdentifier;
-		
-		BufferReader >> PartIdentifier >> PartDiffuseColor >> PartValidSpecularColor >> PartSpecularColor >> PartValidShininess >> PartShininess >> PartProgramIdentifier;
-		
-		auto PartStyle(new Graphics::Style());
-		
-		PartStyle->SetDiffuseColor(PartDiffuseColor);
-		if(PartValidSpecularColor == true)
+		auto PartStyle = new Graphics::Style{};
+        auto PartIdentifier = ReadString();
+        
+		PartStyle->SetDiffuseColor(ReadColourRGBO());
+        
+        auto PartValidSpecularColour = ReadBoolean();
+        auto PartSpecularColour = ReadColourRGBO();
+        
+		if(PartValidSpecularColour == true)
 		{
-			PartStyle->SetSpecularColor(PartSpecularColor);
+			PartStyle->SetSpecularColor(PartSpecularColour);
 		}
+        
+        auto PartValidShininess = ReadBoolean();
+        auto PartShininess = ReadFloat();
+        
 		if(PartValidShininess == true)
 		{
 			PartStyle->SetShininess(PartShininess);
 		}
-		PartStyle->SetProgramIdentifier(PartProgramIdentifier);
-		VisualizationPrototype.SetPartStyle(PartIdentifier, PartStyle);
+		PartStyle->SetProgramIdentifier(ReadString());
+		Result.SetPartStyle(PartIdentifier, PartStyle);
 	}
 	
-	return BufferReader;
+	return Result;
 }

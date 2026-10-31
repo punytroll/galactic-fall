@@ -3149,7 +3149,7 @@ void LoadKeyboardLookupTable(std::optional<std::list<Settings::KeyBinding>> cons
     {
         for(auto const & KeyBinding : KeyBindings.value())
         {
-            if((KeyBinding.Code >= 0) && (KeyBinding.Code < 128))
+            if(KeyBinding.Code < 128)
             {
                 auto EventIndex{-1};
                 
@@ -3328,6 +3328,10 @@ void LoadKeyboardLookupTable(std::optional<std::list<Settings::KeyBinding>> cons
                         throw std::runtime_error("The action '" + KeyBinding.Action + "' is unknown.");
                     }
                 }
+            }
+            else
+            {
+                throw std::runtime_error{"The code '" + std::to_string(KeyBinding.Code) + "' is unknown."};
             }
         }
     }
