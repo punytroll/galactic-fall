@@ -22,6 +22,7 @@
 
 #include "buffer_reading.h"
 #include "globals.h"
+#include "integer_handling.h"
 #include "visualization_prototype.h"
 
 GalacticFall::BufferReader::BufferReader(ARX::Item & Item) :
@@ -64,11 +65,12 @@ auto GalacticFall::BufferReader::ReadColourRGBO() -> Graphics::ColorRGBO
 
 auto GalacticFall::BufferReader::ReadFloat() -> float
 {
-    auto Result = float{};
+    static_assert(sizeof(float) == sizeof(std::uint32_t));
+    static_assert(std::numeric_limits<float>::is_iec559 == true);
     
-    m_BufferReader.Read(sizeof(float), reinterpret_cast<ARX::Buffer::pointer>(&Result));
+    auto Result = ReadUnsignedInteger32Bit();
     
-    return Result;
+    return std::bit_cast<float>(Result);
 }
 
 auto GalacticFall::BufferReader::ReadQuaternion() -> Quaternion
@@ -110,7 +112,7 @@ auto GalacticFall::BufferReader::ReadUnsignedInteger32Bit() -> std::uint32_t
     
     m_BufferReader.Read(sizeof(std::uint32_t), reinterpret_cast<ARX::Buffer::pointer>(&Result));
     
-    return Result;
+    return GalacticFall::FromBigEndian(Result);
 }
 
 auto GalacticFall::BufferReader::ReadVector2f() -> Vector2f

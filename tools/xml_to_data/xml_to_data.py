@@ -208,24 +208,24 @@ def out(data_type, node, element_type = None):
 		else:
 			if node.firstChild != None:
 				out_file.write(node.firstChild.nodeValue.encode("utf-8"))
-		out_file.write(pack('B', 0))
+		out_file.write(pack('!B', 0))
 	elif data_type == "boolean":
 		if node.firstChild.nodeValue == "true":
-			out_file.write(pack('B', 1))
+			out_file.write(pack('!B', 1))
 		elif node.firstChild.nodeValue == "false":
-			out_file.write(pack('B', 0))
+			out_file.write(pack('!B', 0))
 		else:
 			raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White)
 	elif data_type == "float":
-		out_file.write(pack('f', float(node.firstChild.nodeValue)))
+		out_file.write(pack('!f', float(node.firstChild.nodeValue)))
 	elif data_type == "unsigned-integer-8bit":
 		try:
-			out_file.write(pack('B', int(node.firstChild.nodeValue)))
+			out_file.write(pack('!B', int(node.firstChild.nodeValue)))
 		except ValueError:
 			raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White)
 	elif data_type == "unsigned-integer-32bit":
 		try:
-			out_file.write(pack('I', int(node.firstChild.nodeValue)))
+			out_file.write(pack('!I', int(node.firstChild.nodeValue)))
 		except ValueError:
 			raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White)
 	elif data_type == "collection":
@@ -233,7 +233,7 @@ def out(data_type, node, element_type = None):
 		for node_part in node.childNodes:
 			if node_part.nodeType == Node.ELEMENT_NODE:
 				count += 1
-		out_file.write(pack('I', int(count)))
+		out_file.write(pack('!I', int(count)))
 		for node_part in node.childNodes:
 			if node_part.nodeType == Node.ELEMENT_NODE:
 				if element_type != None:

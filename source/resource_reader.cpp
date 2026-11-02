@@ -969,9 +969,9 @@ static auto ReadTexture(ARX::Item & Item) -> void
         throw std::runtime_error("Could not create texture '" + Identifier + "'.");
     }
     
-    auto Width = ntohl(BufferReader.ReadUnsignedInteger32Bit());
-    auto Height = ntohl(BufferReader.ReadUnsignedInteger32Bit());
-    auto Format = ntohl(BufferReader.ReadUnsignedInteger32Bit());
+    auto Width = BufferReader.ReadUnsignedInteger32Bit();
+    auto Height = BufferReader.ReadUnsignedInteger32Bit();
+    auto Format = BufferReader.ReadUnsignedInteger32Bit();
     
     Texture->SetData(Width, Height, Format, BufferReader.GetCurrentData());
 }
