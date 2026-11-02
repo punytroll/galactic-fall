@@ -152,9 +152,9 @@ Faction * System::GetRandomFactionAccordingToInfluences(void)
 	return nullptr;
 }
 
-bool System::IsLinkedToSystem(const System * System) const
+auto System::IsLinkedToSystem(System const * System) const -> bool
 {
-	return std::find(_LinkedSystems.begin(), _LinkedSystems.end(), System) != _LinkedSystems.end();
+	return std::find(m_LinkedSystems.begin(), m_LinkedSystems.end(), System) != m_LinkedSystems.end();
 }
 
 void System::_OnAdded(Object * Content)
@@ -319,9 +319,9 @@ void System::_OnRemoved(Object * Content)
 	}
 }
 
-void System::AddLinkedSystem(System * LinkedSystem)
+auto System::AddLinkedSystem(System * LinkedSystem) -> void
 {
-	_LinkedSystems.push_back(LinkedSystem);
+	m_LinkedSystems.push_back(LinkedSystem);
 }
 
 void System::_UpdateVisualization(Visualization * Visualization)

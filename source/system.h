@@ -44,17 +44,17 @@ public:
 	// queries
 	const std::list< Commodity * > & GetCommodities(void) const;
 	float GetFactionInfluence(Faction * Faction) const;
-	const std::list< System * > GetLinkedSystems(void) const;
+	auto GetLinkedSystems() const -> std::list<System *> const &;
 	const std::vector< Planet * > & GetPlanets(void) const;
 	Faction * GetRandomFactionAccordingToInfluences(void);
 	const std::list< Ship * > & GetShips(void) const;
 	const std::list< Shot * > & GetShots(void) const;
 	const Star * GetStar(void) const;
 	float GetTrafficDensity(void) const;
-	bool IsLinkedToSystem(const System * System) const;
+	auto IsLinkedToSystem(System const * System) const -> bool;
 	// modifiers
 	void AddFactionInfluence(Faction * Faction, float Influence);
-	void AddLinkedSystem(System * LinkedSystem);
+	auto AddLinkedSystem(System * LinkedSystem) -> void;
 	void SetTrafficDensity(float TrafficDensity);
 private:
 	// callbacks
@@ -65,7 +65,7 @@ private:
 	// member variables
 	std::list< Commodity * > _Commodities;
 	std::vector< FactionInfluence * > _FactionInfluences;
-	std::list< System * > _LinkedSystems;
+	std::list<System *> m_LinkedSystems;
 	std::vector< Planet * > _Planets;
 	std::list< Ship * > _Ships;
 	std::list< Shot * > _Shots;
@@ -78,9 +78,9 @@ inline const std::list< Commodity * > & System::GetCommodities(void) const
 	return _Commodities;
 }
 
-inline const std::list< System * > System::GetLinkedSystems(void) const
+inline auto System::GetLinkedSystems() const -> std::list<System *> const &
 {
-	return _LinkedSystems;
+	return m_LinkedSystems;
 }
 
 inline const std::vector< Planet * > & System::GetPlanets(void) const
