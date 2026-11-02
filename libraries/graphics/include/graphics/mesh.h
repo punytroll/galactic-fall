@@ -9,11 +9,13 @@
 
 #include <GL/gl.h>
 
-#include <map>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <algebra/vector3f.h>
+
+#include <graphics/transparent_string_hash.h>
 
 namespace Graphics
 {
@@ -51,20 +53,20 @@ namespace Graphics
         Mesh(const std::string & Identifier);
         void Draw(Graphics::RenderContext * RenderContext) const;
         const std::string & GetIdentifier(void) const;
-        const float * GetMarkerLength(const std::string & MarkerIdentifier) const;
-        const Quaternion * GetMarkerOrientation(const std::string & MarkerIdentifier) const;
-        const Vector3f * GetMarkerPosition(const std::string & MarkerIdentifier) const;
+        auto GetMarkerLength(std::string_view MarkerIdentifier) const -> float const *;
+        auto GetMarkerOrientation(std::string_view MarkerIdentifier) const -> Quaternion const *;
+        auto GetMarkerPosition(std::string_view MarkerIdentifier) const -> Vector3f const *;
         float GetRadialSize(void) const;
-        void AddMarker(const std::string & Identifier);
-        void SetMarkerLength(const std::string & MarkerIdentifier, float Length);
-        void SetMarkerOrientation(const std::string & MarkerIdentifier, const Quaternion & Orientation);
-        void SetMarkerPosition(const std::string & MarkerIdentifier, const Vector3f & Position);
+        auto AddMarker(std::string_view Identifier) -> void;
+        auto SetMarkerLength(std::string_view MarkerIdentifier, float Length) -> void;
+        auto SetMarkerOrientation(std::string_view MarkerIdentifier, Quaternion const& Orientation) -> void;
+        auto SetMarkerPosition(std::string_view MarkerIdentifier, Vector3f const & Position) -> void;
         std::vector< Vector3f >::size_type AddPoint(const Vector3f & Point);
         std::vector< Graphics::Mesh::Triangle >::size_type AddTriangle(std::vector< Vector3f >::size_type Point1Index, const Vector3f & Point1Normal, std::vector< Vector3f >::size_type Point2Index, const Vector3f & Point2Normal, std::vector< Vector3f >::size_type Point3Index, const Vector3f & Point3Normal);
         void BuildVertexArray(void);
     private:
         std::string _Identifier;
-        std::map< std::string, Graphics::Mesh::Marker > _Markers;
+        std::unordered_map<std::string, Graphics::Mesh::Marker, Graphics::TransparentStringHash, std::equal_to<>> m_Markers;
         GLsizei _NumberOfIndices;
         std::vector< Vector3f > _Points;
         mutable float _RadialSize;

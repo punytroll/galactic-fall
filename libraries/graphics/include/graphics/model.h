@@ -1,30 +1,19 @@
 /**
  * galactic-fall
- * Copyright (C) 2006-2025  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2006-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
-#ifndef GALACTIC_FALL__LIBRARY__GRAPHICS__INCLUDE__GRAPHICS__MODEL_H
-#define GALACTIC_FALL__LIBRARY__GRAPHICS__INCLUDE__GRAPHICS__MODEL_H
+#ifndef GALACTIC_FALL__LIBRARIES__GRAPHICS__INCLUDE__GRAPHICS__MODEL_H
+#define GALACTIC_FALL__LIBRARIES__GRAPHICS__INCLUDE__GRAPHICS__MODEL_H
 
-#include <map>
 #include <string>
+#include <unordered_map>
 
 #include <algebra/quaternion.h>
 #include <algebra/vector3f.h>
+
+#include <graphics/transparent_string_hash.h>
 
 namespace Graphics
 {
@@ -46,16 +35,16 @@ namespace Graphics
 		~Model(void);
 		// getters
 		const std::string & GetIdentifier(void) const;
-		const std::map< std::string, const Graphics::Model::Part * > & GetParts(void) const;
+		auto GetParts() const -> std::unordered_map<std::string, Graphics::Model::Part const *, Graphics::TransparentStringHash, std::equal_to<>> const &;
 		float GetRadialSize(void) const;
-		const float * GetMarkerLength(const std::string & PartIdentifier, const std::string & MarkerIdentifier) const;
-		const Quaternion * GetMarkerOrientation(const std::string & PartIdentifier, const std::string & MarkerIdentifier) const;
-		const Vector3f * GetMarkerPosition(const std::string & PartIdentifier, const std::string & MarkerIdentifier) const;
+		auto GetMarkerLength(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> float const *;
+		auto GetMarkerOrientation(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> Quaternion const *;
+		auto GetMarkerPosition(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> Vector3f const *;
 		// modifiers
 		void AddPart(const std::string & PartIdentifier, const Graphics::Mesh * PartMesh, const Vector3f & PartPosition, const Quaternion & PartOrientation);
 	private:
 		std::string _Identifier;
-		std::map< std::string, const Graphics::Model::Part * > _Parts;
+		std::unordered_map<std::string, Graphics::Model::Part const *, Graphics::TransparentStringHash, std::equal_to<>> m_Parts;
 		mutable float _RadialSize;
 	};
 	
@@ -64,9 +53,9 @@ namespace Graphics
 		return _Identifier;
 	}
 	
-	inline const std::map< std::string, const Graphics::Model::Part * > & Model::GetParts(void) const
+	inline auto Model::GetParts() const -> std::unordered_map<std::string, Graphics::Model::Part const *, Graphics::TransparentStringHash, std::equal_to<>> const &
 	{
-		return _Parts;
+		return m_Parts;
 	}
 }
 
