@@ -1,20 +1,7 @@
 /**
  * galactic-fall
- * Copyright (C) 2008-2018  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2008-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
 #include <cassert>
@@ -56,21 +43,24 @@ VisualizationPrototype::~VisualizationPrototype(void)
 	}
 }
 
-const float * VisualizationPrototype::GetMarkerLength(const std::string & PartIdentifier, const std::string & MarkerIdentifier) const
+auto VisualizationPrototype::GetMarkerLength(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> std::optional<float> const &
 {
 	assert(_Model != nullptr);
+    
 	return _Model->GetMarkerLength(PartIdentifier, MarkerIdentifier);
 }
 
-const Quaternion * VisualizationPrototype::GetMarkerOrientation(const std::string & PartIdentifier, const std::string & MarkerIdentifier) const
+auto VisualizationPrototype::GetMarkerOrientation(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> std::optional<Quaternion> const &
 {
 	assert(_Model != nullptr);
+    
 	return _Model->GetMarkerOrientation(PartIdentifier, MarkerIdentifier);
 }
 
-const Vector3f * VisualizationPrototype::GetMarkerPosition(const std::string & PartIdentifier, const std::string & MarkerIdentifier) const
+auto VisualizationPrototype::GetMarkerPosition(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> std::optional<Vector3f> const &
 {
 	assert(_Model != nullptr);
+    
 	return _Model->GetMarkerPosition(PartIdentifier, MarkerIdentifier);
 }
 

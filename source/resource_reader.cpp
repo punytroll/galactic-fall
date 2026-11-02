@@ -213,16 +213,14 @@ auto ResourceReader::ReadGalaxy(std::string const & GalaxyIdentifier) -> Galaxy 
             GalacticFall::CheckItemTypeAndSubType(*Item, DATA_TYPE_GALAXY, 0);
             GalacticFall::FetchAndDecompress(*Item);
             
-            auto Reader = ARX::BufferReader{*Item};
-            auto Identifier = std::string{};
+            auto BufferReader = GalacticFall::BufferReader{*Item};
+            auto Identifier = BufferReader.ReadString();
             
-            Reader >> Identifier;
             if(Identifier == GalaxyIdentifier)
             {
                 auto NewGalaxy = dynamic_cast<Galaxy *>(g_ObjectFactory->Create("galaxy", Identifier, false));
-                auto Name = std::string{};
+                auto Name = BufferReader.ReadString();
                 
-                Reader >> Name;
                 assert(NewGalaxy->GetAspectName() != nullptr);
                 NewGalaxy->GetAspectName()->SetName(Name);
                 if(Item->GetStructure().HasRelation("factions") == false)
@@ -535,9 +533,9 @@ static auto ReadEnergyProjectileWeaponClass(ARX::Item & Item, BlueprintManager *
     
     auto MuzzlePositionPartIdentifier = BufferReader.ReadString();
     auto MuzzlePositionMarkerIdentifier = BufferReader.ReadString();
-    auto MuzzlePosition = EnergyProjectileWeaponVisualisationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier);
+    auto const & MuzzlePosition = EnergyProjectileWeaponVisualisationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier);
     
-    if(MuzzlePosition == nullptr)
+    if(MuzzlePosition.has_value() == false)
     {
         throw std::runtime_error("For the energy projectile weapon '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
     }
@@ -651,26 +649,14 @@ static auto ReadMesh(ARX::Item & Item) -> void
     for(auto MarkerIndex = std::uint32_t{0}; MarkerIndex < MarkerCount; ++MarkerIndex)
     {
         auto MarkerIdentifier = BufferReader.ReadString();
-        auto MarkerLengthValid = BufferReader.ReadBoolean();
-        auto MarkerLength = BufferReader.ReadFloat();
-        auto MarkerPositionValid = BufferReader.ReadBoolean();
-        auto MarkerPosition = BufferReader.ReadVector3f();
-        auto MarkerOrientationValid = BufferReader.ReadBoolean();
-        auto MarkerOrientation = BufferReader.ReadQuaternion();
+        auto MarkerLength = BufferReader.ReadOptionalFloat();
+        auto MarkerPosition = BufferReader.ReadOptionalVector3f();
+        auto MarkerOrientation = BufferReader.ReadOptionalQuaternion();
         
         NewMesh->AddMarker(MarkerIdentifier);
-        if(MarkerLengthValid == true)
-        {
-            NewMesh->SetMarkerLength(MarkerIdentifier, MarkerLength);
-        }
-        if(MarkerPositionValid == true)
-        {
-            NewMesh->SetMarkerPosition(MarkerIdentifier, MarkerPosition);
-        }
-        if(MarkerOrientationValid == true)
-        {
-            NewMesh->SetMarkerOrientation(MarkerIdentifier, MarkerOrientation);
-        }
+        NewMesh->SetMarkerLength(MarkerIdentifier, MarkerLength);
+        NewMesh->SetMarkerPosition(MarkerIdentifier, MarkerPosition);
+        NewMesh->SetMarkerOrientation(MarkerIdentifier, MarkerOrientation);
     }
     NewMesh->BuildVertexArray();
 }
@@ -884,17 +870,17 @@ static auto ReadShipClass(ARX::Item & Item, BlueprintManager * BlueprintManager,
         
         auto SlotMarkerPartIdentifier = BufferReader.ReadString();
         auto SlotMarkerIdentifier = BufferReader.ReadString();
-        auto SlotPosition = VisualisationPrototype.GetMarkerPosition(SlotMarkerPartIdentifier, SlotMarkerIdentifier);
+        auto const & SlotPosition = VisualisationPrototype.GetMarkerPosition(SlotMarkerPartIdentifier, SlotMarkerIdentifier);
 
-        if(SlotPosition == nullptr)
+        if(SlotPosition.has_value() == false)
         {
             throw std::runtime_error("For the ship '" + Identifier + "' and slot '" + SlotIdentifier + "', could not find the marker or its position for the slot position '" + SlotMarkerIdentifier + "' on the part '" + SlotMarkerPartIdentifier + "'.");
         }
         NewSlot.AddProperty("position", *SlotPosition);
     
-        auto SlotOrientation = VisualisationPrototype.GetMarkerOrientation(SlotMarkerPartIdentifier, SlotMarkerIdentifier);
+        auto const & SlotOrientation = VisualisationPrototype.GetMarkerOrientation(SlotMarkerPartIdentifier, SlotMarkerIdentifier);
 
-        if(SlotOrientation == nullptr)
+        if(SlotOrientation.has_value() == false)
         {
             throw std::runtime_error("For the ship '" + Identifier + "' and slot '" + SlotIdentifier + "', could not find the marker or its orientation for the slot position '" + SlotMarkerIdentifier + "' on the part '" + SlotMarkerPartIdentifier + "'.");
         }
@@ -1004,9 +990,9 @@ static auto ReadTurretClass(ARX::Item & Item, BlueprintManager * BlueprintManage
     
     auto MuzzlePositionPartIdentifier = BufferReader.ReadString();
     auto MuzzlePositionMarkerIdentifier = BufferReader.ReadString();
-    auto MuzzlePosition = TurretVisualisationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier);
+    auto const & MuzzlePosition = TurretVisualisationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier);
     
-    if(MuzzlePosition == nullptr)
+    if(MuzzlePosition.has_value() == false)
     {
         throw std::runtime_error("For the turret '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
     }

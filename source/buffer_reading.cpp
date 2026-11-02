@@ -6,6 +6,7 @@
 
 #include <cassert>
 #include <cstdint>
+#include <functional>
 
 #include <arx/buffer_reader.h>
 #include <arx/item.h>
@@ -24,6 +25,29 @@
 #include "globals.h"
 #include "integer_handling.h"
 #include "visualization_prototype.h"
+
+namespace GalacticFall
+{
+    namespace
+    {
+        template<typename ValueType>
+        auto ReadOptional(GalacticFall::BufferReader & BufferReader, auto BufferReaderFunction, std::uint32_t Skip) -> std::optional<ValueType>
+        {
+            auto Engaged = BufferReader.ReadBoolean();
+            
+            if(Engaged == true)
+            {
+                return (BufferReader.*BufferReaderFunction)();
+            }
+            else
+            {
+                BufferReader.Skip(Skip);
+                
+                return std::nullopt;
+            }
+        }
+    }
+}
 
 GalacticFall::BufferReader::BufferReader(ARX::Item & Item) :
     m_BufferReader{Item}
@@ -71,6 +95,26 @@ auto GalacticFall::BufferReader::ReadFloat() -> float
     auto Result = ReadUnsignedInteger32Bit();
     
     return std::bit_cast<float>(Result);
+}
+
+auto GalacticFall::BufferReader::ReadOptionalColourRGBO() -> std::optional<Graphics::ColorRGBO>
+{
+    return GalacticFall::ReadOptional<Graphics::ColorRGBO>(*this, &GalacticFall::BufferReader::ReadColourRGBO, 16);
+}
+
+auto GalacticFall::BufferReader::ReadOptionalFloat() -> std::optional<float>
+{
+    return GalacticFall::ReadOptional<float>(*this, &GalacticFall::BufferReader::ReadFloat, 4);
+}
+
+auto GalacticFall::BufferReader::ReadOptionalQuaternion() -> std::optional<Quaternion>
+{
+    return GalacticFall::ReadOptional<Quaternion>(*this, &GalacticFall::BufferReader::ReadQuaternion, 16);
+}
+
+auto GalacticFall::BufferReader::ReadOptionalVector3f() -> std::optional<Vector3f>
+{
+    return GalacticFall::ReadOptional<Vector3f>(*this, &GalacticFall::BufferReader::ReadVector3f, 12);
 }
 
 auto GalacticFall::BufferReader::ReadQuaternion() -> Quaternion
@@ -156,25 +200,16 @@ auto GalacticFall::BufferReader::ReadVisualisationPrototype() -> VisualizationPr
         auto PartIdentifier = ReadString();
         
 		PartStyle->SetDiffuseColor(ReadColourRGBO());
-        
-        auto PartValidSpecularColour = ReadBoolean();
-        auto PartSpecularColour = ReadColourRGBO();
-        
-		if(PartValidSpecularColour == true)
-		{
-			PartStyle->SetSpecularColor(PartSpecularColour);
-		}
-        
-        auto PartValidShininess = ReadBoolean();
-        auto PartShininess = ReadFloat();
-        
-		if(PartValidShininess == true)
-		{
-			PartStyle->SetShininess(PartShininess);
-		}
+        PartStyle->SetSpecularColor(ReadOptionalColourRGBO());
+        PartStyle->SetShininess(ReadOptionalFloat());
 		PartStyle->SetProgramIdentifier(ReadString());
 		Result.SetPartStyle(PartIdentifier, PartStyle);
 	}
 	
 	return Result;
+}
+
+auto GalacticFall::BufferReader::Skip(std::uint32_t Offset) -> void
+{
+    m_BufferReader.Skip(Offset);
 }

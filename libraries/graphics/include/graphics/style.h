@@ -1,92 +1,88 @@
 /**
  * galactic-fall
- * Copyright (C) 2015-2025  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2015-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
-#ifndef GALACTIC_FALL__LIBRARY__GRAPHICS__INCLUDE__GRAPHICS__STYLE_H
-#define GALACTIC_FALL__LIBRARY__GRAPHICS__INCLUDE__GRAPHICS__STYLE_H
+#ifndef GALACTIC_FALL__LIBRARIES__GRAPHICS__INCLUDE__GRAPHICS__STYLE_H
+#define GALACTIC_FALL__LIBRARIES__GRAPHICS__INCLUDE__GRAPHICS__STYLE_H
 
+#include <optional>
 #include <string>
+
+#include <graphics/color_rgbo.h>
 
 namespace Graphics
 {
-	class ColorRGBO;
-	
 	class Style
 	{
 	public:
-		// constructor & destructor
-		Style(void);
-		explicit Style(const Graphics::Style * Style);
-		~Style(void);
+        Style() = default;
+		explicit Style(Graphics::Style const * Style);
+        
+		Style(Graphics::Style const & Style) = delete;
+		auto operator=(Graphics::Style const & Style) -> Graphics::Style & = delete;
+        
 		// getters
-		const Graphics::ColorRGBO & GetDiffuseColor(void) const;
-		const std::string & GetProgramIdentifier(void) const;
-		float GetShininess(void) const;
-		const Graphics::ColorRGBO & GetSpecularColor(void) const;
-		bool HasDiffuseColor(void) const;
-		bool HasShininess(void) const;
-		bool HasSpecularColor(void) const;
+		auto GetDiffuseColor() const -> Graphics::ColorRGBO const &;
+		auto GetProgramIdentifier() const -> std::string const &;
+		auto GetShininess() const -> float;
+		auto GetSpecularColor() const -> Graphics::ColorRGBO const &;
+		auto HasDiffuseColor() const -> bool;
+		auto HasShininess() const -> bool;
+		auto HasSpecularColor() const -> bool;
 		// setters
-		void SetDiffuseColor(const Graphics::ColorRGBO & DiffuseColor);
-		void SetProgramIdentifier(const std::string & ProgramIdentifier);
-		void SetShininess(float Shininess);
-		void SetSpecularColor(const Graphics::ColorRGBO & SpecularColor);
+		auto SetDiffuseColor(std::optional<Graphics::ColorRGBO> DiffuseColor) -> void;
+		auto SetProgramIdentifier(std::string ProgramIdentifier) -> void;
+		auto SetShininess(std::optional<float> Shininess) -> void;
+		auto SetSpecularColor(std::optional<Graphics::ColorRGBO> SpecularColor) -> void;
 	private:
-		Graphics::ColorRGBO * _DiffuseColor;
-		std::string _ProgramIdentifier;
-		float * _Shininess;
-		Graphics::ColorRGBO * _SpecularColor;
+		std::optional<Graphics::ColorRGBO> m_DiffuseColor;
+		std::string m_ProgramIdentifier;
+		std::optional<float> m_Shininess;
+		std::optional<Graphics::ColorRGBO> m_SpecularColor;
 	private:
-		/**
-		 * @brief Hidden copy constructor.
-		 **/
-		Style(const Graphics::Style & Style);
-		
-		/**
-		 * @brief Hidden assignment operator.
-		 **/
-		Graphics::Style & operator=(const Graphics::Style & Style);
 	};
 	
-	inline const std::string & Style::GetProgramIdentifier(void) const
+	inline auto Style::GetProgramIdentifier() const -> std::string const &
 	{
-		return _ProgramIdentifier;
+		return m_ProgramIdentifier;
 	}
 	
-	inline bool Style::HasDiffuseColor(void) const
+	inline auto Style::HasDiffuseColor() const -> bool
 	{
-		return _DiffuseColor != nullptr;
+		return m_DiffuseColor.has_value();
 	}
 	
-	inline bool Style::HasShininess(void) const
+	inline auto Style::HasShininess() const -> bool
 	{
-		return _Shininess != nullptr;
+		return m_Shininess.has_value();
 	}
 	
-	inline bool Style::HasSpecularColor(void) const
+	inline auto Style::HasSpecularColor() const -> bool
 	{
-		return _SpecularColor != nullptr;
+		return m_SpecularColor.has_value();
 	}
+    
+    inline auto Style::SetDiffuseColor(std::optional<Graphics::ColorRGBO> DiffuseColor) -> void
+    {
+        m_DiffuseColor = std::move(DiffuseColor);
+    }
 	
-	inline void Style::SetProgramIdentifier(const std::string & ProgramIdentifier)
+	inline auto Style::SetProgramIdentifier(std::string ProgramIdentifier) -> void
 	{
-		_ProgramIdentifier = ProgramIdentifier;
+		m_ProgramIdentifier = std::move(ProgramIdentifier);
 	}
+    
+    inline auto Style::SetShininess(std::optional<float> Shininess) -> void
+    {
+        m_Shininess = std::move(Shininess);
+    }
+
+    inline auto Style::SetSpecularColor(std::optional<Graphics::ColorRGBO> SpecularColor) -> void
+    {
+        m_SpecularColor = std::move(SpecularColor);
+    }
 }
 
 #endif

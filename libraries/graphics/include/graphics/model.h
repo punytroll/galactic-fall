@@ -7,6 +7,7 @@
 #ifndef GALACTIC_FALL__LIBRARIES__GRAPHICS__INCLUDE__GRAPHICS__MODEL_H
 #define GALACTIC_FALL__LIBRARIES__GRAPHICS__INCLUDE__GRAPHICS__MODEL_H
 
+#include <optional>
 #include <string>
 #include <unordered_map>
 
@@ -37,9 +38,9 @@ namespace Graphics
 		const std::string & GetIdentifier(void) const;
 		auto GetParts() const -> std::unordered_map<std::string, Graphics::Model::Part const *, Graphics::TransparentStringHash, std::equal_to<>> const &;
 		float GetRadialSize(void) const;
-		auto GetMarkerLength(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> float const *;
-		auto GetMarkerOrientation(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> Quaternion const *;
-		auto GetMarkerPosition(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> Vector3f const *;
+		auto GetMarkerLength(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> std::optional<float> const &;
+		auto GetMarkerOrientation(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> std::optional<Quaternion> const &;
+		auto GetMarkerPosition(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> std::optional<Vector3f> const &;
 		// modifiers
 		void AddPart(const std::string & PartIdentifier, const Graphics::Mesh * PartMesh, const Vector3f & PartPosition, const Quaternion & PartOrientation);
 	private:

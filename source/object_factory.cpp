@@ -1,20 +1,7 @@
 /**
  * galactic-fall
- * Copyright (C) 2007-2019  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2007-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
 #include <stdexcept>
@@ -217,19 +204,19 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto & ShipVisualizationPrototype{ShipBlueprint->GetValue< VisualizationPrototype >("visualization-prototype")};
 		auto & ExhaustMarkerPartIdentifier{ShipBlueprint->GetValue< std::string >("exhaust-marker-part-identifier")};
 		auto & ExhaustMarkerIdentifier{ShipBlueprint->GetValue< std::string >("exhaust-marker-identifier")};
-		auto ExhaustRadius{ShipVisualizationPrototype.GetMarkerLength(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
+		auto const & ExhaustRadius = ShipVisualizationPrototype.GetMarkerLength(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier);
 		
-		assert(ExhaustRadius != nullptr);
+		assert(ExhaustRadius.has_value() == true);
 		NewShip->SetExhaustRadius(*ExhaustRadius);
 		
-		auto ExhaustPosition{ShipVisualizationPrototype.GetMarkerPosition(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
+		auto const & ExhaustPosition = ShipVisualizationPrototype.GetMarkerPosition(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier);
 		
-		assert(ExhaustPosition != nullptr);
+		assert(ExhaustPosition.has_value() == true);
 		NewShip->SetExhaustPosition(*ExhaustPosition);
 		
-		auto ExhaustOrientation{ShipVisualizationPrototype.GetMarkerOrientation(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
+		auto const & ExhaustOrientation = ShipVisualizationPrototype.GetMarkerOrientation(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier);
 		
-		assert(ExhaustOrientation != nullptr);
+		assert(ExhaustOrientation.has_value() == true);
 		NewShip->SetExhaustOrientation(*ExhaustOrientation);
 		
 		auto EngineGlowParticleSystem(CreateParticleSystem("engine_glow"));

@@ -9,6 +9,7 @@
 
 #include <GL/gl.h>
 
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -23,6 +24,14 @@ namespace Graphics
     
     class Mesh
     {
+    private:
+        struct Marker
+        {
+            std::optional<float> Length;
+            std::optional<Quaternion> Orientation;
+            std::optional<Vector3f> Position;
+        };
+        
     public:
         struct Triangle
         {
@@ -30,37 +39,17 @@ namespace Graphics
             Vector3f Normals[3];
         };
         
-        class Marker
-        {
-        public:
-            // constructor and destructor
-            Marker(void);
-            ~Marker(void);
-            // queries
-            const float * GetLength(void) const;
-            const Quaternion * GetOrientation(void) const;
-            const Vector3f * GetPosition(void) const;
-            // modifications
-            void SetLength(float Length);
-            void SetOrientation(const Quaternion & Orientation);
-            void SetPosition(const Vector3f & Position);
-        private:
-            float * _Length;
-            Quaternion * _Orientation;
-            Vector3f * _Position;
-        };
-        
         Mesh(const std::string & Identifier);
         void Draw(Graphics::RenderContext * RenderContext) const;
         const std::string & GetIdentifier(void) const;
-        auto GetMarkerLength(std::string_view MarkerIdentifier) const -> float const *;
-        auto GetMarkerOrientation(std::string_view MarkerIdentifier) const -> Quaternion const *;
-        auto GetMarkerPosition(std::string_view MarkerIdentifier) const -> Vector3f const *;
+        auto GetMarkerLength(std::string_view MarkerIdentifier) const -> std::optional<float> const &;
+        auto GetMarkerOrientation(std::string_view MarkerIdentifier) const -> std::optional<Quaternion> const &;
+        auto GetMarkerPosition(std::string_view MarkerIdentifier) const -> std::optional<Vector3f> const &;
         float GetRadialSize(void) const;
         auto AddMarker(std::string_view Identifier) -> void;
-        auto SetMarkerLength(std::string_view MarkerIdentifier, float Length) -> void;
-        auto SetMarkerOrientation(std::string_view MarkerIdentifier, Quaternion const& Orientation) -> void;
-        auto SetMarkerPosition(std::string_view MarkerIdentifier, Vector3f const & Position) -> void;
+        auto SetMarkerLength(std::string_view MarkerIdentifier, std::optional<float> Length) -> void;
+        auto SetMarkerOrientation(std::string_view MarkerIdentifier, std::optional<Quaternion> Orientation) -> void;
+        auto SetMarkerPosition(std::string_view MarkerIdentifier, std::optional<Vector3f> Position) -> void;
         std::vector< Vector3f >::size_type AddPoint(const Vector3f & Point);
         std::vector< Graphics::Mesh::Triangle >::size_type AddTriangle(std::vector< Vector3f >::size_type Point1Index, const Vector3f & Point1Normal, std::vector< Vector3f >::size_type Point2Index, const Vector3f & Point2Normal, std::vector< Vector3f >::size_type Point3Index, const Vector3f & Point3Normal);
         void BuildVertexArray(void);
@@ -73,21 +62,6 @@ namespace Graphics
         std::vector< Graphics::Mesh::Triangle > _Triangles;
         GLuint _VertexArray;
     };
-    
-    inline const float * Mesh::Marker::GetLength(void) const
-    {
-        return _Length;
-    }
-    
-    inline const Quaternion * Mesh::Marker::GetOrientation(void) const
-    {
-        return _Orientation;
-    }
-    
-    inline const Vector3f * Mesh::Marker::GetPosition(void) const
-    {
-        return _Position;
-    }
     
     inline const std::string & Mesh::GetIdentifier(void) const
     {

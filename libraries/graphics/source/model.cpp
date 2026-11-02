@@ -24,7 +24,7 @@ Graphics::Model::~Model(void)
 	}
 }
 
-auto Graphics::Model::GetMarkerLength(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> float const *
+auto Graphics::Model::GetMarkerLength(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> std::optional<float> const &
 {
 	auto PartIterator = m_Parts.find(PartIdentifier);
 	
@@ -33,7 +33,7 @@ auto Graphics::Model::GetMarkerLength(std::string_view PartIdentifier, std::stri
 	return PartIterator->second->Mesh->GetMarkerLength(MarkerIdentifier);
 }
 
-auto Graphics::Model::GetMarkerOrientation(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> Quaternion const *
+auto Graphics::Model::GetMarkerOrientation(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> std::optional<Quaternion> const &
 {
 	auto PartIterator = m_Parts.find(PartIdentifier);
 	
@@ -42,7 +42,7 @@ auto Graphics::Model::GetMarkerOrientation(std::string_view PartIdentifier, std:
 	return PartIterator->second->Mesh->GetMarkerOrientation(MarkerIdentifier);
 }
 
-auto Graphics::Model::GetMarkerPosition(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> Vector3f const *
+auto Graphics::Model::GetMarkerPosition(std::string_view PartIdentifier, std::string_view MarkerIdentifier) const -> std::optional<Vector3f> const &
 {
 	auto PartIterator = m_Parts.find(PartIdentifier);
 	

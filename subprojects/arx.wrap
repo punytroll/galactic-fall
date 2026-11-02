@@ -1,8 +1,8 @@
 [wrap-file]
-directory = arx-26.10.0
-source_url = https://github.com/punytroll/arx/archive/refs/tags/26.10.0.tar.gz
-source_filename = arx-26.10.0.tar.gz
-source_hash = 27455b8ee82adf669231667f350545aaf30afdc4c1f99e9f25f5659188937114
+directory = arx-26.11.0
+source_url = https://github.com/punytroll/arx/archive/refs/tags/26.11.0.tar.gz
+source_filename = arx-26.11.0.tar.gz
+source_hash = 78d053857fee31fa7953c1b1dfb74e0a46578fa44491428bc4d052e14c122c6d
 
 [provide]
 dependency_names = arx

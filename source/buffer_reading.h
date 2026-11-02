@@ -35,12 +35,17 @@ namespace GalacticFall
         [[nodiscard]] auto ReadColourRGB() -> Graphics::ColorRGB;
         [[nodiscard]] auto ReadColourRGBO() -> Graphics::ColorRGBO;
         [[nodiscard]] auto ReadFloat() -> float;
+        [[nodiscard]] auto ReadOptionalColourRGBO() -> std::optional<Graphics::ColorRGBO>;
+        [[nodiscard]] auto ReadOptionalFloat() -> std::optional<float>;
+        [[nodiscard]] auto ReadOptionalQuaternion() -> std::optional<Quaternion>;
+        [[nodiscard]] auto ReadOptionalVector3f() -> std::optional<Vector3f>;
         [[nodiscard]] auto ReadQuaternion() -> Quaternion;
         [[nodiscard]] auto ReadString() -> std::string;
         [[nodiscard]] auto ReadUnsignedInteger32Bit() -> std::uint32_t;
         [[nodiscard]] auto ReadVector2f() -> Vector2f;
         [[nodiscard]] auto ReadVector3f() -> Vector3f;
         [[nodiscard]] auto ReadVisualisationPrototype() -> VisualizationPrototype;
+        auto Skip(std::uint32_t Offset) -> void;
         
     private:
         ARX::BufferReader m_BufferReader;
