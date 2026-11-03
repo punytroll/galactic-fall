@@ -297,14 +297,14 @@ Visualization * VisualizeEnergyProjectileWeapon(EnergyProjectileWeapon * EnergyP
 	return Visualization;
 }
 
-Graphics::Node * VisualizePrototype(const VisualizationPrototype * VisualizationPrototype)
+auto VisualizePrototype(VisualizationPrototype const * VisualizationPrototype) -> Graphics::Node *
 {
-	Graphics::Node * Result{nullptr};
+	auto Result = static_cast<Graphics::Node *>(nullptr);
 	
 	assert(VisualizationPrototype != nullptr);
 	assert(VisualizationPrototype->GetModel() != nullptr);
 	
-	auto Parts{VisualizationPrototype->GetModel()->GetParts()};
+	auto const & Parts = VisualizationPrototype->GetModel()->GetParts();
 	
 	assert(Parts.size() > 0);
 	if(Parts.size() > 1)
@@ -313,14 +313,13 @@ Graphics::Node * VisualizePrototype(const VisualizationPrototype * Visualization
 	}
 	for(auto PartStyle : VisualizationPrototype->GetPartStyles())
 	{
-		auto MeshNode{new Graphics::MeshNode{}};
-		auto PartIterator{Parts.find(PartStyle.first)};
+		auto MeshNode = new Graphics::MeshNode{};
+		auto PartIterator = Parts.find(PartStyle.first);
 		
 		assert(PartIterator != Parts.end());
 		assert(PartIterator->second != nullptr);
-		assert(PartIterator->second->Mesh != nullptr);
-		MeshNode->SetMesh(PartIterator->second->Mesh);
-		MeshNode->SetStyle(new Graphics::Style(PartStyle.second));
+		MeshNode->SetMesh(std::addressof(PartIterator->second->Mesh));
+		MeshNode->SetStyle(new Graphics::Style{PartStyle.second});
 		MeshNode->SetPosition(PartIterator->second->Position);
 		MeshNode->SetOrientation(PartIterator->second->Orientation);
 		if(Result == nullptr)

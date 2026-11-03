@@ -688,7 +688,7 @@ static auto ReadModel(ARX::Item & Item) -> void
         {
             throw std::runtime_error("For model '" + Identifier + "' could not find the mesh '" + PartMeshIdentifier + "' for part '" + PartIdentifier + "'.");
         }
-        NewModel->AddPart(PartIdentifier, PartMesh, PartPosition, PartOrientation);
+        NewModel->AddPart(PartIdentifier, *PartMesh, PartPosition, PartOrientation);
     }
 }
 
