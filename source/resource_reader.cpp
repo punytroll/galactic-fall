@@ -57,13 +57,13 @@
 static auto ReadAmmunitionClass(ARX::Item & Item, BlueprintManager * BlueprintManager) -> void;
 static auto ReadBatteryClass(ARX::Item & Item, BlueprintManager * BlueprintManager) -> void;
 static auto ReadCommodityClass(ARX::Item & Item, BlueprintManager * BlueprintManager) -> void;
-static auto ReadEnergyProjectileWeaponClass(ARX::Item & Item, BlueprintManager * BlueprintManager) -> void;
 static auto ReadFaction(ARX::Item & Item, Galaxy * Galaxy, std::list<std::tuple<std::string, std::string, float>> & FactionStandings) -> void;
 static auto ReadGeneratorClass(ARX::Item & Item, BlueprintManager * BlueprintManager) -> void;
 static auto ReadMesh(ARX::Item & Item) -> void;
 static auto ReadModel(ARX::Item & Item) -> void;
 static auto ReadPlanet(ARX::Item & Item, Galaxy * Galaxy, System * System) -> void;
 static auto ReadProgram(ARX::Item & Item, Graphics::ShadingManager * ShadingManager) -> void;
+static auto ReadProjectileWeaponClass(ARX::Item & Item, BlueprintManager * BlueprintManager) -> void;
 static auto ReadScenario(ARX::Item & Item, ScenarioManager * ScenarioManager) -> void;
 static auto ReadShader(ARX::Item & Item, Graphics::ShadingManager * ShadingManager) -> void;
 static auto ReadShipClass(ARX::Item & Item, BlueprintManager * BlueprintManager, ClassManager<SlotClass> * SlotClassManager) -> void;
@@ -185,12 +185,6 @@ auto ResourceReader::ReadCommodityClasses(BlueprintManager * BlueprintManager) -
     GalacticFall::ReadItems(*m_Archive, "/Commodity Classes", std::bind(ReadCommodityClass, std::placeholders::_1, BlueprintManager));
 }
 
-auto ResourceReader::ReadEnergyProjectileWeaponClasses(BlueprintManager * BlueprintManager) -> void
-{
-    assert(m_Archive != nullptr);
-    GalacticFall::ReadItems(*m_Archive, "/Energy Projectile Weapon Classes", std::bind(ReadEnergyProjectileWeaponClass, std::placeholders::_1, BlueprintManager));
-}
-
 auto ResourceReader::ReadGalaxy(std::string const & GalaxyIdentifier) -> Galaxy *
 {
     assert(m_Archive != nullptr);
@@ -272,6 +266,12 @@ auto ResourceReader::ReadModels() -> void
 {
     assert(m_Archive != nullptr);
     GalacticFall::ReadItems(*m_Archive, "/Models", ReadModel);
+}
+
+auto ResourceReader::ReadProjectileWeaponClasses(BlueprintManager * BlueprintManager) -> void
+{
+    assert(m_Archive != nullptr);
+    GalacticFall::ReadItems(*m_Archive, "/Projectile Weapon Classes", std::bind(ReadProjectileWeaponClass, std::placeholders::_1, BlueprintManager));
 }
 
 auto ResourceReader::ReadScenarios(ScenarioManager * ScenarioManager) -> void
@@ -505,47 +505,6 @@ static auto ReadCommodityClass(ARX::Item & Item, BlueprintManager * BlueprintMan
     NewCommodityClass->AddProperty("visualization-prototype", BufferReader.ReadVisualisationPrototype());
 }
 
-static auto ReadEnergyProjectileWeaponClass(ARX::Item & Item, BlueprintManager * BlueprintManager) -> void
-{
-    GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_ENERGY_PROJECTILE_WEAPON_CLASS, 0);
-    
-    auto BufferReader = GalacticFall::BufferReader{Item};
-    auto Identifier = BufferReader.ReadString();
-    auto NewEnergyProjectileWeaponBlueprint = BlueprintManager->Create("energy-projectile-weapon", Identifier);
-    
-    if(NewEnergyProjectileWeaponBlueprint == nullptr)
-    {
-        throw std::runtime_error("Could not create energy projectile weapon blueprint '" + Identifier + "'.");
-    }
-    NewEnergyProjectileWeaponBlueprint->AddProperty("name", BufferReader.ReadString());
-    NewEnergyProjectileWeaponBlueprint->AddProperty("description", BufferReader.ReadString());
-    NewEnergyProjectileWeaponBlueprint->AddProperty("base-price", BufferReader.ReadUnsignedInteger32Bit());
-    NewEnergyProjectileWeaponBlueprint->AddProperty("space-requirement", BufferReader.ReadUnsignedInteger32Bit());
-    
-    auto EnergyProjectileWeaponVisualisationPrototype = BufferReader.ReadVisualisationPrototype();
-    
-    NewEnergyProjectileWeaponBlueprint->AddProperty("visualization-prototype", EnergyProjectileWeaponVisualisationPrototype);
-    NewEnergyProjectileWeaponBlueprint->AddProperty("slot-class-identifier", BufferReader.ReadString());
-    NewEnergyProjectileWeaponBlueprint->AddProperty("orientation", BufferReader.ReadQuaternion());
-    NewEnergyProjectileWeaponBlueprint->AddProperty("maximum-power-input", BufferReader.ReadFloat());
-    NewEnergyProjectileWeaponBlueprint->AddProperty("maximum-power-output", BufferReader.ReadFloat());
-    NewEnergyProjectileWeaponBlueprint->AddProperty("energy-usage-per-shot", BufferReader.ReadFloat());
-    
-    auto MuzzlePositionPartIdentifier = BufferReader.ReadString();
-    auto MuzzlePositionMarkerIdentifier = BufferReader.ReadString();
-    auto const & MuzzlePosition = EnergyProjectileWeaponVisualisationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier);
-    
-    if(MuzzlePosition.has_value() == false)
-    {
-        throw std::runtime_error("For the energy projectile weapon '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
-    }
-    NewEnergyProjectileWeaponBlueprint->AddProperty("muzzle-position", *MuzzlePosition);
-    NewEnergyProjectileWeaponBlueprint->AddProperty("shot-exit-speed", BufferReader.ReadFloat());
-    NewEnergyProjectileWeaponBlueprint->AddProperty("shot-damage", BufferReader.ReadFloat());
-    NewEnergyProjectileWeaponBlueprint->AddProperty("shot-life-time", BufferReader.ReadFloat());
-    NewEnergyProjectileWeaponBlueprint->AddProperty("shot-visualization-prototype", BufferReader.ReadVisualisationPrototype());
-}
-
 static auto ReadFaction(ARX::Item & Item, Galaxy * Galaxy, std::list<std::tuple<std::string, std::string, float>> & FactionStandings) -> void
 {
     GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_FACTION, 0);
@@ -770,6 +729,47 @@ static auto ReadProgram(ARX::Item & Item, Graphics::ShadingManager * ShadingMana
     {
         Program->AddShaderIdentifier(BufferReader.ReadString());
     }
+}
+
+static auto ReadProjectileWeaponClass(ARX::Item & Item, BlueprintManager * BlueprintManager) -> void
+{
+    GalacticFall::CheckItemTypeAndSubType(Item, DATA_TYPE_PROJECTILE_WEAPON_CLASS, 0);
+    
+    auto BufferReader = GalacticFall::BufferReader{Item};
+    auto Identifier = BufferReader.ReadString();
+    auto NewProjectileWeaponBlueprint = BlueprintManager->Create("projectile-weapon", Identifier);
+    
+    if(NewProjectileWeaponBlueprint == nullptr)
+    {
+        throw std::runtime_error("Could not create projectile weapon blueprint '" + Identifier + "'.");
+    }
+    NewProjectileWeaponBlueprint->AddProperty("name", BufferReader.ReadString());
+    NewProjectileWeaponBlueprint->AddProperty("description", BufferReader.ReadString());
+    NewProjectileWeaponBlueprint->AddProperty("base-price", BufferReader.ReadUnsignedInteger32Bit());
+    NewProjectileWeaponBlueprint->AddProperty("space-requirement", BufferReader.ReadUnsignedInteger32Bit());
+    
+    auto ProjectileWeaponVisualisationPrototype = BufferReader.ReadVisualisationPrototype();
+    
+    NewProjectileWeaponBlueprint->AddProperty("visualization-prototype", ProjectileWeaponVisualisationPrototype);
+    NewProjectileWeaponBlueprint->AddProperty("slot-class-identifier", BufferReader.ReadString());
+    NewProjectileWeaponBlueprint->AddProperty("orientation", BufferReader.ReadQuaternion());
+    NewProjectileWeaponBlueprint->AddProperty("maximum-power-input", BufferReader.ReadFloat());
+    NewProjectileWeaponBlueprint->AddProperty("maximum-power-output", BufferReader.ReadFloat());
+    NewProjectileWeaponBlueprint->AddProperty("energy-usage-per-shot", BufferReader.ReadFloat());
+    
+    auto MuzzlePositionPartIdentifier = BufferReader.ReadString();
+    auto MuzzlePositionMarkerIdentifier = BufferReader.ReadString();
+    auto const & MuzzlePosition = ProjectileWeaponVisualisationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier);
+    
+    if(MuzzlePosition.has_value() == false)
+    {
+        throw std::runtime_error("For the projectile weapon '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
+    }
+    NewProjectileWeaponBlueprint->AddProperty("muzzle-position", *MuzzlePosition);
+    NewProjectileWeaponBlueprint->AddProperty("shot-exit-speed", BufferReader.ReadFloat());
+    NewProjectileWeaponBlueprint->AddProperty("shot-damage", BufferReader.ReadFloat());
+    NewProjectileWeaponBlueprint->AddProperty("shot-life-time", BufferReader.ReadFloat());
+    NewProjectileWeaponBlueprint->AddProperty("shot-visualization-prototype", BufferReader.ReadVisualisationPrototype());
 }
 
 static auto ReadScenario(ARX::Item & Item, ScenarioManager * ScenarioManager) -> void

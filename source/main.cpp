@@ -74,7 +74,6 @@
 #include "class_manager.h"
 #include "command_mind.h"
 #include "commodity.h"
-#include "energy_projectile_weapon.h"
 #include "faction.h"
 #include "file_handling.h"
 #include "galaxy.h"
@@ -104,6 +103,7 @@
 #include "output_observer.h"
 #include "physics/energy/network.h"
 #include "planet.h"
+#include "projectile_weapon.h"
 #include "real_time.h"
 #include "resource_reader.h"
 #include "scenario.h"
@@ -926,7 +926,7 @@ Ship * CreateShip(const std::string & ShipSubTypeIdentifier, Faction * Faction)
 	{
 		NewCharacter->SetCredits(200 + GetRandomUnsignedInteger32Bit(50, 250));
 		
-		auto NewWeapon{g_ObjectFactory->Create("energy-projectile-weapon", "light_laser", true)};
+		auto NewWeapon{g_ObjectFactory->Create("projectile-weapon", "light_laser", true)};
 		
 		NewShip->GetAspectObjectContainer()->AddContent(NewWeapon);
 		NewShip->GetAspectOutfitting()->GetSlot("front_gun")->Mount(NewWeapon);
@@ -1902,32 +1902,32 @@ void LoadGameFromElement(const XML::Element * SaveElement)
 							}
 						}
 					}
-					else if(SaveChild->GetAttribute("type-identifier") == "energy-projectile-weapon")
+					else if(SaveChild->GetAttribute("type-identifier") == "projectile-weapon")
 					{
-						auto NewEnergyProjectileWeapon(dynamic_cast< EnergyProjectileWeapon * >(NewObject));
+						auto NewProjectileWeapon = dynamic_cast<ProjectileWeapon *>(NewObject);
 						
-						assert(NewEnergyProjectileWeapon != nullptr);
+						assert(NewProjectileWeapon != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChildElements())
 						{
 							if(TypeSpecificChild->GetName() == "energy")
 							{
 								assert(TypeSpecificChild->HasAttribute("value") == true);
-								NewEnergyProjectileWeapon->SetEnergy(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+								NewProjectileWeapon->SetEnergy(from_string_cast<float>(TypeSpecificChild->GetAttribute("value")));
 							}
 							else if(TypeSpecificChild->GetName() == "energy-capacity")
 							{
 								assert(TypeSpecificChild->HasAttribute("value") == true);
-								NewEnergyProjectileWeapon->SetEnergyCapacity(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+								NewProjectileWeapon->SetEnergyCapacity(from_string_cast<float>(TypeSpecificChild->GetAttribute("value")));
 							}
 							else if(TypeSpecificChild->GetName() == "maximum-power-input")
 							{
 								assert(TypeSpecificChild->HasAttribute("value") == true);
-								NewEnergyProjectileWeapon->SetMaximumPowerInput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+								NewProjectileWeapon->SetMaximumPowerInput(from_string_cast<float>(TypeSpecificChild->GetAttribute("value")));
 							}
 							else if(TypeSpecificChild->GetName() == "maximum-power-output")
 							{
 								assert(TypeSpecificChild->HasAttribute("value") == true);
-								NewEnergyProjectileWeapon->SetMaximumPowerOutput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+								NewProjectileWeapon->SetMaximumPowerOutput(from_string_cast<float>(TypeSpecificChild->GetAttribute("value")));
 							}
 							else
 							{
@@ -3479,7 +3479,7 @@ int main(int argc, char ** argv)
 	g_ResourceReader->ReadAmmunitionClasses(g_BlueprintManager);
 	g_ResourceReader->ReadBatteryClasses(g_BlueprintManager);
 	g_ResourceReader->ReadCommodityClasses(g_BlueprintManager);
-	g_ResourceReader->ReadEnergyProjectileWeaponClasses(g_BlueprintManager);
+	g_ResourceReader->ReadProjectileWeaponClasses(g_BlueprintManager);
 	g_ResourceReader->ReadGeneratorClasses(g_BlueprintManager);
 	g_ResourceReader->ReadSlotClasses(g_SlotClassManager);
 	g_ResourceReader->ReadShipClasses(g_BlueprintManager, g_SlotClassManager);

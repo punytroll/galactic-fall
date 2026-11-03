@@ -97,36 +97,6 @@
 					]
 				},
 				{
-					"name": "Energy Projectile Weapon Classes",
-					"type": 0,
-					"sub_type": 0,
-					"relations": [
-						{
-							"name": "child",
-							"items": [
-								{
-									"name": "Light Gauss Cannon",
-									"type": 7,
-									"sub_type": 0,
-									"data": "@CLASSES__ENERGY_PROJECTILE_WEAPON__LIGHT_GAUSS_CANNON@"
-								},
-								{
-									"name": "Light Laser",
-									"type": 7,
-									"sub_type": 0,
-									"data": "@CLASSES__ENERGY_PROJECTILE_WEAPON__LIGHT_LASER@"
-								},
-								{
-									"name": "Medium Laser",
-									"type": 7,
-									"sub_type": 0,
-									"data": "@CLASSES__ENERGY_PROJECTILE_WEAPON__MEDIUM_LASER@"
-								}
-							]
-						}
-					]
-				},
-				{
 					"name": "Galaxies",
 					"type": 0,
 					"sub_type": 0,
@@ -612,6 +582,36 @@
 									"type": 20,
 									"sub_type": 0,
 									"data": "@PROGRAMS__WIDGET@"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Projectile Weapon Classes",
+					"type": 0,
+					"sub_type": 0,
+					"relations": [
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Light Gauss Cannon",
+									"type": 7,
+									"sub_type": 0,
+									"data": "@CLASSES__PROJECTILE_WEAPON__LIGHT_GAUSS_CANNON@"
+								},
+								{
+									"name": "Light Laser",
+									"type": 7,
+									"sub_type": 0,
+									"data": "@CLASSES__PROJECTILE_WEAPON__LIGHT_LASER@"
+								},
+								{
+									"name": "Medium Laser",
+									"type": 7,
+									"sub_type": 0,
+									"data": "@CLASSES__PROJECTILE_WEAPON__MEDIUM_LASER@"
 								}
 							]
 						}

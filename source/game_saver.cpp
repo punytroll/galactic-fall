@@ -26,7 +26,6 @@
 #include "character.h"
 #include "command_mind.h"
 #include "commodity.h"
-#include "energy_projectile_weapon.h"
 #include "faction.h"
 #include "galaxy.h"
 #include "generator.h"
@@ -44,6 +43,7 @@
 #include "object_aspect_position.h"
 #include "object_aspect_visualization.h"
 #include "planet.h"
+#include "projectile_weapon.h"
 #include "ship.h"
 #include "slot.h"
 #include "storage.h"
@@ -286,10 +286,6 @@ void GameSaver::_WriteObject(Object * WriteObject)
 	{
 		_WriteCommodity(dynamic_cast< Commodity * >(WriteObject));
 	}
-	else if(WriteObject->GetTypeIdentifier() == "energy-projectile-weapon")
-	{
-		_WriteEnergyProjectileWeapon(dynamic_cast< EnergyProjectileWeapon * >(WriteObject));
-	}
 	else if(WriteObject->GetTypeIdentifier() == "generator")
 	{
 		_WriteGenerator(dynamic_cast< Generator * >(WriteObject));
@@ -301,6 +297,10 @@ void GameSaver::_WriteObject(Object * WriteObject)
 	else if(WriteObject->GetTypeIdentifier() == "mind")
 	{
 		_WriteMind(dynamic_cast< Mind * >(WriteObject));
+	}
+	else if(WriteObject->GetTypeIdentifier() == "projectile-weapon")
+	{
+		_WriteProjectileWeapon(dynamic_cast<ProjectileWeapon *>(WriteObject));
 	}
 	else if(WriteObject->GetTypeIdentifier() == "ship")
 	{
@@ -378,11 +378,11 @@ void GameSaver::_WriteTurret(Turret * Turret)
 	_XMLStream << element << "maximum-power-output" << attribute << "value" << value << Turret->GetMaximumPowerOutput() << end;
 }
 
-void GameSaver::_WriteEnergyProjectileWeapon(EnergyProjectileWeapon * EnergyProjectileWeapon)
+void GameSaver::_WriteProjectileWeapon(ProjectileWeapon * ProjectileWeapon)
 {
-	assert(EnergyProjectileWeapon != nullptr);
-	_XMLStream << element << "energy" << attribute << "value" << value << EnergyProjectileWeapon->GetEnergy() << end;
-	_XMLStream << element << "energy-capacity" << attribute << "value" << value << EnergyProjectileWeapon->GetEnergyCapacity() << end;
-	_XMLStream << element << "maximum-power-input" << attribute << "value" << value << EnergyProjectileWeapon->GetMaximumPowerInput() << end;
-	_XMLStream << element << "maximum-power-output" << attribute << "value" << value << EnergyProjectileWeapon->GetMaximumPowerOutput() << end;
+	assert(ProjectileWeapon != nullptr);
+	_XMLStream << element << "energy" << attribute << "value" << value << ProjectileWeapon->GetEnergy() << end;
+	_XMLStream << element << "energy-capacity" << attribute << "value" << value << ProjectileWeapon->GetEnergyCapacity() << end;
+	_XMLStream << element << "maximum-power-input" << attribute << "value" << value << ProjectileWeapon->GetMaximumPowerInput() << end;
+	_XMLStream << element << "maximum-power-output" << attribute << "value" << value << ProjectileWeapon->GetMaximumPowerOutput() << end;
 }

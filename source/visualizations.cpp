@@ -28,7 +28,6 @@
 #include <graphics/style.h>
 
 #include "commodity.h"
-#include "energy_projectile_weapon.h"
 #include "globals.h"
 #include "graphics/system_node.h"
 #include "object_aspect_accessory.h"
@@ -36,6 +35,7 @@
 #include "object_aspect_physical.h"
 #include "object_aspect_visualization.h"
 #include "planet.h"
+#include "projectile_weapon.h"
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"
@@ -49,8 +49,8 @@
 std::map< Graphics::Node *, Object * > g_ObjectPerVisualization;
 
 static Visualization * VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container);
-static Visualization * VisualizeEnergyProjectileWeapon(EnergyProjectileWeapon * EnergyProjectileWeapon, Graphics::Node * Container);
 static Visualization * VisualizePlanet(Planet * Planet, Graphics::Node * Container);
+static Visualization * VisualizeProjectileWeapon(ProjectileWeapon * ProjectileWeapon, Graphics::Node * Container);
 static Visualization * VisualizeShip(Ship * Ship, Graphics::Node * Container);
 static Visualization * VisualizeShot(Shot * Shot, Graphics::Node * Container);
 static Visualization * VisualizeSystem(System * System, Graphics::Node * Container);
@@ -79,6 +79,10 @@ Visualization * VisualizeObject(Object * Object, Graphics::Node * Container)
 	{
 		return VisualizePlanet(static_cast< Planet * >(Object), Container);
 	}
+	else if(Object->GetTypeIdentifier() == "projectile-weapon")
+	{
+		return VisualizeProjectileWeapon(static_cast<ProjectileWeapon *>(Object), Container);
+	}
 	else if(Object->GetTypeIdentifier() == "ship")
 	{
 		return VisualizeShip(static_cast< Ship * >(Object), Container);
@@ -94,10 +98,6 @@ Visualization * VisualizeObject(Object * Object, Graphics::Node * Container)
 	else if(Object->GetTypeIdentifier() == "turret")
 	{
 		return VisualizeTurret(static_cast< Turret * >(Object), Container);
-	}
-	else if(Object->GetTypeIdentifier() == "energy-projectile-weapon")
-	{
-		return VisualizeEnergyProjectileWeapon(static_cast< EnergyProjectileWeapon * >(Object), Container);
 	}
 	else
 	{
@@ -164,6 +164,26 @@ Visualization * VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	auto Visualization{Planet->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
 	
 	// add to the scene
+	assert(Container != nullptr);
+	Container->AddNode(Graphics);
+	
+	return Visualization;
+}
+
+Visualization * VisualizeProjectileWeapon(ProjectileWeapon * ProjectileWeapon, Graphics::Node * Container)
+{
+	assert(ProjectileWeapon != nullptr);
+	assert(ProjectileWeapon->GetAspectVisualization() != nullptr);
+	assert(ProjectileWeapon->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
+	
+	auto Graphics{VisualizePrototype(ProjectileWeapon->GetAspectVisualization()->GetVisualizationPrototype())};
+	
+	g_ObjectPerVisualization[Graphics] = ProjectileWeapon;
+	
+	// set as the object's visualization
+	auto Visualization{ProjectileWeapon->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
+	
+	// add to the container node
 	assert(Container != nullptr);
 	Container->AddNode(Graphics);
 	
@@ -269,26 +289,6 @@ Visualization * VisualizeTurret(Turret * Turret, Graphics::Node * Container)
 	
 	// set as the object's visualization
 	auto Visualization{Turret->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
-	
-	// add to the container node
-	assert(Container != nullptr);
-	Container->AddNode(Graphics);
-	
-	return Visualization;
-}
-
-Visualization * VisualizeEnergyProjectileWeapon(EnergyProjectileWeapon * EnergyProjectileWeapon, Graphics::Node * Container)
-{
-	assert(EnergyProjectileWeapon != nullptr);
-	assert(EnergyProjectileWeapon->GetAspectVisualization() != nullptr);
-	assert(EnergyProjectileWeapon->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
-	
-	auto Graphics{VisualizePrototype(EnergyProjectileWeapon->GetAspectVisualization()->GetVisualizationPrototype())};
-	
-	g_ObjectPerVisualization[Graphics] = EnergyProjectileWeapon;
-	
-	// set as the object's visualization
-	auto Visualization{EnergyProjectileWeapon->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
 	
 	// add to the container node
 	assert(Container != nullptr);

@@ -38,11 +38,11 @@ class Generator;
 class Hangar;
 class Mind;
 class Object;
+class ProjectileWeapon;
 class Ship;
 class Storage;
 class System;
 class Turret;
-class EnergyProjectileWeapon;
 
 class GameSaver
 {
@@ -60,10 +60,10 @@ private:
 	void _WriteMind(Mind * Mind);
 	void _WriteObject(Object * Object);
 	void _WriteObjectRecursive(Object * Object);
+	void _WriteProjectileWeapon(ProjectileWeapon * ProjectileWeapon);
 	void _WriteShip(Ship * Ship);
 	void _WriteStorage(Storage * Storage);
 	void _WriteTurret(Turret * Turret);
-	void _WriteEnergyProjectileWeapon(EnergyProjectileWeapon * EnergyProjectileWeapon);
 	std::unordered_map< Object *, std::string > _IdentifiersByObject;
 	std::ostream & _OStream;
 	XMLStream _XMLStream;

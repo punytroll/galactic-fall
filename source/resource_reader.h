@@ -39,11 +39,11 @@ public:
     auto ReadAmmunitionClasses(BlueprintManager * BlueprintManager) -> void;
     auto ReadBatteryClasses(BlueprintManager * BlueprintManager) -> void;
     auto ReadCommodityClasses(BlueprintManager * BlueprintManager) -> void;
-    auto ReadEnergyProjectileWeaponClasses(BlueprintManager * BlueprintManager) -> void;
     auto ReadGalaxy(std::string const & GalaxyIdentifier) -> Galaxy *;
     auto ReadGeneratorClasses(BlueprintManager * BlueprintManager) -> void;
     auto ReadMeshes() -> void;
     auto ReadModels() -> void;
+    auto ReadProjectileWeaponClasses(BlueprintManager * BlueprintManager) -> void;
     auto ReadScenarios(ScenarioManager * ScenarioManager) -> void;
     auto ReadSettings(Settings * Settings) -> void;
     auto ReadShadersAndPrograms(Graphics::ShadingManager * ShadingManager) -> void;

@@ -1,9 +1,9 @@
-<energy-projectile-weapon-class>
-	<identifier>medium_laser</identifier>
-	<name>Medium Laser</name>
-	<description>The medium laser is either used as heavy armament on small space crafts or as light armament on large space crafts.</description>
-	<base-price>4200</base-price>
-	<space-requirement>400</space-requirement>
+<projectile-weapon-class>
+	<identifier>light_laser</identifier>
+	<name>Light Laser</name>
+	<description>The light laser is a standard armament for most civilian and small military space crafts.</description>
+	<base-price>2800</base-price>
+	<space-requirement>250</space-requirement>
 	<visualization>
 		<model-identifier>light_laser</model-identifier>
 		<visualization-parts>
@@ -11,9 +11,9 @@
 				<part-identifier>light_laser</part-identifier>
 				<style>
 					<diffuse-color>
-						<red>0.38</red>
-						<green>0.38</green>
-						<blue>0.4</blue>
+						<red>0.58</red>
+						<green>0.6</green>
+						<blue>0.58</blue>
 						<opacity>1.0</opacity>
 					</diffuse-color>
 					<specular-color>
@@ -34,24 +34,24 @@
 			</visualization-part>
 		</visualization-parts>
 	</visualization>
-	<slot-class-identifier>medium_weapon</slot-class-identifier>
+	<slot-class-identifier>light_weapon</slot-class-identifier>
 	<orientation>
 		<w>0.7071067812</w>
 		<x>0</x>
 		<y>0.7071067812</y>
 		<z>0</z>
 	</orientation>
-	<maximum-power-input>9.5</maximum-power-input>
-	<maximum-power-output>9.5</maximum-power-output>
-	<energy-usage-per-shot>8</energy-usage-per-shot>
+	<maximum-power-input>8</maximum-power-input>
+	<maximum-power-output>8</maximum-power-output>
+	<energy-usage-per-shot>5</energy-usage-per-shot>
 	<muzzle-position>
 		<part-identifier>light_laser</part-identifier>
 		<marker-identifier>muzzle_position</marker-identifier>
 	</muzzle-position>
 	<shot>
-		<exit-speed>26</exit-speed>
-		<damage>28</damage>
-		<life-time>2.9</life-time>
+		<exit-speed>30</exit-speed>
+		<damage>12</damage>
+		<life-time>2.5</life-time>
 		<visualization>
 			<model-identifier>laser_shot</model-identifier>
 			<visualization-parts>
@@ -59,9 +59,9 @@
 					<part-identifier>laser_shot</part-identifier>
 					<style>
 						<diffuse-color>
-							<red>0.2</red>
+							<red>0.8</red>
 							<green>0.2</green>
-							<blue>0.8</blue>
+							<blue>0.2</blue>
 							<opacity>0.8</opacity>
 						</diffuse-color>
 						<specular-color>
@@ -83,4 +83,4 @@
 			</visualization-parts>
 		</visualization>
 	</shot>
-</energy-projectile-weapon-class>
+</projectile-weapon-class>

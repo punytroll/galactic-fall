@@ -13,7 +13,6 @@
 #include "character.h"
 #include "command_mind.h"
 #include "commodity.h"
-#include "energy_projectile_weapon.h"
 #include "faction.h"
 #include "galaxy.h"
 #include "game_time.h"
@@ -32,6 +31,7 @@
 #include "object_aspect_visualization.h"
 #include "object_factory.h"
 #include "planet.h"
+#include "projectile_weapon.h"
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"
@@ -319,40 +319,40 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewTurret->GetAspectVisualization()->SetVisualizationPrototype(TurretBlueprint->GetValue< VisualizationPrototype >("visualization-prototype"));
 		Result = NewTurret;
 	}
-	else if(TypeIdentifier == "energy-projectile-weapon")
+	else if(TypeIdentifier == "projectile-weapon")
 	{
 		assert(g_BlueprintManager != nullptr);
 		
-		auto EnergyProjectileWeaponBlueprint{g_BlueprintManager->Get(TypeIdentifier, SubTypeIdentifier)};
+		auto ProjectileWeaponBlueprint{g_BlueprintManager->Get(TypeIdentifier, SubTypeIdentifier)};
 		
-		assert(EnergyProjectileWeaponBlueprint != nullptr);
+		assert(ProjectileWeaponBlueprint != nullptr);
 		
-		auto NewEnergyProjectileWeapon{new EnergyProjectileWeapon{}};
+		auto NewProjectileWeapon{new ProjectileWeapon{}};
 		
-		NewEnergyProjectileWeapon->SetEnergyCapacity(EnergyProjectileWeaponBlueprint->GetValue< float >("energy-usage-per-shot"));
-		NewEnergyProjectileWeapon->SetMuzzlePosition(EnergyProjectileWeaponBlueprint->GetValue< Vector3f >("muzzle-position"));
-		NewEnergyProjectileWeapon->SetShotDamage(EnergyProjectileWeaponBlueprint->GetValue< float >("shot-damage"));
-		NewEnergyProjectileWeapon->SetShotExitSpeed(EnergyProjectileWeaponBlueprint->GetValue< float >("shot-exit-speed"));
-		NewEnergyProjectileWeapon->SetShotLifeTime(EnergyProjectileWeaponBlueprint->GetValue< float >("shot-life-time"));
-		NewEnergyProjectileWeapon->SetShotVisualizationPrototype(EnergyProjectileWeaponBlueprint->GetValue< VisualizationPrototype >("shot-visualization-prototype"));
-		NewEnergyProjectileWeapon->SetMaximumPowerInput(EnergyProjectileWeaponBlueprint->GetValue< float >("maximum-power-input"));
-		NewEnergyProjectileWeapon->SetMaximumPowerOutput(EnergyProjectileWeaponBlueprint->GetValue< float >("maximum-power-output"));
+		NewProjectileWeapon->SetEnergyCapacity(ProjectileWeaponBlueprint->GetValue< float >("energy-usage-per-shot"));
+		NewProjectileWeapon->SetMuzzlePosition(ProjectileWeaponBlueprint->GetValue< Vector3f >("muzzle-position"));
+		NewProjectileWeapon->SetShotDamage(ProjectileWeaponBlueprint->GetValue< float >("shot-damage"));
+		NewProjectileWeapon->SetShotExitSpeed(ProjectileWeaponBlueprint->GetValue< float >("shot-exit-speed"));
+		NewProjectileWeapon->SetShotLifeTime(ProjectileWeaponBlueprint->GetValue< float >("shot-life-time"));
+		NewProjectileWeapon->SetShotVisualizationPrototype(ProjectileWeaponBlueprint->GetValue< VisualizationPrototype >("shot-visualization-prototype"));
+		NewProjectileWeapon->SetMaximumPowerInput(ProjectileWeaponBlueprint->GetValue< float >("maximum-power-input"));
+		NewProjectileWeapon->SetMaximumPowerOutput(ProjectileWeaponBlueprint->GetValue< float >("maximum-power-output"));
 		// set up accessory aspect
-		assert(NewEnergyProjectileWeapon->GetAspectAccessory() != nullptr);
-		NewEnergyProjectileWeapon->GetAspectAccessory()->SetSlotClassIdentifier(EnergyProjectileWeaponBlueprint->GetValue< std::string >("slot-class-identifier"));
+		assert(NewProjectileWeapon->GetAspectAccessory() != nullptr);
+		NewProjectileWeapon->GetAspectAccessory()->SetSlotClassIdentifier(ProjectileWeaponBlueprint->GetValue< std::string >("slot-class-identifier"));
 		// set up name aspect
-		assert(NewEnergyProjectileWeapon->GetAspectName() != nullptr);
-		NewEnergyProjectileWeapon->GetAspectName()->SetName(EnergyProjectileWeaponBlueprint->GetValue< std::string >("name"));
+		assert(NewProjectileWeapon->GetAspectName() != nullptr);
+		NewProjectileWeapon->GetAspectName()->SetName(ProjectileWeaponBlueprint->GetValue< std::string >("name"));
 		// set up physical aspect
-		assert(NewEnergyProjectileWeapon->GetAspectPhysical() != nullptr);
-		NewEnergyProjectileWeapon->GetAspectPhysical()->SetSpaceRequirement(EnergyProjectileWeaponBlueprint->GetValue< std::uint32_t >("space-requirement"));
+		assert(NewProjectileWeapon->GetAspectPhysical() != nullptr);
+		NewProjectileWeapon->GetAspectPhysical()->SetSpaceRequirement(ProjectileWeaponBlueprint->GetValue< std::uint32_t >("space-requirement"));
 		// set up position aspect
-		assert(NewEnergyProjectileWeapon->GetAspectPosition() != nullptr);
-		NewEnergyProjectileWeapon->GetAspectPosition()->SetOrientation(EnergyProjectileWeaponBlueprint->GetValue< Quaternion >("orientation"));
+		assert(NewProjectileWeapon->GetAspectPosition() != nullptr);
+		NewProjectileWeapon->GetAspectPosition()->SetOrientation(ProjectileWeaponBlueprint->GetValue< Quaternion >("orientation"));
 		// set up visualization aspect
-		assert(NewEnergyProjectileWeapon->GetAspectVisualization() != nullptr);
-		NewEnergyProjectileWeapon->GetAspectVisualization()->SetVisualizationPrototype(EnergyProjectileWeaponBlueprint->GetValue< VisualizationPrototype >("visualization-prototype"));
-		Result = NewEnergyProjectileWeapon;
+		assert(NewProjectileWeapon->GetAspectVisualization() != nullptr);
+		NewProjectileWeapon->GetAspectVisualization()->SetVisualizationPrototype(ProjectileWeaponBlueprint->GetValue< VisualizationPrototype >("visualization-prototype"));
+		Result = NewProjectileWeapon;
 	}
 	else
 	{
