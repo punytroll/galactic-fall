@@ -21,6 +21,17 @@
 									"data": "@CLASSES__AMMUNITION__LIGHT_GAUSS@"
 								}
 							]
+						},
+						{
+							"name": "child",
+							"items": [
+								{
+									"name": "Light Chemically Propelled Ammunition",
+									"type": 26,
+									"sub_type": 0,
+									"data": "@CLASSES__AMMUNITION__LIGHT_CHEMICALLY_PROPELLED@"
+								}
+							]
 						}
 					]
 				},
@@ -368,6 +379,24 @@
 									"data": "@MESHES__LIGHT_BATTERY@"
 								},
 								{
+									"name": "Light Chemical Propulsion Cannon",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES__LIGHT_CHEMICAL_PROPULSION_CANNON@"
+								},
+								{
+									"name": "Light Chemically Propelled Ammunition",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES__LIGHT_CHEMICALLY_PROPELLED_AMMUNITION@"
+								},
+								{
+									"name": "Light Chemically Propelled Shell",
+									"type": 2,
+									"sub_type": 0,
+									"data": "@MESHES__LIGHT_CHEMICALLY_PROPELLED_SHELL@"
+								},
+								{
 									"name": "Light Gauss Ammunition",
 									"type": 2,
 									"sub_type": 0,
@@ -474,6 +503,24 @@
 									"type": 11,
 									"sub_type": 0,
 									"data": "@MODELS__LIGHT_BATTERY@"
+								},
+								{
+									"name": "Light Chemical Propulsion Cannon",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS__LIGHT_CHEMICAL_PROPULSION_CANNON@"
+								},
+								{
+									"name": "Light Chemically Propelled Ammunition",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS__LIGHT_CHEMICALLY_PROPELLED_AMMUNITION@"
+								},
+								{
+									"name": "Light Chemically Propelled Shell",
+									"type": 11,
+									"sub_type": 0,
+									"data": "@MODELS__LIGHT_CHEMICALLY_PROPELLED_SHELL@"
 								},
 								{
 									"name": "Light Gauss Ammunition",
@@ -596,10 +643,16 @@
 							"name": "child",
 							"items": [
 								{
+									"name": "Light Chemical Propulsion Cannon",
+									"type": 7,
+									"sub_type": 0,
+									"data": "@CLASSES__PROJECTILE_WEAPON__LIGHT_CHEMICAL_PROPULSION@"
+								},
+								{
 									"name": "Light Gauss Cannon",
 									"type": 7,
 									"sub_type": 0,
-									"data": "@CLASSES__PROJECTILE_WEAPON__LIGHT_GAUSS_CANNON@"
+									"data": "@CLASSES__PROJECTILE_WEAPON__LIGHT_GAUSS@"
 								},
 								{
 									"name": "Light Laser",

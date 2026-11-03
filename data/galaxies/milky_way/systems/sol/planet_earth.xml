@@ -80,12 +80,22 @@
 		</assets>
 		<assets>
 			<type-identifier>ammunition</type-identifier>
+			<sub-type-identifier>light_chemically_propelled</sub-type-identifier>
+			<base-price-modifier>1.2</base-price-modifier>
+		</assets>
+		<assets>
+			<type-identifier>ammunition</type-identifier>
 			<sub-type-identifier>light_gauss_ammunition</sub-type-identifier>
 			<base-price-modifier>0.9</base-price-modifier>
 		</assets>
 		<assets>
 			<type-identifier>projectile-weapon</type-identifier>
-			<sub-type-identifier>light_gauss_cannon</sub-type-identifier>
+			<sub-type-identifier>light_chemical_propulsion</sub-type-identifier>
+			<base-price-modifier>1.2</base-price-modifier>
+		</assets>
+		<assets>
+			<type-identifier>projectile-weapon</type-identifier>
+			<sub-type-identifier>light_gauss</sub-type-identifier>
 			<base-price-modifier>1.2</base-price-modifier>
 		</assets>
 		<assets>

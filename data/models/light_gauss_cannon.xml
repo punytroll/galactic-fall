@@ -2,7 +2,7 @@
 	<identifier>light_gauss_cannon</identifier>
 	<model-parts>
 		<model-part>
-			<identifier>light_gauss_cannon</identifier>
+			<identifier>cannon</identifier>
 			<mesh-identifier>light_gauss_cannon</mesh-identifier>
 			<position>
 				<x>0.0</x>
