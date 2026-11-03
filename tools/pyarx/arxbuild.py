@@ -25,6 +25,7 @@
 from argparse import Action, ArgumentParser
 from arx import *
 import json
+import traceback
 
 class MessageException(Exception):
     pass
@@ -83,19 +84,22 @@ def first_pass(manifest_item, archive_item, archive):
             else:
                 raise MessageException("manifest relation must have a name")
     if "data" in manifest_item:
-        with open(manifest_item["data"], "rb") as manifest_item_data_file:
-            manifest_item_data = manifest_item_data_file.read()
-        archive_item_data = archive_item.get_data()
-        if archive_item_data.is_compressed() == True:
-            raise MessageException("compressed archive item data is not supported")
-        if archive_item_data.has_content() == True and archive_item_data.get_decompressed_length() > 0:
-            if archive_item_data.get_content() != manifest_item_data:
-                raise MessageException("archive item data differs from manifest item data")
+        try:
+            with open(manifest_item["data"], "rb") as manifest_item_data_file:
+                manifest_item_data = manifest_item_data_file.read()
+            archive_item_data = archive_item.get_data()
+            if archive_item_data.is_compressed() == True:
+                raise MessageException("compressed archive item data is not supported")
+            if archive_item_data.has_content() == True and archive_item_data.get_decompressed_length() > 0:
+                if archive_item_data.get_content() != manifest_item_data:
+                    raise MessageException("archive item data differs from manifest item data")
+                else:
+                    print(f"Data for item \"{archive_item.get_name()}\" matches.")
             else:
-                print(f"Data for item \"{archive_item.get_name()}\" matches.")
-        else:
-            print(f"Adding data to item \"{archive_item.get_name()}\".")
-            archive_item_data.set_decompressed_content(manifest_item_data)
+                print(f"Adding data to item \"{archive_item.get_name()}\".")
+                archive_item_data.set_decompressed_content(manifest_item_data)
+        except FileNotFoundError as exception:
+            raise MessageException(f"File \"{manifest_item["data"]}\" not found for manifest item \"{manifest_item["name"]}\".")
     return archive_item
 
 def second_pass(manifest_item, archive_item, archive):
@@ -140,17 +144,20 @@ parser.add_argument("--output")
 arguments = vars(parser.parse_args())
 if arguments["output"] is not None:
     if arguments["manifest"] is not None:
-        archive = Archive()
-        if arguments["input"] is not None:
-            archive.load(arguments["input"])
-        with open(arguments["manifest"]) as manifest_file:
-            manifest_root_item = json.load(manifest_file)
-        archive_root_item = archive.get_root_item()
-        archive_root_item = first_pass(manifest_root_item, archive_root_item, archive)
-        if archive.get_root_item() is None:
-            archive.set_root_item_identifier(archive_root_item.get_identifier())
-        second_pass(manifest_root_item, archive_root_item, archive)
-        archive.save(arguments["output"])
+        try:
+            archive = Archive()
+            if arguments["input"] is not None:
+                archive.load(arguments["input"])
+            with open(arguments["manifest"]) as manifest_file:
+                manifest_root_item = json.load(manifest_file)
+            archive_root_item = archive.get_root_item()
+            archive_root_item = first_pass(manifest_root_item, archive_root_item, archive)
+            if archive.get_root_item() is None:
+                archive.set_root_item_identifier(archive_root_item.get_identifier())
+            second_pass(manifest_root_item, archive_root_item, archive)
+            archive.save(arguments["output"])
+        except MessageException as exception:
+            print(f"\n{str(exception)}\n{''.join(traceback.format_exception(exception, chain=False)[:-1])}")
     else:
         parser.error("No manifest file name was given with --manifest.")
 else:
