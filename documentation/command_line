@@ -4,7 +4,5 @@ Parameters:
 	Will load the savegame that is available in <file>.
 --data=<file>
 	Tells galactic-fall which file contains the game data.
---echo-events
-	Turns on printing of X events like mouse and keyboard events.
---echo-resizes
-	Turns on printing the new window size when a resize event for the main window is processed. This is helpful for taking screenshots of a certain size.
+--echo-x11-events
+	Turns on printing of X events for mouse, keyboard and resize events.

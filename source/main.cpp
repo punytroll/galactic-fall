@@ -168,8 +168,7 @@ Display * g_Display(nullptr);
 GLXContext g_GLXContext;
 Window g_Window;
 Colormap g_ColorMap;
-bool g_EchoEvents(false);
-bool g_EchoResizes(false);
+auto g_EchoX11Events = false;
 bool g_TakeScreenShot(false);
 ResourceReader * g_ResourceReader(nullptr);
 Settings * g_Settings(nullptr);
@@ -792,10 +791,6 @@ void OnInputMindDestroying(void)
 
 void Resize(void)
 {
-    if(g_EchoResizes == true)
-    {
-        std::cout << "Resize:         width = " << g_Width << " height = " << g_Height << std::endl;
-    }
     if(g_Height == 0)
     {
         g_Height = 1;
@@ -3047,7 +3042,7 @@ void CreateWindow(void)
 
 void ProcessEvents(void)
 {
-    XEvent Event;
+    auto Event = XEvent{};
     
     while(XPending(g_Display) > 0)
     {
@@ -3058,6 +3053,10 @@ void ProcessEvents(void)
             {
                 if((Event.xconfigure.width != g_Width) || (Event.xconfigure.height != g_Height))
                 {
+                    if(g_EchoX11Events == true)
+                    {
+                        std::cout << "Resize:      width = " << g_Width << " height = " << g_Height << '\n';
+                    }
                     g_Width = Event.xconfigure.width;
                     g_Height = Event.xconfigure.height;
                     Resize();
@@ -3067,13 +3066,14 @@ void ProcessEvents(void)
             }
         case MotionNotify:
             {
-                UI::MouseMoveEvent MouseMoveEvent;
-                
-                MouseMoveEvent.SetButtonEvent(&Event.xbutton);
-                if(g_EchoEvents == true)
+                if(g_EchoX11Events == true)
                 {
-                    std::cout << "Motion:         x=" << MouseMoveEvent.GetPosition()[0] << "   y=" << MouseMoveEvent.GetPosition()[1] << std::endl;
+                    std::cout << "Motion:      x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << '\n';
                 }
+                
+                auto MouseMoveEvent = UI::MouseMoveEvent{};
+                
+                MouseMoveEvent.SetButtonEvent(std::addressof(Event.xbutton));
                 g_UserInterface->DispatchMouseMoveEvent(MouseMoveEvent);
                 
                 break;
@@ -3081,13 +3081,14 @@ void ProcessEvents(void)
         case ButtonPress:
         case ButtonRelease:
             {
-                UI::MouseButtonEvent MouseButtonEvent;
-                
-                MouseButtonEvent.SetButtonEvent(&Event.xbutton);
-                if(g_EchoEvents == true)
+                if(g_EchoX11Events == true)
                 {
-                    std::cout << "ButtonEvent:    state=" << ((MouseButtonEvent.IsDown() == true) ? ("down") : ((MouseButtonEvent.IsUp() == true) ? ("up  ") : ("unknown"))) << "   button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+                    std::cout << "ButtonEvent: button_state=" << ((Event.type == ButtonPress) ? ("down") : ("up  ")) << "   button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << '\n';
                 }
+                
+                auto MouseButtonEvent = UI::MouseButtonEvent{};
+                
+                MouseButtonEvent.SetButtonEvent(std::addressof(Event.xbutton));
                 g_UserInterface->DispatchMouseButtonEvent(MouseButtonEvent);
                 
                 break;
@@ -3095,13 +3096,14 @@ void ProcessEvents(void)
         case KeyPress:
         case KeyRelease:
             {
-                UI::KeyEvent KeyEvent;
-                
-                KeyEvent.SetKeyEvent(&Event.xkey);
-                if(g_EchoEvents == true)
+                if(g_EchoX11Events == true)
                 {
-                    std::cout << "KeyEvent:       key_state=" << ((KeyEvent.IsDown() == true) ? ("down") : ((KeyEvent.IsUp() == true) ? ("up  ") : ("unknown"))) << "   modifier_state=" << Event.xkey.state << "   key_code=" << KeyEvent.GetKeyCode() << "   string='" << KeyEvent.GetString() << "'  string.length=" << KeyEvent.GetString().length() << "   key_symbol=" << KeyEvent.GetKeySymbol() << std::endl;
+                    std::cout << "KeyEvent:    key_state=" << ((Event.type == KeyPress) ? ("down") : ("up  ")) << "   modifier_state=" << Event.xkey.state << "   key_code=" << Event.xkey.keycode << '\n';
                 }
+                
+                auto KeyEvent = UI::KeyEvent{};
+                
+                KeyEvent.SetKeyEvent(std::addressof(Event.xkey));
                 g_UserInterface->DispatchKeyEvent(KeyEvent);
                 
                 break;
@@ -3361,13 +3363,9 @@ int main(int argc, char ** argv)
                 DataFilePath = Argument.substr(7);
             }
         }
-        else if(Argument == "--echo-events")
+        else if(Argument == "--echo-x11-events")
         {
-            g_EchoEvents = true;
-        }
-        else if(Argument == "--echo-resizes")
-        {
-            g_EchoResizes = true;
+            g_EchoX11Events = true;
         }
     }
     
