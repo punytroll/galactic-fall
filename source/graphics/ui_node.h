@@ -11,22 +11,23 @@
 
 namespace UI
 {
-	class UserInterface;
+    class UserInterface;
 }
 
 namespace Graphics
 {
-	class RenderContext;
-	
-	class UINode : public Graphics::Node
-	{
-	public:
-		UINode();
-		virtual auto Draw(Graphics::RenderContext * RenderContext) -> void override;
-		auto SetUserInterface(UI::UserInterface * UserInterface) -> void;
-	private:
-		UI::UserInterface * m_UserInterface;
-	};
+    class RenderContext;
+    
+    class UINode : public Graphics::Node
+    {
+    public:
+        UINode();
+        virtual auto Draw(Graphics::RenderContext * RenderContext) -> void override;
+        auto SetUserInterface(UI::UserInterface * UserInterface) -> void;
+        
+    private:
+        UI::UserInterface * m_UserInterface;
+    };
 }
 
 #endif
