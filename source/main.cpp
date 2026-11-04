@@ -3142,7 +3142,6 @@ void ProcessEvents(void)
 
 void DestroyWindow(void)
 {
-    XAutoRepeatOn(g_Display);
     if(g_GLXContext != 0)
     {
         if(glXMakeCurrent(g_Display, None, 0) == 0)
