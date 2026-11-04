@@ -116,6 +116,9 @@ galactic_fall_executable = executable(
     'visualizations.cpp',
     'weapon.cpp'
   ],
+  cpp_args: [
+    '-freflection'
+  ],
   dependencies: [
     algebra_dependency,
     arx_dependency,

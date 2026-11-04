@@ -61,6 +61,7 @@
 #include "class_manager.h"
 #include "command_mind.h"
 #include "commodity.h"
+#include "enumeration_handling.h"
 #include "faction.h"
 #include "file_handling.h"
 #include "galaxy.h"
@@ -2708,9 +2709,10 @@ void ActionToggleTimingDialog(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 void MainViewKeyEvent(UI::KeyEvent & KeyEvent)
 {
+    std::println(std::cout, "Key event for main view:  phase={}  key_code={}  key_state={}", KeyEvent.GetPhase(), KeyEvent.GetKeyCode(), ((KeyEvent.IsDown() == true) ? ("down") : ("up")));
     if((KeyEvent.GetPhase() == UI::Event::Phase::Target) && (KeyEvent.GetKeyCode() < 127))
     {
-        int EventIndex = -1;
+        auto EventIndex = -1;
         
         if(KeyEvent.IsDown() == true)
         {
@@ -2723,6 +2725,7 @@ void MainViewKeyEvent(UI::KeyEvent & KeyEvent)
         if(g_KeyboardLookupTable[KeyEvent.GetKeyCode()][EventIndex] != nullptr)
         {
             g_KeyboardLookupTable[KeyEvent.GetKeyCode()][EventIndex]();
+            KeyEvent.StopPropagation();
         }
     }
 }

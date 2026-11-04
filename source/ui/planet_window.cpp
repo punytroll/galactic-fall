@@ -134,10 +134,12 @@ void UI::PlanetWindow::_OnKey(UI::KeyEvent & KeyEvent)
     if((KeyEvent.GetPhase() == UI::Event::Phase::Bubbling) && (KeyEvent.GetKeyCode() == 28 /* T */) && (KeyEvent.IsDown() == true))
     {
         _OpenTradeCenter();
+        KeyEvent.StopPropagation();
     }
     else if((KeyEvent.GetPhase() == UI::Event::Phase::Bubbling) && (KeyEvent.GetKeyCode() == 43 /* H */) && (KeyEvent.IsDown() == true))
     {
         _OpenHangar();
+        KeyEvent.StopPropagation();
     }
 }
 
