@@ -3040,6 +3040,14 @@ void CreateWindow(void)
     XFree(Configurations);
 }
 
+auto DispatchX11KeyEvent(XKeyEvent & X11KeyEvent) -> void
+{
+    auto KeyEvent = UI::KeyEvent{};
+    
+    KeyEvent.SetKeyEvent(&X11KeyEvent);
+    g_UserInterface->DispatchKeyEvent(KeyEvent);
+}
+
 void ProcessEvents(void)
 {
     auto Event = XEvent{};
@@ -3094,17 +3102,37 @@ void ProcessEvents(void)
                 break;
             }
         case KeyPress:
+            {
+                if(g_EchoX11Events == true)
+                {
+                    std::cout << "KeyEvent:    key_state=down   modifier_state=" << Event.xkey.state << "   key_code=" << Event.xkey.keycode << '\n';
+                }
+                DispatchX11KeyEvent(Event.xkey);
+                
+                break;
+            }
         case KeyRelease:
             {
                 if(g_EchoX11Events == true)
                 {
-                    std::cout << "KeyEvent:    key_state=" << ((Event.type == KeyPress) ? ("down") : ("up  ")) << "   modifier_state=" << Event.xkey.state << "   key_code=" << Event.xkey.keycode << '\n';
+                    std::cout << "KeyEvent:    key_state=up     modifier_state=" << Event.xkey.state << "   key_code=" << Event.xkey.keycode << '\n';
                 }
-                
-                auto KeyEvent = UI::KeyEvent{};
-                
-                KeyEvent.SetKeyEvent(std::addressof(Event.xkey));
-                g_UserInterface->DispatchKeyEvent(KeyEvent);
+                // in case of a key release event, we need to check for synthetic auto repeat sequences
+                if(XPending(g_Display) > 0)
+                {
+                    auto NextEvent = XEvent{};
+                    
+                    XPeekEvent(g_Display, std::addressof(NextEvent));
+                    if((NextEvent.type == KeyPress) && (NextEvent.xkey.keycode == Event.xkey.keycode) && (NextEvent.xkey.time == Event.xkey.time))
+                    {
+                        // we ignore this key release event and consume the next key press event
+                        XNextEvent(g_Display, &NextEvent);
+                        
+                        break;
+                    }
+                }
+                // otherwise, dispatch the key event
+                DispatchX11KeyEvent(Event.xkey);
                 
                 break;
             }
