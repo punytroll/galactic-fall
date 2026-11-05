@@ -26,7 +26,12 @@ expressions_dependency = expressions_subproject.get_variable('expressions_librar
 subproject('xml_parser')
 xml_parser_dependency = dependency('xml_parser', version: '>=26.10.2')
 
-subproject('rasteriser')
+subproject(
+  'rasteriser',
+  default_options: {
+    'tests': 'enabled',
+  },
+)
 rasteriser_dependency = dependency('rasteriser', version: '>=26.10.0')
 
 string_cast_subproject = subproject('string_cast', version: '>=2.0.2')

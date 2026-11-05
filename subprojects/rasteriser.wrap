@@ -1,8 +1,8 @@
 [wrap-file]
-directory = rasteriser-26.10.1
-source_url = https://github.com/punytroll/rasteriser/archive/refs/tags/26.10.1.tar.gz
-source_filename = rasteriser-26.10.1.tar.xz
-source_hash = 1770480c7a7e7ea481f1c3e85e00fa1d330d18c5f80c5dc1d694cc88b3fc749c
+directory = rasteriser-26.11.0
+source_url = https://github.com/punytroll/rasteriser/archive/refs/tags/26.11.0.tar.gz
+source_filename = rasteriser-26.11.0.tar.xz
+source_hash = bdbc661e2757f88f11f20ed306509bf0448b1da4c7bd64c62cb9d3a34bb82db8
 
 [provide]
 dependency_names = rasteriser
