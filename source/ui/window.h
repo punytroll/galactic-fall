@@ -23,6 +23,7 @@ namespace UI
         auto ShowResizeDragBox() -> void;
         
     private:
+        auto m_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent) -> void;
         auto m_OnTitleLabelMouseButton(UI::MouseButtonEvent & MouseButtonEvent) -> void;
         auto m_OnTitleLabelMouseMove(UI::MouseMoveEvent & MouseMoveEvent) -> void;
         auto m_OnResizeDragBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent) -> void;

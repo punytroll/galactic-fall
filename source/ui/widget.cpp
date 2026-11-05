@@ -157,12 +157,12 @@ void UI::Widget::SetWidth(Expressions::Expression && Width)
     _Width = std::move(Width);
 }
 
-void UI::Widget::GrabKeyFocus(void)
+void UI::Widget::GrabKeyboardFocus(void)
 {
     if(_SupWidget != nullptr)
     {
-        _SupWidget->m_KeyFocusWidget = this;
-        _SupWidget->GrabKeyFocus();
+        _SupWidget->m_KeyboardFocusWidget = this;
+        _SupWidget->GrabKeyboardFocus();
     }
 }
 
@@ -184,9 +184,9 @@ void UI::Widget::RemoveSubWidget(UI::Widget * SubWidget)
     assert(SubWidget->_SupWidget == this);
     SubWidget->_SupWidget = nullptr;
     _SubWidgets.erase(std::find(_SubWidgets.begin(), _SubWidgets.end(), SubWidget));
-    if(SubWidget == m_KeyFocusWidget)
+    if(SubWidget == m_KeyboardFocusWidget)
     {
-        m_KeyFocusWidget = nullptr;
+        m_KeyboardFocusWidget = nullptr;
         // if a window was removed and lost focus, we focus the next-top-most window
         if(dynamic_cast<UI::Window *>(SubWidget) != nullptr)
         {
@@ -194,7 +194,7 @@ void UI::Widget::RemoveSubWidget(UI::Widget * SubWidget)
             {
                 if(dynamic_cast<UI::Window *>(IterateSubWidget) != nullptr)
                 {
-                    IterateSubWidget->GrabKeyFocus();
+                    IterateSubWidget->GrabKeyboardFocus();
                 }
             }
         }

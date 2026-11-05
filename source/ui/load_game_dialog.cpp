@@ -79,7 +79,7 @@ UI::LoadGameDialog::LoadGameDialog()
 	_FileNameLabel->SetBackgroundColor(Graphics::ColorRGBO(0.1f, 0.1f, 0.1f, 1.0f));
 	_FileNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_FileNameLabel->ConnectKeyCallback(std::bind(&UI::LoadGameDialog::_OnFileNameLabelKey, this, std::placeholders::_1));
-	_FileNameLabel->GrabKeyFocus();
+	_FileNameLabel->GrabKeyboardFocus();
 	_FileListBox->SetLeft(10.0_c);
 	_FileListBox->SetTop(110.0_c);
 	_FileListBox->SetWidth(width(this) - 2.0_c * left(_FileListBox));

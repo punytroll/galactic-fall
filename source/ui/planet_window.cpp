@@ -199,7 +199,7 @@ void UI::PlanetWindow::_OpenHangar(void)
         // add components
         AddSubWidget(_HangarWidget);
     }
-    _HangarWidget->GrabKeyFocus();
+    _HangarWidget->GrabKeyboardFocus();
 }
 
 void UI::PlanetWindow::_OpenHomeScreen(void)
@@ -231,7 +231,7 @@ void UI::PlanetWindow::_OpenHomeScreen(void)
         _DescriptionLabel->SetWordWrap(true);
         AddSubWidget(_DescriptionLabel);
     }
-    _DescriptionLabel->GrabKeyFocus();
+    _DescriptionLabel->GrabKeyboardFocus();
 }
 
 void UI::PlanetWindow::_OpenTradeCenter(void)
@@ -262,5 +262,5 @@ void UI::PlanetWindow::_OpenTradeCenter(void)
         // add components
         AddSubWidget(_TradeCenterWidget);
     }
-    _TradeCenterWidget->GrabKeyFocus();
+    _TradeCenterWidget->GrabKeyboardFocus();
 }

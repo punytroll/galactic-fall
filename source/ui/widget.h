@@ -57,7 +57,7 @@ namespace UI
         void RaiseSubWidget(Widget * SubWidget);
         void LowerSubWidget(Widget * SubWidget);
         void Destroy(void);
-        void GrabKeyFocus(void);
+        void GrabKeyboardFocus(void);
         void SetName(const std::string & Name);
         // getters
         const Graphics::ColorRGBO * GetBackgroundColor(void) const;
@@ -66,7 +66,7 @@ namespace UI
         float GetHeight(void);
         Widget * GetHoveredWidget(void);
         Vector2f GetGlobalPosition(void);
-        auto GetKeyFocusWidget() const -> UI::Widget const *;
+        auto GetKeyboardFocusWidget() const -> UI::Widget const *;
         float GetLeft(void);
         const std::string & GetName(void) const;
         std::string GetPath(void) const;
@@ -114,7 +114,7 @@ namespace UI
         bool _Enabled;
         UI::Dimension _Height;
         Widget * _HoverWidget;
-        UI::Widget * m_KeyFocusWidget = nullptr;
+        UI::Widget * m_KeyboardFocusWidget = nullptr;
         UI::Dimension _Left;
         std::string _Name;
         std::list< Widget * > _SubWidgets;
@@ -161,9 +161,9 @@ namespace UI
         return _HoverWidget;
     }
     
-    inline auto Widget::GetKeyFocusWidget() const -> UI::Widget const *
+    inline auto Widget::GetKeyboardFocusWidget() const -> UI::Widget const *
     {
-        return m_KeyFocusWidget;
+        return m_KeyboardFocusWidget;
     }
     
     inline float Widget::GetLeft(void)

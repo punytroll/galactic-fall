@@ -2458,7 +2458,7 @@ void ActionOpenMainMenuWindow(void)
         }
         g_MainMenuWindow->ConnectDestroyingCallback(OnMainMenuDestroying);
         g_UserInterface->GetRootWidget()->AddSubWidget(g_MainMenuWindow);
-        g_MainMenuWindow->GrabKeyFocus();
+        g_MainMenuWindow->GrabKeyboardFocus();
     }
 }
 
@@ -2486,7 +2486,7 @@ void ActionOpenMapDialog(void)
             g_CommandMind->DisableTurnRight();
         }
         g_UserInterface->GetRootWidget()->AddSubWidget(MapDialog);
-        MapDialog->GrabKeyFocus();
+        MapDialog->GrabKeyboardFocus();
     }
 }
 
@@ -2503,7 +2503,7 @@ void ActionOpenObjectInformationDialog(void)
     ObjectInformationDialog->SetWidth(500.0_c);
     ObjectInformationDialog->SetHeight(300.0_c);
     g_UserInterface->GetRootWidget()->AddSubWidget(ObjectInformationDialog);
-    ObjectInformationDialog->GrabKeyFocus();
+    ObjectInformationDialog->GrabKeyboardFocus();
 }
 
 void ActionOpenOutfitShipDialog(void)
@@ -2519,7 +2519,7 @@ void ActionOpenOutfitShipDialog(void)
         g_OutfitShipDialog->SetHeight(400.0_c);
         g_OutfitShipDialog->ConnectDestroyingCallback(OnOutfitShipDialogDestroying);
         g_UserInterface->GetRootWidget()->AddSubWidget(g_OutfitShipDialog);
-        g_OutfitShipDialog->GrabKeyFocus();
+        g_OutfitShipDialog->GrabKeyboardFocus();
     }
 }
 
@@ -2696,7 +2696,7 @@ void ActionToggleTimingDialog(void)
         g_TimingDialog->SetHeight(400.0_c);
         g_TimingDialog->ConnectDestroyingCallback(OnTimingDialogDestroying);
         g_UserInterface->GetRootWidget()->AddSubWidget(g_TimingDialog);
-        g_TimingDialog->GrabKeyFocus();
+        g_TimingDialog->GrabKeyboardFocus();
     }
     else
     {

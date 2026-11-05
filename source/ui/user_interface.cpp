@@ -243,7 +243,7 @@ void UI::UserInterface::DispatchKeyEvent(UI::KeyEvent & KeyEvent)
     {
         assert(PathWidget->_Enabled == true);
         PropagationPath.emplace_back(PathWidget, UI::Event::Phase::Capturing);
-        PathWidget = PathWidget->m_KeyFocusWidget;
+        PathWidget = PathWidget->m_KeyboardFocusWidget;
     }
     if(PropagationPath.size() > 0)
     {

@@ -178,7 +178,7 @@ void UI::MainMenuWindow::_OnLoadGameButtonClicked(void)
 		_LoadGameDialog->SetDirectoryPath(DirectoryPath);
 		_DestroyOnLoadGameDialogDestroy = false;
 		GetRootWidget()->AddSubWidget(_LoadGameDialog);
-		_LoadGameDialog->GrabKeyFocus();
+		_LoadGameDialog->GrabKeyboardFocus();
 	}
 }
 
@@ -261,7 +261,7 @@ void UI::MainMenuWindow::_OnLoadScenarioButtonClicked(void)
 		_LoadScenarioDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioDialogDestroying, this, std::placeholders::_1));
 		_DestroyOnLoadScenarioDialogDestroy = false;
 		GetRootWidget()->AddSubWidget(_LoadScenarioDialog);
-		_LoadScenarioDialog->GrabKeyFocus();
+		_LoadScenarioDialog->GrabKeyboardFocus();
 	}
 }
 
@@ -351,7 +351,7 @@ void UI::MainMenuWindow::_OnSaveGameButtonClicked(void)
 		_SaveGameDialog->SetDirectoryPath(DirectoryPath);
 		_DestroyOnSaveGameDialogDestroy = false;
 		GetRootWidget()->AddSubWidget(_SaveGameDialog);
-		_SaveGameDialog->GrabKeyFocus();
+		_SaveGameDialog->GrabKeyboardFocus();
 	}
 }
 

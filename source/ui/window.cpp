@@ -20,6 +20,7 @@ using namespace Expressions::Operators;
 
 UI::Window::Window()
 {
+    ConnectMouseButtonCallback(std::bind(&UI::Window::m_OnMouseButton, this, std::placeholders::_1));
     SetBackgroundColor(Graphics::ColorRGBO(0.2f, 0.2f, 0.2f, 1.0f));
     
     // create components
@@ -70,6 +71,18 @@ auto UI::Window::HideResizeDragBox() -> void
 auto UI::Window::ShowResizeDragBox() -> void
 {
     m_ResizeDragBox->SetVisible(true);
+}
+
+auto UI::Window::m_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent) -> void
+{
+    if(MouseButtonEvent.GetPhase() == UI::Event::Phase::Capturing)
+    {
+        GrabKeyboardFocus();
+        if(GetSupWidget() != nullptr)
+        {
+            GetSupWidget()->RaiseSubWidget(this);
+        }
+    }
 }
 
 auto UI::Window::m_OnTitleLabelMouseButton(UI::MouseButtonEvent & MouseButtonEvent) -> void
@@ -124,14 +137,14 @@ auto UI::Window::m_OnResizeDragBoxMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 
 auto UI::Window::m_OnTitleLabelUpdating([[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds) -> void
 {
-    auto IsGlobalKeyFocus = true;
+    auto IsGlobalKeyboardFocus = true;
     auto CurrentWidget = static_cast<Widget *>(this);
     
     while(CurrentWidget != nullptr)
     {
-        if((CurrentWidget->GetSupWidget() != nullptr) && (CurrentWidget != CurrentWidget->GetSupWidget()->GetKeyFocusWidget()))
+        if((CurrentWidget->GetSupWidget() != nullptr) && (CurrentWidget != CurrentWidget->GetSupWidget()->GetKeyboardFocusWidget()))
         {
-            IsGlobalKeyFocus = false;
+            IsGlobalKeyboardFocus = false;
             
             break;
         }
@@ -141,7 +154,7 @@ auto UI::Window::m_OnTitleLabelUpdating([[maybe_unused]] float RealTimeSeconds, 
         }
     }
     assert(m_TitleLabel != nullptr);
-    if(IsGlobalKeyFocus == true)
+    if(IsGlobalKeyboardFocus == true)
     {
         m_TitleLabel->SetBackgroundColor(Graphics::ColorRGBO(0.23f, 0.35f, 0.55f, 1.0f));
     }
