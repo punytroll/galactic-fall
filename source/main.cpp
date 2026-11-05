@@ -695,7 +695,7 @@ void CollisionDetection(System * System)
                                         auto RotationAxis(Vector3f::CreateFromComponents(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f)));
                                         
                                         RotationAxis.Normalize();
-                                        TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
+                                        TheCommodity->SetAngularVelocity(Algebra::AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
                                         Ship->GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
                                     }
                                     else
@@ -1680,7 +1680,7 @@ void LoadGameFromElement(const XML::Element * SaveElement)
                                 assert(TypeSpecificChild->HasAttribute("axis-y") == true);
                                 assert(TypeSpecificChild->HasAttribute("axis-z") == true);
                                 assert(TypeSpecificChild->HasAttribute("angle") == true);
-                                NewCommodity->SetAngularVelocity(AxisAngle(from_string_cast< float >(TypeSpecificChild->GetAttribute("axis-x")), from_string_cast< float >(TypeSpecificChild->GetAttribute("axis-y")), from_string_cast< float >(TypeSpecificChild->GetAttribute("axis-z")), from_string_cast< float >(TypeSpecificChild->GetAttribute("angle"))));
+                                NewCommodity->SetAngularVelocity(Algebra::AxisAngle(from_string_cast< float >(TypeSpecificChild->GetAttribute("axis-x")), from_string_cast< float >(TypeSpecificChild->GetAttribute("axis-y")), from_string_cast< float >(TypeSpecificChild->GetAttribute("axis-z")), from_string_cast< float >(TypeSpecificChild->GetAttribute("angle"))));
                             }
                             else if(TypeSpecificChild->GetName() == "hull")
                             {

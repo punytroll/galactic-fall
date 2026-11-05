@@ -17,8 +17,13 @@ python3_program = python_module.find_installation('python3')
 subproject('arx')
 arx_dependency = dependency('arx', version: '>=26.11.0')
 
-algebra_subproject = subproject('algebra', version: '>=2.1.1')
-algebra_dependency = algebra_subproject.get_variable('algebra_library_dependency')
+subproject(
+  'algebra',
+  default_options: {
+    'tests': 'enabled',
+  },
+)
+algebra_dependency = dependency('algebra', version: '>=26.11.0')
 
 expressions_subproject = subproject('expressions', version: '>=0.7.1')
 expressions_dependency = expressions_subproject.get_variable('expressions_library_dependency')
