@@ -23,6 +23,7 @@
 #include "../object_aspect_visualization.h"
 #include "../slot.h"
 #include "../slot_class.h"
+#include "key_event.h"
 #include "label.h"
 #include "mouse_button_event.h"
 #include "object_information_dialog.h"
@@ -107,6 +108,7 @@ UI::ObjectInformationDialog::ObjectInformationDialog(Object * Object) :
     assert(m_Object != nullptr);
     m_ObjectDestroyingConnection = m_Object->ConnectDestroyingCallback(std::bind(&UI::ObjectInformationDialog::m_OnObjectDestroying, this));
     ConnectDestroyingCallback(std::bind(&UI::ObjectInformationDialog::m_OnDestroying, this, std::placeholders::_1));
+    ConnectKeyCallback(std::bind(&UI::ObjectInformationDialog::m_OnKey, this, std::placeholders::_1));
     
     // create components
     auto CloseButton = new UI::TextButton{};
@@ -287,6 +289,15 @@ auto UI::ObjectInformationDialog::m_OnDestroying(UI::Event & DestroyingEvent) ->
             m_ObjectDestroyingConnection.Disconnect();
             assert(m_ObjectDestroyingConnection.IsValid() == false);
         }
+    }
+}
+
+auto UI::ObjectInformationDialog::m_OnKey(UI::KeyEvent & KeyEvent) -> void
+{
+    if((KeyEvent.GetPhase() == UI::Event::Phase::Bubbling) && (KeyEvent.GetKeyCode() == 9 /* ESCAPE */) && (KeyEvent.IsDown() == true))
+    {
+		Destroy();
+        KeyEvent.StopPropagation();
     }
 }
 

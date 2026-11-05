@@ -23,16 +23,17 @@ namespace UI
         explicit ObjectInformationDialog(Object * Object);
         
     private:
-        auto m_OnCloseClicked() -> void;
-        auto m_OnDestroying(UI::Event & DestroyingEvent) -> void;
-        auto m_OnRefreshClicked() -> void;
-        auto m_OnObjectDestroying() -> void;
         auto m_AddObjectProperty(UI::Widget * PreviousWidget, float Indentation, Object * Object) -> UI::Widget *;
         auto m_AddSeparator(UI::Widget * PreviousWidget, float Indentation, std::string const & Separator) -> UI::Widget *;
         auto m_AddString(UI::Widget * PreviousWidget, float Indentation, std::string const & String) -> UI::Widget *;
         auto m_AddStringProperty(UI::Widget * PreviousWidget, float Indentation, std::string const & PropertyName, std::string const & PropertyValue) -> UI::Widget *;
-        auto m_GetPositionString(Vector3f const & Position) -> std::string;
         auto m_GetOrientationString(Quaternion const & Orientation) -> std::string;
+        auto m_GetPositionString(Vector3f const & Position) -> std::string;
+        auto m_OnCloseClicked() -> void;
+        auto m_OnDestroying(UI::Event & DestroyingEvent) -> void;
+        auto m_OnKey(UI::KeyEvent & KeyEvent) -> void;
+        auto m_OnObjectDestroying() -> void;
+        auto m_OnRefreshClicked() -> void;
         auto m_Refresh() -> void;
         
         Object * m_Object = nullptr;
