@@ -13,27 +13,25 @@ namespace UI
 {
     class Border;
     class Label;
-
+    
     class Window : public UI::Widget
     {
     public:
-        // constructor
-        Window(void);
-        // setters
-        void SetTitle(const std::string & Title);
-        // modifiers
-        void HideResizeDragBox(void);
-        void ShowResizeDragBox(void);
+        Window();
+        auto SetTitle(std::string_view Title) -> void;
+        auto HideResizeDragBox() -> void;
+        auto ShowResizeDragBox() -> void;
+        
     private:
-        // callbacks
-        void _OnTitleLabelMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
-        void _OnTitleLabelMouseMove(UI::MouseMoveEvent & MouseMoveEvent);
-        void _OnResizeDragBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
-        void _OnResizeDragBoxMouseMove(UI::MouseMoveEvent & MouseMoveEvent);
-        // member variables
-        Vector2f _GrabPosition;
-        UI::Widget * _ResizeDragBox;
-        UI::Label * _TitleLabel;
+        auto m_OnTitleLabelMouseButton(UI::MouseButtonEvent & MouseButtonEvent) -> void;
+        auto m_OnTitleLabelMouseMove(UI::MouseMoveEvent & MouseMoveEvent) -> void;
+        auto m_OnResizeDragBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent) -> void;
+        auto m_OnResizeDragBoxMouseMove(UI::MouseMoveEvent & MouseMoveEvent) -> void;
+        auto m_OnTitleLabelUpdating(float RealTimeSeconds, float GameTimeSeconds) -> void;
+        
+        Vector2f m_GrabPosition;
+        UI::Widget * m_ResizeDragBox = nullptr;
+        UI::Label * m_TitleLabel = nullptr;
     };
 }
 

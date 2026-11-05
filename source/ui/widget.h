@@ -66,6 +66,7 @@ namespace UI
         float GetHeight(void);
         Widget * GetHoveredWidget(void);
         Vector2f GetGlobalPosition(void);
+        auto GetKeyFocusWidget() const -> UI::Widget const *;
         float GetLeft(void);
         const std::string & GetName(void) const;
         std::string GetPath(void) const;
@@ -113,7 +114,7 @@ namespace UI
         bool _Enabled;
         UI::Dimension _Height;
         Widget * _HoverWidget;
-        Widget * _KeyFocus;
+        UI::Widget * m_KeyFocusWidget = nullptr;
         UI::Dimension _Left;
         std::string _Name;
         std::list< Widget * > _SubWidgets;
@@ -158,6 +159,11 @@ namespace UI
     inline Widget * Widget::GetHoveredWidget(void)
     {
         return _HoverWidget;
+    }
+    
+    inline auto Widget::GetKeyFocusWidget() const -> UI::Widget const *
+    {
+        return m_KeyFocusWidget;
     }
     
     inline float Widget::GetLeft(void)

@@ -17,6 +17,7 @@
 #include "sub_widget_event.h"
 #include "user_interface.h"
 #include "widget.h"
+#include "window.h"
 
 using namespace Expressions::Operators;
 
@@ -29,7 +30,6 @@ UI::Widget::Widget(void) :
     _Enabled(true),
     _Height(this, UI::Dimension::Type::Height),
     _HoverWidget(nullptr),
-    _KeyFocus(nullptr),
     _Left(this, UI::Dimension::Type::Left),
     _SupWidget(nullptr),
     _Top(this, UI::Dimension::Type::Top),
@@ -161,7 +161,7 @@ void UI::Widget::GrabKeyFocus(void)
 {
     if(_SupWidget != nullptr)
     {
-        _SupWidget->_KeyFocus = this;
+        _SupWidget->m_KeyFocusWidget = this;
         _SupWidget->GrabKeyFocus();
     }
 }
@@ -184,9 +184,20 @@ void UI::Widget::RemoveSubWidget(UI::Widget * SubWidget)
     assert(SubWidget->_SupWidget == this);
     SubWidget->_SupWidget = nullptr;
     _SubWidgets.erase(std::find(_SubWidgets.begin(), _SubWidgets.end(), SubWidget));
-    if(SubWidget == _KeyFocus)
+    if(SubWidget == m_KeyFocusWidget)
     {
-        _KeyFocus = nullptr;
+        m_KeyFocusWidget = nullptr;
+        // if a window was removed and lost focus, we focus the next-top-most window
+        if(dynamic_cast<UI::Window *>(SubWidget) != nullptr)
+        {
+            for(auto IterateSubWidget : _SubWidgets | std::views::reverse)
+            {
+                if(dynamic_cast<UI::Window *>(IterateSubWidget) != nullptr)
+                {
+                    IterateSubWidget->GrabKeyFocus();
+                }
+            }
+        }
     }
     if(SubWidget == _HoverWidget)
     {
