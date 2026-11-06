@@ -235,45 +235,51 @@ void UI::UserInterface::DispatchHeightChangedEvent(UI::Event & HeightChangedEven
 void UI::UserInterface::DispatchKeyEvent(UI::KeyEvent & KeyEvent)
 {
     assert(KeyEvent.GetTarget() == nullptr);
-    
-    auto PropagationPath = std::list<UI::KeyEventPropagationPathItem>{};
-    auto PathWidget = _RootWidget;
-    
-    while(PathWidget != nullptr)
+    assert(KeyEvent.GetKeyCode() < 256);
+    // we are only interested in this event, if the state changes
+    if(m_PressedKeyCodes[KeyEvent.GetKeyCode()] != KeyEvent.IsDown())
     {
-        assert(PathWidget->_Enabled == true);
-        PropagationPath.emplace_back(PathWidget, UI::Event::Phase::Capturing);
-        PathWidget = PathWidget->m_KeyboardFocusWidget;
-    }
-    if(PropagationPath.size() > 0)
-    {
-        PropagationPath.emplace_back(PropagationPath.back().m_Widget, UI::Event::Phase::Target);
-        PathWidget = PropagationPath.back().m_Widget;
+        m_PressedKeyCodes[KeyEvent.GetKeyCode()] = KeyEvent.IsDown();
+        
+        auto PropagationPath = std::list<UI::KeyEventPropagationPathItem>{};
+        auto PathWidget = _RootWidget;
+        
         while(PathWidget != nullptr)
         {
             assert(PathWidget->_Enabled == true);
-            PropagationPath.emplace_back(PathWidget, UI::Event::Phase::Bubbling);
-            PathWidget = PathWidget->_SupWidget;
+            PropagationPath.emplace_back(PathWidget, UI::Event::Phase::Capturing);
+            PathWidget = PathWidget->m_KeyboardFocusWidget;
         }
-    }
-    for(auto const & PropagationPathItem : PropagationPath)
-    {
-        if(PropagationPathItem.m_Widget != nullptr)
+        if(PropagationPath.size() > 0)
         {
-            KeyEvent.SetCurrentTarget(PropagationPathItem.m_Widget);
-            KeyEvent.SetPhase(PropagationPathItem.m_Phase);
-            KeyEvent.ResumeCallbacks();
-            for(auto & Callback : PropagationPathItem.m_Widget->_KeyEvent.GetCallbacks())
+            PropagationPath.emplace_back(PropagationPath.back().m_Widget, UI::Event::Phase::Target);
+            PathWidget = PropagationPath.back().m_Widget;
+            while(PathWidget != nullptr)
             {
-                Callback(KeyEvent);
-                if(KeyEvent.GetStopCallbacks() == true)
+                assert(PathWidget->_Enabled == true);
+                PropagationPath.emplace_back(PathWidget, UI::Event::Phase::Bubbling);
+                PathWidget = PathWidget->_SupWidget;
+            }
+        }
+        for(auto const & PropagationPathItem : PropagationPath)
+        {
+            if(PropagationPathItem.m_Widget != nullptr)
+            {
+                KeyEvent.SetCurrentTarget(PropagationPathItem.m_Widget);
+                KeyEvent.SetPhase(PropagationPathItem.m_Phase);
+                KeyEvent.ResumeCallbacks();
+                for(auto & Callback : PropagationPathItem.m_Widget->_KeyEvent.GetCallbacks())
+                {
+                    Callback(KeyEvent);
+                    if(KeyEvent.GetStopCallbacks() == true)
+                    {
+                        break;
+                    }
+                }
+                if(KeyEvent.GetStopPropagation() == true)
                 {
                     break;
                 }
-            }
-            if(KeyEvent.GetStopPropagation() == true)
-            {
-                break;
             }
         }
     }
@@ -716,6 +722,13 @@ void UI::UserInterface::DispatchWidthChangedEvent(UI::Event & WidthChangedEvent)
             }
         }
     }
+}
+
+auto UI::UserInterface::IsKeyCodePressed(unsigned int const KeyCode) const -> bool
+{
+    assert(KeyCode < 256);
+    
+    return m_PressedKeyCodes[KeyCode];
 }
 
 void UI::UserInterface::Update(float RealTimeSeconds, float GameTimeSeconds)

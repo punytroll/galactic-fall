@@ -2483,7 +2483,7 @@ void ActionOpenObjectInformationDialog(void)
     assert(g_UserInterface != nullptr);
     assert(g_Galaxy != nullptr);
     
-    auto ObjectInformationDialog{new UI::ObjectInformationDialog(g_Galaxy)};
+    auto ObjectInformationDialog{new UI::ObjectInformationDialog(*g_Galaxy)};
     
     ObjectInformationDialog->SetName("object_information(" + g_Galaxy->GetTypeIdentifier() + " / " + g_Galaxy->GetSubTypeIdentifier() + ")");
     ObjectInformationDialog->SetLeft(100.0_c);

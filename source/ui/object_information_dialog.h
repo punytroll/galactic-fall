@@ -20,7 +20,7 @@ namespace UI
     class ObjectInformationDialog : public UI::Window
     {
     public:
-        explicit ObjectInformationDialog(Object * Object);
+        explicit ObjectInformationDialog(Object & Object);
         
     private:
         auto m_AddObjectProperty(UI::Widget * PreviousWidget, float Indentation, Object * Object) -> UI::Widget *;
@@ -32,9 +32,12 @@ namespace UI
         auto m_OnCloseClicked() -> void;
         auto m_OnDestroying(UI::Event & DestroyingEvent) -> void;
         auto m_OnKey(UI::KeyEvent & KeyEvent) -> void;
+        auto m_OnObjectButtonClicked(Object * Object) -> void;
         auto m_OnObjectDestroying() -> void;
         auto m_OnRefreshClicked() -> void;
         auto m_Refresh() -> void;
+        auto m_SetObject(Object * Object) -> void;
+        auto m_ViewObject(Object * Object) -> void;
         
         Object * m_Object = nullptr;
         Connection m_ObjectDestroyingConnection;
