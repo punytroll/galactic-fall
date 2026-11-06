@@ -7,6 +7,7 @@
 #ifndef GALACTIC_FALL__SOURCE__UI__USER_INTERFACE_H
 #define GALACTIC_FALL__SOURCE__UI__USER_INTERFACE_H
 
+#include <bitset>
 #include <string>
 
 #include <events/connection.h>
@@ -45,6 +46,7 @@ namespace UI
         void DispatchSubWidgetRemovedEvent(UI::SubWidgetEvent & SubWidgetRemovedEvent);
         void DispatchTopChangedEvent(UI::Event & TopChangedEvent);
         void DispatchWidthChangedEvent(UI::Event & WidthChangedEvent);
+        auto IsKeyCodePressed(unsigned int const KeyCode) const -> bool;
         void Update(float RealTimeSeconds, float GameTimeSeconds);
         // setters
         void SetCaptureWidget(UI::Widget * Widget);
@@ -62,6 +64,7 @@ namespace UI
         UI::Widget * _CaptureWidget;
         Connection _CaptureWidgetDestroyingCallbackConnection;
         UI::Widget * _HoverWidget;
+        std::bitset<256> m_PressedKeyCodes;
         UI::Widget * _RootWidget;
     };
 

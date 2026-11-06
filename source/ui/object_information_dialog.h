@@ -32,6 +32,7 @@ namespace UI
         auto m_OnCloseClicked() -> void;
         auto m_OnDestroying(UI::Event & DestroyingEvent) -> void;
         auto m_OnKey(UI::KeyEvent & KeyEvent) -> void;
+        auto m_OnObjectButtonClicked(Object * Object) -> void;
         auto m_OnObjectDestroying() -> void;
         auto m_OnRefreshClicked() -> void;
         auto m_Refresh() -> void;

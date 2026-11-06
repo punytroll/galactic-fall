@@ -30,6 +30,7 @@
 #include "scroll_bar.h"
 #include "scroll_box.h"
 #include "text_button.h"
+#include "user_interface.h"
 
 using namespace Expressions::Operators;
 
@@ -39,65 +40,62 @@ namespace UI
     {
     public:
         ObjectPropertyWidget(float Indentation, Object * Object) :
-            _Object(Object)
+            m_Object{Object}
         {
-            assert(_Object != nullptr);
-            _ObjectDestroyingConnection = _Object->ConnectDestroyingCallback(std::bind(&UI::ObjectPropertyWidget::_OnObjectDestroying, this));
-            ConnectDestroyingCallback(std::bind(&UI::ObjectPropertyWidget::_OnDestroying, this, std::placeholders::_1));
+            assert(m_Object != nullptr);
+            m_ObjectDestroyingConnection = m_Object->ConnectDestroyingCallback(std::bind(&UI::ObjectPropertyWidget::m_OnObjectDestroying, this));
+            ConnectDestroyingCallback(std::bind(&UI::ObjectPropertyWidget::m_OnDestroying, this, std::placeholders::_1));
             // create components
-            _Button = new UI::TextButton{};
+            m_Button = new UI::TextButton{};
             // initialize components
-            _Button->SetLeft(constant(Indentation));
-            _Button->SetTop(5.0_c);
-            _Button->SetWidth(width(this) - constant(Indentation));
-            _Button->SetHeight(height(this) - 2.0_c * 5.0_c);
-            _Button->SetText(Object->GetTypeIdentifier() + " / " + Object->GetSubTypeIdentifier());
-            _Button->ConnectClickedCallback(std::bind(&UI::ObjectPropertyWidget::_OnButtonClicked, this));
+            m_Button->SetLeft(constant(Indentation));
+            m_Button->SetTop(5.0_c);
+            m_Button->SetWidth(width(this) - constant(Indentation));
+            m_Button->SetHeight(height(this) - 2.0_c * 5.0_c);
+            m_Button->SetText(Object->GetTypeIdentifier() + " / " + Object->GetSubTypeIdentifier());
+            m_Button->ConnectClickedCallback([this]()
+                                             {
+                                                 m_ObjectButtonClickedEvent();
+                                             });
             // add components
-            AddSubWidget(_Button);
-        }
-    private:
-        void _OnButtonClicked(void)
-        {
-            auto ObjectInformationDialog{new UI::ObjectInformationDialog{_Object}};
-            
-            ObjectInformationDialog->SetName("object_information(" + _Object->GetTypeIdentifier() + " / " + _Object->GetSubTypeIdentifier() + ")");
-            ObjectInformationDialog->SetLeft(100.0_c);
-            ObjectInformationDialog->SetTop(400.0_c);
-            ObjectInformationDialog->SetWidth(500.0_c);
-            ObjectInformationDialog->SetHeight(300.0_c);
-            GetRootWidget()->AddSubWidget(ObjectInformationDialog);
-            ObjectInformationDialog->GrabKeyboardFocus();
+            AddSubWidget(m_Button);
         }
         
-        void _OnDestroying(UI::Event & DestroyingEvent)
+        auto ConnectObjectButtonClickedCallback(std::function<void()> ClickedHandler) -> Connection
+        {
+            return m_ObjectButtonClickedEvent.Connect(ClickedHandler);
+        }
+        
+    private:
+        auto m_OnDestroying(UI::Event & DestroyingEvent) -> void
         {
             if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
             {
-                if(_Object != nullptr)
+                if(m_Object != nullptr)
                 {
-                    _Object = nullptr;
-                    assert(_ObjectDestroyingConnection.IsValid() == true);
-                    _ObjectDestroyingConnection.Disconnect();
-                    assert(_ObjectDestroyingConnection.IsValid() == false);
+                    m_Object = nullptr;
+                    assert(m_ObjectDestroyingConnection.IsValid() == true);
+                    m_ObjectDestroyingConnection.Disconnect();
+                    assert(m_ObjectDestroyingConnection.IsValid() == false);
                 }
             }
         }
         
-        void _OnObjectDestroying(void)
+        void m_OnObjectDestroying(void)
         {
-            assert(_Object != nullptr);
-            _Object = nullptr;
-            assert(_ObjectDestroyingConnection.IsValid() == true);
-            _ObjectDestroyingConnection.Disconnect();
-            assert(_ObjectDestroyingConnection.IsValid() == false);
-            _Button->SetText("<destroyed>");
-            _Button->SetEnabled(false);
+            assert(m_Object != nullptr);
+            m_Object = nullptr;
+            assert(m_ObjectDestroyingConnection.IsValid() == true);
+            m_ObjectDestroyingConnection.Disconnect();
+            assert(m_ObjectDestroyingConnection.IsValid() == false);
+            m_Button->SetText("<destroyed>");
+            m_Button->SetEnabled(false);
         }
         
-        UI::TextButton * _Button;
-        Object * _Object;
-        Connection _ObjectDestroyingConnection;
+        UI::TextButton * m_Button;
+        ::Event<void> m_ObjectButtonClickedEvent;
+        Object * m_Object;
+        Connection m_ObjectDestroyingConnection;
     };
 }
 
@@ -156,6 +154,7 @@ auto UI::ObjectInformationDialog::m_AddObjectProperty(UI::Widget * PreviousWidge
     }
     ObjectPropertyWidget->SetWidth(width(m_PropertiesScrollBox->GetContent()) - 2.0_c * 10.0_c);
     ObjectPropertyWidget->SetHeight(30.0_c);
+    ObjectPropertyWidget->ConnectObjectButtonClickedCallback(std::bind(&UI::ObjectInformationDialog::m_OnObjectButtonClicked, this, Object));
     m_PropertiesScrollBox->GetContent()->AddSubWidget(ObjectPropertyWidget);
     
     return ObjectPropertyWidget;
@@ -298,6 +297,27 @@ auto UI::ObjectInformationDialog::m_OnKey(UI::KeyEvent & KeyEvent) -> void
     {
 		Destroy();
         KeyEvent.StopPropagation();
+    }
+}
+
+auto UI::ObjectInformationDialog::m_OnObjectButtonClicked(Object * Object) -> void
+{
+    if((g_UserInterface->IsKeyCodePressed(50) == true /* LEFT SHIFT */) || (g_UserInterface->IsKeyCodePressed(62) == true /* RIGHT SHIFT */))
+    {
+        auto ObjectInformationDialog = new UI::ObjectInformationDialog{Object};
+        
+        ObjectInformationDialog->SetName("object_information(" + Object->GetTypeIdentifier() + " / " + Object->GetSubTypeIdentifier() + ")");
+        ObjectInformationDialog->SetLeft(100.0_c);
+        ObjectInformationDialog->SetTop(400.0_c);
+        ObjectInformationDialog->SetWidth(500.0_c);
+        ObjectInformationDialog->SetHeight(300.0_c);
+        GetRootWidget()->AddSubWidget(ObjectInformationDialog);
+        ObjectInformationDialog->GrabKeyboardFocus();
+    }
+    else
+    {
+        m_Object = Object;
+        m_Refresh();
     }
 }
 
