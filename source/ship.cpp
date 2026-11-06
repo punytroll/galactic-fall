@@ -331,33 +331,33 @@ bool Ship::Update(float Seconds)
         }
         if(m_Jettison == true)
         {
-            assert(GetCargoHold() != 0);
-            assert(GetCargoHold()->GetAspectObjectContainer() != 0);
+            assert(GetCargoHold() != nullptr);
+            assert(GetCargoHold()->GetAspectObjectContainer() != nullptr);
             
-            std::set< Object * >::const_iterator ContentIterator(GetCargoHold()->GetAspectObjectContainer()->GetContent().begin());
+            auto ContentIterator = GetCargoHold()->GetAspectObjectContainer()->GetContent().begin();
+            auto ContentEnd = GetCargoHold()->GetAspectObjectContainer()->GetContent().end();
             
-            while(ContentIterator != GetCargoHold()->GetAspectObjectContainer()->GetContent().end())
+            while(ContentIterator != ContentEnd)
             {
-                Object * Content(*ContentIterator);
+                auto Content = *ContentIterator;
                 
                 ++ContentIterator;
                 if(Content->GetTypeIdentifier() == "commodity")
                 {
                     GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Content);
-                    assert(GetAspectPosition() != 0);
-                    assert(Content->GetAspectPosition() != 0);
+                    assert(GetAspectPosition() != nullptr);
+                    assert(Content->GetAspectPosition() != nullptr);
                     Content->GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition());
                     
-                    Commodity * TheCommodity(dynamic_cast< Commodity * >(Content));
-                    auto Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 0.5f), GetRandomFloat(0.0f, 2 * M_PI)));
+                    auto TheCommodity = dynamic_cast<Commodity *>(Content);
+                    auto Velocity = Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 0.5f), GetRandomFloat(0.0f, 2 * M_PI));
                     
                     TheCommodity->SetVelocity(Vector3f::CreateFromComponents(GetVelocity()[0] * 0.8f + Velocity[0], GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
                     
-                    auto RotationAxis(Vector3f::CreateFromComponents(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f)));
+                    auto RotationAxis = Vector3f::CreateFromComponents(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f));
                     
-                    RotationAxis.Normalize();
-                    TheCommodity->SetAngularVelocity(Algebra::AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
-                    assert(GetContainer()->GetAspectObjectContainer() != 0);
+                    TheCommodity->SetAngularVelocity(Algebra::AxisAngle::CreateNormalisedFromAxisAndAngle(RotationAxis, GetRandomFloat(0.0f, 0.7f)));
+                    assert(GetContainer()->GetAspectObjectContainer() != nullptr);
                     GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
                 }
             }

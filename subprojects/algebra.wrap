@@ -1,8 +1,8 @@
 [wrap-file]
-directory = algebra-26.11.0
-source_url = https://github.com/punytroll/algebra/archive/refs/tags/26.11.0.tar.gz
-source_filename = algebra-26.11.0.tar.gz
-source_hash = f059f2f0238dd5fdf3bda5fabb1237d002990f87d54f478910662aa3147823fb
+directory = algebra-26.11.1
+source_url = https://github.com/punytroll/algebra/archive/refs/tags/26.11.1.tar.gz
+source_filename = algebra-26.11.1.tar.gz
+source_hash = fd6b3c431e0121f02f29d4d23a3270ce44953f726a86637449a4219340725846
 
 [provide]
 dependency_names = algebra

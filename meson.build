@@ -23,7 +23,7 @@ subproject(
     'tests': 'enabled',
   },
 )
-algebra_dependency = dependency('algebra', version: '>=26.11.0')
+algebra_dependency = dependency('algebra', version: '>=26.11.1')
 
 expressions_subproject = subproject('expressions', version: '>=0.7.1')
 expressions_dependency = expressions_subproject.get_variable('expressions_library_dependency')

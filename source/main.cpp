@@ -664,47 +664,35 @@ void CollisionDetection(System * System)
                         NewExplosionParticleSystem->SetPosition(Ship->GetAspectPosition()->GetPosition());
                         NewExplosionParticleSystem->SetVelocity(Ship->GetVelocity() * 0.5f);
                         VisualizeParticleSystem(NewExplosionParticleSystem, System);
-                        // if the ship has content, drop all of it
-                        assert(Ship->GetAspectObjectContainer() != nullptr);
                         
-                        const auto & ShipContent(Ship->GetAspectObjectContainer()->GetContent());
-                        auto ShipContentIterator(ShipContent.begin());
+                        auto CargoHold = Ship->GetCargoHold();
                         
-                        while(ShipContentIterator != ShipContent.end())
+                        assert(CargoHold->GetAspectObjectContainer() != nullptr);
+                        
+                        auto ContentIterator = CargoHold->GetAspectObjectContainer()->GetContent().begin();
+                        auto ContentEnd = CargoHold->GetAspectObjectContainer()->GetContent().end();
+                        
+                        while(ContentIterator != ContentEnd)
                         {
-                            if((*ShipContentIterator)->GetTypeIdentifier() == "storage")
+                            auto Content = *ContentIterator;
+                            
+                            ++ContentIterator;
+                            if(Content->GetTypeIdentifier() == "commodity")
                             {
-                                auto TheStorage(*ShipContentIterator);
-                                const auto & StorageContent(TheStorage->GetAspectObjectContainer()->GetContent());
-                                auto StorageContentIterator(StorageContent.begin());
+                                auto TheCommodity = dynamic_cast<Commodity *>(Content);
                                 
-                                while(StorageContentIterator != StorageContent.end())
-                                {
-                                    if((*StorageContentIterator)->GetTypeIdentifier() == "commodity")
-                                    {
-                                        auto TheCommodity(dynamic_cast< Commodity * >(*StorageContentIterator));
-                                        
-                                        ++StorageContentIterator;
-                                        TheStorage->GetAspectObjectContainer()->RemoveContent(TheCommodity);
-                                        TheCommodity->GetAspectPosition()->SetPosition(Ship->GetAspectPosition()->GetPosition());
-                                        
-                                        auto Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI)));
-                                        
-                                        TheCommodity->SetVelocity(Vector3f::CreateFromComponents(Ship->GetVelocity()[0] * 0.8f + Velocity[0], Ship->GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
-                                        
-                                        auto RotationAxis(Vector3f::CreateFromComponents(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f)));
-                                        
-                                        RotationAxis.Normalize();
-                                        TheCommodity->SetAngularVelocity(Algebra::AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
-                                        Ship->GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
-                                    }
-                                    else
-                                    {
-                                        ++StorageContentIterator;
-                                    }
-                                }
+                                CargoHold->GetAspectObjectContainer()->RemoveContent(TheCommodity);
+                                TheCommodity->GetAspectPosition()->SetPosition(Ship->GetAspectPosition()->GetPosition());
+                                
+                                auto Velocity = Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI));
+                                
+                                TheCommodity->SetVelocity(Vector3f::CreateFromComponents(Ship->GetVelocity()[0] * 0.8f + Velocity[0], Ship->GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
+                                
+                                auto RotationAxis = Vector3f::CreateFromComponents(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f));
+                                
+                                TheCommodity->SetAngularVelocity(Algebra::AxisAngle::CreateNormalisedFromAxisAndAngle(RotationAxis, GetRandomFloat(0.0f, 0.7f)));
+                                Ship->GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
                             }
-                            ++ShipContentIterator;
                         }
                         DeleteObject(Ship);
                     }
@@ -1680,7 +1668,7 @@ void LoadGameFromElement(const XML::Element * SaveElement)
                                 assert(TypeSpecificChild->HasAttribute("axis-y") == true);
                                 assert(TypeSpecificChild->HasAttribute("axis-z") == true);
                                 assert(TypeSpecificChild->HasAttribute("angle") == true);
-                                NewCommodity->SetAngularVelocity(Algebra::AxisAngle(from_string_cast< float >(TypeSpecificChild->GetAttribute("axis-x")), from_string_cast< float >(TypeSpecificChild->GetAttribute("axis-y")), from_string_cast< float >(TypeSpecificChild->GetAttribute("axis-z")), from_string_cast< float >(TypeSpecificChild->GetAttribute("angle"))));
+                                NewCommodity->SetAngularVelocity(Algebra::AxisAngle::CreateFromComponents(from_string_cast< float >(TypeSpecificChild->GetAttribute("axis-x")), from_string_cast< float >(TypeSpecificChild->GetAttribute("axis-y")), from_string_cast< float >(TypeSpecificChild->GetAttribute("axis-z")), from_string_cast< float >(TypeSpecificChild->GetAttribute("angle"))));
                             }
                             else if(TypeSpecificChild->GetName() == "hull")
                             {
