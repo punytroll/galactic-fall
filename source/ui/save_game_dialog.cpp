@@ -54,7 +54,6 @@ UI::SaveGameDialog::SaveGameDialog()
     m_FileNameLabel->SetBackgroundColor(Graphics::ColorRGBO(0.1f, 0.1f, 0.1f, 1.0f));
     m_FileNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
     m_FileNameLabel->ConnectKeyCallback(std::bind(&UI::SaveGameDialog::m_OnFileNameLabelKey, this, std::placeholders::_1));
-    m_FileNameLabel->GrabKeyboardFocus();
     m_MessageLabel->SetLeft(10.0_c);
     m_MessageLabel->SetTop(40.0_c);
     m_MessageLabel->SetWidth(width(this) - 2.0_c * left(m_MessageLabel));
@@ -75,6 +74,7 @@ UI::SaveGameDialog::SaveGameDialog()
     AddSubWidget(m_FileNameLabel);
     AddSubWidget(m_MessageLabel);
     AddSubWidget(OKButton);
+    m_FileNameLabel->GrabKeyboardFocus();
 }
 
 auto UI::SaveGameDialog::GetFilePath() -> std::string
