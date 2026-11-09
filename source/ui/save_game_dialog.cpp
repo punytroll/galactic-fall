@@ -1,25 +1,8 @@
 /**
  * galactic-fall
- * Copyright (C) 2007-2019  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2007-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
-
-#include <stdlib.h>
-
-#include <fstream>
 
 #include <expressions/operators.h>
 
@@ -38,166 +21,166 @@
 
 using namespace Expressions::Operators;
 
-UI::SaveGameDialog::SaveGameDialog(void)
+UI::SaveGameDialog::SaveGameDialog()
 {
-	SetTitle("Save Game");
-	ConnectKeyCallback(std::bind(&UI::SaveGameDialog::_OnKey, this, std::placeholders::_1));
-	
-	// create components
-	auto CancelButton{new UI::TextButton{}};
-	auto OKButton{new UI::TextButton{}};
-	
-	_FileListBox = new UI::ListBox{};
-	_FileNameLabel = new UI::Label{};
-	_MessageLabel = new UI::Label{};
-	// initialize components
-	CancelButton->SetLeft(left(OKButton) - 10.0_c - width(CancelButton));
-	CancelButton->SetTop(height(this) - 10.0_c - height(CancelButton));
-	CancelButton->SetWidth(100.0_c);
-	CancelButton->SetHeight(20.0_c);
-	CancelButton->SetText("Cancel");
-	CancelButton->ConnectClickedCallback(std::bind(&UI::SaveGameDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
-	_FileListBox->SetLeft(10.0_c);
-	_FileListBox->SetTop(110.0_c);
-	_FileListBox->SetWidth(width(this) - 2.0_c * left(_FileListBox));
-	_FileListBox->SetHeight(top(OKButton) - 10.0_c - top(_FileListBox));
-	_FileListBox->SetHorizontalScrollBarVisible(false);
-	_FileListBox->ConnectSelectedItemChangedCallback(std::bind(&UI::SaveGameDialog::_OnFileListBoxSelectedItemChanged, this));
-	_FileNameLabel->SetLeft(10.0_c);
-	_FileNameLabel->SetTop(bottom(_MessageLabel) + 10.0_c);
-	_FileNameLabel->SetWidth(width(this) - 2.0_c * left(_FileNameLabel));
-	_FileNameLabel->SetHeight(20.0_c);
-	_FileNameLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 1.0f, 0.5f, 1.0f));
-	_FileNameLabel->SetBackgroundColor(Graphics::ColorRGBO(0.1f, 0.1f, 0.1f, 1.0f));
-	_FileNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	_FileNameLabel->ConnectKeyCallback(std::bind(&UI::SaveGameDialog::_OnFileNameLabelKey, this, std::placeholders::_1));
-	_FileNameLabel->GrabKeyboardFocus();
-	_MessageLabel->SetLeft(10.0_c);
-	_MessageLabel->SetTop(40.0_c);
-	_MessageLabel->SetWidth(width(this) - 2.0_c * left(_MessageLabel));
-	_MessageLabel->SetHeight(30.0_c);
-	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3, 0.3f, 1.0f));
-	_MessageLabel->SetWrap(true);
-	_MessageLabel->SetWordWrap(true);
-	_MessageLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	OKButton->SetLeft(width(this) - 10.0_c - width(OKButton));
-	OKButton->SetTop(height(this) - 10.0_c - height(OKButton));
-	OKButton->SetWidth(100.0_c);
-	OKButton->SetHeight(20.0_c);
-	OKButton->SetText("OK");
-	OKButton->ConnectClickedCallback(std::bind(&UI::SaveGameDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
-	// add components
-	AddSubWidget(CancelButton);
-	AddSubWidget(_FileListBox);
-	AddSubWidget(_FileNameLabel);
-	AddSubWidget(_MessageLabel);
-	AddSubWidget(OKButton);
+    SetTitle("Save Game");
+    ConnectKeyCallback(std::bind(&UI::SaveGameDialog::m_OnKey, this, std::placeholders::_1));
+    
+    // create components
+    auto CancelButton = new UI::TextButton{};
+    auto OKButton = new UI::TextButton{};
+    
+    m_FileListBox = new UI::ListBox{};
+    m_FileNameLabel = new UI::Label{};
+    m_MessageLabel = new UI::Label{};
+    // initialize components
+    CancelButton->SetLeft(left(OKButton) - 10.0_c - width(CancelButton));
+    CancelButton->SetTop(height(this) - 10.0_c - height(CancelButton));
+    CancelButton->SetWidth(100.0_c);
+    CancelButton->SetHeight(20.0_c);
+    CancelButton->SetText("Cancel");
+    CancelButton->ConnectClickedCallback(std::bind(&UI::SaveGameDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
+    m_FileListBox->SetLeft(10.0_c);
+    m_FileListBox->SetTop(110.0_c);
+    m_FileListBox->SetWidth(width(this) - 2.0_c * left(m_FileListBox));
+    m_FileListBox->SetHeight(top(OKButton) - 10.0_c - top(m_FileListBox));
+    m_FileListBox->SetHorizontalScrollBarVisible(false);
+    m_FileListBox->ConnectSelectedItemChangedCallback(std::bind(&UI::SaveGameDialog::m_OnFileListBoxSelectedItemChanged, this));
+    m_FileNameLabel->SetLeft(10.0_c);
+    m_FileNameLabel->SetTop(bottom(m_MessageLabel) + 10.0_c);
+    m_FileNameLabel->SetWidth(width(this) - 2.0_c * left(m_FileNameLabel));
+    m_FileNameLabel->SetHeight(20.0_c);
+    m_FileNameLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 1.0f, 0.5f, 1.0f));
+    m_FileNameLabel->SetBackgroundColor(Graphics::ColorRGBO(0.1f, 0.1f, 0.1f, 1.0f));
+    m_FileNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+    m_FileNameLabel->ConnectKeyCallback(std::bind(&UI::SaveGameDialog::m_OnFileNameLabelKey, this, std::placeholders::_1));
+    m_FileNameLabel->GrabKeyboardFocus();
+    m_MessageLabel->SetLeft(10.0_c);
+    m_MessageLabel->SetTop(40.0_c);
+    m_MessageLabel->SetWidth(width(this) - 2.0_c * left(m_MessageLabel));
+    m_MessageLabel->SetHeight(30.0_c);
+    m_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3, 0.3f, 1.0f));
+    m_MessageLabel->SetWrap(true);
+    m_MessageLabel->SetWordWrap(true);
+    m_MessageLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+    OKButton->SetLeft(width(this) - 10.0_c - width(OKButton));
+    OKButton->SetTop(height(this) - 10.0_c - height(OKButton));
+    OKButton->SetWidth(100.0_c);
+    OKButton->SetHeight(20.0_c);
+    OKButton->SetText("OK");
+    OKButton->ConnectClickedCallback(std::bind(&UI::SaveGameDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
+    // add components
+    AddSubWidget(CancelButton);
+    AddSubWidget(m_FileListBox);
+    AddSubWidget(m_FileNameLabel);
+    AddSubWidget(m_MessageLabel);
+    AddSubWidget(OKButton);
 }
 
-std::string UI::SaveGameDialog::GetFilePath(void)
+auto UI::SaveGameDialog::GetFilePath() -> std::string
 {
-	if(_FileNameLabel->GetText() == "")
-	{
-		return "";
-	}
-	else
-	{
-		return _DirectoryPath + '/' + _FileNameLabel->GetText() + ".xml";
-	}
+    if(m_FileNameLabel->GetText() == "")
+    {
+        return "";
+    }
+    else
+    {
+        return m_DirectoryPath + '/' + m_FileNameLabel->GetText() + ".xml";
+    }
 }
 
-void UI::SaveGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
+auto UI::SaveGameDialog::SetDirectoryPath(std::string const & DirectoryPath) -> void
 {
-	_DirectoryPath = DirectoryPath;
-	while(_FileListBox->GetContent()->GetSubWidgets().empty() == false)
-	{
-		_FileListBox->GetContent()->GetSubWidgets().front()->Destroy();
-	}
-	if(IsExistingDirectory(_DirectoryPath) == false)
-	{
-		ShowErrorMessage("Is not an existing directory: \"" + _DirectoryPath + "\".");
-	}
-	for(auto DirectoryEntry : GetDirectoryEntries(_DirectoryPath))
-	{
-		auto ListBoxTextItem{new UI::ListBoxTextItem{}};
-		
-		ListBoxTextItem->SetText(DirectoryEntry.substr(0, DirectoryEntry.rfind(".xml")));
-		_FileListBox->GetContent()->AddSubWidget(ListBoxTextItem);
-	}
+    m_DirectoryPath = DirectoryPath;
+    while(m_FileListBox->GetContent()->GetSubWidgets().empty() == false)
+    {
+        m_FileListBox->GetContent()->GetSubWidgets().front()->Destroy();
+    }
+    if(IsExistingDirectory(m_DirectoryPath) == false)
+    {
+        ShowErrorMessage("Is not an existing directory: \"" + m_DirectoryPath + "\".");
+    }
+    for(auto DirectoryEntry : GetDirectoryEntries(m_DirectoryPath))
+    {
+        auto ListBoxTextItem = new UI::ListBoxTextItem{};
+        
+        ListBoxTextItem->SetText(DirectoryEntry.substr(0, DirectoryEntry.rfind(".xml")));
+        m_FileListBox->GetContent()->AddSubWidget(ListBoxTextItem);
+    }
 }
 
-void UI::SaveGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
+auto UI::SaveGameDialog::ShowErrorMessage(std::string const & ErrorMessage) -> void
 {
-	if(_MessageTimeoutNotification.IsValid() == true)
-	{
-		_MessageTimeoutNotification.Dismiss();
-	}
-	_MessageLabel->SetVisible(true);
-	_MessageLabel->SetText(ErrorMessage);
-	_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, std::bind(&UI::Label::SetVisible, _MessageLabel, false));
+    if(m_MessageTimeoutNotification.IsValid() == true)
+    {
+        m_MessageTimeoutNotification.Dismiss();
+    }
+    m_MessageLabel->SetVisible(true);
+    m_MessageLabel->SetText(ErrorMessage);
+    m_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, std::bind(&UI::Label::SetVisible, m_MessageLabel, false));
 }
 
-void UI::SaveGameDialog::_OnFileNameLabelTextChanged(void)
+auto UI::SaveGameDialog::m_OnFileNameLabelKey(UI::KeyEvent & KeyEvent) -> void
 {
-	for(auto ListBoxItem : _FileListBox->GetContent()->GetSubWidgets())
-	{
-		auto ListBoxTextItem(dynamic_cast< UI::ListBoxTextItem * >(ListBoxItem));
-		
-		if(ListBoxTextItem != nullptr)
-		{
-			if(ListBoxTextItem->GetText() == _FileNameLabel->GetText())
-			{
-				_FileListBox->SetSelectedItem(ListBoxTextItem);
-				
-				break;
-			}
-		}
-	}
+    if(KeyEvent.GetPhase() == UI::Event::Phase::Target)
+    {
+        if((KeyEvent.GetKeyCode() == 22 /* BACKSPACE */) && (KeyEvent.IsDown() == true))
+        {
+            if(m_FileNameLabel->GetText().length() > 0)
+            {
+                m_FileNameLabel->SetText(m_FileNameLabel->GetText().substr(0, m_FileNameLabel->GetText().length() - 1));
+                m_OnFileNameLabelTextChanged();
+            }
+        }
+        else if((KeyEvent.GetString().empty() == false) && (KeyEvent.IsDown() == true))
+        {
+            m_FileNameLabel->SetText(m_FileNameLabel->GetText() + KeyEvent.GetString());
+            m_OnFileNameLabelTextChanged();
+        }
+        KeyEvent.StopPropagation();
+    }
 }
 
-void UI::SaveGameDialog::_OnFileListBoxSelectedItemChanged(void)
+auto UI::SaveGameDialog::m_OnFileNameLabelTextChanged() -> void
 {
-	auto SelectedFileListBoxItem{dynamic_cast< UI::ListBoxTextItem * >(_FileListBox->GetSelectedItem())};
-	
-	if(SelectedFileListBoxItem != nullptr)
-	{
-		_FileNameLabel->SetText(SelectedFileListBoxItem->GetText());
-	}
-	else
-	{
-		_FileNameLabel->SetText("");
-	}
+    for(auto ListBoxItem : m_FileListBox->GetContent()->GetSubWidgets())
+    {
+        auto ListBoxTextItem = dynamic_cast<UI::ListBoxTextItem *>(ListBoxItem);
+        
+        if(ListBoxTextItem != nullptr)
+        {
+            if(ListBoxTextItem->GetText() == m_FileNameLabel->GetText())
+            {
+                m_FileListBox->SetSelectedItem(ListBoxTextItem);
+                
+                break;
+            }
+        }
+    }
 }
 
-void UI::SaveGameDialog::_OnFileNameLabelKey(UI::KeyEvent & KeyEvent)
+auto UI::SaveGameDialog::m_OnFileListBoxSelectedItemChanged() -> void
 {
-	if(KeyEvent.GetPhase() == UI::Event::Phase::Target)
-	{
-		if((KeyEvent.GetKeyCode() == 22 /* BACKSPACE */) && (KeyEvent.IsDown() == true))
-		{
-			if(_FileNameLabel->GetText().length() > 0)
-			{
-				_FileNameLabel->SetText(_FileNameLabel->GetText().substr(0, _FileNameLabel->GetText().length() - 1));
-				_OnFileNameLabelTextChanged();
-			}
-		}
-		else if((KeyEvent.GetString().empty() == false) && (KeyEvent.IsDown() == true))
-		{
-			_FileNameLabel->SetText(_FileNameLabel->GetText() + KeyEvent.GetString());
-			_OnFileNameLabelTextChanged();
-		}
-		KeyEvent.StopPropagation();
-	}
+    auto SelectedFileListBoxItem = dynamic_cast<UI::ListBoxTextItem *>(m_FileListBox->GetSelectedItem());
+    
+    if(SelectedFileListBoxItem != nullptr)
+    {
+        m_FileNameLabel->SetText(SelectedFileListBoxItem->GetText());
+    }
+    else
+    {
+        m_FileNameLabel->SetText("");
+    }
 }
 
-void UI::SaveGameDialog::_OnKey(UI::KeyEvent & KeyEvent)
+auto UI::SaveGameDialog::m_OnKey(UI::KeyEvent & KeyEvent) -> void
 {
-	if((KeyEvent.GetKeyCode() == 9 /* ESCAPE */) && (KeyEvent.IsDown() == true))
-	{
-		_Close(UI::Dialog::ClosingReason::ESCAPE_KEY);
-	}
-	else if((KeyEvent.GetKeyCode() == 36 /* RETURN */) && (KeyEvent.IsDown() == true))
-	{
-		_Close(UI::Dialog::ClosingReason::RETURN_KEY);
-	}
+    if((KeyEvent.GetKeyCode() == 9 /* ESCAPE */) && (KeyEvent.IsDown() == true))
+    {
+        _Close(UI::Dialog::ClosingReason::ESCAPE_KEY);
+    }
+    else if((KeyEvent.GetKeyCode() == 36 /* RETURN */) && (KeyEvent.IsDown() == true))
+    {
+        _Close(UI::Dialog::ClosingReason::RETURN_KEY);
+    }
 }
