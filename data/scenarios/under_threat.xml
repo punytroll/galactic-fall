@@ -1,0 +1,6 @@
+<scenario>
+	<identifier>under_threat</identifier>
+	<name>Under Threat</name>
+	<description>This scenario places you in a simple shuttle between prirates.</description>
+	<savegame from-file="savegames/under_threat.xml"/>
+</scenario>

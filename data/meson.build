@@ -89,6 +89,7 @@ data_arx_items = [
   ['scenarios' / 'new_game.xml', false, true],
   ['scenarios' / 'rich_game.xml', false, true],
   ['scenarios' / 'rigel_spectator.xml', false, true],
+  ['scenarios' / 'under_threat.xml', false, true],
   ['settings' / 'key_binding_profile.xml', false, true],
   ['settings' / 'window_dimensions.xml', false, true],
   ['shaders' / 'fragment' / 'default.xml', false, true],

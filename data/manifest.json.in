@@ -695,6 +695,12 @@
 									"type": 17,
 									"sub_type": 0,
 									"data": "@SCENARIOS__RIGEL_SPECTATOR@"
+								},
+								{
+									"name": "Under Threat",
+									"type": 17,
+									"sub_type": 0,
+									"data": "@SCENARIOS__UNDER_THREAT@"
 								}
 							]
 						}

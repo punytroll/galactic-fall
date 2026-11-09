@@ -1,0 +1,100 @@
+<save version="0.1">
+	<galaxy identifier="milky_way"/>
+	<current-system identifier="tichel"/>
+	<time-warp value="1"/>
+	<game-time value="103330376.8001"/>
+	<command-mind object-identifier="::player_mind"/>
+	<observed-character object-identifier="::character::player_character"/>
+	<main-camera>
+		<offset x="0" y="0" z="200"/>
+		<field-of-view-y radians="0.8"/>
+	</main-camera>
+	<object type-identifier="system" sub-type-identifier="rigel" object-identifier="::system(rigel)"/>
+	<object type-identifier="system" sub-type-identifier="sol" object-identifier="::system(sol)"/>
+	<object type-identifier="system" sub-type-identifier="tichel" object-identifier="::system(tichel)"/>
+	<object type-identifier="ship" sub-type-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
+		<aspect-name>
+			<name value="Stargazer Alpha 1-0"/>
+		</aspect-name>
+		<aspect-object-container>
+			<content object-identifier="::battery(::ship(shuttle)::player_ship)"/>
+			<content object-identifier="::storage(::ship(shuttle)::player_ship)"/>
+			<content object-identifier="::character::player_character"/>
+		</aspect-object-container>
+		<aspect-physical>
+			<radial-size value="4.63479"/>
+			<space-requirement value="60000"/>
+		</aspect-physical>
+		<aspect-position>
+			<orientation w="1" x="0" y="0" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<aspect-visualization>
+			<part identifier="faction">
+				<style-diffuse-color red="1" green="1" blue="1" opacity="1"/>
+				<style-shininess value="0"/>
+				<style-program-identifier value="default"/>
+			</part>
+			<part identifier="hull">
+				<style-diffuse-color red="0.5" green="0.55" blue="0.58" opacity="1"/>
+				<style-specular-color red="0.45" green="0.45" blue="0.45" opacity="1"/>
+				<style-shininess value="40"/>
+				<style-program-identifier value="default"/>
+			</part>
+		</aspect-visualization>
+		<type-specific>
+			<fuel-capacity value="1"/>
+			<fuel-needed-to-jump value="0.09"/>
+			<hull-capacity value="100"/>
+			<maximum-forward-thrust value="10"/>
+			<maximum-speed value="12"/>
+			<maximum-turn-speed value="1"/>
+			<faction identifier="neutral"/>
+			<fuel value="1"/>
+			<hull value="100"/>
+			<velocity x="0" y="0" z="0"/>
+		</type-specific>
+	</object>
+	<object type-identifier="battery" sub-type-identifier="light_battery" object-identifier="::battery(::ship(shuttle)::player_ship)">
+		<aspect-accessory>
+			<slot slot-identifier="battery"/>
+		</aspect-accessory>
+		<aspect-name>
+			<name value="Light Battery"/>
+		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0"/>
+			<space-requirement value="80"/>
+		</aspect-physical>
+		<type-specific>
+			<energy value="200"/>
+			<energy-capacity value="200"/>
+			<maximum-power-input value="5"/>
+			<maximum-power-output value="20"/>
+		</type-specific>
+	</object>
+	<object type-identifier="storage" sub-type-identifier="" object-identifier="::storage(::ship(shuttle)::player_ship)">
+		<aspect-object-container/>
+		<type-specific>
+			<space-capacity value="12000"/>
+		</type-specific>
+	</object>
+	<object type-identifier="character" sub-type-identifier="" object-identifier="::character::player_character">
+		<aspect-object-container>
+			<content object-identifier="::player_mind"/>
+		</aspect-object-container>
+		<type-specific>
+			<credits value="1000"/>
+			<map-knowledge>
+				<explored-system object-identifier="::system(rigel)"/>
+				<explored-system object-identifier="::system(sol)"/>
+				<explored-system object-identifier="::system(tichel)"/>
+			</map-knowledge>
+		</type-specific>
+	</object>
+	<object type-identifier="mind" sub-type-identifier="command_mind" object-identifier="::player_mind">
+		<type-specific>
+			<character object-identifier="::character::player_character"/>
+		</type-specific>
+	</object>
+</save>
