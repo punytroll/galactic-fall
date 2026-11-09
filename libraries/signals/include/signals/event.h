@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: MIT
 **/
 
-#ifndef GALACTIC_FALL__LIBRARIES__EVENTS__INCLUDE__EVENTS__EVENT_H
-#define GALACTIC_FALL__LIBRARIES__EVENTS__INCLUDE__EVENTS__EVENT_H
+#ifndef GALACTIC_FALL__LIBRARIES__SIGNALS__INCLUDE__SIGNALS__EVENT_H
+#define GALACTIC_FALL__LIBRARIES__SIGNALS__INCLUDE__SIGNALS__EVENT_H
 
 #include <cassert>
 #include <functional>
 #include <list>
 
-#include <events/connection.h>
+#include <signals/connection.h>
 
 class EventBase
 {

@@ -1,2 +1,2 @@
-subdir('events')
 subdir('graphics')
+subdir('signals')

@@ -22,7 +22,7 @@
 
 #include <string>
 
-#include <events/connection.h>
+#include <signals/connection.h>
 
 class Object;
 

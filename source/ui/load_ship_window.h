@@ -19,7 +19,7 @@
 #ifndef LOAD_SHIP_WINDOW_H
 #define LOAD_SHIP_WINDOW_H
 
-#include <events/connection.h>
+#include <signals/connection.h>
 
 #include "window.h"
 

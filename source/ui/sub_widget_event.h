@@ -20,7 +20,7 @@
 #ifndef UI_SUB_WIDGET_EVENT_H
 #define UI_SUB_WIDGET_EVENT_H
 
-#include <events/connection.h>
+#include <signals/connection.h>
 
 #include "event.h"
 

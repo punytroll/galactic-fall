@@ -14,7 +14,7 @@
 
 #include <algebra/vector2f.h>
 
-#include <events/event.h>
+#include <signals/event.h>
 
 #include "dimension.h"
 #include "dimension_operators.h"

@@ -25,7 +25,7 @@
 #include <set>
 #include <string>
 
-#include <events/event.h>
+#include <signals/event.h>
 
 class Object;
 

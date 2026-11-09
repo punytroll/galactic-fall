@@ -7,7 +7,7 @@
 #include <cassert>
 #include <iostream>
 
-#include <events/event.h>
+#include <signals/event.h>
 
 auto g_Global = 0;
 

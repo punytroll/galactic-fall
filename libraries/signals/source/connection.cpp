@@ -1,12 +1,13 @@
 /**
  * galactic-fall
  * Copyright (C) 2014-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
 #include <cassert>
 
-#include <events/connection.h>
-#include <events/event.h>
+#include <signals/connection.h>
+#include <signals/event.h>
 
 Connection::Core::Core(void) :
     _Event(nullptr),
