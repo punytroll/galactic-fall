@@ -54,7 +54,6 @@ public:
 	void Unmount(void);
 	// events
 	Connection ConnectDestroyingCallback(std::function< void (void) > Callback);
-	void DisconnectDestroyingCallback(Connection & Connection);
 private:
 	void _OnMountedObjectDestroying(void);
 	Event< void > _DestroyingEvent;

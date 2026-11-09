@@ -38,7 +38,6 @@ namespace UI
 		Dialog(void);
 		// connecting and disconnecting event callbacks
 		Connection ConnectClosingCallback(std::function< bool (UI::Dialog::ClosingReason) > Callback);
-		void DisconnectClosingCallback(Connection & Connection);
 	protected:
 		// helper functions and actions
 		void _Close(UI::Dialog::ClosingReason ClosingReason);

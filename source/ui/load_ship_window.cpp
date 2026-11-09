@@ -215,26 +215,26 @@ void UI::LoadShipWindow::_OnDestroying(UI::Event & DestroyingEvent)
 		{
 			assert(_Hangar->GetAspectObjectContainer() != nullptr);
 			assert(_HangarContentAddedCallbackConnection.IsValid() == true);
-			_Hangar->GetAspectObjectContainer()->DisconnectContentAddedCallback(_HangarContentAddedCallbackConnection);
+			_HangarContentAddedCallbackConnection.Disconnect();
 			assert(_HangarContentRemovedCallbackConnection.IsValid() == true);
-			_Hangar->GetAspectObjectContainer()->DisconnectContentRemovedCallback(_HangarContentRemovedCallbackConnection);
+			_HangarContentRemovedCallbackConnection.Disconnect();
 			assert(_HangarDestroyingCallbackConnection.IsValid() == true);
-			_Hangar->DisconnectDestroyingCallback(_HangarDestroyingCallbackConnection);
+			_HangarDestroyingCallbackConnection.Disconnect();
 		}
 		assert(_HangarContentAddedCallbackConnection.IsValid() == false);
 		assert(_HangarContentRemovedCallbackConnection.IsValid() == false);
 		assert(_HangarDestroyingCallbackConnection.IsValid() == false);
 		assert(_Ship != nullptr);
 		assert(_ShipDestroyingCallbackConnection.IsValid() == true);
-		_Ship->DisconnectDestroyingCallback(_ShipDestroyingCallbackConnection);
+		_ShipDestroyingCallbackConnection.Disconnect();
 		assert(_ShipDestroyingCallbackConnection.IsValid() == false);
 		assert(_Ship->GetCargoHold() != nullptr);
 		assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr);
 		assert(_ShipContentAddedCallbackConnection.IsValid() == true);
-		_Ship->GetCargoHold()->GetAspectObjectContainer()->DisconnectContentAddedCallback(_ShipContentAddedCallbackConnection);
+		_ShipContentAddedCallbackConnection.Disconnect();
 		assert(_ShipContentAddedCallbackConnection.IsValid() == false);
 		assert(_ShipContentRemovedCallbackConnection.IsValid() == true);
-		_Ship->GetCargoHold()->GetAspectObjectContainer()->DisconnectContentRemovedCallback(_ShipContentRemovedCallbackConnection);
+		_ShipContentRemovedCallbackConnection.Disconnect();
 		assert(_ShipContentRemovedCallbackConnection.IsValid() == false);
 	}
 }
@@ -267,17 +267,16 @@ void UI::LoadShipWindow::_OnHangarContentRemoved(Object * Content)
 void UI::LoadShipWindow::_OnHangarDestroying(void)
 {
 	assert(_Hangar != nullptr);
-	assert(_Hangar->GetAspectObjectContainer() != nullptr);
+	_Hangar = nullptr;
 	assert(_HangarContentAddedCallbackConnection.IsValid() == true);
-	_Hangar->GetAspectObjectContainer()->DisconnectContentAddedCallback(_HangarContentAddedCallbackConnection);
+	_HangarContentAddedCallbackConnection.Disconnect();
 	assert(_HangarContentAddedCallbackConnection.IsValid() == false);
 	assert(_HangarContentRemovedCallbackConnection.IsValid() == true);
-	_Hangar->GetAspectObjectContainer()->DisconnectContentRemovedCallback(_HangarContentRemovedCallbackConnection);
+	_HangarContentRemovedCallbackConnection.Disconnect();
 	assert(_HangarContentRemovedCallbackConnection.IsValid() == false);
 	assert(_HangarDestroyingCallbackConnection.IsValid() == true);
-	_Hangar->DisconnectDestroyingCallback(_HangarDestroyingCallbackConnection);
+	_HangarDestroyingCallbackConnection.Disconnect();
 	assert(_HangarDestroyingCallbackConnection.IsValid() == false);
-	_Hangar = nullptr;
 }
 
 void UI::LoadShipWindow::_OnKey(UI::KeyEvent & KeyEvent)

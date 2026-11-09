@@ -41,7 +41,6 @@ namespace UI
 		virtual ~ScrollBar(void);
 		// events
 		Connection ConnectScrollPositionChangedCallback(std::function< void (void) > Callback);
-		void DisconnectScrollPositionChangedCallback(Connection & Connection);
 		// getters
 		UI::ScrollBar::Alignment GetAlignment(void) const;
 		float GetCurrentPosition(void) const;

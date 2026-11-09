@@ -117,7 +117,7 @@ UI::AccessoryListItem::~AccessoryListItem(void)
 	if(_Accessory != nullptr)
 	{
 		assert(_AccessoryDestroyingConnection.IsValid() == true);
-		_Accessory->DisconnectDestroyingCallback(_AccessoryDestroyingConnection);
+		_AccessoryDestroyingConnection.Disconnect();
 		assert(_AccessoryDestroyingConnection.IsValid() == false);
 		_Accessory = nullptr;
 	}
@@ -132,7 +132,7 @@ void UI::AccessoryListItem::_OnAccessoryDestroying(void)
 {
 	assert(_Accessory != nullptr);
 	assert(_AccessoryDestroyingConnection.IsValid() == true);
-	_Accessory->DisconnectDestroyingCallback(_AccessoryDestroyingConnection);
+	_AccessoryDestroyingConnection.Disconnect();
 	assert(_AccessoryDestroyingConnection.IsValid() == false);
 	_Accessory = nullptr;
 }
@@ -171,10 +171,10 @@ UI::SlotListItem::~SlotListItem(void)
 	if(_Slot != nullptr)
 	{
 		assert(_SlotDestroyingConnection.IsValid() == true);
-		_Slot->DisconnectDestroyingCallback(_SlotDestroyingConnection);
-		assert(_SlotDestroyingConnection.IsValid() == false);
+		_SlotDestroyingConnection.Disconnect();
 		_Slot = nullptr;
 	}
+    assert(_SlotDestroyingConnection.IsValid() == false);
 }
 
 void UI::SlotListItem::Update(void)
@@ -211,10 +211,10 @@ Slot * UI::SlotListItem::GetSlot(void)
 void UI::SlotListItem::_OnSlotDestroying(void)
 {
 	assert(_Slot != nullptr);
-	assert(_SlotDestroyingConnection.IsValid() == true);
-	_Slot->DisconnectDestroyingCallback(_SlotDestroyingConnection);
-	assert(_SlotDestroyingConnection.IsValid() == false);
 	_Slot = nullptr;
+	assert(_SlotDestroyingConnection.IsValid() == true);
+	_SlotDestroyingConnection.Disconnect();
+	assert(_SlotDestroyingConnection.IsValid() == false);
 }
 
 UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :

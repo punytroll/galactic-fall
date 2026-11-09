@@ -47,8 +47,6 @@ public:
 	// events
 	Connection ConnectContentAddedCallback(std::function< void (Object *) > Callback);
 	Connection ConnectContentRemovedCallback(std::function< void (Object *) > Callback);
-	void DisconnectContentAddedCallback(Connection & Connection);
-	void DisconnectContentRemovedCallback(Connection & Connection);
 private:
 	std::set< Object * > _Content;
 	Object * _Object;

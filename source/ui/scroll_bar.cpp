@@ -73,11 +73,6 @@ Connection UI::ScrollBar::ConnectScrollPositionChangedCallback(std::function< vo
 	return _ScrollPositionChangedEvent.Connect(Callback);
 }
 
-void UI::ScrollBar::DisconnectScrollPositionChangedCallback(Connection & Connection)
-{
-	_ScrollPositionChangedEvent.Disconnect(Connection);
-}
-
 float UI::ScrollBar::_GetAvailableRange(void)
 {
 	if(_Alignment == UI::ScrollBar::Alignment::HORIZONTAL)

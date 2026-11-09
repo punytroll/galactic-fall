@@ -89,7 +89,6 @@ public:
 	void Destroy(void);
 	// events
 	Connection ConnectDestroyingCallback(std::function< void (void) > Callback);
-	void DisconnectDestroyingCallback(Connection & Connection);
 private:
 	// aspects
 	ObjectAspectAccessory * _AspectAccessory;

@@ -33,7 +33,8 @@ Hangar::~Hangar(void)
 	if(_Character != nullptr)
 	{
 		assert(_CharacterDestroyingConnection.IsValid() == true);
-		_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnection);
+		_CharacterDestroyingConnection.Disconnect();
+		assert(_CharacterDestroyingConnection.IsValid() == false);
 		_Character = nullptr;
 	}
 }
@@ -43,7 +44,8 @@ void Hangar::SetCharacter(Character * Character)
 	if(_Character != nullptr)
 	{
 		assert(_CharacterDestroyingConnection.IsValid() == true);
-		_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnection);
+		_CharacterDestroyingConnection.Disconnect();
+		assert(_CharacterDestroyingConnection.IsValid() == false);
 		_Character = nullptr;
 	}
 	if(Character != nullptr)
@@ -57,6 +59,7 @@ void Hangar::_OnCharacterDestroying(void)
 {
 	assert(_Character != nullptr);
 	assert(_CharacterDestroyingConnection.IsValid() == true);
-	_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnection);
+	_CharacterDestroyingConnection.Disconnect();
+	assert(_CharacterDestroyingConnection.IsValid() == true);
 	_Character = nullptr;
 }

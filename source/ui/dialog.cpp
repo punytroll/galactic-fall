@@ -28,11 +28,6 @@ Connection UI::Dialog::ConnectClosingCallback(std::function< bool (UI::Dialog::C
 	return _ClosingEvent.Connect(Callback);
 }
 
-void UI::Dialog::DisconnectClosingCallback(Connection & Connection)
-{
-	_ClosingEvent.Disconnect(Connection);
-}
-
 void UI::Dialog::_Close(UI::Dialog::ClosingReason ClosingReason)
 {
 	bool CallDestroy(true);

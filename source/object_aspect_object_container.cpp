@@ -55,16 +55,6 @@ Connection ObjectAspectObjectContainer::ConnectContentRemovedCallback(std::funct
 	return _ContentRemovedEvent.Connect(Callback);
 }
 
-void ObjectAspectObjectContainer::DisconnectContentAddedCallback(Connection & Connection)
-{
-	_ContentAddedEvent.Disconnect(Connection);
-}
-
-void ObjectAspectObjectContainer::DisconnectContentRemovedCallback(Connection & Connection)
-{
-	_ContentRemovedEvent.Disconnect(Connection);
-}
-
 std::uint32_t ObjectAspectObjectContainer::GetAmount(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
 {
 	std::uint32_t Amount{0};

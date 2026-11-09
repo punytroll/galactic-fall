@@ -135,11 +135,6 @@ Connection Object::ConnectDestroyingCallback(std::function< void (void) > Callba
 	return _DestroyingEvent.Connect(Callback);
 }
 
-void Object::DisconnectDestroyingCallback(Connection & Connection)
-{
-	_DestroyingEvent.Disconnect(Connection);
-}
-
 void Object::SetContainer(Object * Container)
 {
 	assert(((_Container == nullptr) || (Container == nullptr)) && (_Container != Container));

@@ -91,8 +91,10 @@ Ship::~Ship(void)
     assert(_CargoHold == nullptr);
     if(_Target != nullptr)
     {
-        _Target->DisconnectDestroyingCallback(_TargetDestroyingConnection);
+        assert(_TargetDestroyingConnection.IsValid() == true);
+        _TargetDestroyingConnection.Disconnect();
     }
+    assert(_TargetDestroyingConnection.IsValid() == false);
     if(_Faction != nullptr)
     {
         assert(_FactionDestroyingConnection.IsValid() == true);
@@ -460,7 +462,9 @@ void Ship::SetTarget(Object * Target)
     {
         if(_Target != nullptr)
         {
-            _Target->DisconnectDestroyingCallback(_TargetDestroyingConnection);
+            assert(_TargetDestroyingConnection.IsValid() == true);
+            _TargetDestroyingConnection.Disconnect();
+            assert(_TargetDestroyingConnection.IsValid() == false);
             _Target = nullptr;
         }
         if(Target != nullptr)

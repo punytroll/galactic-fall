@@ -256,14 +256,14 @@ void UI::StarMapDisplay::_OnDestroying(UI::Event & DestroyingEvent)
 		if(_Character != nullptr)
 		{
 			assert(_CharacterDestroyingConnection.IsValid() == true);
-			_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnection);
+			_CharacterDestroyingConnection.Disconnect();
 			_Character = nullptr;
 		}
 		assert(_CharacterDestroyingConnection.IsValid() == false);
 		if(_SelectedSystem != nullptr)
 		{
 			assert(_SelectedSystemDestroyingConnection.IsValid() == true);
-			_SelectedSystem->DisconnectDestroyingCallback(_SelectedSystemDestroyingConnection);
+			_SelectedSystemDestroyingConnection.Disconnect();
 			_SelectedSystem = nullptr;
 		}
 		assert(_SelectedSystemDestroyingConnection.IsValid() == false);
