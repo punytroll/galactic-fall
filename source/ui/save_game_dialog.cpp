@@ -92,10 +92,7 @@ auto UI::SaveGameDialog::GetFilePath() -> std::string
 auto UI::SaveGameDialog::SetDirectoryPath(std::string const & DirectoryPath) -> void
 {
     m_DirectoryPath = DirectoryPath;
-    while(m_FileListBox->GetContent()->GetSubWidgets().empty() == false)
-    {
-        m_FileListBox->GetContent()->GetSubWidgets().front()->Destroy();
-    }
+    m_FileListBox->Clear();
     if(IsExistingDirectory(m_DirectoryPath) == false)
     {
         ShowErrorMessage("Is not an existing directory: \"" + m_DirectoryPath + "\".");
