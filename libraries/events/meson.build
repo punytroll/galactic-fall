@@ -20,6 +20,6 @@ events_library_test_suite_executable = executable(
 )
 
 test(
-  'test_suite',
+  'events_test_suite',
   events_library_test_suite_executable
 )
