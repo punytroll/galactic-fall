@@ -63,7 +63,7 @@ namespace UI
         void _OnRootWidgetDestroying(UI::Event & DestroyingEvent);
         // member variables
         UI::Widget * _CaptureWidget;
-        Connection _CaptureWidgetDestroyingCallbackConnection;
+        Signals::Connection m_CaptureWidgetDestroyingCallbackConnection;
         UI::Widget * _HoverWidget;
         std::bitset<256> m_PressedKeyCodes;
         UI::Widget * m_RootWidget = nullptr;

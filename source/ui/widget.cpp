@@ -278,69 +278,69 @@ void UI::Widget::_UnsetHoverWidget(void)
     }
 }
 
-Connection UI::Widget::ConnectDestroyingCallback(std::function< void (UI::Event &) > Callback)
+auto UI::Widget::ConnectDestroyingCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection
 {
-    return _DestroyingEvent.Connect(Callback);
+    return m_DestroyingEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectHeightChangedCallback(std::function< void (UI::Event &) > Callback)
+auto UI::Widget::ConnectHeightChangedCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection
 {
-    return _HeightChangedEvent.Connect(Callback);
+    return m_HeightChangedEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectKeyCallback(std::function< void (UI::KeyEvent &) > Callback)
+auto UI::Widget::ConnectKeyCallback(std::function<void(UI::KeyEvent &)> Callback) -> Signals::Connection
 {
-    return _KeyEvent.Connect(Callback);
+    return m_KeyEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectLeftChangedCallback(std::function< void (UI::Event &) > Callback)
+auto UI::Widget::ConnectLeftChangedCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection
 {
-    return _LeftChangedEvent.Connect(Callback);
+    return m_LeftChangedEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectMouseButtonCallback(std::function< void (UI::MouseButtonEvent &) > Callback)
+auto UI::Widget::ConnectMouseButtonCallback(std::function<void(UI::MouseButtonEvent &)> Callback) -> Signals::Connection
 {
-    return _MouseButtonEvent.Connect(Callback);
+    return m_MouseButtonEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectMouseEnterCallback(std::function< void (UI::Event &) > Callback)
+auto UI::Widget::ConnectMouseEnterCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection
 {
-    return _MouseEnterEvent.Connect(Callback);
+    return m_MouseEnterEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectMouseLeaveCallback(std::function< void (UI::Event &) > Callback)
+auto UI::Widget::ConnectMouseLeaveCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection
 {
-    return _MouseLeaveEvent.Connect(Callback);
+    return m_MouseLeaveEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectMouseMoveCallback(std::function< void (UI::MouseMoveEvent &) > Callback)
+auto UI::Widget::ConnectMouseMoveCallback(std::function<void(UI::MouseMoveEvent &)> Callback) -> Signals::Connection
 {
-    return _MouseMoveEvent.Connect(Callback);
+    return m_MouseMoveEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectSubWidgetAddedCallback(std::function< void (UI::SubWidgetEvent &) > Callback)
+auto UI::Widget::ConnectSubWidgetAddedCallback(std::function<void(UI::SubWidgetEvent &)> Callback) -> Signals::Connection
 {
-    return _SubWidgetAddedEvent.Connect(Callback);
+    return m_SubWidgetAddedEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectSubWidgetRemovedCallback(std::function< void (UI::SubWidgetEvent &) > Callback)
+auto UI::Widget::ConnectSubWidgetRemovedCallback(std::function<void(UI::SubWidgetEvent &)> Callback) -> Signals::Connection
 {
-    return _SubWidgetRemovedEvent.Connect(Callback);
+    return m_SubWidgetRemovedEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectTopChangedCallback(std::function< void (UI::Event &) > Callback)
+auto UI::Widget::ConnectTopChangedCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection
 {
-    return _TopChangedEvent.Connect(Callback);
+    return m_TopChangedEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectWidthChangedCallback(std::function< void (UI::Event &) > Callback)
+auto UI::Widget::ConnectWidthChangedCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection
 {
-    return _WidthChangedEvent.Connect(Callback);
+    return m_WidthChangedEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectUpdatingCallback(std::function< void (float, float) > Callback)
+auto UI::Widget::ConnectUpdatingCallback(std::function<void(float, float)> Callback) -> Signals::Connection
 {
-    return _UpdatingEvent.Connect(Callback);
+    return m_UpdatingEvent.Connect(Callback);
 }
 
 void UI::Widget::_PopClippingRectangle(Graphics::RenderContext * RenderContext)

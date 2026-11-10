@@ -48,7 +48,7 @@ namespace UI
 		// member variables
 		UI::ListBox * _AccessoryListBox;
 		Ship * _Ship;
-		Connection _ShipDestroyingConnection;
+		Signals::Connection m_ShipDestroyingConnection;
 		UI::ListBox * _SlotListBox;
 	};
 }

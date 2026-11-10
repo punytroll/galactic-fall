@@ -71,13 +71,13 @@ namespace UI
 		void _OnTakeOffButtonUpdating(UI::Button * TakeOffButton, float RealTimeSeconds, float GameTimeSeconds);
 		// member variables
 		Character * _Character;
-		Connection _CharacterDestroyingConnection;
-		Connection _HangarContentAddedConnection;
-		Connection _HangarContentRemovedConnection;
+		Signals::Connection m_CharacterDestroyingConnection;
+		Signals::Connection m_HangarContentAddedConnection;
+		Signals::Connection m_HangarContentRemovedConnection;
 		UI::LoadShipWindow * _LoadShipWindow;
 		UI::OutfitShipDialog * _OutfitShipDialog;
 		Planet * _Planet;
-		Connection _PlanetDestroyingConnection;
+		Signals::Connection m_PlanetDestroyingConnection;
 		UI::ShipListItem * _SelectedShipListItem;
 		UI::ScrollBox * _ShipScrollBox;
 	};

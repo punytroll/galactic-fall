@@ -45,13 +45,13 @@ public:
 	void Destroy(void);
 	void RemoveContent(Object * Content);
 	// events
-	Connection ConnectContentAddedCallback(std::function< void (Object *) > Callback);
-	Connection ConnectContentRemovedCallback(std::function< void (Object *) > Callback);
+	auto ConnectContentAddedCallback(std::function<void(Object *)> Callback) -> Signals::Connection;
+	auto ConnectContentRemovedCallback(std::function<void(Object *)> Callback) -> Signals::Connection;
 private:
 	std::set< Object * > _Content;
 	Object * _Object;
-	::Event< void, Object * > _ContentAddedEvent;
-	::Event< void, Object * > _ContentRemovedEvent;
+	Signals::Event<void, Object *> m_ContentAddedEvent;
+	Signals::Event<void, Object *> m_ContentRemovedEvent;
 };
 
 inline const std::set< Object * > & ObjectAspectObjectContainer::GetContent(void) const

@@ -55,12 +55,12 @@ namespace UI
 		void StopPropagation(void);
 	private:
 		UI::Widget * _CurrentTarget;
-		Connection _CurrentTargetDestroyingConnection;
+		Signals::Connection m_CurrentTargetDestroyingConnection;
 		UI::Event::Phase _Phase;
 		bool _StopCallbacks;
 		bool _StopPropagation;
 		UI::Widget * _Target;
-		Connection _TargetDestroyingConnection;
+		Signals::Connection m_TargetDestroyingConnection;
 	};
 }
 

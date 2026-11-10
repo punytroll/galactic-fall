@@ -91,17 +91,18 @@ Ship::~Ship(void)
     assert(_CargoHold == nullptr);
     if(_Target != nullptr)
     {
-        assert(_TargetDestroyingConnection.IsValid() == true);
-        _TargetDestroyingConnection.Disconnect();
+        _Target = nullptr;
+        assert(m_TargetDestroyingConnection.IsValid() == true);
+        m_TargetDestroyingConnection.Disconnect();
     }
-    assert(_TargetDestroyingConnection.IsValid() == false);
+    assert(m_TargetDestroyingConnection.IsValid() == false);
     if(_Faction != nullptr)
     {
-        assert(_FactionDestroyingConnection.IsValid() == true);
-        _FactionDestroyingConnection.Disconnect();
         _Faction = nullptr;
+        assert(m_FactionDestroyingConnection.IsValid() == true);
+        m_FactionDestroyingConnection.Disconnect();
     }
-    assert(_FactionDestroyingConnection.IsValid() == false);
+    assert(m_FactionDestroyingConnection.IsValid() == false);
     delete _EnergyNetwork;
     _EnergyNetwork = nullptr;
     g_GraphicsEngine->RemoveParticleSystem(_EngineGlowParticleSystem);
@@ -393,16 +394,16 @@ void Ship::SetFaction(Faction * Faction)
 {
     if(_Faction != nullptr)
     {
-        assert(_FactionDestroyingConnection.IsValid() == true);
-        _FactionDestroyingConnection.Disconnect();
-        assert(_FactionDestroyingConnection.IsValid() == false);
+        _Faction = nullptr;
+        assert(m_FactionDestroyingConnection.IsValid() == true);
+        m_FactionDestroyingConnection.Disconnect();
     }
-    _Faction = Faction;
-    if(_Faction != nullptr)
+    assert(m_FactionDestroyingConnection.IsValid() == false);
+    if(Faction != nullptr)
     {
-        assert(_FactionDestroyingConnection.IsValid() == false);
-        _FactionDestroyingConnection = _Faction->ConnectDestroyingCallback(std::bind(&Ship::_OnFactionDestroying, this));
-        assert(_FactionDestroyingConnection.IsValid() == true);
+        _Faction = Faction;
+        m_FactionDestroyingConnection = _Faction->ConnectDestroyingCallback(std::bind(&Ship::_OnFactionDestroying, this));
+        assert(m_FactionDestroyingConnection.IsValid() == true);
     }
 }
 
@@ -462,15 +463,16 @@ void Ship::SetTarget(Object * Target)
     {
         if(_Target != nullptr)
         {
-            assert(_TargetDestroyingConnection.IsValid() == true);
-            _TargetDestroyingConnection.Disconnect();
-            assert(_TargetDestroyingConnection.IsValid() == false);
             _Target = nullptr;
+            assert(m_TargetDestroyingConnection.IsValid() == true);
+            m_TargetDestroyingConnection.Disconnect();
         }
+        assert(m_TargetDestroyingConnection.IsValid() == false);
         if(Target != nullptr)
         {
             _Target = Target;
-            _TargetDestroyingConnection = _Target->ConnectDestroyingCallback(std::bind(&Ship::_OnTargetDestroying, this));
+            m_TargetDestroyingConnection = _Target->ConnectDestroyingCallback(std::bind(&Ship::_OnTargetDestroying, this));
+            assert(m_TargetDestroyingConnection.IsValid() == true);
         }
     }
 }
@@ -510,10 +512,10 @@ void Ship::OnRemoved(Object * Content)
 void Ship::_OnFactionDestroying(void)
 {
     assert(_Faction != nullptr);
-    assert(_FactionDestroyingConnection.IsValid() == true);
-    _FactionDestroyingConnection.Disconnect();
-    assert(_FactionDestroyingConnection.IsValid() == false);
     _Faction = nullptr;
+    assert(m_FactionDestroyingConnection.IsValid() == true);
+    m_FactionDestroyingConnection.Disconnect();
+    assert(m_FactionDestroyingConnection.IsValid() == false);
 }
 
 void Ship::_OnTargetDestroying(void)

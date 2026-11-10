@@ -32,9 +32,9 @@ UI::PlanetWindow::PlanetWindow(Planet * Planet, Character * Character) :
     _TradeCenterWidget(nullptr)
 {
     assert(_Character != nullptr);
-    _CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::PlanetWindow::_OnCharacterDestroying, this));
+    m_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::PlanetWindow::_OnCharacterDestroying, this));
     assert(_Planet != nullptr);
-    _PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&UI::PlanetWindow::_OnPlanetDestroying, this));
+    m_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&UI::PlanetWindow::_OnPlanetDestroying, this));
     assert(_Planet->GetAspectName() != nullptr);
     SetTitle("Planet: " + _Planet->GetAspectName()->GetName());
     ConnectKeyCallback(std::bind(&UI::PlanetWindow::_OnKey, this, std::placeholders::_1));
@@ -95,28 +95,28 @@ void UI::PlanetWindow::_OnDestroying(UI::Event & DestroyingEvent)
     {
         if(_Character != nullptr)
         {
-            assert(_CharacterDestroyingConnection.IsValid() == true);
-            _CharacterDestroyingConnection.Disconnect();
-            assert(_CharacterDestroyingConnection.IsValid() == false);
             _Character = nullptr;
+            assert(m_CharacterDestroyingConnection.IsValid() == true);
+            m_CharacterDestroyingConnection.Disconnect();
         }
+        assert(m_CharacterDestroyingConnection.IsValid() == false);
         if(_Planet != nullptr)
         {
-            assert(_PlanetDestroyingConnection.IsValid() == true);
-            _PlanetDestroyingConnection.Disconnect();
-            assert(_PlanetDestroyingConnection.IsValid() == false);
             _Planet = nullptr;
+            assert(m_PlanetDestroyingConnection.IsValid() == true);
+            m_PlanetDestroyingConnection.Disconnect();
         }
+        assert(m_PlanetDestroyingConnection.IsValid() == false);
     }
 }
 
 void UI::PlanetWindow::_OnCharacterDestroying(void)
 {
     assert(_Character != nullptr);
-    assert(_CharacterDestroyingConnection.IsValid() == true);
-    _CharacterDestroyingConnection.Disconnect();
-    assert(_CharacterDestroyingConnection.IsValid() == false);
     _Character = nullptr;
+    assert(m_CharacterDestroyingConnection.IsValid() == true);
+    m_CharacterDestroyingConnection.Disconnect();
+    assert(m_CharacterDestroyingConnection.IsValid() == false);
 }
 
 void UI::PlanetWindow::_OnHangarButtonClicked(void)
@@ -146,10 +146,10 @@ void UI::PlanetWindow::_OnKey(UI::KeyEvent & KeyEvent)
 void UI::PlanetWindow::_OnPlanetDestroying(void)
 {
     assert(_Planet != nullptr);
-    assert(_PlanetDestroyingConnection.IsValid() == true);
-    _PlanetDestroyingConnection.Disconnect();
-    assert(_PlanetDestroyingConnection.IsValid() == false);
     _Planet = nullptr;
+    assert(m_PlanetDestroyingConnection.IsValid() == true);
+    m_PlanetDestroyingConnection.Disconnect();
+    assert(m_PlanetDestroyingConnection.IsValid() == false);
 }
 
 void UI::PlanetWindow::_OnTradeCenterButtonClicked(void)

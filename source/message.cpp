@@ -28,45 +28,45 @@ Message::Message(const std::string & TypeIdentifier, Object * Sender, Object * R
 	_TypeIdentifier(TypeIdentifier)
 {
 	assert(_Receiver != nullptr);
-	_ReceiverDestroyingConnection = _Receiver->ConnectDestroyingCallback(std::bind(&Message::_OnReceiverDestroying, this));
-	assert(_ReceiverDestroyingConnection.IsValid() == true);
+	m_ReceiverDestroyingConnection = _Receiver->ConnectDestroyingCallback(std::bind(&Message::_OnReceiverDestroying, this));
+	assert(m_ReceiverDestroyingConnection.IsValid() == true);
 	assert(_Sender != nullptr);
-	_SenderDestroyingConnection = _Sender->ConnectDestroyingCallback(std::bind(&Message::_OnSenderDestroying, this));
-	assert(_SenderDestroyingConnection.IsValid() == true);
+	m_SenderDestroyingConnection = _Sender->ConnectDestroyingCallback(std::bind(&Message::_OnSenderDestroying, this));
+	assert(m_SenderDestroyingConnection.IsValid() == true);
 }
 
 Message::~Message(void)
 {
 	if(_Receiver != nullptr)
 	{
-		assert(_ReceiverDestroyingConnection.IsValid() == true);
-		_ReceiverDestroyingConnection.Disconnect();
+		assert(m_ReceiverDestroyingConnection.IsValid() == true);
+		m_ReceiverDestroyingConnection.Disconnect();
 		_Receiver = nullptr;
 	}
-	assert(_ReceiverDestroyingConnection.IsValid() == false);
+	assert(m_ReceiverDestroyingConnection.IsValid() == false);
 	if(_Sender != nullptr)
 	{
-		assert(_SenderDestroyingConnection.IsValid() == true);
-		_SenderDestroyingConnection.Disconnect();
+		assert(m_SenderDestroyingConnection.IsValid() == true);
+		m_SenderDestroyingConnection.Disconnect();
 		_Sender = nullptr;
 	}
-	assert(_SenderDestroyingConnection.IsValid() == false);
+	assert(m_SenderDestroyingConnection.IsValid() == false);
 }
 
 void Message::_OnReceiverDestroying(void)
 {
 	assert(_Receiver != nullptr);
-	assert(_ReceiverDestroyingConnection.IsValid() == true);
-	_ReceiverDestroyingConnection.Disconnect();
-	assert(_ReceiverDestroyingConnection.IsValid() == false);
 	_Receiver = nullptr;
+	assert(m_ReceiverDestroyingConnection.IsValid() == true);
+	m_ReceiverDestroyingConnection.Disconnect();
+	assert(m_ReceiverDestroyingConnection.IsValid() == false);
 }
 
 void Message::_OnSenderDestroying(void)
 {
 	assert(_Sender != nullptr);
-	assert(_SenderDestroyingConnection.IsValid() == true);
-	_SenderDestroyingConnection.Disconnect();
-	assert(_SenderDestroyingConnection.IsValid() == false);
 	_Sender = nullptr;
+	assert(m_SenderDestroyingConnection.IsValid() == true);
+	m_SenderDestroyingConnection.Disconnect();
+	assert(m_SenderDestroyingConnection.IsValid() == false);
 }

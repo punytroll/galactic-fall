@@ -35,7 +35,7 @@ namespace UI
 		Button(void);
 		virtual ~Button(void);
 		// connect events
-		Connection ConnectClickedCallback(std::function< void (void) > ClickedHandler);
+		auto ConnectClickedCallback(std::function<void()> ClickedHandler) -> Signals::Connection;
 	private:
 		// callbacks
 		void _OnMouseButton(UI::MouseButtonEvent & MouseBUttonEvent);
@@ -43,7 +43,7 @@ namespace UI
 		void _OnMouseLeave(void);
 		// member variables
 		// events
-		::Event< void > _ClickedEvent;
+		Signals::Event<void> m_ClickedEvent;
 	};
 }
 

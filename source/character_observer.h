@@ -37,7 +37,7 @@ public:
 private:
 	void _OnObservedCharacterDestroying(void);
 	Character * _ObservedCharacter;
-	Connection _ObservedCharacterDestroyingConnection;
+	Signals::Connection m_ObservedCharacterDestroyingConnection;
 };
 
 inline Character * CharacterObserver::GetObservedCharacter(void)

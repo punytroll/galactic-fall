@@ -37,9 +37,9 @@ UI::Button::~Button(void)
 {
 }
 
-Connection UI::Button::ConnectClickedCallback(std::function< void (void) > ClickedHandler)
+auto UI::Button::ConnectClickedCallback(std::function<void()> ClickedHandler) -> Signals::Connection
 {
-	return _ClickedEvent.Connect(ClickedHandler);
+	return m_ClickedEvent.Connect(ClickedHandler);
 }
 
 void UI::Button::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
@@ -55,7 +55,7 @@ void UI::Button::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 			g_UserInterface->ReleaseCaptureWidget();
 			if((MouseButtonEvent.GetPosition()[0] >= 0) && (MouseButtonEvent.GetPosition()[0] <= GetWidth()) && (MouseButtonEvent.GetPosition()[1] >= 0) && (MouseButtonEvent.GetPosition()[1] <= GetHeight()))
 			{
-				_ClickedEvent();
+				m_ClickedEvent();
 			}
 		}
 	}

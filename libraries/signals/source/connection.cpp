@@ -9,25 +9,25 @@
 #include <signals/connection.h>
 #include <signals/event.h>
 
-Connection::Core::Core(void) :
+Signals::Connection::Core::Core(void) :
     _Event(nullptr),
     _IsValid(false),
     _References(0)
 {
 }
 
-Connection::Core::~Core(void)
+Signals::Connection::Core::~Core(void)
 {
     assert(_IsValid == false);
     assert(_References == 0);
 }
 
-Connection::Connection(void) :
+Signals::Connection::Connection(void) :
     _Core(nullptr)
 {
 }
 
-Connection::Connection(Core * Core) :
+Signals::Connection::Connection(Core * Core) :
     _Core(Core)
 {
     assert(_Core != nullptr);
@@ -35,7 +35,7 @@ Connection::Connection(Core * Core) :
     _Core->_References += 1;
 }
 
-Connection::Connection(const Connection & Connection) :
+Signals::Connection::Connection(const Connection & Connection) :
     _Core(Connection._Core)
 {
     if(_Core != nullptr)
@@ -45,7 +45,7 @@ Connection::Connection(const Connection & Connection) :
     }
 }
 
-Connection & Connection::operator=(const Connection & Other)
+Signals::Connection & Signals::Connection::operator=(const Connection & Other)
 {
     if(this != &Other)
     {
@@ -71,7 +71,7 @@ Connection & Connection::operator=(const Connection & Other)
     return *this;
 }
 
-Connection::~Connection(void)
+Signals::Connection::~Connection(void)
 {
     if(_Core != nullptr)
     {
@@ -86,7 +86,7 @@ Connection::~Connection(void)
     }
 }
 
-void Connection::Clear(void)
+void Signals::Connection::Clear(void)
 {
     if(_Core != nullptr)
     {
@@ -101,7 +101,7 @@ void Connection::Clear(void)
     }
 }
 
-void Connection::Disconnect(void)
+void Signals::Connection::Disconnect(void)
 {
     assert(_Core != nullptr);
     assert(_Core->_Event != nullptr);
@@ -109,7 +109,7 @@ void Connection::Disconnect(void)
     _Core->_Event->Disconnect(*this);
 }
 
-void Connection::_Invalidate(void)
+void Signals::Connection::_Invalidate(void)
 {
     if(_Core != nullptr)
     {

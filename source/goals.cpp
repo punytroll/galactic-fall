@@ -638,18 +638,18 @@ GoalRefuel::GoalRefuel(GoalMind * GoalMind, Planet * Planet) :
 	_Planet(Planet)
 {
 	assert(_Planet != nullptr);
-	_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&GoalRefuel::_OnPlanetDestroying, this));
+	m_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&GoalRefuel::_OnPlanetDestroying, this));
 }
 
 GoalRefuel::~GoalRefuel(void)
 {
 	if(_Planet != nullptr)
 	{
-		assert(_PlanetDestroyingConnection.IsValid() == true);
-		_PlanetDestroyingConnection.Disconnect();
 		_Planet = nullptr;
+		assert(m_PlanetDestroyingConnection.IsValid() == true);
+		m_PlanetDestroyingConnection.Disconnect();
 	}
-	assert(_PlanetDestroyingConnection.IsValid() == false);
+	assert(m_PlanetDestroyingConnection.IsValid() == false);
 }
 
 void GoalRefuel::Activate(void)
@@ -686,10 +686,10 @@ void GoalRefuel::Process(void)
 void GoalRefuel::_OnPlanetDestroying(void)
 {
 	assert(_Planet != nullptr);
-	assert(_PlanetDestroyingConnection.IsValid() == true);
-	_PlanetDestroyingConnection.Disconnect();
-	assert(_PlanetDestroyingConnection.IsValid() == false);
 	_Planet = nullptr;
+	assert(m_PlanetDestroyingConnection.IsValid() == true);
+	m_PlanetDestroyingConnection.Disconnect();
+	assert(m_PlanetDestroyingConnection.IsValid() == false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

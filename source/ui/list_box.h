@@ -32,7 +32,7 @@ namespace UI
 		// constructor
 		ListBox(void);
 		// connect events
-		Connection ConnectSelectedItemChangedCallback(std::function< void (void) > SelectedItemChangedHandler);
+		auto ConnectSelectedItemChangedCallback(std::function<void()> SelectedItemChangedHandler) -> Signals::Connection;
 		// getters
 		UI::ListBoxItem * GetSelectedItem(void);
 		// setters
@@ -43,7 +43,7 @@ namespace UI
 		void _OnSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent);
 		void _OnSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent);
 		// events
-		::Event< void > _SelectedItemChangedEvent;
+		Signals::Event<void> m_SelectedItemChangedEvent;
 		// components
 		UI::ListBoxItem * _SelectedItem;
 	};

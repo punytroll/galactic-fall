@@ -68,9 +68,9 @@ UI::ScrollBar::~ScrollBar(void)
 {
 }
 
-Connection UI::ScrollBar::ConnectScrollPositionChangedCallback(std::function< void (void) > Callback)
+auto UI::ScrollBar::ConnectScrollPositionChangedCallback(std::function<void()> Callback) -> Signals::Connection
 {
-	return _ScrollPositionChangedEvent.Connect(Callback);
+	return m_ScrollPositionChangedEvent.Connect(Callback);
 }
 
 float UI::ScrollBar::_GetAvailableRange(void)
@@ -206,7 +206,7 @@ void UI::ScrollBar::SetCurrentPosition(float CurrentPosition)
 		_CurrentPosition = CurrentPosition;
 		_AdjustTrackerPosition();
 		// fire the scroll position listeners
-		_ScrollPositionChangedEvent();
+		m_ScrollPositionChangedEvent();
 	}
 }
 

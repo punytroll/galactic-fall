@@ -88,7 +88,7 @@ public:
 	void AddAspectVisualization(void);
 	void Destroy(void);
 	// events
-	Connection ConnectDestroyingCallback(std::function< void (void) > Callback);
+	auto ConnectDestroyingCallback(std::function<void()> Callback) -> Signals::Connection;
 private:
 	// aspects
 	ObjectAspectAccessory * _AspectAccessory;
@@ -102,7 +102,7 @@ private:
 	ObjectAspectVisualization * _AspectVisualization;
 	// other
 	Object * _Container;
-	Event< void > _DestroyingEvent;
+	Signals::Event<void> m_DestroyingEvent;
 	std::string _SubTypeIdentifier;
 	std::string _TypeIdentifier;
 };

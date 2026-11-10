@@ -13,95 +13,98 @@
 
 #include <signals/connection.h>
 
-class EventBase
+namespace Signals
 {
-public:
-    virtual ~EventBase(void)
-    {
-    }
-    
-    virtual void Disconnect(Connection & Connection) = 0;
-};
-
-template < typename ReturnType, typename ... Types >
-class Event : public EventBase
-{
-private:
-    class Core : public Connection::Core
+    class EventBase
     {
     public:
-        Core(void)
+        virtual ~EventBase(void)
         {
         }
         
-        typename std::function< ReturnType (Types ...) > _Callback;
-        typename std::list< Event::Core * >::iterator _Iterator;
+        virtual void Disconnect(Connection & Connection) = 0;
     };
-public:
-    virtual ~Event(void) override
+
+    template < typename ReturnType, typename ... Types >
+    class Event : public EventBase
     {
-        while(_Cores.empty() == false)
+    private:
+        class Core : public Connection::Core
         {
-            auto Core(_Cores.back());
-            
-            _Cores.pop_back();
-            assert(Core->_Event == this);
-            Core->_Event = nullptr;
-            Core->_IsValid = false;
-            Core->_References -= 1;
-            if(Core->_References == 0)
+        public:
+            Core(void)
             {
-                delete Core;
+            }
+            
+            typename std::function< ReturnType (Types ...) > _Callback;
+            typename std::list< Event::Core * >::iterator _Iterator;
+        };
+    public:
+        virtual ~Event(void) override
+        {
+            while(_Cores.empty() == false)
+            {
+                auto Core(_Cores.back());
+                
+                _Cores.pop_back();
+                assert(Core->_Event == this);
+                Core->_Event = nullptr;
+                Core->_IsValid = false;
+                Core->_References -= 1;
+                if(Core->_References == 0)
+                {
+                    delete Core;
+                }
             }
         }
-    }
-    
-    Connection Connect(std::function< ReturnType (Types ...) > Callback)
-    {
-        auto Core(new Event::Core());
         
-        Core->_Callback = Callback;
-        Core->_Event = this;
-        Core->_IsValid = true;
-        Core->_References += 1;
-        _Cores.push_back(Core);
-        Core->_Iterator = --_Cores.end();
-        
-        return Connection(Core);
-    }
-    
-    virtual void Disconnect(Connection & Connection) override
-    {
-        auto Core(static_cast< Event::Core * >(Connection.GetCore()));
-        
-        assert(Core->_References > 0);
-        Core->_References -= 1;
-        assert(Core->_References > 0);
-        _Cores.erase(Core->_Iterator);
-        Connection._Invalidate();
-    }
-    
-    std::list< std::function< ReturnType (Types ...) > > GetCallbacks(void)
-    {
-        std::list< std::function< ReturnType (Types ...) > > Result;
-        
-        for(auto Core : _Cores)
+        Connection Connect(std::function< ReturnType (Types ...) > Callback)
         {
-            Result.push_back(Core->_Callback);
+            auto Core(new Event::Core());
+            
+            Core->_Callback = Callback;
+            Core->_Event = this;
+            Core->_IsValid = true;
+            Core->_References += 1;
+            _Cores.push_back(Core);
+            Core->_Iterator = --_Cores.end();
+            
+            return Connection(Core);
         }
         
-        return Result;
-    }
-    
-    void operator()(Types ... Arguments)
-    {
-        for(auto & Callback : GetCallbacks())
+        virtual void Disconnect(Connection & Connection) override
         {
-            Callback(Arguments ...);
+            auto Core(static_cast< Event::Core * >(Connection.GetCore()));
+            
+            assert(Core->_References > 0);
+            Core->_References -= 1;
+            assert(Core->_References > 0);
+            _Cores.erase(Core->_Iterator);
+            Connection._Invalidate();
         }
-    }
-private:
-    std::list< Event::Core * > _Cores;
-};
+        
+        std::list< std::function< ReturnType (Types ...) > > GetCallbacks(void)
+        {
+            std::list< std::function< ReturnType (Types ...) > > Result;
+            
+            for(auto Core : _Cores)
+            {
+                Result.push_back(Core->_Callback);
+            }
+            
+            return Result;
+        }
+        
+        void operator()(Types ... Arguments)
+        {
+            for(auto & Callback : GetCallbacks())
+            {
+                Callback(Arguments ...);
+            }
+        }
+    private:
+        std::list< Event::Core * > _Cores;
+    };
+}
 
 #endif

@@ -76,7 +76,7 @@ namespace UI
 			ConnectUpdatingCallback(std::bind(&UI::ShipDisplay::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 			ConnectHeightChangedCallback(std::bind(&UI::ShipDisplay::_OnSizeChanged, this, std::placeholders::_1));
 			ConnectWidthChangedCallback(std::bind(&UI::ShipDisplay::_OnSizeChanged, this, std::placeholders::_1));
-			_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::ShipDisplay::_OnShipDestroying, this));
+			m_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::ShipDisplay::_OnShipDestroying, this));
 		}
 	private:
 		void _Clear(void)
@@ -120,7 +120,9 @@ namespace UI
 		{
 			if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 			{
-				_ShipDestroyingConnection.Disconnect();
+				assert(m_ShipDestroyingConnection.IsValid() == true);
+				m_ShipDestroyingConnection.Disconnect();
+				assert(m_ShipDestroyingConnection.IsValid() == false);
 				_Clear();
 				assert(_Visualization == nullptr);
 			}
@@ -220,7 +222,7 @@ namespace UI
 		}
 		
 		Ship * _Ship;
-		Connection _ShipDestroyingConnection;
+		Signals::Connection m_ShipDestroyingConnection;
 		Visualization * _Visualization;
 	};
 	
@@ -233,7 +235,7 @@ namespace UI
 			_Ship(Ship)
 		{
 			assert(_Ship != nullptr);
-			_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::ShipListItem::_OnShipDestroying, this));
+			m_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::ShipListItem::_OnShipDestroying, this));
 			ConnectDestroyingCallback(std::bind(&UI::ShipListItem::_OnDestroying, this, std::placeholders::_1));
 			
 			// create components
@@ -286,8 +288,10 @@ namespace UI
 			if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 			{
 				assert(_Ship != nullptr);
-				_ShipDestroyingConnection.Disconnect();
 				_Ship = nullptr;
+				assert(m_ShipDestroyingConnection.IsValid() == true);
+				m_ShipDestroyingConnection.Disconnect();
+				assert(m_ShipDestroyingConnection.IsValid() == false);
 			}
 		}
 		
@@ -299,7 +303,7 @@ namespace UI
 		
 		UI::Border * _Border;
 		Ship * _Ship;
-		Connection _ShipDestroyingConnection;
+		Signals::Connection m_ShipDestroyingConnection;
 	};
 }
 
@@ -312,9 +316,9 @@ UI::HangarWidget::HangarWidget(Planet * Planet, Character * Character) :
 {
 	ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnDestroying, this, std::placeholders::_1));
 	assert(_Character != nullptr);
-	_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnCharacterDestroying, this));
+	m_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnCharacterDestroying, this));
 	assert(_Planet != nullptr);
-	_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnPlanetDestroying, this));
+	m_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnPlanetDestroying, this));
 	
 	// create components
 	auto BoardButton{new UI::TextButton{}};
@@ -343,8 +347,8 @@ UI::HangarWidget::HangarWidget(Planet * Planet, Character * Character) :
 	
 	assert(Hangar != nullptr);
 	assert(Hangar->GetAspectObjectContainer() != nullptr);
-	_HangarContentAddedConnection = Hangar->GetAspectObjectContainer()->ConnectContentAddedCallback(std::bind(&UI::HangarWidget::_OnHangarContentAdded, this, std::placeholders::_1));
-	_HangarContentRemovedConnection = Hangar->GetAspectObjectContainer()->ConnectContentRemovedCallback(std::bind(&UI::HangarWidget::_OnHangarContentRemoved, this, std::placeholders::_1));
+	m_HangarContentAddedConnection = Hangar->GetAspectObjectContainer()->ConnectContentAddedCallback(std::bind(&UI::HangarWidget::_OnHangarContentAdded, this, std::placeholders::_1));
+	m_HangarContentRemovedConnection = Hangar->GetAspectObjectContainer()->ConnectContentRemovedCallback(std::bind(&UI::HangarWidget::_OnHangarContentRemoved, this, std::placeholders::_1));
 	for(auto Content : Hangar->GetAspectObjectContainer()->GetContent())
 	{
 		if(Content->GetTypeIdentifier() == "ship")
@@ -479,20 +483,24 @@ void UI::HangarWidget::_OnDestroying(UI::Event & DestroyingEvent)
 {
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		if(_HangarContentAddedConnection.IsValid() == true)
+		if(m_HangarContentAddedConnection.IsValid() == true)
 		{
-			_HangarContentAddedConnection.Disconnect();
+			m_HangarContentAddedConnection.Disconnect();
 		}
-		if(_HangarContentRemovedConnection.IsValid() == true)
+		if(m_HangarContentRemovedConnection.IsValid() == true)
 		{
-			_HangarContentRemovedConnection.Disconnect();
+			m_HangarContentRemovedConnection.Disconnect();
 		}
 		assert(_Character != nullptr);
-		_CharacterDestroyingConnection.Disconnect();
 		_Character = nullptr;
+		assert(m_CharacterDestroyingConnection.IsValid() == true);
+		m_CharacterDestroyingConnection.Disconnect();
+		assert(m_CharacterDestroyingConnection.IsValid() == false);
 		assert(_Planet != nullptr);
-		_PlanetDestroyingConnection.Disconnect();
 		_Planet = nullptr;
+		assert(m_PlanetDestroyingConnection.IsValid() == true);
+		m_PlanetDestroyingConnection.Disconnect();
+		assert(m_PlanetDestroyingConnection.IsValid() == false);
 		if(_OutfitShipDialog != nullptr)
 		{
 			_OutfitShipDialog->Destroy();

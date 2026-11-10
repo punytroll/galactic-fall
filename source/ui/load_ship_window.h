@@ -54,14 +54,14 @@ namespace UI
 		void _OnShipFreeSpaceLabelUpdating(UI::Label * ShipFreeSpaceLabel, float RealTimeSeconds, float GameTimeSeconds);
 		// member variables
 		Hangar * _Hangar;
-		Connection _HangarContentAddedCallbackConnection;
-		Connection _HangarContentRemovedCallbackConnection;
-		Connection _HangarDestroyingCallbackConnection;
+		Signals::Connection m_HangarContentAddedCallbackConnection;
+		Signals::Connection m_HangarContentRemovedCallbackConnection;
+		Signals::Connection m_HangarDestroyingCallbackConnection;
 		UI::ListBox * _HangarListBox;
 		Ship * _Ship;
-		Connection _ShipContentAddedCallbackConnection;
-		Connection _ShipContentRemovedCallbackConnection;
-		Connection _ShipDestroyingCallbackConnection;
+		Signals::Connection m_ShipContentAddedCallbackConnection;
+		Signals::Connection m_ShipContentRemovedCallbackConnection;
+		Signals::Connection m_ShipDestroyingCallbackConnection;
 		UI::ListBox * _ShipListBox;
 	};
 }

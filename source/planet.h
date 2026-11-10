@@ -73,7 +73,7 @@ private:
 	// member variables
 	std::string _Description;
 	Faction * _Faction;
-	Connection _FactionDestroyingConnection;
+	Signals::Connection m_FactionDestroyingConnection;
 	float _LandingFeePerSpace;
 	bool _OffersRecharging;
 	bool _OffersRepairing;

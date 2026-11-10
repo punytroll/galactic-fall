@@ -68,9 +68,9 @@ namespace UI
 		UI::ListBox * _AssetClassListBox;
 		UI::ViewDisplay * _AssetClassViewDisplay;
 		Character * _Character;
-		Connection _CharacterDestroyingConnection;
+		Signals::Connection m_CharacterDestroyingConnection;
 		Planet * _Planet;
-		Connection _PlanetDestroyingConnection;
+		Signals::Connection m_PlanetDestroyingConnection;
 	};
 }
 

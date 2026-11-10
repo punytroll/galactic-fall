@@ -56,12 +56,12 @@ namespace UI
 		void _OnSizeChanged(UI::Event & SizeChangedEvent);
 		// member variables
 		Character * _Character;
-		Connection _CharacterDestroyingConnection;
+		Signals::Connection m_CharacterDestroyingConnection;
 		Vector2f _GrabPosition;
 		Vector2f _CameraWorldPosition;
 		float _Scale;
 		System * _SelectedSystem;
-		Connection _SelectedSystemDestroyingConnection;
+		Signals::Connection m_SelectedSystemDestroyingConnection;
 	};
 
 	inline Character * StarMapDisplay::GetCharacter(void)

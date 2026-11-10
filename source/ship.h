@@ -122,7 +122,7 @@ private:
 	Vector3f _ExhaustPosition;
 	float _ExhaustRadius;
 	Faction * _Faction;
-	Connection _FactionDestroyingConnection;
+	Signals::Connection m_FactionDestroyingConnection;
 	float m_Fuel;
 	float m_FuelCapacity;
 	float m_FuelNeededToAccelerate;
@@ -141,7 +141,7 @@ private:
 	bool m_Scoop;
 	bool m_TakeOff;
 	Object * _Target;
-	Connection _TargetDestroyingConnection;
+	Signals::Connection m_TargetDestroyingConnection;
 	float m_TurnLeft;
 	float m_TurnRight;
 	Vector3f m_Velocity;

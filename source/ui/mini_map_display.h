@@ -52,7 +52,7 @@ namespace UI
 		void _OnDraw(Graphics::RenderContext * RenderContext);
 		void _OnSizeChanged(UI::Event & SizeChangedEvent);
 		Character * _Character;
-		Connection _CharacterDestroyingConnection;
+		Signals::Connection m_CharacterDestroyingConnection;
 		float _Scale;
 	};
 }

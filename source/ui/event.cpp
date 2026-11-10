@@ -40,15 +40,16 @@ void UI::Event::SetCurrentTarget(UI::Widget * CurrentTarget)
 {
 	if(_CurrentTarget != nullptr)
 	{
-		_CurrentTargetDestroyingConnection.Disconnect();
 		_CurrentTarget = nullptr;
+		assert(m_CurrentTargetDestroyingConnection.IsValid() == true);
+		m_CurrentTargetDestroyingConnection.Disconnect();
 	}
-	_CurrentTarget = CurrentTarget;
-	if(_CurrentTarget != nullptr)
+	assert(m_CurrentTargetDestroyingConnection.IsValid() == false);
+	if(CurrentTarget != nullptr)
 	{
-		assert(_CurrentTargetDestroyingConnection.IsValid() == false);
-		_CurrentTargetDestroyingConnection = _CurrentTarget->ConnectDestroyingCallback(std::bind(&UI::Event::SetCurrentTarget, this, nullptr));
-		assert(_CurrentTargetDestroyingConnection.IsValid() == true);
+		_CurrentTarget = CurrentTarget;
+		m_CurrentTargetDestroyingConnection = _CurrentTarget->ConnectDestroyingCallback(std::bind(&UI::Event::SetCurrentTarget, this, nullptr));
+		assert(m_CurrentTargetDestroyingConnection.IsValid() == true);
 	}
 }
 
@@ -56,14 +57,15 @@ void UI::Event::SetTarget(UI::Widget * Target)
 {
 	if(_Target != nullptr)
 	{
-		_TargetDestroyingConnection.Disconnect();
 		_Target = nullptr;
+		assert(m_TargetDestroyingConnection.IsValid() == true);
+		m_TargetDestroyingConnection.Disconnect();
 	}
-	_Target = Target;
-	if(_Target != nullptr)
+	assert(m_TargetDestroyingConnection.IsValid() == false);
+	if(Target != nullptr)
 	{
-		assert(_TargetDestroyingConnection.IsValid() == false);
-		_TargetDestroyingConnection = _Target->ConnectDestroyingCallback(std::bind(&UI::Event::SetTarget, this, nullptr));
-		assert(_TargetDestroyingConnection.IsValid() == true);
+		_Target = Target;
+		m_TargetDestroyingConnection = _Target->ConnectDestroyingCallback(std::bind(&UI::Event::SetTarget, this, nullptr));
+		assert(m_TargetDestroyingConnection.IsValid() == true);
 	}
 }

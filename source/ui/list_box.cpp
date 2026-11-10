@@ -35,9 +35,9 @@ UI::ListBox::ListBox(void) :
 	GetContent()->ConnectSubWidgetRemovedCallback(std::bind(&UI::ListBox::_OnSubWidgetRemoved, this, std::placeholders::_1));
 }
 
-Connection UI::ListBox::ConnectSelectedItemChangedCallback(std::function< void (void) > SelectedItemChangedHandler)
+auto UI::ListBox::ConnectSelectedItemChangedCallback(std::function<void()> SelectedItemChangedHandler) -> Signals::Connection
 {
-	return _SelectedItemChangedEvent.Connect(SelectedItemChangedHandler);
+	return m_SelectedItemChangedEvent.Connect(SelectedItemChangedHandler);
 }
 
 void UI::ListBox::SetSelectedItem(UI::ListBoxItem * ListBoxItem)
@@ -59,7 +59,7 @@ void UI::ListBox::SetSelectedItem(UI::ListBoxItem * ListBoxItem)
 	}
 	if(SelectedItemChanged == true)
 	{
-		_SelectedItemChangedEvent();
+		m_SelectedItemChangedEvent();
 	}
 }
 
@@ -178,7 +178,7 @@ void UI::ListBox::_OnSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent)
 			{
 				GetContent()->SetHeight(0.0_c);
 			}
-			_SelectedItemChangedEvent();
+			m_SelectedItemChangedEvent();
 		}
 	}
 }
@@ -195,7 +195,7 @@ void UI::ListBox::_OnItemMouseButton(UI::MouseButtonEvent & MouseButtonEvent, UI
 			}
 			_SelectedItem = Item;
 			_SelectedItem->SetSelected(true);
-			_SelectedItemChangedEvent();
+			m_SelectedItemChangedEvent();
 		}
 	}
 }

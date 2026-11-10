@@ -73,7 +73,7 @@ namespace UI
 		{
 			assert(_Hangar != nullptr);
 			SetHeight(20.0_c);
-			_HangarDestroyingConnection = _Hangar->ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetsListBoxItem::_OnHangarDestroying, this));
+			m_HangarDestroyingConnection = _Hangar->ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetsListBoxItem::_OnHangarDestroying, this));
 			ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetsListBoxItem::_OnDestroying, this, std::placeholders::_1));
 			
 			// create components
@@ -143,22 +143,25 @@ namespace UI
 			{
 				if(_Hangar != nullptr)
 				{
-					assert(_HangarDestroyingConnection.IsValid() == true);
-					_HangarDestroyingConnection.Disconnect();
 					_Hangar = nullptr;
+					assert(m_HangarDestroyingConnection.IsValid() == true);
+					m_HangarDestroyingConnection.Disconnect();
 				}
-				assert(_HangarDestroyingConnection.IsValid() == false);
+				assert(m_HangarDestroyingConnection.IsValid() == false);
 			}
 		}
 		
 		void _OnHangarDestroying(void)
 		{
 			_Hangar = nullptr;
+			assert(m_HangarDestroyingConnection.IsValid() == true);
+			m_HangarDestroyingConnection.Disconnect();
+			assert(m_HangarDestroyingConnection.IsValid() == false);
 		}
 		
 		PlanetAssets * _PlanetAssets;
 		Hangar * _Hangar;
-		Connection _HangarDestroyingConnection;
+		Signals::Connection m_HangarDestroyingConnection;
 	};
 }
 
@@ -167,9 +170,9 @@ UI::TradeCenterWidget::TradeCenterWidget(Planet * Planet, Character * Character)
 	_Planet(Planet)
 {
 	assert(_Character != nullptr);
-	_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::TradeCenterWidget::_OnCharacterDestroying, this));
+	m_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::TradeCenterWidget::_OnCharacterDestroying, this));
 	assert(_Planet != nullptr);
-	_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&UI::TradeCenterWidget::_OnPlanetDestroying, this));
+	m_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&UI::TradeCenterWidget::_OnPlanetDestroying, this));
 	ConnectDestroyingCallback(std::bind(&UI::TradeCenterWidget::_OnDestroying, this, std::placeholders::_1));
 	ConnectKeyCallback(std::bind(&UI::TradeCenterWidget::_OnKey, this, std::placeholders::_1));
 	ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
@@ -525,18 +528,18 @@ void UI::TradeCenterWidget::_OnDestroying(UI::Event & DestroyingEvent)
 		_ClearAssetClassViewDisplay();
 		if(_Planet != nullptr)
 		{
-			assert(_PlanetDestroyingConnection.IsValid() == true);
-			_PlanetDestroyingConnection.Disconnect();
 			_Planet = nullptr;
+			assert(m_PlanetDestroyingConnection.IsValid() == true);
+			m_PlanetDestroyingConnection.Disconnect();
 		}
-		assert(_PlanetDestroyingConnection.IsValid() == false);
+		assert(m_PlanetDestroyingConnection.IsValid() == false);
 		if(_Character != nullptr)
 		{
-			assert(_CharacterDestroyingConnection.IsValid() == true);
-			_CharacterDestroyingConnection.Disconnect();
 			_Character = nullptr;
+			assert(m_CharacterDestroyingConnection.IsValid() == true);
+			m_CharacterDestroyingConnection.Disconnect();
 		}
-		assert(_CharacterDestroyingConnection.IsValid() == false);
+		assert(m_CharacterDestroyingConnection.IsValid() == false);
 	}
 }
 
@@ -544,9 +547,9 @@ void UI::TradeCenterWidget::_OnCharacterDestroying(void)
 {
 	assert(_Character != nullptr);
 	_Character = nullptr;
-	assert(_CharacterDestroyingConnection.IsValid() == true);
-	_CharacterDestroyingConnection.Disconnect();
-	assert(_CharacterDestroyingConnection.IsValid() == false);
+	assert(m_CharacterDestroyingConnection.IsValid() == true);
+	m_CharacterDestroyingConnection.Disconnect();
+	assert(m_CharacterDestroyingConnection.IsValid() == false);
 }
 
 void UI::TradeCenterWidget::_OnDestroyInScene(Graphics::Node * Node)
@@ -575,9 +578,9 @@ void UI::TradeCenterWidget::_OnPlanetDestroying(void)
 {
 	assert(_Planet != nullptr);
 	_Planet = nullptr;
-	assert(_PlanetDestroyingConnection.IsValid() == true);
-	_PlanetDestroyingConnection.Disconnect();
-	assert(_PlanetDestroyingConnection.IsValid() == false);
+	assert(m_PlanetDestroyingConnection.IsValid() == true);
+	m_PlanetDestroyingConnection.Disconnect();
+	assert(m_PlanetDestroyingConnection.IsValid() == false);
 }
 
 void UI::TradeCenterWidget::_OnSellButtonClicked(void)

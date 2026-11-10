@@ -59,7 +59,7 @@ namespace std
 class FactionInfluence
 {
 public:
-	Connection _DestroyingConnection;
+	Signals::Connection m_DestroyingConnection;
 	Faction * _Faction;
 	float _Influence;
 };
@@ -86,9 +86,9 @@ System::~System(void)
 		
 		assert(FactionInfluence->_Faction != nullptr);
 		FactionInfluence->_Faction = nullptr;
-		assert(FactionInfluence->_DestroyingConnection.IsValid() == true);
-		FactionInfluence->_DestroyingConnection.Disconnect();
-		assert(FactionInfluence->_DestroyingConnection.IsValid() == false);
+		assert(FactionInfluence->m_DestroyingConnection.IsValid() == true);
+		FactionInfluence->m_DestroyingConnection.Disconnect();
+		assert(FactionInfluence->m_DestroyingConnection.IsValid() == false);
 		delete FactionInfluence;
 		_FactionInfluences.pop_back();
 	}
@@ -111,7 +111,7 @@ void System::AddFactionInfluence(Faction * Faction, float Influence)
 	
 	NewFactionInfluence->_Faction = Faction;
 	NewFactionInfluence->_Influence = Influence;
-	NewFactionInfluence->_DestroyingConnection = Faction->ConnectDestroyingCallback(std::bind(&System::_OnFactionDestroying, this, Faction));
+	NewFactionInfluence->m_DestroyingConnection = Faction->ConnectDestroyingCallback(std::bind(&System::_OnFactionDestroying, this, Faction));
 	_FactionInfluences.push_back(NewFactionInfluence);
 }
 
@@ -231,9 +231,9 @@ void System::_OnFactionDestroying(Faction * Faction)
 	
 	assert(FactionInfluence->_Faction != nullptr);
 	FactionInfluence->_Faction = nullptr;
-	assert(FactionInfluence->_DestroyingConnection.IsValid() == true);
-	FactionInfluence->_DestroyingConnection.Disconnect();
-	assert(FactionInfluence->_DestroyingConnection.IsValid() == false);
+	assert(FactionInfluence->m_DestroyingConnection.IsValid() == true);
+	FactionInfluence->m_DestroyingConnection.Disconnect();
+	assert(FactionInfluence->m_DestroyingConnection.IsValid() == false);
 	delete FactionInfluence;
 	_FactionInfluences.erase(FactionInfluenceIterator);
 }

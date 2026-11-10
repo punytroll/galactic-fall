@@ -42,17 +42,17 @@ void ObjectAspectObjectContainer::AddContent(Object * Content)
 	
 	assert(InsertionResult.second == true);
 	Content->SetContainer(_Object);
-	_ContentAddedEvent(Content);
+	m_ContentAddedEvent(Content);
 }
 
-Connection ObjectAspectObjectContainer::ConnectContentAddedCallback(std::function< void (Object *) > Callback)
+auto ObjectAspectObjectContainer::ConnectContentAddedCallback(std::function<void(Object *)> Callback) -> Signals::Connection
 {
-	return _ContentAddedEvent.Connect(Callback);
+	return m_ContentAddedEvent.Connect(Callback);
 }
 
-Connection ObjectAspectObjectContainer::ConnectContentRemovedCallback(std::function< void (Object *) > Callback)
+auto ObjectAspectObjectContainer::ConnectContentRemovedCallback(std::function<void(Object *)> Callback) -> Signals::Connection
 {
-	return _ContentRemovedEvent.Connect(Callback);
+	return m_ContentRemovedEvent.Connect(Callback);
 }
 
 std::uint32_t ObjectAspectObjectContainer::GetAmount(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
@@ -80,7 +80,7 @@ void ObjectAspectObjectContainer::RemoveContent(Object * Content)
 	assert(ContentIterator != _Content.end());
 	Content->SetContainer(0);
 	_Content.erase(ContentIterator);
-	_ContentRemovedEvent(Content);
+	m_ContentRemovedEvent(Content);
 }
 
 void ObjectAspectObjectContainer::Destroy(void)

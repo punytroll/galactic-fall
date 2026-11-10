@@ -36,19 +36,19 @@ Slot::Slot(const SlotClass * SlotClass, const std::string & Identifier) :
 Slot::~Slot(void)
 {
 	assert(_MountedObject == nullptr);
-	assert(_MountedObjectDestroyingConnection.IsValid() == false);
-	_DestroyingEvent();
+	assert(m_MountedObjectDestroyingConnection.IsValid() == false);
+	m_DestroyingEvent();
 }
 
 void Slot::Mount(Object * TheObject)
 {
 	assert(_MountedObject == nullptr);
-	assert(_MountedObjectDestroyingConnection.IsValid() == false);
+	assert(m_MountedObjectDestroyingConnection.IsValid() == false);
 	assert(TheObject != nullptr);
 	assert(TheObject->GetAspectAccessory() != 0);
 	assert(_SlotClass->AcceptsSlotClassIdentifier(TheObject->GetAspectAccessory()->GetSlotClassIdentifier()) == true);
 	_MountedObject = TheObject;
-	_MountedObjectDestroyingConnection = _MountedObject->ConnectDestroyingCallback(std::bind(&Slot::_OnMountedObjectDestroying, this));
+	m_MountedObjectDestroyingConnection = _MountedObject->ConnectDestroyingCallback(std::bind(&Slot::_OnMountedObjectDestroying, this));
 	_MountedObject->GetAspectAccessory()->SetSlot(this);
 	if(_VisualizeAccessory == true)
 	{
@@ -66,10 +66,10 @@ void Slot::Mount(Object * TheObject)
 void Slot::_OnMountedObjectDestroying(void)
 {
 	assert(_MountedObject != nullptr);
-	assert(_MountedObjectDestroyingConnection.IsValid() == true);
-	_MountedObjectDestroyingConnection.Disconnect();
-	assert(_MountedObjectDestroyingConnection.IsValid() == false);
 	_MountedObject = nullptr;
+	assert(m_MountedObjectDestroyingConnection.IsValid() == true);
+	m_MountedObjectDestroyingConnection.Disconnect();
+	assert(m_MountedObjectDestroyingConnection.IsValid() == false);
 }
 
 void Slot::Unmount(void)
@@ -85,14 +85,14 @@ void Slot::Unmount(void)
 			_MountedObject->GetAspectVisualization()->DestroyVisualization(Visualization->GetGraphics());
 		}
 	}
-	assert(_MountedObjectDestroyingConnection.IsValid() == true);
-	_MountedObjectDestroyingConnection.Disconnect();
-	assert(_MountedObjectDestroyingConnection.IsValid() == false);
+	assert(m_MountedObjectDestroyingConnection.IsValid() == true);
+	m_MountedObjectDestroyingConnection.Disconnect();
+	assert(m_MountedObjectDestroyingConnection.IsValid() == false);
 	_MountedObject->GetAspectAccessory()->SetSlot(0);
 	_MountedObject = nullptr;
 }
 
-Connection Slot::ConnectDestroyingCallback(std::function< void (void) > Callback)
+auto Slot::ConnectDestroyingCallback(std::function<void()> Callback) -> Signals::Connection
 {
-	return _DestroyingEvent.Connect(Callback);
+	return m_DestroyingEvent.Connect(Callback);
 }

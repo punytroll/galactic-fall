@@ -39,11 +39,11 @@ namespace UI
         void _OpenTradeCenter(void);
         
         Character * _Character;
-        Connection _CharacterDestroyingConnection;
+        Signals::Connection m_CharacterDestroyingConnection;
         UI::Label * _DescriptionLabel;
         UI::HangarWidget * _HangarWidget;
         Planet * _Planet;
-        Connection _PlanetDestroyingConnection;
+        Signals::Connection m_PlanetDestroyingConnection;
         UI::TradeCenterWidget * _TradeCenterWidget;
     };
 }

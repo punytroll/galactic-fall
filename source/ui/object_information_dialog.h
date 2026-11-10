@@ -40,7 +40,7 @@ namespace UI
         auto m_ViewObject(Object * Object) -> void;
         
         Object * m_Object = nullptr;
-        Connection m_ObjectDestroyingConnection;
+        Signals::Connection m_ObjectDestroyingConnection;
         UI::ScrollBox * m_PropertiesScrollBox = nullptr;
     };
 }

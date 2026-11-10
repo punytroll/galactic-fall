@@ -57,7 +57,7 @@ namespace UI
 		void _OnAccessoryDestroying(void);
 		// member variables
 		Object * _Accessory;
-		Connection _AccessoryDestroyingConnection;
+		Signals::Connection m_AccessoryDestroyingConnection;
 	};
 	
 	class SlotListItem : public UI::ListBoxItem
@@ -74,7 +74,7 @@ namespace UI
 		void _OnSlotDestroying(void);
 		// member variables
 		Slot * _Slot;
-		Connection _SlotDestroyingConnection;
+		Signals::Connection m_SlotDestroyingConnection;
 		UI::Label * _TypeOrWeaponLabel;
 	};
 }
@@ -83,7 +83,7 @@ UI::AccessoryListItem::AccessoryListItem(Object * Accessory) :
 	_Accessory(Accessory)
 {
 	assert(_Accessory != nullptr);
-	_AccessoryDestroyingConnection = _Accessory->ConnectDestroyingCallback(std::bind(&UI::AccessoryListItem::_OnAccessoryDestroying, this));
+	m_AccessoryDestroyingConnection = _Accessory->ConnectDestroyingCallback(std::bind(&UI::AccessoryListItem::_OnAccessoryDestroying, this));
 	// safe-guard: only accept objects with a name aspect
 	assert(Accessory->GetAspectName() != nullptr);
 	// safe-guard: only accept objects with a accessory aspect
@@ -116,11 +116,11 @@ UI::AccessoryListItem::~AccessoryListItem(void)
 {
 	if(_Accessory != nullptr)
 	{
-		assert(_AccessoryDestroyingConnection.IsValid() == true);
-		_AccessoryDestroyingConnection.Disconnect();
-		assert(_AccessoryDestroyingConnection.IsValid() == false);
 		_Accessory = nullptr;
+		assert(m_AccessoryDestroyingConnection.IsValid() == true);
+		m_AccessoryDestroyingConnection.Disconnect();
 	}
+	assert(m_AccessoryDestroyingConnection.IsValid() == false);
 }
 
 Object * UI::AccessoryListItem::GetAccessory(void)
@@ -131,17 +131,17 @@ Object * UI::AccessoryListItem::GetAccessory(void)
 void UI::AccessoryListItem::_OnAccessoryDestroying(void)
 {
 	assert(_Accessory != nullptr);
-	assert(_AccessoryDestroyingConnection.IsValid() == true);
-	_AccessoryDestroyingConnection.Disconnect();
-	assert(_AccessoryDestroyingConnection.IsValid() == false);
 	_Accessory = nullptr;
+	assert(m_AccessoryDestroyingConnection.IsValid() == true);
+	m_AccessoryDestroyingConnection.Disconnect();
+	assert(m_AccessoryDestroyingConnection.IsValid() == false);
 }
 
 UI::SlotListItem::SlotListItem(Slot * Slot) :
 	_Slot(Slot)
 {
 	assert(_Slot != nullptr);
-	_SlotDestroyingConnection = _Slot->ConnectDestroyingCallback(std::bind(&UI::SlotListItem::_OnSlotDestroying, this));
+	m_SlotDestroyingConnection = _Slot->ConnectDestroyingCallback(std::bind(&UI::SlotListItem::_OnSlotDestroying, this));
 	
 	// create components
 	auto IdentifierLabel{new UI::Label{}};
@@ -170,11 +170,11 @@ UI::SlotListItem::~SlotListItem(void)
 {
 	if(_Slot != nullptr)
 	{
-		assert(_SlotDestroyingConnection.IsValid() == true);
-		_SlotDestroyingConnection.Disconnect();
 		_Slot = nullptr;
+		assert(m_SlotDestroyingConnection.IsValid() == true);
+		m_SlotDestroyingConnection.Disconnect();
 	}
-    assert(_SlotDestroyingConnection.IsValid() == false);
+	assert(m_SlotDestroyingConnection.IsValid() == false);
 }
 
 void UI::SlotListItem::Update(void)
@@ -212,9 +212,9 @@ void UI::SlotListItem::_OnSlotDestroying(void)
 {
 	assert(_Slot != nullptr);
 	_Slot = nullptr;
-	assert(_SlotDestroyingConnection.IsValid() == true);
-	_SlotDestroyingConnection.Disconnect();
-	assert(_SlotDestroyingConnection.IsValid() == false);
+	assert(m_SlotDestroyingConnection.IsValid() == true);
+	m_SlotDestroyingConnection.Disconnect();
+	assert(m_SlotDestroyingConnection.IsValid() == false);
 }
 
 UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
@@ -222,7 +222,7 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 {
 	SetTitle("Outfit Ship");
 	assert(_Ship != nullptr);
-	_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::OutfitShipDialog::_OnShipDestroying, this));
+	m_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::OutfitShipDialog::_OnShipDestroying, this));
 	ConnectDestroyingCallback(std::bind(&UI::OutfitShipDialog::_OnDestroying, this, std::placeholders::_1));
 	ConnectKeyCallback(std::bind(&UI::OutfitShipDialog::_OnKey, this, std::placeholders::_1));
 	
@@ -351,10 +351,10 @@ void UI::OutfitShipDialog::_OnDestroying(UI::Event & DestroyingEvent)
 		if(_Ship != nullptr)
 		{
 			_Ship = nullptr;
-			assert(_ShipDestroyingConnection.IsValid() == true);
-			_ShipDestroyingConnection.Disconnect();
+			assert(m_ShipDestroyingConnection.IsValid() == true);
+			m_ShipDestroyingConnection.Disconnect();
 		}
-		assert(_ShipDestroyingConnection.IsValid() == false);
+		assert(m_ShipDestroyingConnection.IsValid() == false);
 	}
 }
 
@@ -460,7 +460,7 @@ void UI::OutfitShipDialog::_OnShipDestroying(void)
 {
 	assert(_Ship != nullptr);
 	_Ship = nullptr;
-	assert(_ShipDestroyingConnection.IsValid() == true);
-	_ShipDestroyingConnection.Disconnect();
-	assert(_ShipDestroyingConnection.IsValid() == false);
+	assert(m_ShipDestroyingConnection.IsValid() == true);
+	m_ShipDestroyingConnection.Disconnect();
+	assert(m_ShipDestroyingConnection.IsValid() == false);
 }

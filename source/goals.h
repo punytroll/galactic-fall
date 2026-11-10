@@ -159,7 +159,7 @@ private:
 	void _OnPlanetDestroying(void);
 	// members
 	Planet * _Planet;
-	Connection _PlanetDestroyingConnection;
+	Signals::Connection m_PlanetDestroyingConnection;
 };
 
 class GoalSelectFightableTarget : public Goal

@@ -48,7 +48,7 @@ private:
 	// variables
 	float _Damage;
 	Object * _Shooter;
-	Connection _ShooterDestroyingConnection;
+	Signals::Connection m_ShooterDestroyingConnection;
 	double _TimeOfDeath;
 	Vector3f _Velocity;
 };

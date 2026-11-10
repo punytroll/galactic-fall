@@ -50,7 +50,7 @@ UI::StarMapDisplay::StarMapDisplay(Character * Character) :
 	_SelectedSystem(nullptr)
 {
 	assert(_Character != nullptr);
-	_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnCharacterDestroying, this));
+	m_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnCharacterDestroying, this));
 	
 	auto System{_Character->GetSystem()};
 	
@@ -243,9 +243,9 @@ void UI::StarMapDisplay::_OnCharacterDestroying(void)
 {
 	assert(_Character != nullptr);
 	_Character = nullptr;
-	assert(_CharacterDestroyingConnection.IsValid() == true);
-	_CharacterDestroyingConnection.Disconnect();
-	assert(_CharacterDestroyingConnection.IsValid() == false);
+	assert(m_CharacterDestroyingConnection.IsValid() == true);
+	m_CharacterDestroyingConnection.Disconnect();
+	assert(m_CharacterDestroyingConnection.IsValid() == false);
 }
 
 void UI::StarMapDisplay::_OnDestroying(UI::Event & DestroyingEvent)
@@ -255,18 +255,18 @@ void UI::StarMapDisplay::_OnDestroying(UI::Event & DestroyingEvent)
 		_ClearView();
 		if(_Character != nullptr)
 		{
-			assert(_CharacterDestroyingConnection.IsValid() == true);
-			_CharacterDestroyingConnection.Disconnect();
 			_Character = nullptr;
+			assert(m_CharacterDestroyingConnection.IsValid() == true);
+			m_CharacterDestroyingConnection.Disconnect();
 		}
-		assert(_CharacterDestroyingConnection.IsValid() == false);
+		assert(m_CharacterDestroyingConnection.IsValid() == false);
 		if(_SelectedSystem != nullptr)
 		{
-			assert(_SelectedSystemDestroyingConnection.IsValid() == true);
-			_SelectedSystemDestroyingConnection.Disconnect();
 			_SelectedSystem = nullptr;
+			assert(m_SelectedSystemDestroyingConnection.IsValid() == true);
+			m_SelectedSystemDestroyingConnection.Disconnect();
 		}
-		assert(_SelectedSystemDestroyingConnection.IsValid() == false);
+		assert(m_SelectedSystemDestroyingConnection.IsValid() == false);
 	}
 }
 
@@ -352,9 +352,9 @@ void UI::StarMapDisplay::_OnSelectedSystemDestroying(void)
 {
 	assert(_SelectedSystem != nullptr);
 	_SelectedSystem = nullptr;
-	assert(_SelectedSystemDestroyingConnection.IsValid() == true);
-	_SelectedSystemDestroyingConnection.Disconnect();
-	assert(_SelectedSystemDestroyingConnection.IsValid() == false);
+	assert(m_SelectedSystemDestroyingConnection.IsValid() == true);
+	m_SelectedSystemDestroyingConnection.Disconnect();
+	assert(m_SelectedSystemDestroyingConnection.IsValid() == false);
 }
 
 void UI::StarMapDisplay::SetSelectedSystem(System * SelectedSystem)
@@ -362,14 +362,15 @@ void UI::StarMapDisplay::SetSelectedSystem(System * SelectedSystem)
 	if(_SelectedSystem != nullptr)
 	{
 		_SelectedSystem = nullptr;
-		assert(_SelectedSystemDestroyingConnection.IsValid() == true);
-		_SelectedSystemDestroyingConnection.Disconnect();
+		assert(m_SelectedSystemDestroyingConnection.IsValid() == true);
+		m_SelectedSystemDestroyingConnection.Disconnect();
 	}
-	assert(_SelectedSystemDestroyingConnection.IsValid() == false);
+	assert(m_SelectedSystemDestroyingConnection.IsValid() == false);
 	if(SelectedSystem != nullptr)
 	{
 		_SelectedSystem = SelectedSystem;
-		_SelectedSystemDestroyingConnection = _SelectedSystem->ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnSelectedSystemDestroying, this));
+		m_SelectedSystemDestroyingConnection = _SelectedSystem->ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnSelectedSystemDestroying, this));
+		assert(m_SelectedSystemDestroyingConnection.IsValid() == true);
 	}
 }
 

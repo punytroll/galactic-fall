@@ -33,8 +33,9 @@ CharacterObserver::~CharacterObserver(void)
 void CharacterObserver::_OnObservedCharacterDestroying(void)
 {
 	assert(_ObservedCharacter != nullptr);
-	assert(_ObservedCharacterDestroyingConnection.IsValid() == true);
-	_ObservedCharacterDestroyingConnection.Disconnect();
+	assert(m_ObservedCharacterDestroyingConnection.IsValid() == true);
+	m_ObservedCharacterDestroyingConnection.Disconnect();
+	assert(m_ObservedCharacterDestroyingConnection.IsValid() == false);
 	_ObservedCharacter->RemoveObserver(this);
 	_ObservedCharacter = nullptr;
 }
@@ -43,14 +44,16 @@ void CharacterObserver::SetObservedCharacter(Character * ObservedCharacter)
 {
 	if(_ObservedCharacter != nullptr)
 	{
-		assert(_ObservedCharacterDestroyingConnection.IsValid() == true);
-		_ObservedCharacterDestroyingConnection.Disconnect();
+		assert(m_ObservedCharacterDestroyingConnection.IsValid() == true);
+		m_ObservedCharacterDestroyingConnection.Disconnect();
 		_ObservedCharacter->RemoveObserver(this);
 	}
+	assert(m_ObservedCharacterDestroyingConnection.IsValid() == false);
 	_ObservedCharacter = ObservedCharacter;
 	if(_ObservedCharacter != nullptr)
 	{
-		_ObservedCharacterDestroyingConnection = _ObservedCharacter->ConnectDestroyingCallback(std::bind(&CharacterObserver::_OnObservedCharacterDestroying, this));
+		m_ObservedCharacterDestroyingConnection = _ObservedCharacter->ConnectDestroyingCallback(std::bind(&CharacterObserver::_OnObservedCharacterDestroying, this));
+		assert(m_ObservedCharacterDestroyingConnection.IsValid() == true);
 		_ObservedCharacter->AddObserver(this);
 	}
 }

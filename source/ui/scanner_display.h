@@ -50,7 +50,7 @@ namespace UI
 		void _Setup(void);
 		// variables
 		Object * _Target;
-		Connection _TargetDestroyingConnection;
+		Signals::Connection m_TargetDestroyingConnection;
 	};
 
 	inline Object * ScannerDisplay::GetTarget(void)

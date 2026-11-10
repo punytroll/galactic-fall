@@ -40,7 +40,7 @@ namespace UI
 		ScrollBar(ScrollBar::Alignment Alignment);
 		virtual ~ScrollBar(void);
 		// events
-		Connection ConnectScrollPositionChangedCallback(std::function< void (void) > Callback);
+		auto ConnectScrollPositionChangedCallback(std::function<void()> Callback) -> Signals::Connection;
 		// getters
 		UI::ScrollBar::Alignment GetAlignment(void) const;
 		float GetCurrentPosition(void) const;
@@ -79,7 +79,7 @@ namespace UI
 		float _MinimumPosition;
 		float _StepSize;
 		// events
-		::Event< void > _ScrollPositionChangedEvent;
+		Signals::Event<void> m_ScrollPositionChangedEvent;
 	};
 
 	inline ScrollBar::Alignment ScrollBar::GetAlignment(void) const

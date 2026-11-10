@@ -53,14 +53,14 @@ public:
 	void Mount(Object * TheObject);
 	void Unmount(void);
 	// events
-	Connection ConnectDestroyingCallback(std::function< void (void) > Callback);
+	auto ConnectDestroyingCallback(std::function<void()> Callback) -> Signals::Connection;
 private:
 	void _OnMountedObjectDestroying(void);
-	Event< void > _DestroyingEvent;
+	Signals::Event<void> m_DestroyingEvent;
 	std::string _Identifier;
 	std::string _Name;
 	Object * _MountedObject;
-	Connection _MountedObjectDestroyingConnection;
+	Signals::Connection m_MountedObjectDestroyingConnection;
 	Quaternion _Orientation;
 	Vector3f _Position;
 	const SlotClass * _SlotClass;

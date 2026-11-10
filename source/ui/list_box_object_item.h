@@ -39,7 +39,7 @@ namespace UI
 		void _OnObjectDestroying(void);
 		// member variables
 		Object * _Object;
-		Connection _ObjectDestroyingConnection;
+		Signals::Connection m_ObjectDestroyingConnection;
 	};
 	
 	inline Object * ListBoxObjectItem::GetObject(void)

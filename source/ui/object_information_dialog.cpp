@@ -61,7 +61,7 @@ namespace UI
             AddSubWidget(m_Button);
         }
         
-        auto ConnectObjectButtonClickedCallback(std::function<void()> ClickedHandler) -> Connection
+        auto ConnectObjectButtonClickedCallback(std::function<void()> ClickedHandler) -> Signals::Connection
         {
             return m_ObjectButtonClickedEvent.Connect(ClickedHandler);
         }
@@ -93,9 +93,9 @@ namespace UI
         }
         
         UI::TextButton * m_Button;
-        ::Event<void> m_ObjectButtonClickedEvent;
+        Signals::Event<void> m_ObjectButtonClickedEvent;
         Object * m_Object;
-        Connection m_ObjectDestroyingConnection;
+        Signals::Connection m_ObjectDestroyingConnection;
     };
 }
 

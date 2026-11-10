@@ -37,14 +37,14 @@ namespace UI
 		// constructor
 		Dialog(void);
 		// connecting and disconnecting event callbacks
-		Connection ConnectClosingCallback(std::function< bool (UI::Dialog::ClosingReason) > Callback);
+		auto ConnectClosingCallback(std::function<bool(UI::Dialog::ClosingReason)> Callback) -> Signals::Connection;
 	protected:
 		// helper functions and actions
 		void _Close(UI::Dialog::ClosingReason ClosingReason);
 	private:
 		// member variables
 		//events
-		::Event< bool, UI::Dialog::ClosingReason > _ClosingEvent;
+		Signals::Event<bool, UI::Dialog::ClosingReason> m_ClosingEvent;
 	};
 }
 

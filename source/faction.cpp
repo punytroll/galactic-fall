@@ -24,7 +24,7 @@
 class FactionStanding
 {
 public:
-	Connection _DestroyingConnection;
+	Signals::Connection m_DestroyingConnection;
 	Faction * _Faction;
 	float _Standing;
 };
@@ -43,9 +43,9 @@ Faction::~Faction(void)
 		
 		assert(FactionStanding->_Faction != nullptr);
 		FactionStanding->_Faction = nullptr;
-		assert(FactionStanding->_DestroyingConnection.IsValid() == true);
-		FactionStanding->_DestroyingConnection.Disconnect();
-		assert(FactionStanding->_DestroyingConnection.IsValid() == false);
+		assert(FactionStanding->m_DestroyingConnection.IsValid() == true);
+		FactionStanding->m_DestroyingConnection.Disconnect();
+		assert(FactionStanding->m_DestroyingConnection.IsValid() == false);
 		delete FactionStanding;
 		_FactionStandings.pop_back();
 	}
@@ -64,7 +64,7 @@ void Faction::AddFactionStanding(Faction * Faction, float Standing)
 	
 	NewFactionStanding->_Faction = Faction;
 	NewFactionStanding->_Standing = Standing;
-	NewFactionStanding->_DestroyingConnection = Faction->ConnectDestroyingCallback(std::bind(&Faction::_OnFactionDestroying, this, Faction));
+	NewFactionStanding->m_DestroyingConnection = Faction->ConnectDestroyingCallback(std::bind(&Faction::_OnFactionDestroying, this, Faction));
 	_FactionStandings.push_back(NewFactionStanding);
 }
 
@@ -99,9 +99,9 @@ void Faction::_OnFactionDestroying(Faction * Faction)
 	
 	assert(FactionStanding->_Faction != nullptr);
 	FactionStanding->_Faction = nullptr;
-	assert(FactionStanding->_DestroyingConnection.IsValid() == true);
-	FactionStanding->_DestroyingConnection.Disconnect();
-	assert(FactionStanding->_DestroyingConnection.IsValid() == false);
+	assert(FactionStanding->m_DestroyingConnection.IsValid() == true);
+	FactionStanding->m_DestroyingConnection.Disconnect();
+	assert(FactionStanding->m_DestroyingConnection.IsValid() == false);
 	delete FactionStanding;
 	_FactionStandings.erase(FactionStandingIterator);
 }

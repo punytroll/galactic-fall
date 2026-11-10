@@ -33,7 +33,7 @@ UI::ListBoxObjectItem::ListBoxObjectItem(Object * Object) :
 	SetHeight(20.0_c);
 	assert(_Object != nullptr);
 	ConnectDestroyingCallback(std::bind(&UI::ListBoxObjectItem::_OnDestroying, this, std::placeholders::_1));
-	_ObjectDestroyingConnection = _Object->ConnectDestroyingCallback(std::bind(&UI::ListBoxObjectItem::_OnObjectDestroying, this));
+	m_ObjectDestroyingConnection = _Object->ConnectDestroyingCallback(std::bind(&UI::ListBoxObjectItem::_OnObjectDestroying, this));
 	assert(_Object->GetAspectName() != nullptr);
 	
 	// create components
@@ -57,9 +57,9 @@ void UI::ListBoxObjectItem::_OnDestroying(UI::Event & DestroyingEvent)
 	{
 		assert(_Object != nullptr);
 		_Object = nullptr;
-		assert(_ObjectDestroyingConnection.IsValid() == true);
-		_ObjectDestroyingConnection.Disconnect();
-		assert(_ObjectDestroyingConnection.IsValid() == false);
+		assert(m_ObjectDestroyingConnection.IsValid() == true);
+		m_ObjectDestroyingConnection.Disconnect();
+		assert(m_ObjectDestroyingConnection.IsValid() == false);
 	}
 }
 

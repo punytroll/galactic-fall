@@ -39,8 +39,8 @@ namespace UI
                 {
                     assert(m_WidgetDestroyingConnection.IsValid() == true);
                     m_WidgetDestroyingConnection.Disconnect();
-                    assert(m_WidgetDestroyingConnection.IsValid() == false);
                 }
+                assert(m_WidgetDestroyingConnection.IsValid() == false);
             }
             
             UI::Event::Phase m_Phase;
@@ -59,7 +59,7 @@ namespace UI
                 }
             }
             
-            Connection m_WidgetDestroyingConnection;
+            Signals::Connection m_WidgetDestroyingConnection;
         };
 
         struct KeyEventPropagationPathItem : UI::EventPropagationPathItem
@@ -106,7 +106,9 @@ UI::UserInterface::~UserInterface(void)
     if(_CaptureWidget != nullptr)
     {
         _CaptureWidget = nullptr;
-        _CaptureWidgetDestroyingCallbackConnection.Disconnect();
+        assert(m_CaptureWidgetDestroyingCallbackConnection.IsValid() == true);
+        m_CaptureWidgetDestroyingCallbackConnection.Disconnect();
+        assert(m_CaptureWidgetDestroyingCallbackConnection.IsValid() == false);
     }
     m_RootWidget->Destroy();
     m_RootWidget = nullptr;
@@ -135,7 +137,7 @@ void UI::UserInterface::SetCaptureWidget(UI::Widget * Widget)
     assert(Widget != nullptr);
     assert(_CaptureWidget == nullptr);
     _CaptureWidget = Widget;
-    _CaptureWidgetDestroyingCallbackConnection = _CaptureWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::_OnCaptureWidgetDestroying, this, std::placeholders::_1));
+    m_CaptureWidgetDestroyingCallbackConnection = _CaptureWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::_OnCaptureWidgetDestroying, this, std::placeholders::_1));
 }
 
 auto UI::UserInterface::SetRootWidget(UI::Widget * RootWidget) -> void
@@ -151,7 +153,9 @@ void UI::UserInterface::ReleaseCaptureWidget(void)
     if(_CaptureWidget != nullptr)
     {
         _CaptureWidget = nullptr;
-        _CaptureWidgetDestroyingCallbackConnection.Disconnect();
+        assert(m_CaptureWidgetDestroyingCallbackConnection.IsValid() == true);
+        m_CaptureWidgetDestroyingCallbackConnection.Disconnect();
+        assert(m_CaptureWidgetDestroyingCallbackConnection.IsValid() == false);
     }
 }
 
@@ -191,7 +195,7 @@ void UI::UserInterface::DispatchDestroyingEvent(UI::Event & DestroyingEvent)
             DestroyingEvent.SetCurrentTarget(PropagationPathItem.m_Widget);
             DestroyingEvent.SetPhase(PropagationPathItem.m_Phase);
             DestroyingEvent.ResumeCallbacks();
-            for(auto & Callback : PropagationPathItem.m_Widget->_DestroyingEvent.GetCallbacks())
+            for(auto & Callback : PropagationPathItem.m_Widget->m_DestroyingEvent.GetCallbacks())
             {
                 Callback(DestroyingEvent);
                 if(DestroyingEvent.GetStopCallbacks() == true)
@@ -222,7 +226,7 @@ void UI::UserInterface::DispatchHeightChangedEvent(UI::Event & HeightChangedEven
             HeightChangedEvent.SetCurrentTarget(PropagationPathItem.m_Widget);
             HeightChangedEvent.SetPhase(PropagationPathItem.m_Phase);
             HeightChangedEvent.ResumeCallbacks();
-            for(auto & Callback : PropagationPathItem.m_Widget->_HeightChangedEvent.GetCallbacks())
+            for(auto & Callback : PropagationPathItem.m_Widget->m_HeightChangedEvent.GetCallbacks())
             {
                 Callback(HeightChangedEvent);
                 if(HeightChangedEvent.GetStopCallbacks() == true)
@@ -274,7 +278,7 @@ void UI::UserInterface::DispatchKeyEvent(UI::KeyEvent & KeyEvent)
                 KeyEvent.SetCurrentTarget(PropagationPathItem.m_Widget);
                 KeyEvent.SetPhase(PropagationPathItem.m_Phase);
                 KeyEvent.ResumeCallbacks();
-                for(auto & Callback : PropagationPathItem.m_Widget->_KeyEvent.GetCallbacks())
+                for(auto & Callback : PropagationPathItem.m_Widget->m_KeyEvent.GetCallbacks())
                 {
                     Callback(KeyEvent);
                     if(KeyEvent.GetStopCallbacks() == true)
@@ -306,7 +310,7 @@ void UI::UserInterface::DispatchLeftChangedEvent(UI::Event & LeftChangedEvent)
             LeftChangedEvent.SetCurrentTarget(PropagationPathItem.m_Widget);
             LeftChangedEvent.SetPhase(PropagationPathItem.m_Phase);
             LeftChangedEvent.ResumeCallbacks();
-            for(auto & Callback : PropagationPathItem.m_Widget->_LeftChangedEvent.GetCallbacks())
+            for(auto & Callback : PropagationPathItem.m_Widget->m_LeftChangedEvent.GetCallbacks())
             {
                 Callback(LeftChangedEvent);
                 if(LeftChangedEvent.GetStopCallbacks() == true)
@@ -398,7 +402,7 @@ void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseBut
             MouseButtonEvent.SetPhase(PropagationPathItem.m_Phase);
             MouseButtonEvent.SetPosition(PropagationPathItem.m_Position);
             MouseButtonEvent.ResumeCallbacks();
-            for(auto & Callback : PropagationPathItem.m_Widget->_MouseButtonEvent.GetCallbacks())
+            for(auto & Callback : PropagationPathItem.m_Widget->m_MouseButtonEvent.GetCallbacks())
             {
                 Callback(MouseButtonEvent);
                 if(MouseButtonEvent.GetStopCallbacks() == true)
@@ -429,7 +433,7 @@ void UI::UserInterface::DispatchMouseEnterEvent(UI::Event & MouseEnterEvent)
             MouseEnterEvent.SetCurrentTarget(PropagationPathItem.m_Widget);
             MouseEnterEvent.SetPhase(PropagationPathItem.m_Phase);
             MouseEnterEvent.ResumeCallbacks();
-            for(auto & Callback : PropagationPathItem.m_Widget->_MouseEnterEvent.GetCallbacks())
+            for(auto & Callback : PropagationPathItem.m_Widget->m_MouseEnterEvent.GetCallbacks())
             {
                 Callback(MouseEnterEvent);
                 if(MouseEnterEvent.GetStopCallbacks() == true)
@@ -460,7 +464,7 @@ void UI::UserInterface::DispatchMouseLeaveEvent(UI::Event & MouseLeaveEvent)
             MouseLeaveEvent.SetCurrentTarget(PropagationPathItem.m_Widget);
             MouseLeaveEvent.SetPhase(PropagationPathItem.m_Phase);
             MouseLeaveEvent.ResumeCallbacks();
-            for(auto & Callback : PropagationPathItem.m_Widget->_MouseLeaveEvent.GetCallbacks())
+            for(auto & Callback : PropagationPathItem.m_Widget->m_MouseLeaveEvent.GetCallbacks())
             {
                 Callback(MouseLeaveEvent);
                 if(MouseLeaveEvent.GetStopCallbacks() == true)
@@ -590,7 +594,7 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
             MouseMoveEvent.SetPhase(PropagationPathItem.m_Phase);
             MouseMoveEvent.SetPosition(PropagationPathItem.m_Position);
             MouseMoveEvent.ResumeCallbacks();
-            for(auto & Callback : PropagationPathItem.m_Widget->_MouseMoveEvent.GetCallbacks())
+            for(auto & Callback : PropagationPathItem.m_Widget->m_MouseMoveEvent.GetCallbacks())
             {
                 Callback(MouseMoveEvent);
                 if(MouseMoveEvent.GetStopCallbacks() == true)
@@ -621,7 +625,7 @@ void UI::UserInterface::DispatchSubWidgetAddedEvent(UI::SubWidgetEvent & SubWidg
             SubWidgetAddedEvent.SetCurrentTarget(PropagationPathItem.m_Widget);
             SubWidgetAddedEvent.SetPhase(PropagationPathItem.m_Phase);
             SubWidgetAddedEvent.ResumeCallbacks();
-            for(auto & Callback : PropagationPathItem.m_Widget->_SubWidgetAddedEvent.GetCallbacks())
+            for(auto & Callback : PropagationPathItem.m_Widget->m_SubWidgetAddedEvent.GetCallbacks())
             {
                 Callback(SubWidgetAddedEvent);
                 if(SubWidgetAddedEvent.GetStopCallbacks() == true)
@@ -652,7 +656,7 @@ void UI::UserInterface::DispatchSubWidgetRemovedEvent(UI::SubWidgetEvent & SubWi
             SubWidgetRemovedEvent.SetCurrentTarget(PropagationPathItem.m_Widget);
             SubWidgetRemovedEvent.SetPhase(PropagationPathItem.m_Phase);
             SubWidgetRemovedEvent.ResumeCallbacks();
-            for(auto & Callback : PropagationPathItem.m_Widget->_SubWidgetRemovedEvent.GetCallbacks())
+            for(auto & Callback : PropagationPathItem.m_Widget->m_SubWidgetRemovedEvent.GetCallbacks())
             {
                 Callback(SubWidgetRemovedEvent);
                 if(SubWidgetRemovedEvent.GetStopCallbacks() == true)
@@ -683,7 +687,7 @@ void UI::UserInterface::DispatchTopChangedEvent(UI::Event & TopChangedEvent)
             TopChangedEvent.SetCurrentTarget(PropagationPathItem.m_Widget);
             TopChangedEvent.SetPhase(PropagationPathItem.m_Phase);
             TopChangedEvent.ResumeCallbacks();
-            for(auto & Callback : PropagationPathItem.m_Widget->_TopChangedEvent.GetCallbacks())
+            for(auto & Callback : PropagationPathItem.m_Widget->m_TopChangedEvent.GetCallbacks())
             {
                 Callback(TopChangedEvent);
                 if(TopChangedEvent.GetStopCallbacks() == true)
@@ -714,7 +718,7 @@ void UI::UserInterface::DispatchWidthChangedEvent(UI::Event & WidthChangedEvent)
             WidthChangedEvent.SetCurrentTarget(PropagationPathItem.m_Widget);
             WidthChangedEvent.SetPhase(PropagationPathItem.m_Phase);
             WidthChangedEvent.ResumeCallbacks();
-            for(auto & Callback : PropagationPathItem.m_Widget->_WidthChangedEvent.GetCallbacks())
+            for(auto & Callback : PropagationPathItem.m_Widget->m_WidthChangedEvent.GetCallbacks())
             {
                 Callback(WidthChangedEvent);
                 if(WidthChangedEvent.GetStopCallbacks() == true)
@@ -750,7 +754,7 @@ void UI::UserInterface::Update(float RealTimeSeconds, float GameTimeSeconds)
         
         if((Widget.first->_SubWidgets.size() == 0) || (Widget.second == true))
         {
-            Widget.first->_UpdatingEvent(RealTimeSeconds, GameTimeSeconds);
+            Widget.first->m_UpdatingEvent(RealTimeSeconds, GameTimeSeconds);
             ToDo.pop();
         }
         else
@@ -770,7 +774,7 @@ void UI::UserInterface::_OnCaptureWidgetDestroying(UI::Event & DestroyingEvent)
     {
         assert(_CaptureWidget != nullptr);
         _CaptureWidget = nullptr;
-        _CaptureWidgetDestroyingCallbackConnection.Disconnect();
+        m_CaptureWidgetDestroyingCallbackConnection.Disconnect();
     }
 }
 

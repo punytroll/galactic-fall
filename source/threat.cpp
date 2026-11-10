@@ -29,7 +29,7 @@ class ThreatByObject
 public:
 	Object * _Object;
 	float _Threat;
-	Connection _ObjectDestroyingConnection;
+	Signals::Connection m_ObjectDestroyingConnection;
 };
 
 Threat::~Threat(void)
@@ -41,9 +41,9 @@ Threat::~Threat(void)
 		assert(ThreatByObject != nullptr);
 		assert(ThreatByObject->_Object != nullptr);
 		ThreatByObject->_Object = nullptr;
-		assert(ThreatByObject->_ObjectDestroyingConnection.IsValid() == true);
-		ThreatByObject->_ObjectDestroyingConnection.Disconnect();
-		assert(ThreatByObject->_ObjectDestroyingConnection.IsValid() == false);
+		assert(ThreatByObject->m_ObjectDestroyingConnection.IsValid() == true);
+		ThreatByObject->m_ObjectDestroyingConnection.Disconnect();
+		assert(ThreatByObject->m_ObjectDestroyingConnection.IsValid() == false);
 		_Threats.erase(_Threats.begin());
 	}
 }
@@ -84,7 +84,7 @@ void Threat::ModifyThreat(Object * ThreateningObject, float DeltaThreat)
 		auto NewThreatByObject{new ThreatByObject{}};
 		
 		NewThreatByObject->_Object = ThreateningObject;
-		NewThreatByObject->_ObjectDestroyingConnection = ThreateningObject->ConnectDestroyingCallback(std::bind(&Threat::_OnObjectDestroying, this, NewThreatByObject));
+		NewThreatByObject->m_ObjectDestroyingConnection = ThreateningObject->ConnectDestroyingCallback(std::bind(&Threat::_OnObjectDestroying, this, NewThreatByObject));
 		NewThreatByObject->_Threat = DeltaThreat;
 		_Threats.push_back(NewThreatByObject);
 	}
@@ -93,9 +93,9 @@ void Threat::ModifyThreat(Object * ThreateningObject, float DeltaThreat)
 void Threat::_OnObjectDestroying(ThreatByObject * ThreatByObject)
 {
 	assert(ThreatByObject != nullptr);
-	assert(ThreatByObject->_ObjectDestroyingConnection.IsValid() == true);
-	ThreatByObject->_ObjectDestroyingConnection.Disconnect();
-	assert(ThreatByObject->_ObjectDestroyingConnection.IsValid() == false);
+	assert(ThreatByObject->m_ObjectDestroyingConnection.IsValid() == true);
+	ThreatByObject->m_ObjectDestroyingConnection.Disconnect();
+	assert(ThreatByObject->m_ObjectDestroyingConnection.IsValid() == false);
 	ThreatByObject->_Object = nullptr;
 	
 	auto Iterator{std::find(_Threats.begin(), _Threats.end(), ThreatByObject)};

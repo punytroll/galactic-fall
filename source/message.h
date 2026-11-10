@@ -41,9 +41,9 @@ private:
 	void _OnSenderDestroying(void);
 	// members
 	Object * _Receiver;
-	Connection _ReceiverDestroyingConnection;
+	Signals::Connection m_ReceiverDestroyingConnection;
 	Object * _Sender;
-	Connection _SenderDestroyingConnection;
+	Signals::Connection m_SenderDestroyingConnection;
 	std::string _TypeIdentifier;
 };
 

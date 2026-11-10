@@ -88,19 +88,19 @@ namespace UI
         void SetVisible(bool Visible);
         void SetWidth(Expressions::Expression && Width);
         // connect events
-        Connection ConnectDestroyingCallback(std::function< void (UI::Event &) > Callback);
-        Connection ConnectHeightChangedCallback(std::function< void (UI::Event &) > Callback);
-        Connection ConnectKeyCallback(std::function< void (UI::KeyEvent &) > Callback);
-        Connection ConnectLeftChangedCallback(std::function< void (UI::Event &) > Callback);
-        Connection ConnectMouseButtonCallback(std::function< void (UI::MouseButtonEvent &) > Callback);
-        Connection ConnectMouseEnterCallback(std::function< void (UI::Event &) > Callback);
-        Connection ConnectMouseLeaveCallback(std::function< void (UI::Event &) > Callback);
-        Connection ConnectMouseMoveCallback(std::function< void (UI::MouseMoveEvent &) > Callback);
-        Connection ConnectSubWidgetAddedCallback(std::function< void (UI::SubWidgetEvent &) > Callback);
-        Connection ConnectSubWidgetRemovedCallback(std::function< void (UI::SubWidgetEvent &) > Callback);
-        Connection ConnectTopChangedCallback(std::function< void (UI::Event &) > Callback);
-        Connection ConnectUpdatingCallback(std::function< void (float, float) > Callback);
-        Connection ConnectWidthChangedCallback(std::function< void (UI::Event &) > Callback);
+        auto ConnectDestroyingCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection;
+        auto ConnectHeightChangedCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection;
+        auto ConnectKeyCallback(std::function<void(UI::KeyEvent &)> Callback) -> Signals::Connection;
+        auto ConnectLeftChangedCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection;
+        auto ConnectMouseButtonCallback(std::function<void(UI::MouseButtonEvent &)> Callback) -> Signals::Connection;
+        auto ConnectMouseEnterCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection;
+        auto ConnectMouseLeaveCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection;
+        auto ConnectMouseMoveCallback(std::function<void(UI::MouseMoveEvent &)> Callback) -> Signals::Connection;
+        auto ConnectSubWidgetAddedCallback(std::function<void(UI::SubWidgetEvent &)> Callback) -> Signals::Connection;
+        auto ConnectSubWidgetRemovedCallback(std::function<void(UI::SubWidgetEvent &)> Callback) -> Signals::Connection;
+        auto ConnectTopChangedCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection;
+        auto ConnectUpdatingCallback(std::function<void(float, float)> Callback) -> Signals::Connection;
+        auto ConnectWidthChangedCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection;
         // static manager functions
         static std::list< Widget * > & GetDestroyedWidgets(void);
     protected:
@@ -123,19 +123,19 @@ namespace UI
         bool _Visible;
         UI::Dimension _Width;
         // events
-        ::Event< void, UI::Event & > _DestroyingEvent;
-        ::Event< void, UI::Event & > _HeightChangedEvent;
-        ::Event< void, UI::KeyEvent & > _KeyEvent;
-        ::Event< void, UI::Event & > _LeftChangedEvent;
-        ::Event< void, UI::MouseButtonEvent & > _MouseButtonEvent;
-        ::Event< void, UI::Event & > _MouseEnterEvent;
-        ::Event< void, UI::Event & > _MouseLeaveEvent;
-        ::Event< void, UI::MouseMoveEvent & > _MouseMoveEvent;
-        ::Event< void, UI::SubWidgetEvent & > _SubWidgetAddedEvent;
-        ::Event< void, UI::SubWidgetEvent & > _SubWidgetRemovedEvent;
-        ::Event< void, UI::Event & > _TopChangedEvent;
-        ::Event< void, float, float > _UpdatingEvent;
-        ::Event< void, UI::Event & > _WidthChangedEvent;
+        Signals::Event<void, UI::Event &> m_DestroyingEvent;
+        Signals::Event<void, UI::Event &> m_HeightChangedEvent;
+        Signals::Event<void, UI::KeyEvent &> m_KeyEvent;
+        Signals::Event<void, UI::Event &> m_LeftChangedEvent;
+        Signals::Event<void, UI::MouseButtonEvent &> m_MouseButtonEvent;
+        Signals::Event<void, UI::Event &> m_MouseEnterEvent;
+        Signals::Event<void, UI::Event &> m_MouseLeaveEvent;
+        Signals::Event<void, UI::MouseMoveEvent &> m_MouseMoveEvent;
+        Signals::Event<void, UI::SubWidgetEvent &> m_SubWidgetAddedEvent;
+        Signals::Event<void, UI::SubWidgetEvent &> m_SubWidgetRemovedEvent;
+        Signals::Event<void, UI::Event &> m_TopChangedEvent;
+        Signals::Event<void, float, float> m_UpdatingEvent;
+        Signals::Event<void, UI::Event &> m_WidthChangedEvent;
         // static manager properties
         static std::list< Widget * > _DestroyedWidgets;
         static std::stack< std::tuple< float, float, float, float > > _ClippingRectangles;

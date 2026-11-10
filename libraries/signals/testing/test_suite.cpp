@@ -9,39 +9,45 @@
 
 #include <signals/event.h>
 
-auto g_Global = 0;
-
-auto EmptyFunction() -> void
+namespace Signals::Testing
 {
-}
-
-auto IncrementingFunction(int Value) -> void
-{
-    g_Global += Value;
-}
-
-class SelfDisconnecting
-{
-public:
-    auto Register(Event<void> & Event) -> void
+    namespace
     {
-        m_Connection = Event.Connect(std::bind(&SelfDisconnecting::m_Notify, this));
+        auto g_Global = 0;
+
+        auto EmptyFunction() -> void
+        {
+        }
+
+        auto IncrementingFunction(int Value) -> void
+        {
+            g_Global += Value;
+        }
+
+        class SelfDisconnecting
+        {
+        public:
+            auto Register(Signals::Event<void> & Event) -> void
+            {
+                m_Connection = Event.Connect(std::bind(&SelfDisconnecting::m_Notify, this));
+            }
+        private:
+            auto m_Notify() -> void
+            {
+                m_Connection.Disconnect();
+            }
+            
+            Signals::Connection m_Connection;
+        };
     }
-private:
-    auto m_Notify() -> void
-    {
-        m_Connection.Disconnect();
-    }
-    
-    Connection m_Connection;
-};
+}
 
 auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
 {
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Connection Connection;
+        auto Connection = Signals::Connection{};
         
         assert(Connection.IsValid() == false);
     }
@@ -49,7 +55,7 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Connection Connection;
+        auto Connection = Signals::Connection{};
         
         Connection.Clear();
         assert(Connection.IsValid() == false);
@@ -58,7 +64,7 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
+        auto Event = Signals::Event<void>{};
         
         assert(Event.GetCallbacks().empty() == true);
     }
@@ -66,7 +72,7 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
+        auto Event = Signals::Event<void>{};
         
         Event();
     }
@@ -74,17 +80,17 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
+        auto Event = Signals::Event<void>{};
         
-        Event.Connect(EmptyFunction);
+        Event.Connect(Signals::Testing::EmptyFunction);
         Event();
     }
     
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        auto Connection(Event.Connect(EmptyFunction));
+        auto Event = Signals::Event<void>{};
+        auto Connection = Event.Connect(Signals::Testing::EmptyFunction);
         
         assert(Connection.IsValid() == true);
     }
@@ -92,18 +98,18 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        Connection Connection;
+        auto Event = Signals::Event<void>{};
+        auto Connection = Signals::Connection{};
         
-        Connection = Event.Connect(EmptyFunction);
+        Connection = Event.Connect(Signals::Testing::EmptyFunction);
         assert(Connection.IsValid() == true);
     }
     
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        auto Connection(Event.Connect(EmptyFunction));
+        auto Event = Signals::Event<void>{};
+        auto Connection = Event.Connect(Signals::Testing::EmptyFunction);
         
         Event.Disconnect(Connection);
         assert(Connection.IsValid() == false);
@@ -112,10 +118,10 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        Connection Connection;
+        auto Event = Signals::Event<void>{};
+        auto Connection = Signals::Connection{};
         
-        Connection = Event.Connect(EmptyFunction);
+        Connection = Event.Connect(Signals::Testing::EmptyFunction);
         Event.Disconnect(Connection);
         assert(Connection.IsValid() == false);
     }
@@ -123,8 +129,8 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        auto Connection(Event.Connect(EmptyFunction));
+        auto Event = Signals::Event<void>{};
+        auto Connection = Event.Connect(Signals::Testing::EmptyFunction);
         
         Connection.Disconnect();
         assert(Connection.IsValid() == false);
@@ -133,10 +139,10 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        Connection Connection;
+        auto Event = Signals::Event<void>{};
+        auto Connection = Signals::Connection{};
         
-        Connection = Event.Connect(EmptyFunction);
+        Connection = Event.Connect(Signals::Testing::EmptyFunction);
         Connection.Disconnect();
         assert(Connection.IsValid() == false);
     }
@@ -144,9 +150,9 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        auto Connection1(Event.Connect(EmptyFunction));
-        auto Connection2(Connection1);
+        auto Event = Signals::Event<void>{};
+        auto Connection1 = Event.Connect(Signals::Testing::EmptyFunction);
+        auto Connection2 = Connection1;
         
         assert(Connection2.IsValid() == true);
     }
@@ -154,9 +160,9 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        auto Connection1(Event.Connect(EmptyFunction));
-        auto Connection2(Connection1);
+        auto Event = Signals::Event<void>{};
+        auto Connection1 = Event.Connect(Signals::Testing::EmptyFunction);
+        auto Connection2 = Connection1;
         
         Event();
     }
@@ -164,9 +170,9 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        auto Connection1(Event.Connect(EmptyFunction));
-        auto Connection2(Connection1);
+        auto Event = Signals::Event<void>{};
+        auto Connection1 = Event.Connect(Signals::Testing::EmptyFunction);
+        auto Connection2 = Connection1;
         
         Event.Disconnect(Connection1);
         assert(Connection1.IsValid() == false);
@@ -175,9 +181,9 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        auto Connection1(Event.Connect(EmptyFunction));
-        auto Connection2(Connection1);
+        auto Event = Signals::Event<void>{};
+        auto Connection1 = Event.Connect(Signals::Testing::EmptyFunction);
+        auto Connection2 = Connection1;
         
         Event.Disconnect(Connection2);
         assert(Connection2.IsValid() == false);
@@ -186,9 +192,9 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        auto Connection1(Event.Connect(EmptyFunction));
-        auto Connection2(Connection1);
+        auto Event = Signals::Event<void>{};
+        auto Connection1 = Event.Connect(Signals::Testing::EmptyFunction);
+        auto Connection2 = Connection1;
         
         Event.Disconnect(Connection1);
         assert(Connection2.IsValid() == false);
@@ -197,9 +203,9 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        auto Connection1(Event.Connect(EmptyFunction));
-        auto Connection2(Connection1);
+        auto Event = Signals::Event<void>{};
+        auto Connection1 = Event.Connect(Signals::Testing::EmptyFunction);
+        auto Connection2 = Connection1;
         
         Event.Disconnect(Connection2);
         assert(Connection1.IsValid() == false);
@@ -208,10 +214,10 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        auto Connection1(Event.Connect(EmptyFunction));
-        auto Connection2(Connection1);
-        Connection Connection3;
+        auto Event = Signals::Event<void>{};
+        auto Connection1 = Event.Connect(Signals::Testing::EmptyFunction);
+        auto Connection2 = Connection1;
+        auto Connection3 = Signals::Connection{};
         
         Connection3 = Connection2;
         Event.Disconnect(Connection2);
@@ -223,10 +229,10 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        auto Connection1(Event.Connect(EmptyFunction));
-        auto Connection2(Connection1);
-        Connection Connection3;
+        auto Event = Signals::Event<void>{};
+        auto Connection1 = Event.Connect(Signals::Testing::EmptyFunction);
+        auto Connection2 = Connection1;
+        auto Connection3 = Signals::Connection{};
         
         Connection3 = Connection2;
         Event.Disconnect(Connection3);
@@ -238,64 +244,64 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        g_Global = 32;
+        Signals::Testing::g_Global = 32;
         
-        Event< void > Event;
+        auto Event = Signals::Event<void>{};
         
-        Event.Connect(std::bind(IncrementingFunction, 8));
+        Event.Connect(std::bind(Signals::Testing::IncrementingFunction, 8));
         Event();
-        assert(g_Global == 40);
+        assert(Signals::Testing::g_Global == 40);
         Event();
-        assert(g_Global == 48);
+        assert(Signals::Testing::g_Global == 48);
     }
     
     std::cout << "-----------------------------" << std::endl;
     
     {
-        g_Global = 32;
+        Signals::Testing::g_Global = 32;
         
-        Event< void > Event;
-        auto Connection(Event.Connect(std::bind(IncrementingFunction, 8)));
+        auto Event = Signals::Event<void>{};
+        auto Connection = Event.Connect(std::bind(Signals::Testing::IncrementingFunction, 8));
         
         Event();
-        assert(g_Global == 40);
+        assert(Signals::Testing::g_Global == 40);
         Event.Disconnect(Connection);
         Event();
-        assert(g_Global == 40);
+        assert(Signals::Testing::g_Global == 40);
     }
     
     std::cout << "-----------------------------" << std::endl;
     
     {
-        g_Global = 32;
+        Signals::Testing::g_Global = 32;
         
-        Event< void > Event;
-        auto Connection(Event.Connect(std::bind(IncrementingFunction, 8)));
+        auto Event = Signals::Event<void>{};
+        auto Connection = Event.Connect(std::bind(Signals::Testing::IncrementingFunction, 8));
         
         Event();
-        assert(g_Global == 40);
+        assert(Signals::Testing::g_Global == 40);
         Connection.Disconnect();
         Event();
-        assert(g_Global == 40);
+        assert(Signals::Testing::g_Global == 40);
     }
     
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        Connection Connection;
+        auto Event = Signals::Event<void>{};
+        auto Connection = Signals::Connection{};
         
-        Connection = Event.Connect(std::bind(EmptyFunction));
+        Connection = Event.Connect(std::bind(Signals::Testing::EmptyFunction));
         Event.Disconnect(Connection);
     }
     
     std::cout << "-----------------------------" << std::endl;
     
     {
-        g_Global = 64;
+        Signals::Testing::g_Global = 64;
         
-        Event< void > Event;
-        Connection Connection(Event.Connect(std::bind(IncrementingFunction, 78)));
+        auto Event = Signals::Event<void>{};
+        auto Connection = Event.Connect(std::bind(Signals::Testing::IncrementingFunction, 78));
         
         Event.Disconnect(Connection);
     }
@@ -303,31 +309,31 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        g_Global = 64;
+        Signals::Testing::g_Global = 64;
         
-        Event< void > Event;
-        Connection Connection1(Event.Connect(std::bind(IncrementingFunction, 8)));
-        Connection Connection2(Event.Connect(std::bind(IncrementingFunction, 12)));
-        Connection Connection3(Event.Connect(std::bind(IncrementingFunction, 7)));
+        auto Event = Signals::Event<void>{};
+        auto Connection1 = Event.Connect(std::bind(Signals::Testing::IncrementingFunction, 8));
+        auto Connection2 = Event.Connect(std::bind(Signals::Testing::IncrementingFunction, 12));
+        auto Connection3 = Event.Connect(std::bind(Signals::Testing::IncrementingFunction, 7));
         
         Event();
-        assert(g_Global == 91);
+        assert(Signals::Testing::g_Global == 91);
         Event.Disconnect(Connection3);
         Event();
-        assert(g_Global == 111);
+        assert(Signals::Testing::g_Global == 111);
         Event.Disconnect(Connection1);
         Event();
-        assert(g_Global == 123);
+        assert(Signals::Testing::g_Global == 123);
         Event.Disconnect(Connection2);
         Event();
-        assert(g_Global == 123);
+        assert(Signals::Testing::g_Global == 123);
     }
     
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Event< void > Event;
-        SelfDisconnecting SelfDisconnecting;
+        auto Event = Signals::Event<void>{};
+        auto SelfDisconnecting = Signals::Testing::SelfDisconnecting{};
         
         SelfDisconnecting.Register(Event);
         Event();
@@ -337,12 +343,12 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        Connection Connection;
+        auto Connection = Signals::Connection{};
         
         {
-            Event< void > Event;
+            auto Event = Signals::Event<void>{};
             
-            Connection = Event.Connect(EmptyFunction);
+            Connection = Event.Connect(Signals::Testing::EmptyFunction);
         }
         assert(Connection.IsValid() == false);
     }

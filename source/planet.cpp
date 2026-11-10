@@ -63,11 +63,11 @@ Planet::~Planet(void)
 	}
 	if(_Faction != nullptr)
 	{
-		assert(_FactionDestroyingConnection.IsValid() == true);
-		_FactionDestroyingConnection.Disconnect();
 		_Faction = nullptr;
+		assert(m_FactionDestroyingConnection.IsValid() == true);
+		m_FactionDestroyingConnection.Disconnect();
 	}
-	assert(_FactionDestroyingConnection.IsValid() == false);
+	assert(m_FactionDestroyingConnection.IsValid() == false);
 }
 
 Hangar * Planet::GetHangar(Character * Character)
@@ -118,16 +118,15 @@ void Planet::SetFaction(Faction * Faction)
 {
 	if(_Faction != nullptr)
 	{
-		assert(_FactionDestroyingConnection.IsValid() == true);
-		_FactionDestroyingConnection.Disconnect();
-		assert(_FactionDestroyingConnection.IsValid() == false);
+		assert(m_FactionDestroyingConnection.IsValid() == true);
+		m_FactionDestroyingConnection.Disconnect();
 	}
+	assert(m_FactionDestroyingConnection.IsValid() == false);
 	_Faction = Faction;
 	if(_Faction != nullptr)
 	{
-		assert(_FactionDestroyingConnection.IsValid() == false);
-		_FactionDestroyingConnection = _Faction->ConnectDestroyingCallback(std::bind(&Planet::_OnFactionDestroying, this));
-		assert(_FactionDestroyingConnection.IsValid() == true);
+		m_FactionDestroyingConnection = _Faction->ConnectDestroyingCallback(std::bind(&Planet::_OnFactionDestroying, this));
+		assert(m_FactionDestroyingConnection.IsValid() == true);
 	}
 }
 
@@ -283,10 +282,10 @@ Hangar * Planet::_CreateHangar(Character * Character)
 void Planet::_OnFactionDestroying(void)
 {
 	assert(_Faction != nullptr);
-	assert(_FactionDestroyingConnection.IsValid() == true);
-	_FactionDestroyingConnection.Disconnect();
-	assert(_FactionDestroyingConnection.IsValid() == false);
 	_Faction = nullptr;
+	assert(m_FactionDestroyingConnection.IsValid() == true);
+	m_FactionDestroyingConnection.Disconnect();
+	assert(m_FactionDestroyingConnection.IsValid() == false);
 }
 
 void Planet::_UpdateVisualization(Visualization * Visualization)

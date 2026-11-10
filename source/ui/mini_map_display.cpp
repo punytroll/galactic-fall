@@ -55,22 +55,23 @@ UI::MiniMapDisplay::MiniMapDisplay(void) :
 UI::MiniMapDisplay::~MiniMapDisplay(void)
 {
 	assert(_Character == nullptr);
-	assert(_CharacterDestroyingConnection.IsValid() == false);
+	assert(m_CharacterDestroyingConnection.IsValid() == false);
 }
 
 void UI::MiniMapDisplay::SetCharacter(Character * Character)
 {
 	if(_Character != nullptr)
 	{
-		assert(_CharacterDestroyingConnection.IsValid() == true);
-		_CharacterDestroyingConnection.Disconnect();
 		_Character = nullptr;
+		assert(m_CharacterDestroyingConnection.IsValid() == true);
+		m_CharacterDestroyingConnection.Disconnect();
 	}
-	assert(_CharacterDestroyingConnection.IsValid() == false);
+	assert(m_CharacterDestroyingConnection.IsValid() == false);
 	if(Character != nullptr)
 	{
 		_Character = Character;
-		_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::MiniMapDisplay::_OnCharacterDestroying, this));
+		m_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::MiniMapDisplay::_OnCharacterDestroying, this));
+		assert(m_CharacterDestroyingConnection.IsValid() == true);
 	}
 	_ClearView();
 	_SetupView();
@@ -173,9 +174,9 @@ void UI::MiniMapDisplay::_OnCharacterDestroying(void)
 {
 	assert(_Character != nullptr);
 	_Character = nullptr;
-	assert(_CharacterDestroyingConnection.IsValid() == true);
-	_CharacterDestroyingConnection.Disconnect();
-	assert(_CharacterDestroyingConnection.IsValid() == false);
+	assert(m_CharacterDestroyingConnection.IsValid() == true);
+	m_CharacterDestroyingConnection.Disconnect();
+	assert(m_CharacterDestroyingConnection.IsValid() == false);
 }
 
 void UI::MiniMapDisplay::_OnDestroying(UI::Event & DestroyingEvent)
@@ -185,11 +186,11 @@ void UI::MiniMapDisplay::_OnDestroying(UI::Event & DestroyingEvent)
 		_ClearView();
 		if(_Character != nullptr)
 		{
-			assert(_CharacterDestroyingConnection.IsValid() == true);
-			_CharacterDestroyingConnection.Disconnect();
 			_Character = nullptr;
+			assert(m_CharacterDestroyingConnection.IsValid() == true);
+			m_CharacterDestroyingConnection.Disconnect();
 		}
-		assert(_CharacterDestroyingConnection.IsValid() == false);
+		assert(m_CharacterDestroyingConnection.IsValid() == false);
 	}
 }
 

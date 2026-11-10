@@ -53,15 +53,16 @@ void UI::ScannerDisplay::SetTarget(Object * Target)
 		if(_Target != nullptr)
 		{
 			_Clear();
-            assert(_TargetDestroyingConnection.IsValid() == true);
-			_TargetDestroyingConnection.Disconnect();
-            assert(_TargetDestroyingConnection.IsValid() == false);
 			_Target = nullptr;
+			assert(m_TargetDestroyingConnection.IsValid() == true);
+			m_TargetDestroyingConnection.Disconnect();
 		}
+		assert(m_TargetDestroyingConnection.IsValid() == false);
 		if(Target != nullptr)
 		{
 			_Target = Target;
-			_TargetDestroyingConnection = _Target->ConnectDestroyingCallback(std::bind(&UI::ScannerDisplay::_OnTargetDestroying, this));
+			m_TargetDestroyingConnection = _Target->ConnectDestroyingCallback(std::bind(&UI::ScannerDisplay::_OnTargetDestroying, this));
+			assert(m_TargetDestroyingConnection.IsValid() == true);
 			_Setup();
 		}
 	}
@@ -121,7 +122,11 @@ void UI::ScannerDisplay::_OnDestroyInScene(Graphics::Node * Node)
 void UI::ScannerDisplay::_OnTargetDestroying(void)
 {
 	_Clear();
+	assert(_Target != nullptr);
 	_Target = nullptr;
+	assert(m_TargetDestroyingConnection.IsValid() == true);
+	m_TargetDestroyingConnection.Disconnect();
+	assert(m_TargetDestroyingConnection.IsValid() == false);
 }
 
 void UI::ScannerDisplay::_Setup(void)

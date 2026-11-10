@@ -44,28 +44,30 @@ Shot::~Shot(void)
 {
 	if(_Shooter != nullptr)
 	{
-		assert(_ShooterDestroyingConnection.IsValid() == true);
-		_ShooterDestroyingConnection.Disconnect();
 		_Shooter = nullptr;
+		assert(m_ShooterDestroyingConnection.IsValid() == true);
+		m_ShooterDestroyingConnection.Disconnect();
 	}
-	assert(_ShooterDestroyingConnection.IsValid() == false);
+	assert(m_ShooterDestroyingConnection.IsValid() == false);
 }
 
 void Shot::SetShooter(Object * Shooter)
 {
-	assert((Shooter != nullptr) && (_Shooter == nullptr) && (_ShooterDestroyingConnection.IsValid() == false));
+	assert(Shooter != nullptr);
+	assert(_Shooter == nullptr);
 	_Shooter = Shooter;
-	_ShooterDestroyingConnection = _Shooter->ConnectDestroyingCallback(std::bind(&Shot::_OnShooterDestroying, this));
-	assert(_ShooterDestroyingConnection.IsValid() == true);
+	assert(m_ShooterDestroyingConnection.IsValid() == false);
+	m_ShooterDestroyingConnection = _Shooter->ConnectDestroyingCallback(std::bind(&Shot::_OnShooterDestroying, this));
+	assert(m_ShooterDestroyingConnection.IsValid() == true);
 }
 
 void Shot::_OnShooterDestroying(void)
 {
 	assert(_Shooter != nullptr);
-	assert(_ShooterDestroyingConnection.IsValid() == true);
-	_ShooterDestroyingConnection.Disconnect();
-	assert(_ShooterDestroyingConnection.IsValid() == false);
 	_Shooter = nullptr;
+	assert(m_ShooterDestroyingConnection.IsValid() == true);
+	m_ShooterDestroyingConnection.Disconnect();
+	assert(m_ShooterDestroyingConnection.IsValid() == false);
 }
 
 bool Shot::_Update(float Seconds)
