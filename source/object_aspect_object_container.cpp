@@ -42,7 +42,7 @@ void ObjectAspectObjectContainer::AddContent(Object * Content)
 	
 	assert(InsertionResult.second == true);
 	Content->SetContainer(_Object);
-	m_ContentAddedSignal(Content);
+	m_ContentAddedSignal.Emit(Content);
 }
 
 auto ObjectAspectObjectContainer::ConnectContentAddedCallback(std::function<void(Object *)> Callback) -> Signals::Connection
@@ -80,7 +80,7 @@ void ObjectAspectObjectContainer::RemoveContent(Object * Content)
 	assert(ContentIterator != _Content.end());
 	Content->SetContainer(0);
 	_Content.erase(ContentIterator);
-	m_ContentRemovedSignal(Content);
+	m_ContentRemovedSignal.Emit(Content);
 }
 
 void ObjectAspectObjectContainer::Destroy(void)

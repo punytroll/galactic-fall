@@ -92,6 +92,16 @@ namespace Signals
             Connection.m_Invalidate();
         }
         
+        auto Emit(ArgumentTypes ... Arguments) -> void
+        {
+            auto CopyCores = std::list<Signal::Core *>{m_Cores};
+            
+            for(auto Core : CopyCores)
+            {
+                Core->m_Callback(Arguments ...);
+            }
+        }
+        
         auto GetCallbacks() const -> std::list<std::function<auto (ArgumentTypes ...) -> ReturnType>>
         {
             auto Result = std::list<std::function<auto (ArgumentTypes ...) -> ReturnType>>{};
@@ -102,16 +112,6 @@ namespace Signals
             }
             
             return Result;
-        }
-        
-        auto operator()(ArgumentTypes ... Arguments) -> void
-        {
-            auto CopyCores = std::list<Event::Core *>{m_Cores};
-            
-            for(auto Core : CopyCores)
-            {
-                Core->m_Callback(Arguments ...);
-            }
         }
         
     private:

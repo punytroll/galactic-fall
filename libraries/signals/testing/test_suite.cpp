@@ -74,7 +74,7 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     {
         auto Signal = Signals::Signal<auto () -> void>{};
         
-        Signal();
+        Signal.Emit();
     }
     
     std::cout << "-----------------------------" << std::endl;
@@ -83,7 +83,7 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
         auto Signal = Signals::Signal<auto () -> void>{};
         
         Signal.Connect(Signals::Testing::EmptyFunction);
-        Signal();
+        Signal.Emit();
     }
     
     std::cout << "-----------------------------" << std::endl;
@@ -164,7 +164,7 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
         auto Connection1 = Signal.Connect(Signals::Testing::EmptyFunction);
         auto Connection2 = Connection1;
         
-        Signal();
+        Signal.Emit();
     }
     
     std::cout << "-----------------------------" << std::endl;
@@ -298,9 +298,9 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
         auto Signal = Signals::Signal<auto () -> void>{};
         
         Signal.Connect(std::bind(Signals::Testing::IncrementingFunction, 8));
-        Signal();
+        Signal.Emit();
         assert(Signals::Testing::g_Global == 40);
-        Signal();
+        Signal.Emit();
         assert(Signals::Testing::g_Global == 48);
     }
     
@@ -312,10 +312,10 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
         auto Signal = Signals::Signal<auto () -> void>{};
         auto Connection = Signal.Connect(std::bind(Signals::Testing::IncrementingFunction, 8));
         
-        Signal();
+        Signal.Emit();
         assert(Signals::Testing::g_Global == 40);
         Signal.Disconnect(Connection);
-        Signal();
+        Signal.Emit();
         assert(Signals::Testing::g_Global == 40);
     }
     
@@ -327,10 +327,10 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
         auto Signal = Signals::Signal<auto () -> void>{};
         auto Connection = Signal.Connect(std::bind(Signals::Testing::IncrementingFunction, 8));
         
-        Signal();
+        Signal.Emit();
         assert(Signals::Testing::g_Global == 40);
         Connection.Disconnect();
-        Signal();
+        Signal.Emit();
         assert(Signals::Testing::g_Global == 40);
     }
     
@@ -365,16 +365,16 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
         auto Connection2 = Signal.Connect(std::bind(Signals::Testing::IncrementingFunction, 12));
         auto Connection3 = Signal.Connect(std::bind(Signals::Testing::IncrementingFunction, 7));
         
-        Signal();
+        Signal.Emit();
         assert(Signals::Testing::g_Global == 91);
         Signal.Disconnect(Connection3);
-        Signal();
+        Signal.Emit();
         assert(Signals::Testing::g_Global == 111);
         Signal.Disconnect(Connection1);
-        Signal();
+        Signal.Emit();
         assert(Signals::Testing::g_Global == 123);
         Signal.Disconnect(Connection2);
-        Signal();
+        Signal.Emit();
         assert(Signals::Testing::g_Global == 123);
     }
     
@@ -385,8 +385,8 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
         auto SelfDisconnecting = Signals::Testing::SelfDisconnecting{};
         
         SelfDisconnecting.Register(Signal);
-        Signal();
-        Signal();
+        Signal.Emit();
+        Signal.Emit();
     }
     
     std::cout << "-----------------------------" << std::endl;

@@ -55,10 +55,7 @@ namespace UI
             m_Button->SetWidth(width(this) - constant(Indentation));
             m_Button->SetHeight(height(this) - 2.0_c * 5.0_c);
             m_Button->SetText(m_Object->GetTypeIdentifier() + " / " + m_Object->GetSubTypeIdentifier());
-            m_Button->ConnectClickedCallback([this]()
-                                             {
-                                                 m_ObjectButtonClickedSignal();
-                                             });
+            m_Button->ConnectClickedCallback(std::bind(&Signals::Signal<auto () -> void>::Emit, std::addressof(m_ObjectButtonClickedSignal)));
             // add components
             AddSubWidget(m_Button);
         }

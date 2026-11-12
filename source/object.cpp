@@ -144,7 +144,7 @@ void Object::SetContainer(Object * Container)
 void Object::Destroy(void)
 {
 	// fire destroying event before aything is actually destroyed
-	m_DestroyingSignal();
+	m_DestroyingSignal.Emit();
 	// call destroy on all relevant aspects
 	if(_AspectVisualization != nullptr)
 	{

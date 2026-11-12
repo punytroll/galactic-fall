@@ -59,7 +59,7 @@ void UI::ListBox::SetSelectedItem(UI::ListBoxItem * ListBoxItem)
 	}
 	if(SelectedItemChanged == true)
 	{
-		m_SelectedItemChangedSignal();
+		m_SelectedItemChangedSignal.Emit();
 	}
 }
 
@@ -178,7 +178,7 @@ void UI::ListBox::_OnSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent)
 			{
 				GetContent()->SetHeight(0.0_c);
 			}
-			m_SelectedItemChangedSignal();
+			m_SelectedItemChangedSignal.Emit();
 		}
 	}
 }
@@ -195,7 +195,7 @@ void UI::ListBox::_OnItemMouseButton(UI::MouseButtonEvent & MouseButtonEvent, UI
 			}
 			_SelectedItem = Item;
 			_SelectedItem->SetSelected(true);
-			m_SelectedItemChangedSignal();
+			m_SelectedItemChangedSignal.Emit();
 		}
 	}
 }

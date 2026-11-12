@@ -37,7 +37,7 @@ Slot::~Slot(void)
 {
 	assert(_MountedObject == nullptr);
 	assert(m_MountedObjectDestroyingConnection.IsValid() == false);
-	m_DestroyingSignal();
+	m_DestroyingSignal.Emit();
 }
 
 void Slot::Mount(Object * TheObject)

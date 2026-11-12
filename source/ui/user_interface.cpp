@@ -754,7 +754,7 @@ void UI::UserInterface::Update(float RealTimeSeconds, float GameTimeSeconds)
         
         if((Widget.first->_SubWidgets.size() == 0) || (Widget.second == true))
         {
-            Widget.first->m_UpdatingSignal(RealTimeSeconds, GameTimeSeconds);
+            Widget.first->m_UpdatingSignal.Emit(RealTimeSeconds, GameTimeSeconds);
             ToDo.pop();
         }
         else

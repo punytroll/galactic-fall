@@ -206,7 +206,7 @@ void UI::ScrollBar::SetCurrentPosition(float CurrentPosition)
 		_CurrentPosition = CurrentPosition;
 		_AdjustTrackerPosition();
 		// fire the scroll position listeners
-		m_ScrollPositionChangedSignal();
+		m_ScrollPositionChangedSignal.Emit();
 	}
 }
 
