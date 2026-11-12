@@ -1,107 +1,97 @@
 /**
  * galactic-fall
- * Copyright (C) 2007-2018  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2007-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
-#include <algorithm>
+#include <ranges>
 
 #include "faction.h"
 
 class FactionStanding
 {
 public:
-	Signals::Connection m_DestroyingConnection;
-	Faction * _Faction;
-	float _Standing;
+    Signals::Connection m_DestroyingConnection;
+    Faction * m_Faction;
+    float m_Standing;
 };
 
-Faction::Faction(void)
+Faction::Faction()
 {
-	// initialize object aspects
-	AddAspectName();
+    // initialize object aspects
+    AddAspectName();
 }
 
-Faction::~Faction(void)
+Faction::~Faction()
 {
-	while(_FactionStandings.size() > 0)
-	{
-		auto FactionStanding{_FactionStandings.back()};
-		
-		assert(FactionStanding->_Faction != nullptr);
-		FactionStanding->_Faction = nullptr;
-		assert(FactionStanding->m_DestroyingConnection.IsValid() == true);
-		FactionStanding->m_DestroyingConnection.Disconnect();
-		assert(FactionStanding->m_DestroyingConnection.IsValid() == false);
-		delete FactionStanding;
-		_FactionStandings.pop_back();
-	}
+    while(m_FactionStandings.empty() == false)
+    {
+        auto FactionStanding = m_FactionStandings.back();
+        
+        assert(FactionStanding->m_Faction != nullptr);
+        FactionStanding->m_Faction = nullptr;
+        assert(FactionStanding->m_DestroyingConnection.IsValid() == true);
+        FactionStanding->m_DestroyingConnection.Disconnect();
+        assert(FactionStanding->m_DestroyingConnection.IsValid() == false);
+        delete FactionStanding;
+        m_FactionStandings.pop_back();
+    }
 }
 
-void Faction::AddFactionStanding(Faction * Faction, float Standing)
+auto Faction::AddFactionStanding(Faction * Faction, float Standing) -> void
 {
-	assert(Faction != nullptr);
-	for(auto FactionStanding : _FactionStandings)
-	{
-		assert(FactionStanding != nullptr);
-		assert(FactionStanding->_Faction != Faction);
-	}
-	
-	auto NewFactionStanding{new FactionStanding{}};
-	
-	NewFactionStanding->_Faction = Faction;
-	NewFactionStanding->_Standing = Standing;
-	NewFactionStanding->m_DestroyingConnection = Faction->ConnectDestroyingCallback(std::bind(&Faction::_OnFactionDestroying, this, Faction));
-	_FactionStandings.push_back(NewFactionStanding);
+    assert(Faction != nullptr);
+    for(auto FactionStanding : m_FactionStandings)
+    {
+        assert(FactionStanding != nullptr);
+        assert(FactionStanding->m_Faction != Faction);
+    }
+    
+    auto NewFactionStanding = new FactionStanding{};
+    
+    NewFactionStanding->m_Faction = Faction;
+    NewFactionStanding->m_Standing = Standing;
+    NewFactionStanding->m_DestroyingConnection = Faction->ConnectDestroyingCallback(std::bind(&Faction::m_OnFactionDestroying, this, Faction));
+    m_FactionStandings.push_back(NewFactionStanding);
 }
 
-float Faction::GetStanding(Faction * Faction) const
+auto Faction::GetStanding(Faction * Faction) const -> float
 {
-	// If we don't know the other faction, assume slightly above neutral to avoid conflict
-	// This default value might later be tweaked per faction in relation to how aggressive a faction is when meeting new factions.
-	auto Result{0.6f};
-	
-	assert(Faction != nullptr);
-	for(auto FactionStanding : _FactionStandings)
-	{
-		assert(FactionStanding != nullptr);
-		if(FactionStanding->_Faction == Faction)
-		{
-			Result = FactionStanding->_Standing;
-			
-			break;
-		}
-	}
-	
-	return Result;
+    // If we don't know the other faction, assume slightly above neutral to avoid conflict
+    // This default value might later be tweaked per faction in relation to how aggressive a faction is when meeting new factions.
+    auto Result = 0.6f;
+    
+    assert(Faction != nullptr);
+    for(auto FactionStanding : m_FactionStandings)
+    {
+        assert(FactionStanding != nullptr);
+        if(FactionStanding->m_Faction == Faction)
+        {
+            Result = FactionStanding->m_Standing;
+            
+            break;
+        }
+    }
+    
+    return Result;
 }
 
-void Faction::_OnFactionDestroying(Faction * Faction)
+auto Faction::m_OnFactionDestroying(Faction * Faction) -> void
 {
-	auto FactionStandingIterator{std::find_if(_FactionStandings.begin(), _FactionStandings.end(), [&] (FactionStanding * FactionStanding) { return FactionStanding->_Faction == Faction; })};
-	
-	assert(FactionStandingIterator != _FactionStandings.end());
-	
-	auto FactionStanding{*FactionStandingIterator};
-	
-	assert(FactionStanding->_Faction != nullptr);
-	FactionStanding->_Faction = nullptr;
-	assert(FactionStanding->m_DestroyingConnection.IsValid() == true);
-	FactionStanding->m_DestroyingConnection.Disconnect();
-	assert(FactionStanding->m_DestroyingConnection.IsValid() == false);
-	delete FactionStanding;
-	_FactionStandings.erase(FactionStandingIterator);
+    auto FactionStandingIterator = std::ranges::find_if(m_FactionStandings, [Faction](FactionStanding * FactionStanding)
+                                                                            {
+                                                                                return FactionStanding->m_Faction == Faction;
+                                                                            });
+    
+    assert(FactionStandingIterator != m_FactionStandings.end());
+    
+    auto FactionStanding = *FactionStandingIterator;
+    
+    assert(FactionStanding->m_Faction != nullptr);
+    FactionStanding->m_Faction = nullptr;
+    assert(FactionStanding->m_DestroyingConnection.IsValid() == true);
+    FactionStanding->m_DestroyingConnection.Disconnect();
+    assert(FactionStanding->m_DestroyingConnection.IsValid() == false);
+    delete FactionStanding;
+    m_FactionStandings.erase(FactionStandingIterator);
 }

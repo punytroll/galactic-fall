@@ -1,24 +1,11 @@
 /**
  * galactic-fall
- * Copyright (C) 2006-2018  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2006-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
-#ifndef FACTION_H
-#define FACTION_H
+#ifndef GALACTIC_FALL__SOURCE__FACTION_H
+#define GALACTIC_FALL__SOURCE__FACTION_H
 
 #include <vector>
 
@@ -30,30 +17,28 @@ class FactionStanding;
 class Faction : public Object
 {
 public:
-	Faction(void);
-	virtual ~Faction(void) override;
-	// queries
-	const Graphics::ColorRGBO & GetColor(void) const;
-	float GetStanding(Faction * Faction) const;
-	// modifiers
-	void AddFactionStanding(Faction * Faction, float Standing);
-	void SetColor(const Graphics::ColorRGBO & Color);
+    Faction();
+    ~Faction() override;
+    auto GetColor() const -> const Graphics::ColorRGBO &;
+    auto GetStanding(Faction * Faction) const -> float;
+    auto AddFactionStanding(Faction * Faction, float Standing) -> void;
+    auto SetColor(Graphics::ColorRGBO const & Color) -> void;
+    
 private:
-	// callbacks
-	void _OnFactionDestroying(Faction * Faction);
-	// member variables
-	Graphics::ColorRGBO _Color;
-	std::vector< FactionStanding * > _FactionStandings;
+    auto m_OnFactionDestroying(Faction * Faction) -> void;
+    
+    Graphics::ColorRGBO m_Color;
+    std::vector<FactionStanding *> m_FactionStandings;
 };
 
-inline const Graphics::ColorRGBO & Faction::GetColor(void) const
+inline auto Faction::GetColor() const -> Graphics::ColorRGBO const &
 {
-	return _Color;
+    return m_Color;
 }
 
-inline void Faction::SetColor(const Graphics::ColorRGBO & Color)
+inline auto Faction::SetColor(Graphics::ColorRGBO const & Color) -> void
 {
-	_Color = Color;
+    m_Color = Color;
 }
 
 #endif
