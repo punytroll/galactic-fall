@@ -50,8 +50,8 @@ public:
 private:
 	std::set< Object * > _Content;
 	Object * _Object;
-	Signals::Event<void, Object *> m_ContentAddedEvent;
-	Signals::Event<void, Object *> m_ContentRemovedEvent;
+	Signals::Event<auto (Object *) -> void> m_ContentAddedEvent;
+	Signals::Event<auto (Object *) -> void> m_ContentRemovedEvent;
 };
 
 inline const std::set< Object * > & ObjectAspectObjectContainer::GetContent(void) const

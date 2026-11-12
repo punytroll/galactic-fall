@@ -102,7 +102,7 @@ private:
 	ObjectAspectVisualization * _AspectVisualization;
 	// other
 	Object * _Container;
-	Signals::Event<void> m_DestroyingEvent;
+	Signals::Event<auto () -> void> m_DestroyingEvent;
 	std::string _SubTypeIdentifier;
 	std::string _TypeIdentifier;
 };

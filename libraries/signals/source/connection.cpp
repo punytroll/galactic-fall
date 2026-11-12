@@ -9,118 +9,128 @@
 #include <signals/connection.h>
 #include <signals/event.h>
 
-Signals::Connection::Core::Core(void) :
-    _Event(nullptr),
-    _IsValid(false),
-    _References(0)
+Signals::Connection::Core::~Core()
 {
+    assert(m_References == 0);
 }
 
-Signals::Connection::Core::~Core(void)
+Signals::Connection::Connection(Signals::Connection::Core * Core) :
+    m_Core{Core}
 {
-    assert(_IsValid == false);
-    assert(_References == 0);
+    assert(m_Core != nullptr);
+    m_Core->m_IsValid = true;
+    m_Core->m_References += 1;
 }
 
-Signals::Connection::Connection(void) :
-    _Core(nullptr)
+Signals::Connection::Connection(Signals::Connection const & Other) :
+    m_Core{Other.m_Core}
 {
-}
-
-Signals::Connection::Connection(Core * Core) :
-    _Core(Core)
-{
-    assert(_Core != nullptr);
-    _Core->_IsValid = true;
-    _Core->_References += 1;
-}
-
-Signals::Connection::Connection(const Connection & Connection) :
-    _Core(Connection._Core)
-{
-    if(_Core != nullptr)
+    if(m_Core != nullptr)
     {
-        assert(_Core->_References > 0);
-        _Core->_References += 1;
+        assert(m_Core->m_References > 0);
+        m_Core->m_References += 1;
     }
 }
 
-Signals::Connection & Signals::Connection::operator=(const Connection & Other)
+Signals::Connection::Connection(Signals::Connection && Other) :
+    m_Core{Other.m_Core}
 {
-    if(this != &Other)
+    if(m_Core != nullptr)
     {
-        if(_Core != nullptr)
+        assert(m_Core->m_References > 0);
+        Other.m_Core = nullptr;
+    }
+}
+
+auto Signals::Connection::operator=(Signals::Connection const & Other) -> Signals::Connection &
+{
+    if(this != std::addressof(Other))
+    {
+        if(m_Core != nullptr)
         {
-            assert(_Core->_References > 0);
-            _Core->_References -= 1;
-            if(_Core->_References == 0)
+            assert(m_Core->m_References > 0);
+            m_Core->m_References -= 1;
+            if(m_Core->m_References == 0)
             {
-                _Core->_IsValid = false;
-                delete _Core;
+                delete m_Core;
             }
-            _Core = nullptr;
+            m_Core = nullptr;
         }
-        if(Other._Core != nullptr)
+        if(Other.m_Core != nullptr)
         {
-            assert(Other._Core->_References > 0);
-            _Core = Other._Core;
-            _Core->_References += 1;
+            assert(Other.m_Core->m_References > 0);
+            m_Core = Other.m_Core;
+            m_Core->m_References += 1;
         }
     }
     
     return *this;
 }
 
-Signals::Connection::~Connection(void)
+auto Signals::Connection::operator=(Signals::Connection && Other) -> Signals::Connection &
 {
-    if(_Core != nullptr)
+    if(this != std::addressof(Other))
     {
-        assert(_Core->_References > 0);
-        _Core->_References -= 1;
-        if(_Core->_References == 0)
+        if(m_Core != nullptr)
         {
-            _Core->_IsValid = false;
-            delete _Core;
+            assert(m_Core->m_References > 0);
+            m_Core->m_References -= 1;
+            if(m_Core->m_References == 0)
+            {
+                delete m_Core;
+            }
+            m_Core = nullptr;
         }
-        _Core = nullptr;
+        if(Other.m_Core != nullptr)
+        {
+            assert(Other.m_Core->m_References > 0);
+            m_Core = Other.m_Core;
+            Other.m_Core = nullptr;
+        }
+    }
+    
+    return *this;
+}
+
+Signals::Connection::~Connection()
+{
+    Clear();
+}
+
+auto Signals::Connection::Clear() -> void
+{
+    if(m_Core != nullptr)
+    {
+        assert(m_Core->m_References > 0);
+        m_Core->m_References -= 1;
+        if(m_Core->m_References == 0)
+        {
+            delete m_Core;
+        }
+        m_Core = nullptr;
     }
 }
 
-void Signals::Connection::Clear(void)
+auto Signals::Connection::Disconnect() -> void
 {
-    if(_Core != nullptr)
-    {
-        assert(_Core->_References > 0);
-        _Core->_References -= 1;
-        if(_Core->_References == 0)
-        {
-            _Core->_IsValid = false;
-            delete _Core;
-        }
-        _Core = nullptr;
-    }
+    assert(m_Core != nullptr);
+    assert(m_Core->m_Event != nullptr);
+    assert(m_Core->m_IsValid == true);
+    m_Core->m_Event->Disconnect(*this);
 }
 
-void Signals::Connection::Disconnect(void)
+auto Signals::Connection::m_Invalidate() -> void
 {
-    assert(_Core != nullptr);
-    assert(_Core->_Event != nullptr);
-    assert(_Core->_IsValid == true);
-    _Core->_Event->Disconnect(*this);
-}
-
-void Signals::Connection::_Invalidate(void)
-{
-    if(_Core != nullptr)
+    if(m_Core != nullptr)
     {
-        assert(_Core->_References > 0);
-        _Core->_Event = nullptr;
-        _Core->_IsValid = false;
-        _Core->_References -= 1;
-        if(_Core->_References == 0)
+        assert(m_Core->m_References > 0);
+        m_Core->m_Event = nullptr;
+        m_Core->m_IsValid = false;
+        m_Core->m_References -= 1;
+        if(m_Core->m_References == 0)
         {
-            delete _Core;
+            delete m_Core;
         }
-        _Core = nullptr;
+        m_Core = nullptr;
     }
 }

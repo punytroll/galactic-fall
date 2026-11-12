@@ -43,7 +43,7 @@ namespace UI
 		void _OnMouseLeave(void);
 		// member variables
 		// events
-		Signals::Event<void> m_ClickedEvent;
+		Signals::Event<auto () -> void> m_ClickedEvent;
 	};
 }
 

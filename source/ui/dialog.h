@@ -44,7 +44,7 @@ namespace UI
 	private:
 		// member variables
 		//events
-		Signals::Event<bool, UI::Dialog::ClosingReason> m_ClosingEvent;
+		Signals::Event<auto (UI::Dialog::ClosingReason) -> bool> m_ClosingEvent;
 	};
 }
 

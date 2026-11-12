@@ -10,45 +10,49 @@
 namespace Signals
 {
     class EventBase;
-
+    
     class Connection
     {
     public:
-        template < typename ReturnType, typename ... Types >
+        template<typename Signature>
         friend class Event;
         
         class Core
         {
         public:
-            Core(void);
-            virtual ~Core(void);
-            EventBase * _Event;
-            bool _IsValid;
-            int _References;
+            virtual ~Core();
+            
+            EventBase * m_Event = nullptr;
+            bool m_IsValid = false;
+            int m_References = 0;
         };
         
-        Connection(void);
-        Connection(Core * Core);
-        Connection(const Connection & Connection);
-        Connection & operator=(const Connection & Other);
-        ~Connection(void);
-        void Clear(void);
-        void Disconnect(void);
-        bool IsValid(void);
-        Core * GetCore(void);
+        Connection() = default;
+        Connection(Signals::Connection::Core * Core);
+        Connection(Signals::Connection const & Other);
+        Connection(Signals::Connection && Other);
+        auto operator=(Signals::Connection const & Other) -> Signals::Connection &;
+        auto operator=(Signals::Connection && Other) -> Signals::Connection &;
+        ~Connection();
+        auto Clear() -> void;
+        auto Disconnect() -> void;
+        auto IsValid() -> bool;
+        auto GetCore() -> Signals::Connection::Core *;
+        
     private:
-        void _Invalidate(void);
-        Core * _Core;
+        auto m_Invalidate() -> void;
+        
+        Core * m_Core = nullptr;
     };
-
-    inline bool Connection::IsValid(void)
+    
+    inline auto Connection::IsValid() -> bool
     {
-        return (_Core != nullptr) && (_Core->_IsValid == true);
+        return (m_Core != nullptr) && (m_Core->m_IsValid == true);
     }
-
-    inline Connection::Core * Connection::GetCore(void)
+    
+    inline auto Connection::GetCore() -> Signals::Connection::Core *
     {
-        return _Core;
+        return m_Core;
     }
 }
 

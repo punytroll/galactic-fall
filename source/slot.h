@@ -56,7 +56,7 @@ public:
 	auto ConnectDestroyingCallback(std::function<void()> Callback) -> Signals::Connection;
 private:
 	void _OnMountedObjectDestroying(void);
-	Signals::Event<void> m_DestroyingEvent;
+	Signals::Event<auto () -> void> m_DestroyingEvent;
 	std::string _Identifier;
 	std::string _Name;
 	Object * _MountedObject;

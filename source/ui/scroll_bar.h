@@ -79,7 +79,7 @@ namespace UI
 		float _MinimumPosition;
 		float _StepSize;
 		// events
-		Signals::Event<void> m_ScrollPositionChangedEvent;
+		Signals::Event<auto () -> void> m_ScrollPositionChangedEvent;
 	};
 
 	inline ScrollBar::Alignment ScrollBar::GetAlignment(void) const

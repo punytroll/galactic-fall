@@ -123,19 +123,19 @@ namespace UI
         bool _Visible;
         UI::Dimension _Width;
         // events
-        Signals::Event<void, UI::Event &> m_DestroyingEvent;
-        Signals::Event<void, UI::Event &> m_HeightChangedEvent;
-        Signals::Event<void, UI::KeyEvent &> m_KeyEvent;
-        Signals::Event<void, UI::Event &> m_LeftChangedEvent;
-        Signals::Event<void, UI::MouseButtonEvent &> m_MouseButtonEvent;
-        Signals::Event<void, UI::Event &> m_MouseEnterEvent;
-        Signals::Event<void, UI::Event &> m_MouseLeaveEvent;
-        Signals::Event<void, UI::MouseMoveEvent &> m_MouseMoveEvent;
-        Signals::Event<void, UI::SubWidgetEvent &> m_SubWidgetAddedEvent;
-        Signals::Event<void, UI::SubWidgetEvent &> m_SubWidgetRemovedEvent;
-        Signals::Event<void, UI::Event &> m_TopChangedEvent;
-        Signals::Event<void, float, float> m_UpdatingEvent;
-        Signals::Event<void, UI::Event &> m_WidthChangedEvent;
+        Signals::Event<auto (UI::Event &) -> void> m_DestroyingEvent;
+        Signals::Event<auto (UI::Event &) -> void> m_HeightChangedEvent;
+        Signals::Event<auto (UI::KeyEvent &) -> void> m_KeyEvent;
+        Signals::Event<auto (UI::Event &) -> void> m_LeftChangedEvent;
+        Signals::Event<auto (UI::MouseButtonEvent &) -> void> m_MouseButtonEvent;
+        Signals::Event<auto (UI::Event &) -> void> m_MouseEnterEvent;
+        Signals::Event<auto (UI::Event &) -> void> m_MouseLeaveEvent;
+        Signals::Event<auto (UI::MouseMoveEvent &) -> void> m_MouseMoveEvent;
+        Signals::Event<auto (UI::SubWidgetEvent &) -> void> m_SubWidgetAddedEvent;
+        Signals::Event<auto (UI::SubWidgetEvent &) -> void> m_SubWidgetRemovedEvent;
+        Signals::Event<auto (UI::Event &) -> void> m_TopChangedEvent;
+        Signals::Event<auto (float, float) -> void> m_UpdatingEvent;
+        Signals::Event<auto (UI::Event &) -> void> m_WidthChangedEvent;
         // static manager properties
         static std::list< Widget * > _DestroyedWidgets;
         static std::stack< std::tuple< float, float, float, float > > _ClippingRectangles;

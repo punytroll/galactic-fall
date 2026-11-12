@@ -93,7 +93,7 @@ namespace UI
         }
         
         UI::TextButton * m_Button;
-        Signals::Event<void> m_ObjectButtonClickedEvent;
+        Signals::Event<auto () -> void> m_ObjectButtonClickedEvent;
         Object * m_Object;
         Signals::Connection m_ObjectDestroyingConnection;
     };

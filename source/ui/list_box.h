@@ -43,7 +43,7 @@ namespace UI
 		void _OnSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent);
 		void _OnSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent);
 		// events
-		Signals::Event<void> m_SelectedItemChangedEvent;
+		Signals::Event<auto () -> void> m_SelectedItemChangedEvent;
 		// components
 		UI::ListBoxItem * _SelectedItem;
 	};
