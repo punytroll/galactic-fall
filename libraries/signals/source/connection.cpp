@@ -7,7 +7,7 @@
 #include <cassert>
 
 #include <signals/connection.h>
-#include <signals/event.h>
+#include <signals/signal.h>
 
 Signals::Connection::Core::~Core()
 {
@@ -114,9 +114,9 @@ auto Signals::Connection::Clear() -> void
 auto Signals::Connection::Disconnect() -> void
 {
     assert(m_Core != nullptr);
-    assert(m_Core->m_Event != nullptr);
+    assert(m_Core->m_Signal != nullptr);
     assert(m_Core->m_IsValid == true);
-    m_Core->m_Event->Disconnect(*this);
+    m_Core->m_Signal->Disconnect(*this);
 }
 
 auto Signals::Connection::m_Invalidate() -> void
@@ -124,7 +124,7 @@ auto Signals::Connection::m_Invalidate() -> void
     if(m_Core != nullptr)
     {
         assert(m_Core->m_References > 0);
-        m_Core->m_Event = nullptr;
+        m_Core->m_Signal = nullptr;
         m_Core->m_IsValid = false;
         m_Core->m_References -= 1;
         if(m_Core->m_References == 0)

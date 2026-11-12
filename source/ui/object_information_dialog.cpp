@@ -8,6 +8,8 @@
 
 #include <graphics/color_rgbo.h>
 
+#include <signals/signal.h>
+
 #include <string_cast/string_cast.h>
 
 #include "../globals.h"
@@ -55,7 +57,7 @@ namespace UI
             m_Button->SetText(m_Object->GetTypeIdentifier() + " / " + m_Object->GetSubTypeIdentifier());
             m_Button->ConnectClickedCallback([this]()
                                              {
-                                                 m_ObjectButtonClickedEvent();
+                                                 m_ObjectButtonClickedSignal();
                                              });
             // add components
             AddSubWidget(m_Button);
@@ -63,7 +65,7 @@ namespace UI
         
         auto ConnectObjectButtonClickedCallback(std::function<void()> ClickedHandler) -> Signals::Connection
         {
-            return m_ObjectButtonClickedEvent.Connect(ClickedHandler);
+            return m_ObjectButtonClickedSignal.Connect(ClickedHandler);
         }
         
     private:
@@ -93,7 +95,7 @@ namespace UI
         }
         
         UI::TextButton * m_Button;
-        Signals::Event<auto () -> void> m_ObjectButtonClickedEvent;
+        Signals::Signal<auto () -> void> m_ObjectButtonClickedSignal;
         Object * m_Object;
         Signals::Connection m_ObjectDestroyingConnection;
     };

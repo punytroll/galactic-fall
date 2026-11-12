@@ -20,6 +20,8 @@
 #ifndef UI_DIALOG_H
 #define UI_DIALOG_H
 
+#include <signals/signal.h>
+
 #include "window.h"
 
 namespace UI
@@ -42,9 +44,7 @@ namespace UI
 		// helper functions and actions
 		void _Close(UI::Dialog::ClosingReason ClosingReason);
 	private:
-		// member variables
-		//events
-		Signals::Event<auto (UI::Dialog::ClosingReason) -> bool> m_ClosingEvent;
+		Signals::Signal<auto (UI::Dialog::ClosingReason) -> bool> m_ClosingSignal;
 	};
 }
 

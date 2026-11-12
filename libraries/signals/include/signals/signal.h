@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: MIT
 **/
 
-#ifndef GALACTIC_FALL__LIBRARIES__SIGNALS__INCLUDE__SIGNALS__EVENT_H
-#define GALACTIC_FALL__LIBRARIES__SIGNALS__INCLUDE__SIGNALS__EVENT_H
+#ifndef GALACTIC_FALL__LIBRARIES__SIGNALS__INCLUDE__SIGNALS__SIGNAL_H
+#define GALACTIC_FALL__LIBRARIES__SIGNALS__INCLUDE__SIGNALS__SIGNAL_H
 
 #include <cassert>
 #include <functional>
@@ -15,49 +15,49 @@
 
 namespace Signals
 {
-    class EventBase
+    class SignalBase
     {
     public:
-        virtual ~EventBase() = default;
+        virtual ~SignalBase() = default;
         virtual auto Disconnect(Signals::Connection & Connection) -> void = 0;
     };
     
     template<typename>
-    inline constexpr auto UnsupportedEventSignature = false;
+    inline constexpr auto UnsupportedSignalSignature = false;
     
     template<typename Signature>
-    class Event
+    class Signal
     {
-        static_assert(UnsupportedEventSignature<Signature>, "Signals::Event requires a function signature.");
+        static_assert(UnsupportedSignalSignature<Signature>, "Signals::Signal requires a function signature tempalte argument.");
     };
     
     template<typename ReturnType, typename ... ArgumentTypes>
-    class Event<auto (ArgumentTypes ...) -> ReturnType> : public EventBase
+    class Signal<auto (ArgumentTypes ...) -> ReturnType> : public SignalBase
     {
     private:
         class Core : public Connection::Core
         {
         public:
             typename std::function<auto (ArgumentTypes ...) -> ReturnType> m_Callback;
-            typename std::list<Event::Core *>::iterator m_Iterator;
+            typename std::list<Signal::Core *>::iterator m_Iterator;
         };
         
     public:
-        Event() = default;
-        Event(Signals::Event<auto (ArgumentTypes ...) -> ReturnType> const & Other) = delete;
-        Event(Signals::Event<auto (ArgumentTypes ...) -> ReturnType> && Other) = delete;
-        auto operator=(Signals::Event<auto (ArgumentTypes ...) -> ReturnType> const & Other) -> Signals::Event<auto (ArgumentTypes ...) -> ReturnType> = delete;
-        auto operator=(Signals::Event<auto (ArgumentTypes ...) -> ReturnType> && Other) -> Signals::Event<auto (ArgumentTypes ...) -> ReturnType> = delete;
+        Signal() = default;
+        Signal(Signals::Signal<auto (ArgumentTypes ...) -> ReturnType> const & Other) = delete;
+        Signal(Signals::Signal<auto (ArgumentTypes ...) -> ReturnType> && Other) = delete;
+        auto operator=(Signals::Signal<auto (ArgumentTypes ...) -> ReturnType> const & Other) -> Signals::Signal<auto (ArgumentTypes ...) -> ReturnType> = delete;
+        auto operator=(Signals::Signal<auto (ArgumentTypes ...) -> ReturnType> && Other) -> Signals::Signal<auto (ArgumentTypes ...) -> ReturnType> = delete;
         
-        ~Event() override
+        ~Signal() override
         {
             while(m_Cores.empty() == false)
             {
                 auto Core = m_Cores.back();
                 
                 m_Cores.pop_back();
-                assert(Core->m_Event == this);
-                Core->m_Event = nullptr;
+                assert(Core->m_Signal == this);
+                Core->m_Signal = nullptr;
                 Core->m_IsValid = false;
                 Core->m_References -= 1;
                 if(Core->m_References == 0)
@@ -69,10 +69,10 @@ namespace Signals
         
         auto Connect(std::function<auto (ArgumentTypes ...) -> ReturnType> Callback) -> Signals::Connection
         {
-            auto Core = new Event::Core{};
+            auto Core = new Signal::Core{};
             
             Core->m_Callback = Callback;
-            Core->m_Event = this;
+            Core->m_Signal = this;
             Core->m_IsValid = true;
             Core->m_References += 1;
             m_Cores.push_back(Core);
@@ -83,7 +83,7 @@ namespace Signals
         
         auto Disconnect(Signals::Connection & Connection) -> void override
         {
-            auto Core = static_cast<Event::Core *>(Connection.GetCore());
+            auto Core = static_cast<Signal::Core *>(Connection.GetCore());
             
             assert(Core->m_References > 0);
             Core->m_References -= 1;
@@ -115,7 +115,7 @@ namespace Signals
         }
         
     private:
-        std::list<Event::Core *> m_Cores;
+        std::list<Signal::Core *> m_Cores;
     };
 }
 

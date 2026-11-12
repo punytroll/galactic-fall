@@ -9,20 +9,20 @@
 
 namespace Signals
 {
-    class EventBase;
+    class SignalBase;
     
     class Connection
     {
     public:
         template<typename Signature>
-        friend class Event;
+        friend class Signal;
         
         class Core
         {
         public:
             virtual ~Core();
             
-            EventBase * m_Event = nullptr;
+            SignalBase * m_Signal = nullptr;
             bool m_IsValid = false;
             int m_References = 0;
         };

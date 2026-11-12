@@ -37,7 +37,7 @@ Slot::~Slot(void)
 {
 	assert(_MountedObject == nullptr);
 	assert(m_MountedObjectDestroyingConnection.IsValid() == false);
-	m_DestroyingEvent();
+	m_DestroyingSignal();
 }
 
 void Slot::Mount(Object * TheObject)
@@ -94,5 +94,5 @@ void Slot::Unmount(void)
 
 auto Slot::ConnectDestroyingCallback(std::function<void()> Callback) -> Signals::Connection
 {
-	return m_DestroyingEvent.Connect(Callback);
+	return m_DestroyingSignal.Connect(Callback);
 }

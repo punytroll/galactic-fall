@@ -20,7 +20,7 @@
 #ifndef UI_BUTTON_H
 #define UI_BUTTON_H
 
-#include <string>
+#include <signals/signal.h>
 
 #include "widget.h"
 
@@ -43,7 +43,7 @@ namespace UI
 		void _OnMouseLeave(void);
 		// member variables
 		// events
-		Signals::Event<auto () -> void> m_ClickedEvent;
+		Signals::Signal<auto () -> void> m_ClickedSignal;
 	};
 }
 

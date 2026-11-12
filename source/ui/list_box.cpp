@@ -37,7 +37,7 @@ UI::ListBox::ListBox(void) :
 
 auto UI::ListBox::ConnectSelectedItemChangedCallback(std::function<void()> SelectedItemChangedHandler) -> Signals::Connection
 {
-	return m_SelectedItemChangedEvent.Connect(SelectedItemChangedHandler);
+	return m_SelectedItemChangedSignal.Connect(SelectedItemChangedHandler);
 }
 
 void UI::ListBox::SetSelectedItem(UI::ListBoxItem * ListBoxItem)
@@ -59,7 +59,7 @@ void UI::ListBox::SetSelectedItem(UI::ListBoxItem * ListBoxItem)
 	}
 	if(SelectedItemChanged == true)
 	{
-		m_SelectedItemChangedEvent();
+		m_SelectedItemChangedSignal();
 	}
 }
 
@@ -178,7 +178,7 @@ void UI::ListBox::_OnSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent)
 			{
 				GetContent()->SetHeight(0.0_c);
 			}
-			m_SelectedItemChangedEvent();
+			m_SelectedItemChangedSignal();
 		}
 	}
 }
@@ -195,7 +195,7 @@ void UI::ListBox::_OnItemMouseButton(UI::MouseButtonEvent & MouseButtonEvent, UI
 			}
 			_SelectedItem = Item;
 			_SelectedItem->SetSelected(true);
-			m_SelectedItemChangedEvent();
+			m_SelectedItemChangedSignal();
 		}
 	}
 }

@@ -25,7 +25,7 @@
 #include <set>
 #include <string>
 
-#include <signals/event.h>
+#include <signals/signal.h>
 
 class Message;
 class ObjectAspectAccessory;
@@ -102,7 +102,7 @@ private:
 	ObjectAspectVisualization * _AspectVisualization;
 	// other
 	Object * _Container;
-	Signals::Event<auto () -> void> m_DestroyingEvent;
+	Signals::Signal<auto () -> void> m_DestroyingSignal;
 	std::string _SubTypeIdentifier;
 	std::string _TypeIdentifier;
 };

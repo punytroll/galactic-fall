@@ -25,14 +25,14 @@ UI::Dialog::Dialog()
 
 auto UI::Dialog::ConnectClosingCallback(std::function<bool(UI::Dialog::ClosingReason)> Callback) -> Signals::Connection
 {
-	return m_ClosingEvent.Connect(Callback);
+	return m_ClosingSignal.Connect(Callback);
 }
 
 void UI::Dialog::_Close(UI::Dialog::ClosingReason ClosingReason)
 {
-	bool CallDestroy(true);
+	auto CallDestroy = true;
 	
-	for(auto & Callback : m_ClosingEvent.GetCallbacks())
+	for(auto & Callback : m_ClosingSignal.GetCallbacks())
 	{
 		CallDestroy &= Callback(ClosingReason);
 	}

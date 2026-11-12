@@ -20,6 +20,8 @@
 #ifndef UI_SCROLL_BAR_H
 #define UI_SCROLL_BAR_H
 
+#include <signals/signal.h>
+
 #include "widget.h"
 
 namespace UI
@@ -79,7 +81,7 @@ namespace UI
 		float _MinimumPosition;
 		float _StepSize;
 		// events
-		Signals::Event<auto () -> void> m_ScrollPositionChangedEvent;
+		Signals::Signal<auto () -> void> m_ScrollPositionChangedSignal;
 	};
 
 	inline ScrollBar::Alignment ScrollBar::GetAlignment(void) const

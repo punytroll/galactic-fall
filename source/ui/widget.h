@@ -14,7 +14,7 @@
 
 #include <algebra/vector2f.h>
 
-#include <signals/event.h>
+#include <signals/signal.h>
 
 #include "dimension.h"
 #include "dimension_operators.h"
@@ -123,19 +123,19 @@ namespace UI
         bool _Visible;
         UI::Dimension _Width;
         // events
-        Signals::Event<auto (UI::Event &) -> void> m_DestroyingEvent;
-        Signals::Event<auto (UI::Event &) -> void> m_HeightChangedEvent;
-        Signals::Event<auto (UI::KeyEvent &) -> void> m_KeyEvent;
-        Signals::Event<auto (UI::Event &) -> void> m_LeftChangedEvent;
-        Signals::Event<auto (UI::MouseButtonEvent &) -> void> m_MouseButtonEvent;
-        Signals::Event<auto (UI::Event &) -> void> m_MouseEnterEvent;
-        Signals::Event<auto (UI::Event &) -> void> m_MouseLeaveEvent;
-        Signals::Event<auto (UI::MouseMoveEvent &) -> void> m_MouseMoveEvent;
-        Signals::Event<auto (UI::SubWidgetEvent &) -> void> m_SubWidgetAddedEvent;
-        Signals::Event<auto (UI::SubWidgetEvent &) -> void> m_SubWidgetRemovedEvent;
-        Signals::Event<auto (UI::Event &) -> void> m_TopChangedEvent;
-        Signals::Event<auto (float, float) -> void> m_UpdatingEvent;
-        Signals::Event<auto (UI::Event &) -> void> m_WidthChangedEvent;
+        Signals::Signal<auto (UI::Event &) -> void> m_DestroyingSignal;
+        Signals::Signal<auto (UI::Event &) -> void> m_HeightChangedSignal;
+        Signals::Signal<auto (UI::KeyEvent &) -> void> m_KeySignal;
+        Signals::Signal<auto (UI::Event &) -> void> m_LeftChangedSignal;
+        Signals::Signal<auto (UI::MouseButtonEvent &) -> void> m_MouseButtonSignal;
+        Signals::Signal<auto (UI::Event &) -> void> m_MouseEnterSignal;
+        Signals::Signal<auto (UI::Event &) -> void> m_MouseLeaveSignal;
+        Signals::Signal<auto (UI::MouseMoveEvent &) -> void> m_MouseMoveSignal;
+        Signals::Signal<auto (UI::SubWidgetEvent &) -> void> m_SubWidgetAddedSignal;
+        Signals::Signal<auto (UI::SubWidgetEvent &) -> void> m_SubWidgetRemovedSignal;
+        Signals::Signal<auto (UI::Event &) -> void> m_TopChangedSignal;
+        Signals::Signal<auto (float, float) -> void> m_UpdatingSignal;
+        Signals::Signal<auto (UI::Event &) -> void> m_WidthChangedSignal;
         // static manager properties
         static std::list< Widget * > _DestroyedWidgets;
         static std::stack< std::tuple< float, float, float, float > > _ClippingRectangles;

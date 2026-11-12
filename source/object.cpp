@@ -132,7 +132,7 @@ void Object::AddAspectVisualization(void)
 
 auto Object::ConnectDestroyingCallback(std::function<void()> Callback) -> Signals::Connection
 {
-	return m_DestroyingEvent.Connect(Callback);
+	return m_DestroyingSignal.Connect(Callback);
 }
 
 void Object::SetContainer(Object * Container)
@@ -144,7 +144,7 @@ void Object::SetContainer(Object * Container)
 void Object::Destroy(void)
 {
 	// fire destroying event before aything is actually destroyed
-	m_DestroyingEvent();
+	m_DestroyingSignal();
 	// call destroy on all relevant aspects
 	if(_AspectVisualization != nullptr)
 	{

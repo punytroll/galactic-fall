@@ -25,7 +25,7 @@
 #include <set>
 #include <string>
 
-#include <signals/event.h>
+#include <signals/signal.h>
 
 class Object;
 
@@ -50,8 +50,8 @@ public:
 private:
 	std::set< Object * > _Content;
 	Object * _Object;
-	Signals::Event<auto (Object *) -> void> m_ContentAddedEvent;
-	Signals::Event<auto (Object *) -> void> m_ContentRemovedEvent;
+	Signals::Signal<auto (Object *) -> void> m_ContentAddedSignal;
+	Signals::Signal<auto (Object *) -> void> m_ContentRemovedSignal;
 };
 
 inline const std::set< Object * > & ObjectAspectObjectContainer::GetContent(void) const

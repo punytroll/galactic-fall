@@ -20,6 +20,8 @@
 #ifndef UI_LIST_BOX_H
 #define UI_LIST_BOX_H
 
+#include <signals/signal.h>
+
 #include "scroll_box.h"
 
 namespace UI
@@ -43,7 +45,7 @@ namespace UI
 		void _OnSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent);
 		void _OnSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent);
 		// events
-		Signals::Event<auto () -> void> m_SelectedItemChangedEvent;
+		Signals::Signal<auto () -> void> m_SelectedItemChangedSignal;
 		// components
 		UI::ListBoxItem * _SelectedItem;
 	};

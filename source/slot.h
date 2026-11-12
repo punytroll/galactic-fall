@@ -25,8 +25,8 @@
 #include <algebra/quaternion.h>
 #include <algebra/vector3f.h>
 
-#include <signals/event.h>
 #include <signals/connection.h>
+#include <signals/signal.h>
 
 class Object;
 class SlotClass;
@@ -56,7 +56,7 @@ public:
 	auto ConnectDestroyingCallback(std::function<void()> Callback) -> Signals::Connection;
 private:
 	void _OnMountedObjectDestroying(void);
-	Signals::Event<auto () -> void> m_DestroyingEvent;
+	Signals::Signal<auto () -> void> m_DestroyingSignal;
 	std::string _Identifier;
 	std::string _Name;
 	Object * _MountedObject;
