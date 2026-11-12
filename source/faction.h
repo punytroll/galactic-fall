@@ -12,13 +12,14 @@
 #include "graphics/color_rgbo.h"
 #include "object.h"
 
-class FactionStanding;
 
 class Faction : public Object
 {
+private:
+    class FactionStanding;
+    
 public:
     Faction();
-    ~Faction() override;
     auto GetColor() const -> const Graphics::ColorRGBO &;
     auto GetStanding(Faction * Faction) const -> float;
     auto AddFactionStanding(Faction * Faction, float Standing) -> void;
@@ -28,7 +29,7 @@ private:
     auto m_OnFactionDestroying(Faction * Faction) -> void;
     
     Graphics::ColorRGBO m_Color;
-    std::vector<FactionStanding *> m_FactionStandings;
+    std::vector<Faction::FactionStanding> m_FactionStandings;
 };
 
 inline auto Faction::GetColor() const -> Graphics::ColorRGBO const &

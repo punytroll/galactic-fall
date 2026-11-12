@@ -8,9 +8,47 @@
 
 #include "faction.h"
 
-class FactionStanding
+class Faction::FactionStanding
 {
 public:
+    FactionStanding(Faction * Faction, float Standing, std::function<auto () -> void> FactionDestroyingCallback) :
+        m_Faction{Faction},
+        m_Standing{Standing}
+    {
+        assert(m_Faction != nullptr);
+        m_DestroyingConnection = m_Faction->ConnectDestroyingCallback(FactionDestroyingCallback);
+    }
+    
+    FactionStanding(Faction::FactionStanding const & Other) = delete;
+    
+    FactionStanding(Faction::FactionStanding && Other) :
+        m_DestroyingConnection(std::move(Other.m_DestroyingConnection)),
+        m_Faction{std::exchange(Other.m_Faction, nullptr)},
+        m_Standing{Other.m_Standing}
+    {
+    }
+    
+    auto operator=(Faction::FactionStanding const & Other) -> Faction::FactionStanding & = delete;
+    
+    auto operator=(Faction::FactionStanding && Other) -> Faction::FactionStanding &
+    {
+        m_DestroyingConnection = std::move(Other.m_DestroyingConnection);
+        m_Faction = std::exchange(Other.m_Faction, nullptr);
+        m_Standing = Other.m_Standing;
+        
+        return *this;
+    }
+    
+    ~FactionStanding()
+    {
+        if(m_Faction != nullptr)
+        {
+            assert(m_DestroyingConnection.IsValid() == true);
+            m_DestroyingConnection.Disconnect();
+        }
+        assert(m_DestroyingConnection.IsValid() == false);
+    }
+    
     Signals::Connection m_DestroyingConnection;
     Faction * m_Faction;
     float m_Standing;
@@ -22,37 +60,14 @@ Faction::Faction()
     AddAspectName();
 }
 
-Faction::~Faction()
-{
-    while(m_FactionStandings.empty() == false)
-    {
-        auto FactionStanding = m_FactionStandings.back();
-        
-        assert(FactionStanding->m_Faction != nullptr);
-        FactionStanding->m_Faction = nullptr;
-        assert(FactionStanding->m_DestroyingConnection.IsValid() == true);
-        FactionStanding->m_DestroyingConnection.Disconnect();
-        assert(FactionStanding->m_DestroyingConnection.IsValid() == false);
-        delete FactionStanding;
-        m_FactionStandings.pop_back();
-    }
-}
-
 auto Faction::AddFactionStanding(Faction * Faction, float Standing) -> void
 {
     assert(Faction != nullptr);
-    for(auto FactionStanding : m_FactionStandings)
+    for(auto const & FactionStanding : m_FactionStandings)
     {
-        assert(FactionStanding != nullptr);
-        assert(FactionStanding->m_Faction != Faction);
+        assert(FactionStanding.m_Faction != Faction);
     }
-    
-    auto NewFactionStanding = new FactionStanding{};
-    
-    NewFactionStanding->m_Faction = Faction;
-    NewFactionStanding->m_Standing = Standing;
-    NewFactionStanding->m_DestroyingConnection = Faction->ConnectDestroyingCallback(std::bind(&Faction::m_OnFactionDestroying, this, Faction));
-    m_FactionStandings.push_back(NewFactionStanding);
+    m_FactionStandings.emplace_back(Faction, Standing, std::bind(&Faction::m_OnFactionDestroying, this, Faction));
 }
 
 auto Faction::GetStanding(Faction * Faction) const -> float
@@ -62,12 +77,11 @@ auto Faction::GetStanding(Faction * Faction) const -> float
     auto Result = 0.6f;
     
     assert(Faction != nullptr);
-    for(auto FactionStanding : m_FactionStandings)
+    for(auto const & FactionStanding : m_FactionStandings)
     {
-        assert(FactionStanding != nullptr);
-        if(FactionStanding->m_Faction == Faction)
+        if(FactionStanding.m_Faction == Faction)
         {
-            Result = FactionStanding->m_Standing;
+            Result = FactionStanding.m_Standing;
             
             break;
         }
@@ -78,20 +92,11 @@ auto Faction::GetStanding(Faction * Faction) const -> float
 
 auto Faction::m_OnFactionDestroying(Faction * Faction) -> void
 {
-    auto FactionStandingIterator = std::ranges::find_if(m_FactionStandings, [Faction](FactionStanding * FactionStanding)
+    auto FactionStandingIterator = std::ranges::find_if(m_FactionStandings, [Faction](FactionStanding const & FactionStanding)
                                                                             {
-                                                                                return FactionStanding->m_Faction == Faction;
+                                                                                return FactionStanding.m_Faction == Faction;
                                                                             });
     
     assert(FactionStandingIterator != m_FactionStandings.end());
-    
-    auto FactionStanding = *FactionStandingIterator;
-    
-    assert(FactionStanding->m_Faction != nullptr);
-    FactionStanding->m_Faction = nullptr;
-    assert(FactionStanding->m_DestroyingConnection.IsValid() == true);
-    FactionStanding->m_DestroyingConnection.Disconnect();
-    assert(FactionStanding->m_DestroyingConnection.IsValid() == false);
-    delete FactionStanding;
     m_FactionStandings.erase(FactionStandingIterator);
 }
