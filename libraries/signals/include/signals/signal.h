@@ -58,7 +58,6 @@ namespace Signals
                 m_Cores.pop_back();
                 assert(Core->m_Signal == this);
                 Core->m_Signal = nullptr;
-                Core->m_IsValid = false;
                 Core->m_References -= 1;
                 if(Core->m_References == 0)
                 {
@@ -73,28 +72,29 @@ namespace Signals
             
             Core->m_Callback = Callback;
             Core->m_Signal = this;
-            Core->m_IsValid = true;
             Core->m_References += 1;
             m_Cores.push_back(Core);
             Core->m_Iterator = --m_Cores.end();
             
-            return Connection(Core);
+            return Signals::Connection{Core};
         }
         
         auto Disconnect(Signals::Connection & Connection) -> void override
         {
-            auto Core = static_cast<Signal::Core *>(Connection.GetCore());
+            auto Core = static_cast<Signal::Core *>(Connection.m_Core);
             
+            Core->m_Signal = nullptr;
             assert(Core->m_References > 0);
             Core->m_References -= 1;
+            // because at least the Connection holds an additional reference
             assert(Core->m_References > 0);
             m_Cores.erase(Core->m_Iterator);
-            Connection.m_Invalidate();
+            Connection.m_ReleaseCore();
         }
         
         auto Emit(ArgumentTypes ... Arguments) -> void
         {
-            auto CopyCores = std::list<Signal::Core *>{m_Cores};
+            auto CopyCores = m_Cores;
             
             for(auto Core : CopyCores)
             {

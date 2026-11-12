@@ -18,7 +18,6 @@ Signals::Connection::Connection(Signals::Connection::Core * Core) :
     m_Core{Core}
 {
     assert(m_Core != nullptr);
-    m_Core->m_IsValid = true;
     m_Core->m_References += 1;
 }
 
@@ -48,13 +47,7 @@ auto Signals::Connection::operator=(Signals::Connection const & Other) -> Signal
     {
         if(m_Core != nullptr)
         {
-            assert(m_Core->m_References > 0);
-            m_Core->m_References -= 1;
-            if(m_Core->m_References == 0)
-            {
-                delete m_Core;
-            }
-            m_Core = nullptr;
+            m_ReleaseCore();
         }
         if(Other.m_Core != nullptr)
         {
@@ -73,13 +66,7 @@ auto Signals::Connection::operator=(Signals::Connection && Other) -> Signals::Co
     {
         if(m_Core != nullptr)
         {
-            assert(m_Core->m_References > 0);
-            m_Core->m_References -= 1;
-            if(m_Core->m_References == 0)
-            {
-                delete m_Core;
-            }
-            m_Core = nullptr;
+            m_ReleaseCore();
         }
         if(Other.m_Core != nullptr)
         {
@@ -94,20 +81,9 @@ auto Signals::Connection::operator=(Signals::Connection && Other) -> Signals::Co
 
 Signals::Connection::~Connection()
 {
-    Clear();
-}
-
-auto Signals::Connection::Clear() -> void
-{
     if(m_Core != nullptr)
     {
-        assert(m_Core->m_References > 0);
-        m_Core->m_References -= 1;
-        if(m_Core->m_References == 0)
-        {
-            delete m_Core;
-        }
-        m_Core = nullptr;
+        m_ReleaseCore();
     }
 }
 
@@ -115,22 +91,17 @@ auto Signals::Connection::Disconnect() -> void
 {
     assert(m_Core != nullptr);
     assert(m_Core->m_Signal != nullptr);
-    assert(m_Core->m_IsValid == true);
     m_Core->m_Signal->Disconnect(*this);
 }
 
-auto Signals::Connection::m_Invalidate() -> void
+auto Signals::Connection::m_ReleaseCore() -> void
 {
-    if(m_Core != nullptr)
+    assert(m_Core != nullptr);
+    assert(m_Core->m_References > 0);
+    m_Core->m_References -= 1;
+    if(m_Core->m_References == 0)
     {
-        assert(m_Core->m_References > 0);
-        m_Core->m_Signal = nullptr;
-        m_Core->m_IsValid = false;
-        m_Core->m_References -= 1;
-        if(m_Core->m_References == 0)
-        {
-            delete m_Core;
-        }
-        m_Core = nullptr;
+        delete m_Core;
     }
+    m_Core = nullptr;
 }

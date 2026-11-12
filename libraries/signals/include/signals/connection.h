@@ -23,7 +23,6 @@ namespace Signals
             virtual ~Core();
             
             SignalBase * m_Signal = nullptr;
-            bool m_IsValid = false;
             int m_References = 0;
         };
         
@@ -31,28 +30,34 @@ namespace Signals
         Connection(Signals::Connection::Core * Core);
         Connection(Signals::Connection const & Other);
         Connection(Signals::Connection && Other);
+        ~Connection();
         auto operator=(Signals::Connection const & Other) -> Signals::Connection &;
         auto operator=(Signals::Connection && Other) -> Signals::Connection &;
-        ~Connection();
-        auto Clear() -> void;
+        
+        /**
+         * @brief Disconnects the slot referred to by this connection.
+         * @note It is a necessary precondition, that the connection refers to an actual connected slot in a signal, i.e. @a IsValid() returns true.
+         **/
         auto Disconnect() -> void;
+        
+        /**
+         * @brief Returns whether this connection refers to an actual connected slot in a signal.
+         **/
         auto IsValid() -> bool;
-        auto GetCore() -> Signals::Connection::Core *;
         
     private:
-        auto m_Invalidate() -> void;
+        /**
+         * @brief Releases the core and possibly deletes it.
+         * @note The core must exist and its reference counter must be positive.
+         **/
+        auto m_ReleaseCore() -> void;
         
         Core * m_Core = nullptr;
     };
     
     inline auto Connection::IsValid() -> bool
     {
-        return (m_Core != nullptr) && (m_Core->m_IsValid == true);
-    }
-    
-    inline auto Connection::GetCore() -> Signals::Connection::Core *
-    {
-        return m_Core;
+        return (m_Core != nullptr) && (m_Core->m_Signal != nullptr);
     }
 }
 

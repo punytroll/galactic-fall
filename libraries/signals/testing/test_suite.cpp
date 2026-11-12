@@ -55,15 +55,6 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
     std::cout << "-----------------------------" << std::endl;
     
     {
-        auto Connection = Signals::Connection{};
-        
-        Connection.Clear();
-        assert(Connection.IsValid() == false);
-    }
-    
-    std::cout << "-----------------------------" << std::endl;
-    
-    {
         auto Signal = Signals::Signal<auto () -> void>{};
         
         assert(Signal.GetCallbacks().empty() == true);
