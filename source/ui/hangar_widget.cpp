@@ -483,10 +483,12 @@ void UI::HangarWidget::_OnDestroying(UI::Event & DestroyingEvent)
 {
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
+		// since the UI is destroyed after the ship has left the planet, the empty hangar might already be destroyed, thus invalidating the connection
 		if(m_HangarContentAddedConnection.IsValid() == true)
 		{
 			m_HangarContentAddedConnection.Disconnect();
 		}
+		// since the UI is destroyed after the ship has left the planet, the empty hangar might already be destroyed, thus invalidating the connection
 		if(m_HangarContentRemovedConnection.IsValid() == true)
 		{
 			m_HangarContentRemovedConnection.Disconnect();
