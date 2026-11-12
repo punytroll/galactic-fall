@@ -97,10 +97,8 @@ namespace UI
 
 UI::UserInterface::UserInterface(void) :
     _CaptureWidget(nullptr),
-    _HoverWidget(nullptr),
-    _RootWidget(new UI::Widget{})
+    _HoverWidget(nullptr)
 {
-    _RootWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::_OnRootWidgetDestroying, this, std::placeholders::_1));
 }
 
 UI::UserInterface::~UserInterface(void)
@@ -110,8 +108,8 @@ UI::UserInterface::~UserInterface(void)
         _CaptureWidget = nullptr;
         _CaptureWidgetDestroyingCallbackConnection.Disconnect();
     }
-    _RootWidget->Destroy();
-    _RootWidget = nullptr;
+    m_RootWidget->Destroy();
+    m_RootWidget = nullptr;
 }
 
 void UI::UserInterface::Draw(Graphics::RenderContext * RenderContext) const
@@ -120,10 +118,10 @@ void UI::UserInterface::Draw(Graphics::RenderContext * RenderContext) const
     GLEnable(GL_CLIP_PLANE1);
     GLEnable(GL_CLIP_PLANE2);
     GLEnable(GL_CLIP_PLANE3);
-    if((_RootWidget != nullptr) && (_RootWidget->IsVisible() == true))
+    if((m_RootWidget != nullptr) && (m_RootWidget->IsVisible() == true))
     {
-        UI::Widget::_PushClippingRectangle(RenderContext, _RootWidget->GetLeft(), _RootWidget->GetTop(), _RootWidget->GetTop() + _RootWidget->GetHeight(), _RootWidget->GetLeft() + _RootWidget->GetWidth());
-        _RootWidget->Draw(RenderContext);
+        UI::Widget::_PushClippingRectangle(RenderContext, m_RootWidget->GetLeft(), m_RootWidget->GetTop(), m_RootWidget->GetTop() + m_RootWidget->GetHeight(), m_RootWidget->GetLeft() + m_RootWidget->GetWidth());
+        m_RootWidget->Draw(RenderContext);
         UI::Widget::_PopClippingRectangle(RenderContext);
     }
     GLDisable(GL_CLIP_PLANE0);
@@ -138,6 +136,14 @@ void UI::UserInterface::SetCaptureWidget(UI::Widget * Widget)
     assert(_CaptureWidget == nullptr);
     _CaptureWidget = Widget;
     _CaptureWidgetDestroyingCallbackConnection = _CaptureWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::_OnCaptureWidgetDestroying, this, std::placeholders::_1));
+}
+
+auto UI::UserInterface::SetRootWidget(UI::Widget * RootWidget) -> void
+{
+    assert(RootWidget != nullptr);
+    assert(m_RootWidget == nullptr);
+    m_RootWidget = RootWidget;
+    m_RootWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::_OnRootWidgetDestroying, this, std::placeholders::_1));
 }
 
 void UI::UserInterface::ReleaseCaptureWidget(void)
@@ -157,7 +163,7 @@ UI::Widget * UI::UserInterface::GetWidget(const std::string & Path)
     }
     
     std::string::size_type Position(1);
-    auto * Root(_RootWidget);
+    auto * Root(m_RootWidget);
     
     while((Root != nullptr) && (Position < Path.length()))
     {
@@ -242,7 +248,7 @@ void UI::UserInterface::DispatchKeyEvent(UI::KeyEvent & KeyEvent)
         m_PressedKeyCodes[KeyEvent.GetKeyCode()] = KeyEvent.IsDown();
         
         auto PropagationPath = std::list<UI::KeyEventPropagationPathItem>{};
-        auto PathWidget = _RootWidget;
+        auto PathWidget = m_RootWidget;
         
         while(PathWidget != nullptr)
         {
@@ -334,13 +340,13 @@ void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseBut
     
     if(_CaptureWidget == nullptr)
     {
-        if((_RootWidget != nullptr) && (_RootWidget->IsVisible() == true) && (_RootWidget->IsEnabled() == true))
+        if((m_RootWidget != nullptr) && (m_RootWidget->IsVisible() == true) && (m_RootWidget->IsEnabled() == true))
         {
-            auto Position = MouseButtonEvent.GetPosition() - Vector2f{_RootWidget->GetLeft(), _RootWidget->GetTop()};
+            auto Position = MouseButtonEvent.GetPosition() - Vector2f{m_RootWidget->GetLeft(), m_RootWidget->GetTop()};
             
-            if(IsInside(Position, _RootWidget->GetWidth(), _RootWidget->GetHeight()) == true)
+            if(IsInside(Position, m_RootWidget->GetWidth(), m_RootWidget->GetHeight()) == true)
             {
-                auto PathWidget = _RootWidget;
+                auto PathWidget = m_RootWidget;
                 
                 while(PathWidget != nullptr)
                 {
@@ -479,24 +485,24 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
     
     if(_CaptureWidget == nullptr)
     {
-        if((_RootWidget != nullptr) && (_RootWidget->IsEnabled() == true) && (_RootWidget->IsVisible() == true))
+        if((m_RootWidget != nullptr) && (m_RootWidget->IsEnabled() == true) && (m_RootWidget->IsVisible() == true))
         {
             auto Position = MouseMoveEvent.GetPosition();
             
-            assert((_HoverWidget == nullptr) || (_HoverWidget == _RootWidget));
-            if(IsInside(Position, _RootWidget->GetLeft(), _RootWidget->GetTop(), _RootWidget->GetWidth(), _RootWidget->GetHeight()) == true)
+            assert((_HoverWidget == nullptr) || (_HoverWidget == m_RootWidget));
+            if(IsInside(Position, m_RootWidget->GetLeft(), m_RootWidget->GetTop(), m_RootWidget->GetWidth(), m_RootWidget->GetHeight()) == true)
             {
                 if(_HoverWidget == nullptr)
                 {
-                    _HoverWidget = _RootWidget;
+                    _HoverWidget = m_RootWidget;
                     
                     auto MouseEnterEvent = UI::Event{};
                     
-                    MouseEnterEvent.SetTarget(_RootWidget);
+                    MouseEnterEvent.SetTarget(m_RootWidget);
                     DispatchMouseEnterEvent(MouseEnterEvent);
                 }
                 
-                auto CurrentWidget = _RootWidget;
+                auto CurrentWidget = m_RootWidget;
                 
                 while(CurrentWidget != nullptr)
                 {
@@ -535,9 +541,9 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
                     CurrentWidget = NextWidget;
                 }
             }
-            else if(_HoverWidget == _RootWidget)
+            else if(_HoverWidget == m_RootWidget)
             {
-                _RootWidget->_UnsetHoverWidget();
+                m_RootWidget->_UnsetHoverWidget();
                 _HoverWidget = nullptr;
             }
         }
@@ -733,11 +739,11 @@ auto UI::UserInterface::IsKeyCodePressed(unsigned int const KeyCode) const -> bo
 
 void UI::UserInterface::Update(float RealTimeSeconds, float GameTimeSeconds)
 {
-    assert(_RootWidget != nullptr);
+    assert(m_RootWidget != nullptr);
     
     std::stack< std::pair< UI::Widget *, bool > > ToDo;
     
-    ToDo.push(std::make_pair(_RootWidget, false));
+    ToDo.push(std::make_pair(m_RootWidget, false));
     while(ToDo.size() > 0)
     {
         std::pair< UI::Widget *, bool > & Widget(ToDo.top());
@@ -781,7 +787,7 @@ void UI::UserInterface::_OnRootWidgetDestroying(UI::Event & DestroyingEvent)
 {
     if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
     {
-        assert(_RootWidget != nullptr);
-        _RootWidget = nullptr;
+        assert(m_RootWidget != nullptr);
+        m_RootWidget = nullptr;
     }
 }

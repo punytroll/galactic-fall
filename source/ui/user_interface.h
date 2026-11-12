@@ -50,10 +50,11 @@ namespace UI
         void Update(float RealTimeSeconds, float GameTimeSeconds);
         // setters
         void SetCaptureWidget(UI::Widget * Widget);
+        auto SetRootWidget(UI::Widget * RootWidget) -> void;
         void ReleaseCaptureWidget(void);
         // getters
         UI::Widget * GetWidget(const std::string & Path);
-        UI::Widget * GetRootWidget(void);
+        auto GetRootWidget() -> UI::Widget *;
         UI::Widget * GetCaptureWidget(void);
     private:
         // callbacks
@@ -65,7 +66,7 @@ namespace UI
         Connection _CaptureWidgetDestroyingCallbackConnection;
         UI::Widget * _HoverWidget;
         std::bitset<256> m_PressedKeyCodes;
-        UI::Widget * _RootWidget;
+        UI::Widget * m_RootWidget = nullptr;
     };
 
     inline UI::Widget * UserInterface::GetCaptureWidget(void)
@@ -73,9 +74,9 @@ namespace UI
         return _CaptureWidget;
     }
 
-    inline UI::Widget * UserInterface::GetRootWidget(void)
+    inline auto UserInterface::GetRootWidget() -> UI::Widget *
     {
-        return _RootWidget;
+        return m_RootWidget;
     }
 }
 

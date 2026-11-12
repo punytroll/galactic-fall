@@ -3456,14 +3456,18 @@ int main(int argc, char ** argv)
     // set first timeout for widget collector, it will reinsert itself on callback
     g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, CollectWidgetsRecurrent);
     // user interface
-    g_UserInterface = new UI::UserInterface();
-    g_UserInterface->GetRootWidget()->SetLeft(0.0_c);
-    g_UserInterface->GetRootWidget()->SetTop(0.0_c);
-    g_UserInterface->GetRootWidget()->SetWidth(constant(g_Width));
-    g_UserInterface->GetRootWidget()->SetHeight(constant(g_Height));
-    g_UserInterface->GetRootWidget()->ConnectKeyCallback(MainViewKeyEvent);
-    g_UserInterface->GetRootWidget()->ConnectMouseButtonCallback(MainViewMouseButtonEvent);
-    g_UserInterface->GetRootWidget()->ConnectMouseMoveCallback(MainViewMouseMove);
+    g_UserInterface = new UI::UserInterface{};
+    
+    auto RootWidget = new UI::Widget{};
+    
+    RootWidget->SetLeft(0.0_c);
+    RootWidget->SetTop(0.0_c);
+    RootWidget->SetWidth(constant(g_Width));
+    RootWidget->SetHeight(constant(g_Height));
+    RootWidget->ConnectKeyCallback(MainViewKeyEvent);
+    RootWidget->ConnectMouseButtonCallback(MainViewMouseButtonEvent);
+    RootWidget->ConnectMouseMoveCallback(MainViewMouseMove);
+    g_UserInterface->SetRootWidget(RootWidget);
     UINode->SetUserInterface(g_UserInterface);
     // resize here after the graphics have been set up
     Resize();
