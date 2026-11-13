@@ -9,11 +9,14 @@
 
 namespace Signals
 {
+    class ScopedConnection;
     class SignalBase;
     
     class Connection
     {
     public:
+        friend class ScopedConnection;
+        
         template<typename Signature>
         friend class Signal;
         
@@ -22,7 +25,7 @@ namespace Signals
         public:
             virtual ~Core();
             
-            SignalBase * m_Signal = nullptr;
+            Signals::SignalBase * m_Signal = nullptr;
             int m_References = 0;
         };
         
@@ -52,13 +55,13 @@ namespace Signals
          **/
         auto m_ReleaseCore() -> void;
         
-        Core * m_Core = nullptr;
+        Signals::Connection::Core * m_Core = nullptr;
     };
-    
-    inline auto Connection::IsValid() -> bool
-    {
-        return (m_Core != nullptr) && (m_Core->m_Signal != nullptr);
-    }
+}
+
+inline auto Signals::Connection::IsValid() -> bool
+{
+    return (m_Core != nullptr) && (m_Core->m_Signal != nullptr);
 }
 
 #endif

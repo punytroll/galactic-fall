@@ -392,4 +392,107 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char ** argv) -> int
         }
         assert(Connection.IsValid() == false);
     }
+    
+    std::cout << "-----------------------------" << std::endl;
+    
+    {
+        Signals::Testing::g_Global = 2;
+        
+        auto Signal = Signals::Signal<auto () -> void>{};
+        
+        {
+            auto ScopedConnection = Signals::ScopedConnection{Signal.Connect(std::bind(Signals::Testing::IncrementingFunction, 2))};
+            
+            assert(ScopedConnection.IsConnected() == true);
+            assert(Signals::Testing::g_Global == 2);
+            Signal.Emit();
+            assert(Signals::Testing::g_Global == 4);
+        }
+        Signal.Emit();
+        assert(Signals::Testing::g_Global == 4);
+    }
+    
+    std::cout << "-----------------------------" << std::endl;
+    
+    {
+        Signals::Testing::g_Global = 2;
+        
+        auto ScopedConnection = Signals::ScopedConnection{};
+        
+        {
+            auto Signal = Signals::Signal<auto () -> void>{};
+            
+            ScopedConnection = Signals::ScopedConnection{Signal.Connect(std::bind(Signals::Testing::IncrementingFunction, 2))};
+            assert(ScopedConnection.IsConnected() == true);
+            assert(Signals::Testing::g_Global == 2);
+            Signal.Emit();
+            assert(Signals::Testing::g_Global == 4);
+        }
+        assert(ScopedConnection.IsConnected() == false);
+    }
+    
+    std::cout << "-----------------------------" << std::endl;
+    
+    {
+        Signals::Testing::g_Global = 2;
+        
+        auto ScopedConnection = Signals::ScopedConnection{};
+        
+        {
+            auto Signal = Signals::Signal<auto () -> void>{};
+            
+            ScopedConnection = Signal.Connect(std::bind(Signals::Testing::IncrementingFunction, 2));
+            assert(ScopedConnection.IsConnected() == true);
+            assert(Signals::Testing::g_Global == 2);
+            Signal.Emit();
+            assert(Signals::Testing::g_Global == 4);
+        }
+        assert(ScopedConnection.IsConnected() == false);
+    }
+    
+    std::cout << "-----------------------------" << std::endl;
+    
+    {
+        Signals::Testing::g_Global = 2;
+        
+        auto ScopedConnection = Signals::ScopedConnection{};
+        
+        {
+            auto Signal = Signals::Signal<auto () -> void>{};
+            
+            ScopedConnection = Signal.Connect(std::bind(Signals::Testing::IncrementingFunction, 2));
+            assert(ScopedConnection.IsConnected() == true);
+            assert(Signals::Testing::g_Global == 2);
+            Signal.Emit();
+            assert(Signals::Testing::g_Global == 4);
+        }
+        assert(ScopedConnection.IsConnected() == false);
+        
+        auto Signal = Signals::Signal<auto () -> void>{};
+        
+        ScopedConnection = Signal.Connect(std::bind(Signals::Testing::IncrementingFunction, 2));
+    }
+    
+    std::cout << "-----------------------------" << std::endl;
+    
+    {
+        Signals::Testing::g_Global = 2;
+        
+        auto ScopedConnection = Signals::ScopedConnection{};
+        
+        {
+            auto Signal = Signals::Signal<auto () -> void>{};
+            
+            ScopedConnection = Signal.Connect(std::bind(Signals::Testing::IncrementingFunction, 2));
+            assert(ScopedConnection.IsConnected() == true);
+            assert(Signals::Testing::g_Global == 2);
+            Signal.Emit();
+            assert(Signals::Testing::g_Global == 4);
+        }
+        assert(ScopedConnection.IsConnected() == false);
+        
+        auto Signal = Signals::Signal<auto () -> void>{};
+        
+        ScopedConnection = Signals::ScopedConnection{Signal.Connect(std::bind(Signals::Testing::IncrementingFunction, 2))};
+    }
 }

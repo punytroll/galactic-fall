@@ -1,12 +1,17 @@
+signals_library_include_directories = include_directories('include')
+
 signals_library = static_library(
   'signals',
-  sources: ['source/connection.cpp'],
-  include_directories: [include_directories('include')]
+  sources: [
+    'source/connection.cpp',
+    'source/scoped_connection.cpp',
+  ],
+  include_directories: signals_library_include_directories
 )
 
 signals_dependency = declare_dependency(
-  include_directories: [include_directories('include')],
-  link_with: [signals_library]
+  include_directories: signals_library_include_directories,
+  link_with: signals_library
 )
 
 signals_library_test_suite_executable = executable(

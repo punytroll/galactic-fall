@@ -10,6 +10,8 @@
 
 #include <unordered_map>
 
+#include <signals/scoped_connection.h>
+
 class Object;
 
 class Threat
@@ -19,10 +21,9 @@ public:
     {
     public:
         float m_Threat;
-        Signals::Connection m_ObjectDestroyingConnection;
+        Signals::ScopedConnection m_ObjectDestroyingConnection;
     };
     
-    ~Threat();
     auto GetObjectWithHighestThreat() const -> Object *;
     auto ModifyThreat(Object * ThreateningObject, float DeltaThreat) -> void;
     

@@ -12,6 +12,7 @@
 #include <list>
 
 #include <signals/connection.h>
+#include <signals/scoped_connection.h>
 
 namespace Signals
 {
@@ -20,6 +21,7 @@ namespace Signals
     public:
         virtual ~SignalBase() = default;
         virtual auto Disconnect(Signals::Connection & Connection) -> void = 0;
+        virtual auto Disconnect(Signals::ScopedConnection & ScopedConnection) -> void = 0;
     };
     
     template<typename>
@@ -90,6 +92,19 @@ namespace Signals
             assert(Core->m_References > 0);
             m_Cores.erase(Core->m_Iterator);
             Connection.m_ReleaseCore();
+        }
+        
+        auto Disconnect(Signals::ScopedConnection & ScopedConnection) -> void override
+        {
+            auto Core = static_cast<Signal::Core *>(ScopedConnection.m_Core);
+            
+            Core->m_Signal = nullptr;
+            assert(Core->m_References > 0);
+            Core->m_References -= 1;
+            // because at least the Connection holds an additional reference
+            assert(Core->m_References > 0);
+            m_Cores.erase(Core->m_Iterator);
+            ScopedConnection.m_ReleaseCore();
         }
         
         auto Emit(ArgumentTypes ... Arguments) -> void

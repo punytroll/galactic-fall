@@ -8,20 +8,6 @@
 #include "object.h"
 #include "threat.h"
 
-Threat::~Threat()
-{
-    while(m_Threats.empty() == false)
-    {
-        auto & [Object, ThreatByObject] = *(m_Threats.begin());
-        
-        assert(Object != nullptr);
-        assert(ThreatByObject.m_ObjectDestroyingConnection.IsValid() == true);
-        ThreatByObject.m_ObjectDestroyingConnection.Disconnect();
-        assert(ThreatByObject.m_ObjectDestroyingConnection.IsValid() == false);
-        m_Threats.erase(m_Threats.begin());
-    }
-}
-
 auto Threat::GetObjectWithHighestThreat() const -> Object *
 {
     auto Result = static_cast<Object *>(nullptr);
