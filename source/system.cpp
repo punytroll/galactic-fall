@@ -22,25 +22,6 @@
 #include "visualization.h"
 #include "visualizations.h"
 
-namespace std
-{
-    template< typename Type1, typename Type2 >
-    std::list< std::pair< Type1, Type2 > > tuples(const std::list< Type1 > & One, const std::list< Type2 > & Two)
-    {
-        std::list< std::pair< Type1, Type2 > > Result;
-        
-        for(auto ValueOne : One)
-        {
-            for(auto ValueTwo : Two)
-            {
-                Result.push_back(std::make_pair(ValueOne, ValueTwo));
-            }
-        }
-        
-        return Result;
-    }
-}
-
 class FactionInfluence
 {
 public:
@@ -234,11 +215,19 @@ void System::_OnRemoved(Object * Content)
         _Commodities.erase(CommodityIterator);
         assert(GetAspectVisualization() != nullptr);
         assert(Content->GetAspectVisualization() != nullptr);
-        for(auto Visualizations : std::tuples(Content->GetAspectVisualization()->GetVisualizations(), GetAspectVisualization()->GetVisualizations()))
+        
+        auto CommodityVisualisations = Content->GetAspectVisualization()->GetVisualizations();
+        
+        for(auto CommodityVisualisation : CommodityVisualisations)
         {
-            if(Visualizations.first->GetGraphics()->GetContainer() == (static_cast< Graphics::SystemNode * >(Visualizations.second->GetGraphics()))->GetCommodityLayer())
+            for(auto SystemVisualisation : GetAspectVisualization()->GetVisualizations())
             {
-                Content->GetAspectVisualization()->DestroyVisualization(Visualizations.first);
+                if(CommodityVisualisation->GetGraphics()->GetContainer() == (dynamic_cast<Graphics::SystemNode *>(SystemVisualisation->GetGraphics()))->GetCommodityLayer())
+                {
+                    Content->GetAspectVisualization()->DestroyVisualization(CommodityVisualisation);
+                    
+                    break;
+                }
             }
         }
     }
@@ -250,11 +239,19 @@ void System::_OnRemoved(Object * Content)
         _Planets.erase(PlanetIterator);
         assert(GetAspectVisualization() != nullptr);
         assert(Content->GetAspectVisualization() != nullptr);
-        for(auto Visualizations : std::tuples(Content->GetAspectVisualization()->GetVisualizations(), GetAspectVisualization()->GetVisualizations()))
+        
+        auto PlanetVisualisations = Content->GetAspectVisualization()->GetVisualizations();
+        
+        for(auto PlanetVisualisation : PlanetVisualisations)
         {
-            if(Visualizations.first->GetGraphics()->GetContainer() == (static_cast< Graphics::SystemNode * >(Visualizations.second->GetGraphics()))->GetPlanetLayer())
+            for(auto SystemVisualisation : GetAspectVisualization()->GetVisualizations())
             {
-                Content->GetAspectVisualization()->DestroyVisualization(Visualizations.first);
+                if(PlanetVisualisation->GetGraphics()->GetContainer() == (dynamic_cast<Graphics::SystemNode *>(SystemVisualisation->GetGraphics()))->GetPlanetLayer())
+                {
+                    Content->GetAspectVisualization()->DestroyVisualization(PlanetVisualisation);
+                    
+                    break;
+                }
             }
         }
     }
@@ -266,11 +263,19 @@ void System::_OnRemoved(Object * Content)
         _Ships.erase(ShipIterator);
         assert(GetAspectVisualization() != nullptr);
         assert(Content->GetAspectVisualization() != nullptr);
-        for(auto Visualizations : std::tuples(Content->GetAspectVisualization()->GetVisualizations(), GetAspectVisualization()->GetVisualizations()))
+        
+        auto ShipVisualisations = Content->GetAspectVisualization()->GetVisualizations();
+        
+        for(auto ShipVisualisation : ShipVisualisations)
         {
-            if(Visualizations.first->GetGraphics()->GetContainer() == (static_cast< Graphics::SystemNode * >(Visualizations.second->GetGraphics()))->GetShipLayer())
+            for(auto SystemVisualisation : GetAspectVisualization()->GetVisualizations())
             {
-                Content->GetAspectVisualization()->DestroyVisualization(Visualizations.first);
+                if(ShipVisualisation->GetGraphics()->GetContainer() == (dynamic_cast<Graphics::SystemNode *>(SystemVisualisation->GetGraphics()))->GetShipLayer())
+                {
+                    Content->GetAspectVisualization()->DestroyVisualization(ShipVisualisation);
+                    
+                    break;
+                }
             }
         }
     }
@@ -282,11 +287,19 @@ void System::_OnRemoved(Object * Content)
         _Shots.erase(ShotIterator);
         assert(GetAspectVisualization() != nullptr);
         assert(Content->GetAspectVisualization() != nullptr);
-        for(auto Visualizations : std::tuples(Content->GetAspectVisualization()->GetVisualizations(), GetAspectVisualization()->GetVisualizations()))
+        
+        auto ShotVisualisations = Content->GetAspectVisualization()->GetVisualizations();
+        
+        for(auto ShotVisualisation : ShotVisualisations)
         {
-            if(Visualizations.first->GetGraphics()->GetContainer() == (static_cast< Graphics::SystemNode * >(Visualizations.second->GetGraphics()))->GetShotLayer())
+            for(auto SystemVisualisation : GetAspectVisualization()->GetVisualizations())
             {
-                Content->GetAspectVisualization()->DestroyVisualization(Visualizations.first);
+                if(ShotVisualisation->GetGraphics()->GetContainer() == (dynamic_cast<Graphics::SystemNode *>(SystemVisualisation->GetGraphics()))->GetShotLayer())
+                {
+                    Content->GetAspectVisualization()->DestroyVisualization(ShotVisualisation);
+                    
+                    break;
+                }
             }
         }
     }
