@@ -42,5 +42,8 @@ auto Threat::ModifyThreat(Object * ThreateningObject, float DeltaThreat) -> void
 auto Threat::m_OnObjectDestroying(Object * Object) -> void
 {
     assert(Object != nullptr);
-    m_Threats.erase(Object);
+    
+    auto EraseCount = m_Threats.erase(Object);
+    
+    assert(EraseCount == 1);
 }
