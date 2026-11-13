@@ -5,89 +5,82 @@
  * SPDX-License-Identifier: MIT
 **/
 
-#include <float.h>
-
-#include <algorithm>
+#include <ranges>
 
 #include "object.h"
 #include "threat.h"
 
-class ThreatByObject
+class Threat::ThreatByObject
 {
 public:
-    Object * _Object;
-    float _Threat;
+    Object * m_Object;
+    float m_Threat;
     Signals::Connection m_ObjectDestroyingConnection;
 };
 
-Threat::~Threat(void)
+Threat::~Threat()
 {
-    while(_Threats.empty() == false)
+    while(m_Threats.empty() == false)
     {
-        auto ThreatByObject{_Threats.front()};
+        auto ThreatByObject = m_Threats.front();
         
         assert(ThreatByObject != nullptr);
-        assert(ThreatByObject->_Object != nullptr);
-        ThreatByObject->_Object = nullptr;
+        assert(ThreatByObject->m_Object != nullptr);
+        ThreatByObject->m_Object = nullptr;
         assert(ThreatByObject->m_ObjectDestroyingConnection.IsValid() == true);
         ThreatByObject->m_ObjectDestroyingConnection.Disconnect();
         assert(ThreatByObject->m_ObjectDestroyingConnection.IsValid() == false);
-        _Threats.erase(_Threats.begin());
+        m_Threats.erase(m_Threats.begin());
     }
 }
 
-Object * Threat::GetObjectWithHighestThreat(void)
+auto Threat::GetObjectWithHighestThreat() const -> Object *
 {
-    Object * Result(nullptr);
-    float HighestThreat(FLT_MIN);
+    auto Result = static_cast<Object *>(nullptr);
+    auto HighestThreat = 0.0f;
     
-    for(auto & Threat : _Threats)
+    for(auto & ThreatByObject : m_Threats)
     {
-        if(Threat->_Threat > HighestThreat)
+        if(ThreatByObject->m_Threat > HighestThreat)
         {
-            Result = Threat->_Object;
-            HighestThreat = Threat->_Threat;
+            Result = ThreatByObject->m_Object;
+            HighestThreat = ThreatByObject->m_Threat;
         }
     }
     
     return Result;
 }
 
-void Threat::ModifyThreat(Object * ThreateningObject, float DeltaThreat)
+auto Threat::ModifyThreat(Object * ThreateningObject, float DeltaThreat) -> void
 {
-    auto Found{false};
-    
-    for(auto ThreatByObject : _Threats)
+    for(auto ThreatByObject : m_Threats)
     {
-        if(ThreatByObject->_Object == ThreateningObject)
+        if(ThreatByObject->m_Object == ThreateningObject)
         {
-            ThreatByObject->_Threat += DeltaThreat;
-            Found = true;
+            ThreatByObject->m_Threat += DeltaThreat;
             
-            break;
+            return;
         }
     }
-    if(Found == false)
-    {
-        auto NewThreatByObject{new ThreatByObject{}};
-        
-        NewThreatByObject->_Object = ThreateningObject;
-        NewThreatByObject->m_ObjectDestroyingConnection = ThreateningObject->ConnectDestroyingCallback(std::bind(&Threat::_OnObjectDestroying, this, NewThreatByObject));
-        NewThreatByObject->_Threat = DeltaThreat;
-        _Threats.push_back(NewThreatByObject);
-    }
+    
+    auto NewThreatByObject = new ThreatByObject{};
+    
+    NewThreatByObject->m_Object = ThreateningObject;
+    NewThreatByObject->m_ObjectDestroyingConnection = ThreateningObject->ConnectDestroyingCallback(std::bind(&Threat::m_OnObjectDestroying, this, NewThreatByObject));
+    NewThreatByObject->m_Threat = DeltaThreat;
+    m_Threats.push_back(NewThreatByObject);
 }
 
-void Threat::_OnObjectDestroying(ThreatByObject * ThreatByObject)
+auto Threat::m_OnObjectDestroying(ThreatByObject * ThreatByObject) -> void
 {
     assert(ThreatByObject != nullptr);
     assert(ThreatByObject->m_ObjectDestroyingConnection.IsValid() == true);
     ThreatByObject->m_ObjectDestroyingConnection.Disconnect();
     assert(ThreatByObject->m_ObjectDestroyingConnection.IsValid() == false);
-    ThreatByObject->_Object = nullptr;
+    ThreatByObject->m_Object = nullptr;
     
-    auto Iterator{std::find(_Threats.begin(), _Threats.end(), ThreatByObject)};
+    auto ThreatByObjectIterator = std::ranges::find(m_Threats, ThreatByObject);
     
-    assert(Iterator != _Threats.end());
-    _Threats.erase(Iterator);
+    assert(ThreatByObjectIterator != m_Threats.end());
+    m_Threats.erase(ThreatByObjectIterator);
 }

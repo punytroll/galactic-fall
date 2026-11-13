@@ -8,23 +8,23 @@
 #ifndef GALACTIC_FALL__SOURCE__THREAT_H
 #define GALACTIC_FALL__SOURCE__THREAT_H
 
-#include <deque>
+#include <list>
 
 class Object;
-class ThreatByObject;
 
 class Threat
 {
 public:
-    // destructor
-    ~Threat(void);
-    // getters
-    Object * GetObjectWithHighestThreat(void);
-    // modifiers
-    void ModifyThreat(Object * ThreateningObject, float DeltaThreat);
+    class ThreatByObject;
+    
+    ~Threat();
+    auto GetObjectWithHighestThreat() const -> Object *;
+    auto ModifyThreat(Object * ThreateningObject, float DeltaThreat) -> void;
+    
 private:
-    void _OnObjectDestroying(ThreatByObject * ThreatByObject);
-    std::deque< ThreatByObject * > _Threats;
+    auto m_OnObjectDestroying(ThreatByObject * ThreatByObject) -> void;
+    
+    std::list<Threat::ThreatByObject *> m_Threats;
 };
 
 #endif
