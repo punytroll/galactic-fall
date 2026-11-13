@@ -23,7 +23,7 @@ jobs:
       env:
         CC: gcc-16
         CXX: g++-16
-      run: meson setup build --werror
+      run: meson setup build --werror --buildtype=debug -Db_sanitize=address,undefined
     - name: Compile project
       run: meson compile -C build
     - name: Run tests
