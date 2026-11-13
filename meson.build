@@ -7,8 +7,7 @@ project(
     'cpp_std': 'c++26',
     'default_library': 'static',
     'warning_level': '3',
-    'werror': 'true'
-  }
+  },
 )
 
 python_module = import('python')
