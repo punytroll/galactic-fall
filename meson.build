@@ -38,6 +38,14 @@ subproject(
 )
 rasteriser_dependency = dependency('rasteriser', version: '>=26.10.0')
 
+subproject(
+  'signals',
+  default_options: {
+    'tests': 'enabled',
+  }
+)
+signals_dependency = dependency('signals', version: '>=26.11.0')
+
 string_cast_subproject = subproject('string_cast', version: '>=2.0.2')
 string_cast_dependency = string_cast_subproject.get_variable('string_cast_library_dependency')
 

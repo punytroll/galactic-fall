@@ -1,2 +1,1 @@
 subdir('graphics')
-subdir('signals')
