@@ -25,33 +25,37 @@ class Visualization;
 class System : public Object
 {
 public:
-    // constructor and destructor
+    class FactionInfluence
+    {
+    public:
+        Signals::ScopedConnection m_FactionDestroyingConnection;
+        float m_Influence;
+    };
+    
     System(void);
-    virtual ~System(void) override;
-    // queries
+    virtual ~System() override;
+    auto AddFactionInfluence(Faction * Faction, float Influence) -> void;
     const std::list< Commodity * > & GetCommodities(void) const;
-    float GetFactionInfluence(Faction * Faction) const;
+    auto GetFactionInfluence(Faction * Faction) const -> float;
     auto GetLinkedSystems() const -> std::list<System *> const &;
     const std::vector< Planet * > & GetPlanets(void) const;
-    Faction * GetRandomFactionAccordingToInfluences(void);
+    auto GetRandomFactionAccordingToInfluences() const -> Faction *;
     const std::list< Ship * > & GetShips(void) const;
     const std::list< Shot * > & GetShots(void) const;
     const Star * GetStar(void) const;
     float GetTrafficDensity(void) const;
     auto IsLinkedToSystem(System const * System) const -> bool;
-    // modifiers
-    void AddFactionInfluence(Faction * Faction, float Influence);
     auto AddLinkedSystem(System * LinkedSystem) -> void;
     void SetTrafficDensity(float TrafficDensity);
+    
 private:
-    // callbacks
     void _OnAdded(Object * Content);
-    void _OnFactionDestroying(Faction * Faction);
+    auto m_OnFactionDestroying(Faction * Faction) -> void;
     void _OnRemoved(Object * Content);
     void _UpdateVisualization(Visualization * Visualization);
-    // member variables
+    
     std::list< Commodity * > _Commodities;
-    std::vector< FactionInfluence * > _FactionInfluences;
+    std::unordered_map<Faction *, System::FactionInfluence> m_FactionInfluences;
     std::list<System *> m_LinkedSystems;
     std::vector< Planet * > _Planets;
     std::list< Ship * > _Ships;

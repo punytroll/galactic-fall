@@ -22,14 +22,6 @@
 #include "visualization.h"
 #include "visualizations.h"
 
-class FactionInfluence
-{
-public:
-    Signals::Connection m_DestroyingConnection;
-    Faction * _Faction;
-    float _Influence;
-};
-
 System::System(void) :
     _Star(nullptr),
     _TrafficDensity(0.0f)
@@ -44,20 +36,8 @@ System::System(void) :
     GetAspectVisualization()->SetUpdateVisualizationCallback(std::bind(&System::_UpdateVisualization, this, std::placeholders::_1));
 }
 
-System::~System(void)
+System::~System()
 {
-    while(_FactionInfluences.size() > 0)
-    {
-        auto FactionInfluence{_FactionInfluences.back()};
-        
-        assert(FactionInfluence->_Faction != nullptr);
-        FactionInfluence->_Faction = nullptr;
-        assert(FactionInfluence->m_DestroyingConnection.IsValid() == true);
-        FactionInfluence->m_DestroyingConnection.Disconnect();
-        assert(FactionInfluence->m_DestroyingConnection.IsValid() == false);
-        delete FactionInfluence;
-        _FactionInfluences.pop_back();
-    }
     assert(_Commodities.empty() == true);
     assert(_Planets.empty() == true);
     assert(_Ships.empty() == true);
@@ -65,53 +45,47 @@ System::~System(void)
     assert(_Star == nullptr);
 }
 
-void System::AddFactionInfluence(Faction * Faction, float Influence)
+auto System::AddFactionInfluence(Faction * Faction, float Influence) -> void
 {
     assert(Faction != nullptr);
-    for(auto FactionInfluence : _FactionInfluences)
+    for(auto const & [FactionInSystem, FactionInfluence] : m_FactionInfluences)
     {
-        assert(FactionInfluence->_Faction != Faction);
+        assert(Faction != FactionInSystem);
     }
-    
-    auto NewFactionInfluence{new FactionInfluence{}};
-    
-    NewFactionInfluence->_Faction = Faction;
-    NewFactionInfluence->_Influence = Influence;
-    NewFactionInfluence->m_DestroyingConnection = Faction->ConnectDestroyingCallback(std::bind(&System::_OnFactionDestroying, this, Faction));
-    _FactionInfluences.push_back(NewFactionInfluence);
+    m_FactionInfluences.try_emplace(Faction, Faction->ConnectDestroyingCallback(std::bind(&System::m_OnFactionDestroying, this, Faction)), Influence);
 }
 
-float System::GetFactionInfluence(Faction * Faction) const
+auto System::GetFactionInfluence(Faction * Faction) const -> float
 {
     assert(Faction != nullptr);
-    for(auto FactionInfluence : _FactionInfluences)
+    for(auto & [FactionInSystem, FactionInfluence] : m_FactionInfluences)
     {
-        if(FactionInfluence->_Faction == Faction)
+        if(FactionInSystem == Faction)
         {
-            return FactionInfluence->_Influence;
+            return FactionInfluence.m_Influence;
         }
     }
     
     return 0.0f;
 }
 
-Faction * System::GetRandomFactionAccordingToInfluences(void)
+auto System::GetRandomFactionAccordingToInfluences() const -> Faction *
 {
-    auto TotalInfluence{0.0f};
+    auto TotalInfluence = 0.0f;
     
-    for(auto FactionInfluence : _FactionInfluences)
+    for(auto & [FactionInSystem, FactionInfluence] : m_FactionInfluences)
     {
-        TotalInfluence += FactionInfluence->_Influence;
+        TotalInfluence += FactionInfluence.m_Influence;
     }
     
-    auto Random{GetRandomFloat(0.0f, TotalInfluence)};
+    auto Random = GetRandomFloat(0.0f, TotalInfluence);
     
-    for(auto FactionInfluence : _FactionInfluences)
+    for(auto & [FactionInSystem, FactionInfluence] : m_FactionInfluences)
     {
-        Random -= FactionInfluence->_Influence;
+        Random -= FactionInfluence.m_Influence;
         if(Random <= 0.0f)
         {
-            return FactionInfluence->_Faction;
+            return FactionInSystem;
         }
     }
     
@@ -187,21 +161,13 @@ void System::_OnAdded(Object * Content)
     }
 }
 
-void System::_OnFactionDestroying(Faction * Faction)
+auto System::m_OnFactionDestroying(Faction * Faction) -> void
 {
-    auto FactionInfluenceIterator{std::find_if(_FactionInfluences.begin(), _FactionInfluences.end(), [&] (FactionInfluence * FactionInfluence) { return FactionInfluence->_Faction == Faction; })};
+    assert(Faction != nullptr);
     
-    assert(FactionInfluenceIterator != _FactionInfluences.end());
+    auto EraseCount = m_FactionInfluences.erase(Faction);
     
-    auto FactionInfluence{*FactionInfluenceIterator};
-    
-    assert(FactionInfluence->_Faction != nullptr);
-    FactionInfluence->_Faction = nullptr;
-    assert(FactionInfluence->m_DestroyingConnection.IsValid() == true);
-    FactionInfluence->m_DestroyingConnection.Disconnect();
-    assert(FactionInfluence->m_DestroyingConnection.IsValid() == false);
-    delete FactionInfluence;
-    _FactionInfluences.erase(FactionInfluenceIterator);
+    assert(EraseCount == 1);
 }
 
 void System::_OnRemoved(Object * Content)
@@ -216,6 +182,7 @@ void System::_OnRemoved(Object * Content)
         assert(GetAspectVisualization() != nullptr);
         assert(Content->GetAspectVisualization() != nullptr);
         
+        // this copy is needed, as we might modify the container
         auto CommodityVisualisations = Content->GetAspectVisualization()->GetVisualizations();
         
         for(auto CommodityVisualisation : CommodityVisualisations)
@@ -240,6 +207,7 @@ void System::_OnRemoved(Object * Content)
         assert(GetAspectVisualization() != nullptr);
         assert(Content->GetAspectVisualization() != nullptr);
         
+        // this copy is needed, as we might modify the container
         auto PlanetVisualisations = Content->GetAspectVisualization()->GetVisualizations();
         
         for(auto PlanetVisualisation : PlanetVisualisations)
@@ -264,6 +232,7 @@ void System::_OnRemoved(Object * Content)
         assert(GetAspectVisualization() != nullptr);
         assert(Content->GetAspectVisualization() != nullptr);
         
+        // this copy is needed, as we might modify the container
         auto ShipVisualisations = Content->GetAspectVisualization()->GetVisualizations();
         
         for(auto ShipVisualisation : ShipVisualisations)
@@ -288,6 +257,7 @@ void System::_OnRemoved(Object * Content)
         assert(GetAspectVisualization() != nullptr);
         assert(Content->GetAspectVisualization() != nullptr);
         
+        // this copy is needed, as we might modify the container
         auto ShotVisualisations = Content->GetAspectVisualization()->GetVisualizations();
         
         for(auto ShotVisualisation : ShotVisualisations)
