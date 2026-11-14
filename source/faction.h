@@ -7,7 +7,7 @@
 #ifndef GALACTIC_FALL__SOURCE__FACTION_H
 #define GALACTIC_FALL__SOURCE__FACTION_H
 
-#include <vector>
+#include <unordered_map>
 
 #include "graphics/color_rgbo.h"
 #include "object.h"
@@ -16,7 +16,12 @@
 class Faction : public Object
 {
 private:
-    class FactionStanding;
+    class FactionStanding
+    {
+    public:
+        Signals::ScopedConnection m_FactionDestroyingConnection;
+        float m_Standing;
+    };
     
 public:
     Faction();
@@ -29,7 +34,7 @@ private:
     auto m_OnFactionDestroying(Faction * Faction) -> void;
     
     Graphics::ColorRGBO m_Color;
-    std::vector<Faction::FactionStanding> m_FactionStandings;
+    std::unordered_map<Faction *, Faction::FactionStanding> m_FactionStandings;
 };
 
 inline auto Faction::GetColor() const -> Graphics::ColorRGBO const &

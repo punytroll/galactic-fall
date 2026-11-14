@@ -48,11 +48,10 @@ System::~System()
 auto System::AddFactionInfluence(Faction * Faction, float Influence) -> void
 {
     assert(Faction != nullptr);
-    for(auto const & [FactionInSystem, FactionInfluence] : m_FactionInfluences)
-    {
-        assert(Faction != FactionInSystem);
-    }
-    m_FactionInfluences.try_emplace(Faction, Faction->ConnectDestroyingCallback(std::bind(&System::m_OnFactionDestroying, this, Faction)), Influence);
+    
+    auto const & [Iterator, Success] = m_FactionInfluences.try_emplace(Faction, Faction->ConnectDestroyingCallback(std::bind(&System::m_OnFactionDestroying, this, Faction)), Influence);
+    
+    assert(Success == true);
 }
 
 auto System::GetFactionInfluence(Faction * Faction) const -> float
