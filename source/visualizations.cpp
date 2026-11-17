@@ -126,9 +126,9 @@ Visualization * VisualizeCommodity(Commodity * Commodity, Graphics::Node * Conta
 	return Visualization;
 }
 
-void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, System * System)
+auto VisualizeParticleSystem(SharedPointer<Graphics::ParticleSystem> & ParticleSystem, System * System) -> void
 {
-	assert(ParticleSystem != nullptr);
+	assert(ParticleSystem.HasValue() == true);
 	assert(System != nullptr);
 	assert(System->GetAspectVisualization() != nullptr);
 	for(auto Visualization : System->GetAspectVisualization()->GetVisualizations())
@@ -137,12 +137,12 @@ void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, System *
 	}
 }
 
-void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, Graphics::Node * Container)
+auto VisualizeParticleSystem(SharedPointer<Graphics::ParticleSystem> & ParticleSystem, Graphics::Node * Container) -> void
 {
-	assert(ParticleSystem != nullptr);
+	assert(ParticleSystem.HasValue() == true);
 	assert(Container != nullptr);
 	
-	auto Graphics{new Graphics::ParticleSystemNode{}};
+	auto Graphics = new Graphics::ParticleSystemNode{};
 	
 	Graphics->SetParticleSystem(ParticleSystem);
 	Container->AddNode(Graphics);

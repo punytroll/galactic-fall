@@ -31,29 +31,28 @@
 
 const Graphics::Texture * g_ParticleTexture(nullptr);
 
-Graphics::ParticleSystemNode::ParticleSystemNode(void) :
-	_ParticleSystem(nullptr)
+Graphics::ParticleSystemNode::ParticleSystemNode()
 {
 	SetBlendFunction(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 	SetUseBlending(true);
 	SetUseDepthTest(true);
 }
 
-Graphics::ParticleSystemNode::~ParticleSystemNode(void)
+Graphics::ParticleSystemNode::~ParticleSystemNode()
 {
-	if(_ParticleSystem != nullptr)
+	if(m_ParticleSystem.HasValue() == true)
 	{
-		_ParticleSystem->_ParticleSystemNodes.erase(this);
-		_ParticleSystem = nullptr;
+		m_ParticleSystem->m_ParticleSystemNodes.erase(this);
+		m_ParticleSystem.Reset();
 	}
 }
-	
-void Graphics::ParticleSystemNode::SetParticleSystem(Graphics::ParticleSystem * ParticleSystem)
+
+auto Graphics::ParticleSystemNode::SetParticleSystem(SharedPointer<Graphics::ParticleSystem> ParticleSystem) -> void
 {
-	assert(_ParticleSystem == nullptr);
-	assert(ParticleSystem != nullptr);
-	_ParticleSystem = ParticleSystem;
-	_ParticleSystem->_ParticleSystemNodes.insert(this);
+	assert(m_ParticleSystem.HasValue() == false);
+	assert(ParticleSystem.HasValue() == true);
+	m_ParticleSystem = std::move(ParticleSystem);
+	m_ParticleSystem->m_ParticleSystemNodes.insert(this);
 }
 
 void Graphics::ParticleSystemNode::Begin(Graphics::RenderContext * RenderContext)
@@ -74,25 +73,27 @@ void Graphics::ParticleSystemNode::Begin(Graphics::RenderContext * RenderContext
 
 void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 {
-	assert(_ParticleSystem != nullptr);
+	assert(m_ParticleSystem.HasValue() == true);
 	
-	if(_ParticleSystem->GetParticles().empty() == false)
+	auto const & Particles = m_ParticleSystem->GetParticles();
+	
+	if(Particles.empty() == false)
 	{
 		GLuint VertexArray{0};
 		
 		GLGenVertexArrays(1, &VertexArray);
 		GLBindVertexArray(VertexArray);
 		
-		const GLsizei NumberOfVertices{static_cast< GLsizei >(4 * _ParticleSystem->GetParticles().size())};
+		const GLsizei NumberOfVertices{static_cast< GLsizei >(4 * Particles.size())};
 		auto Colors = std::vector<float>(4 * NumberOfVertices);
 		auto Vertices = std::vector<float>(3 * NumberOfVertices);
 		auto TextureCoordinates = std::vector<float>(2 * NumberOfVertices);
 		auto Opacities = std::vector<float>(1 * NumberOfVertices);
-		auto Indices = std::vector<unsigned short>(NumberOfVertices + _ParticleSystem->GetParticles().size() - 1);
+		auto Indices = std::vector<unsigned short>(NumberOfVertices + Particles.size() - 1);
 		int ParticleIndex{0};
 		int IndexIndex{0};
 		
-		for(auto Particle : _ParticleSystem->GetParticles())
+		for(auto Particle : Particles)
 		{
 			if(IndexIndex > 0)
 			{
@@ -150,7 +151,7 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 		GLGenBuffers(5, Buffers);
 		// index buffer
 		GLBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffers[0]);
-		GLBufferData(GL_ELEMENT_ARRAY_BUFFER, (NumberOfVertices + _ParticleSystem->GetParticles().size() - 1) * sizeof(unsigned short), Indices.data(), GL_STREAM_DRAW);
+		GLBufferData(GL_ELEMENT_ARRAY_BUFFER, (NumberOfVertices + Particles.size() - 1) * sizeof(unsigned short), Indices.data(), GL_STREAM_DRAW);
 		// vertex coordinates
 		GLBindBuffer(GL_ARRAY_BUFFER, Buffers[1]);
 		GLBufferData(GL_ARRAY_BUFFER, 3 * NumberOfVertices * sizeof(GLfloat), Vertices.data(), GL_STREAM_DRAW);
@@ -177,7 +178,7 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 		RenderContext->ActivateProgram();
 		GLEnable(GL_PRIMITIVE_RESTART);
 		GLPrimitiveRestartIndex(0xFFFF);
-		GLDrawElements(GL_TRIANGLE_FAN, NumberOfVertices + _ParticleSystem->GetParticles().size() - 1, GL_UNSIGNED_SHORT, NULL);
+		GLDrawElements(GL_TRIANGLE_FAN, NumberOfVertices + Particles.size() - 1, GL_UNSIGNED_SHORT, NULL);
 		GLBindVertexArray(0);
 		GLDeleteBuffers(4, Buffers);
 		GLDeleteVertexArrays(1, &VertexArray);

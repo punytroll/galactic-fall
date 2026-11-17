@@ -20,6 +20,8 @@
 #ifndef VISUALIZATIONS_H
 #define VISUALIZATIONS_H
 
+#include <graphics/shared_pointer.h>
+
 class Object;
 class System;
 class Visualization;
@@ -33,8 +35,8 @@ namespace Graphics
 
 void InvalidateVisualizationReference(Graphics::Node * Node);
 Visualization * VisualizeObject(Object * Object, Graphics::Node * Container);
-void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, System * System);
-void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, Graphics::Node * Container);
+auto VisualizeParticleSystem(SharedPointer<Graphics::ParticleSystem> & ParticleSystem, System * System) -> void;
+auto VisualizeParticleSystem(SharedPointer<Graphics::ParticleSystem> & ParticleSystem, Graphics::Node * Container) -> void;
 auto VisualizePrototype(VisualizationPrototype const * VisualizationPrototype) -> Graphics::Node *;
 
 #endif

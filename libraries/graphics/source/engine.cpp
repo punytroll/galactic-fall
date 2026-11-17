@@ -65,9 +65,9 @@ void Graphics::Engine::AddView(Graphics::View * View)
 	View->_SetEngine(this);
 }
 
-void Graphics::Engine::AddParticleSystem(Graphics::ParticleSystem * ParticleSystem)
+auto Graphics::Engine::AddParticleSystem(SharedPointer<Graphics::ParticleSystem> ParticleSystem) -> void
 {
-	_ParticleSystems.insert(ParticleSystem);
+	m_ParticleSystems.insert(ParticleSystem);
 }
 
 void Graphics::Engine::Initialize(void)
@@ -159,9 +159,9 @@ void Graphics::Engine::Initialize(void)
 	GLEnable(GL_CULL_FACE);
 }
 
-void Graphics::Engine::RemoveParticleSystem(Graphics::ParticleSystem * ParticleSystem)
+auto Graphics::Engine::RemoveParticleSystem(SharedPointer<Graphics::ParticleSystem> ParticleSystem) -> void
 {
-	_ParticleSystems.erase(ParticleSystem);
+	m_ParticleSystems.erase(ParticleSystem);
 }
 
 void Graphics::Engine::RemoveView(Graphics::View * View)
@@ -174,17 +174,16 @@ void Graphics::Engine::RemoveView(Graphics::View * View)
 
 void Graphics::Engine::Update(float Seconds)
 {
-	auto ParticleSystemIterator(_ParticleSystems.begin());
+	auto ParticleSystemIterator = m_ParticleSystems.begin();
 	
-	while(ParticleSystemIterator != _ParticleSystems.end())
+	while(ParticleSystemIterator != m_ParticleSystems.end())
 	{
-		auto ParticleSystem(*ParticleSystemIterator);
+		auto & ParticleSystem = *ParticleSystemIterator;
 		
 		ParticleSystem->Update(Seconds);
 		if(ParticleSystem->IsDone() == true)
 		{
-			_ParticleSystems.erase(ParticleSystemIterator++);
-			delete ParticleSystem;
+			m_ParticleSystems.erase(ParticleSystemIterator++);
 		}
 		else
 		{

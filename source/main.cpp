@@ -39,6 +39,7 @@
 #include <graphics/perspective_projection.h>
 #include <graphics/scene.h>
 #include <graphics/shading_manager.h>
+#include <graphics/shared_pointer.h>
 #include <graphics/style.h>
 #include <graphics/texture.h>
 #include <graphics/texture_manager.h>
@@ -351,9 +352,10 @@ void CalculateCharacters(void)
     }
 }
 
-Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier)
+[[nodiscard]]
+auto CreateParticleSystem(std::string_view ParticleSystemClassIdentifier) -> SharedPointer<Graphics::ParticleSystem>
 {
-    auto ParticleSystem(new Graphics::ParticleSystem());
+    auto ParticleSystem = MakeSharedPointer<Graphics::ParticleSystem>();
     
     if(ParticleSystemClassIdentifier == "hit")
     {
@@ -522,7 +524,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
     }
     else
     {
-        throw std::runtime_error("Could not create a particle system with the class identifier'" + ParticleSystemClassIdentifier + "'.");
+        throw std::runtime_error(std::format("Could not create a particle system with the class identifier'{}.", ParticleSystemClassIdentifier));
     }
     assert(g_GraphicsEngine != nullptr);
     g_GraphicsEngine->AddParticleSystem(ParticleSystem);
@@ -643,7 +645,7 @@ void CollisionDetection(System * System)
                 assert(Shot->GetAspectPosition() != nullptr);
                 if((Shot->GetAspectPosition()->GetPosition() - Ship->GetAspectPosition()->GetPosition()).SquaredLength() < (Shot->GetAspectPhysical()->GetRadialSize() * Shot->GetAspectPhysical()->GetRadialSize() + Ship->GetAspectPhysical()->GetRadialSize() * Ship->GetAspectPhysical()->GetRadialSize()))
                 {
-                    auto * NewHitParticleSystem(CreateParticleSystem("hit"));
+                    auto NewHitParticleSystem = CreateParticleSystem("hit");
                     
                     NewHitParticleSystem->SetPosition(Shot->GetAspectPosition()->GetPosition());
                     NewHitParticleSystem->SetVelocity((Shot->GetVelocity() * 0.2f) + (Ship->GetVelocity() * 0.8f));

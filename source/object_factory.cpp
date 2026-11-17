@@ -41,7 +41,9 @@
 #include "turret.h"
 #include "visualization_prototype.h"
 
-Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemSubTypeIdentifier);
+// this function defined in main.cpp
+[[nodiscard]]
+auto CreateParticleSystem(std::string_view ParticleSystemClassIdentifier) -> SharedPointer<Graphics::ParticleSystem>;
 
 Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier, bool CreateNestedObjects) const
 {
@@ -219,7 +221,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		assert(ExhaustOrientation.has_value() == true);
 		NewShip->SetExhaustOrientation(*ExhaustOrientation);
 		
-		auto EngineGlowParticleSystem(CreateParticleSystem("engine_glow"));
+		auto EngineGlowParticleSystem = CreateParticleSystem("engine_glow");
 		
 		EngineGlowParticleSystem->SetPosition(*ExhaustPosition);
 		NewShip->SetEngineGlowParticleSystem(EngineGlowParticleSystem);

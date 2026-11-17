@@ -22,6 +22,8 @@
 
 #include <algebra/vector3f.h>
 
+#include <graphics/shared_pointer.h>
+
 #include "object.h"
 
 class Faction;
@@ -52,7 +54,7 @@ public:
 	// getters
 	Storage * GetCargoHold(void);
 	const Storage * GetCargoHold(void) const;
-	Graphics::ParticleSystem * GetEngineGlowParticleSystem(void);
+	auto GetEngineGlowParticleSystem() -> SharedPointer<Graphics::ParticleSystem> &;
 	const Quaternion & GetExhaustOrientation(void) const;
 	const Vector3f & GetExhaustPosition(void) const;
 	float GetExhaustRadius(void) const;
@@ -74,7 +76,7 @@ public:
 	const Vector3f & GetVelocity(void) const;
 	// setters
 	void SetAccelerate(bool Accelerate);
-	void SetEngineGlowParticleSystem(Graphics::ParticleSystem * EngineGlowParticleSystem);
+	auto SetEngineGlowParticleSystem(SharedPointer<Graphics::ParticleSystem> EngineGlowParticleSystem) -> void;
 	void SetExhaustOrientation(const Quaternion & ExhaustOrientation);
 	void SetExhaustPosition(const Vector3f & ExhaustPosition);
 	void SetExhaustRadius(float ExhaustRadius);
@@ -116,7 +118,7 @@ private:
 	bool m_Accelerate;
 	Storage * _CargoHold;
 	Physics::Energy::Network * _EnergyNetwork;
-	Graphics::ParticleSystem * _EngineGlowParticleSystem;
+	SharedPointer<Graphics::ParticleSystem> m_EngineGlowParticleSystem;
 	float _ExhaustNextParticle;
 	Quaternion _ExhaustOrientation;
 	Vector3f _ExhaustPosition;
@@ -157,9 +159,9 @@ inline const Storage * Ship::GetCargoHold(void) const
 	return _CargoHold;
 }
 
-inline Graphics::ParticleSystem * Ship::GetEngineGlowParticleSystem(void)
+inline auto Ship::GetEngineGlowParticleSystem() -> SharedPointer<Graphics::ParticleSystem> &
 {
-	return _EngineGlowParticleSystem;
+	return m_EngineGlowParticleSystem;
 }
 
 inline const Quaternion & Ship::GetExhaustOrientation(void) const
@@ -257,9 +259,9 @@ inline void Ship::SetAccelerate(bool Accelerate)
 	m_Accelerate = Accelerate;
 }
 
-inline void Ship::SetEngineGlowParticleSystem(Graphics::ParticleSystem * EngineGlowParticleSystem)
+inline auto Ship::SetEngineGlowParticleSystem(SharedPointer<Graphics::ParticleSystem> EngineGlowParticleSystem) -> void
 {
-	_EngineGlowParticleSystem = EngineGlowParticleSystem;
+	m_EngineGlowParticleSystem = std::move(EngineGlowParticleSystem);
 }
 
 inline void Ship::SetExhaustOrientation(const Quaternion & ExhaustOrientation)

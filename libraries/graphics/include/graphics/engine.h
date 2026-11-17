@@ -20,8 +20,10 @@
 #ifndef GALACTIC_FALL__LIBRARY__GRAPHICS__INCLUDE__GRAPHICS__ENGINE_H
 #define GALACTIC_FALL__LIBRARY__GRAPHICS__INCLUDE__GRAPHICS__ENGINE_H
 
-#include <set>
+#include <unordered_set>
 #include <vector>
+
+#include <graphics/shared_pointer.h>
 
 namespace Graphics
 {
@@ -45,16 +47,16 @@ namespace Graphics
 		Graphics::ShadingManager * GetShadingManager(void);
 		Graphics::TextureManager * GetTextureManager(void);
 		// modifiers
-		void AddParticleSystem(Graphics::ParticleSystem * ParticleSystem);
+		auto AddParticleSystem(SharedPointer<Graphics::ParticleSystem> ParticleSystem) -> void;
 		void AddView(Graphics::View * View);
 		void Initialize(void);
-		void RemoveParticleSystem(Graphics::ParticleSystem * ParticleSystem);
+		auto RemoveParticleSystem(SharedPointer<Graphics::ParticleSystem> ParticleSystem) -> void;
 		void RemoveView(Graphics::View * View);
 		void Update(float Seconds);
 	private:
 		Graphics::MeshManager * _MeshManager;
 		Graphics::ModelManager * _ModelManager;
-		std::set< Graphics::ParticleSystem * > _ParticleSystems;
+		std::unordered_set<SharedPointer<Graphics::ParticleSystem>> m_ParticleSystems;
 		Graphics::ShadingManager * _ShadingManager;
 		Graphics::TextureManager * _TextureManager;
 		std::vector< Graphics::View * > _Views;

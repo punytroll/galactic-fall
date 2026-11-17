@@ -21,6 +21,7 @@
 #define GALACTIC_FALL__LIBRARY__GRAPHICS__INCLUDE__GRAPHICS__PARTICLE_SYSTEM_NODE_H
 
 #include <graphics/node.h>
+#include <graphics/shared_pointer.h>
 
 namespace Graphics
 {
@@ -30,16 +31,16 @@ namespace Graphics
 	{
 	public:
 		// constructor & destructor
-		ParticleSystemNode(void);
-		virtual ~ParticleSystemNode(void);
+		ParticleSystemNode();
+		~ParticleSystemNode() override;
 		// setters
-		void SetParticleSystem(Graphics::ParticleSystem * ParticleSystem);
+		auto SetParticleSystem(SharedPointer<Graphics::ParticleSystem> ParticleSystem) -> void;
 		// modifiers
 		virtual void Begin(Graphics::RenderContext * RenderContext) override;
 		virtual void Draw(Graphics::RenderContext * RenderContext) override;
 		virtual void End(Graphics::RenderContext * RenderContext) override;
 	private:
-		ParticleSystem * _ParticleSystem;
+		SharedPointer<ParticleSystem> m_ParticleSystem;
 	};
 }
 

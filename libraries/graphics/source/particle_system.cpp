@@ -29,9 +29,9 @@ Graphics::ParticleSystem::ParticleSystem(void) :
 
 Graphics::ParticleSystem::~ParticleSystem(void)
 {
-	while(_ParticleSystemNodes.empty() == false)
+	while(m_ParticleSystemNodes.empty() == false)
 	{
-		(*_ParticleSystemNodes.begin())->Destroy();
+		(*m_ParticleSystemNodes.begin())->Destroy();
 	}
 }
 
@@ -113,7 +113,7 @@ void Graphics::ParticleSystem::Update(float Seconds)
 			throw std::runtime_error("Unknown particle system command '" + *ScriptLine + "'.");
 		}
 	}
-	for(auto ParticleSystemNode : _ParticleSystemNodes)
+	for(auto ParticleSystemNode : m_ParticleSystemNodes)
 	{
 		ParticleSystemNode->SetPosition(_Position);
 	}

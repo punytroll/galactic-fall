@@ -38,13 +38,13 @@
 const float g_ExhaustNextParticle{0.0005f};
 
 // this function defined in main.cpp
-Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier);
+[[nodiscard]]
+auto CreateParticleSystem(std::string_view ParticleSystemClassIdentifier) -> SharedPointer<Graphics::ParticleSystem>;
 
 Ship::Ship(void) :
     m_Accelerate(false),
     _CargoHold(nullptr),
     _EnergyNetwork{new Physics::Energy::Network{}},
-    _EngineGlowParticleSystem(0),
     _ExhaustNextParticle{g_ExhaustNextParticle},
     _ExhaustOrientation{Quaternion::CreateIdentity()},
     _ExhaustPosition{Vector3f::CreateZero()},
@@ -105,9 +105,7 @@ Ship::~Ship(void)
     assert(m_FactionDestroyingConnection.IsValid() == false);
     delete _EnergyNetwork;
     _EnergyNetwork = nullptr;
-    g_GraphicsEngine->RemoveParticleSystem(_EngineGlowParticleSystem);
-    delete _EngineGlowParticleSystem;
-    _EngineGlowParticleSystem = nullptr;
+    g_GraphicsEngine->RemoveParticleSystem(m_EngineGlowParticleSystem);
 }
 
 System * Ship::GetSystem(void)
@@ -157,11 +155,11 @@ bool Ship::Update(float Seconds)
             SetFuel(GetFuel() - GetFuelNeededToJump());
             
             // display jump partice system in old system
-            auto NewJumpParticleSystem(CreateParticleSystem("jump"));
+            auto NewJumpParticleSystem = CreateParticleSystem("jump");
             
             NewJumpParticleSystem->SetPosition(GetAspectPosition()->GetPosition());
             NewJumpParticleSystem->SetVelocity(Vector3f::CreateZero());
-            VisualizeParticleSystem(NewJumpParticleSystem, dynamic_cast< System * >(OldSystem));
+            VisualizeParticleSystem(NewJumpParticleSystem, dynamic_cast<System *>(OldSystem));
             
             // set the ship's position according to the old system
             Vector3f Direction(NewSystem->GetAspectPosition()->GetPosition() - OldSystem->GetAspectPosition()->GetPosition());
@@ -304,7 +302,7 @@ bool Ship::Update(float Seconds)
                     m_Velocity *= GetMaximumSpeed();
                 }
                 SetFuel(GetFuel() - FuelConsumption);
-                assert(_EngineGlowParticleSystem != nullptr);
+                assert(m_EngineGlowParticleSystem.HasValue() == true);
                 
                 auto SecondsForParticleExhaust{Seconds};
                 
@@ -327,7 +325,7 @@ bool Ship::Update(float Seconds)
                     Particle._Velocity = Vector3f::CreateFromComponents(Velocity, 0.0f, 0.0f).Rotate(_ExhaustOrientation);
                     Particle._Size = 0.2f;
                     Particle._Opacity = 1.0f;
-                    _EngineGlowParticleSystem->AddParticle(Particle);
+                    m_EngineGlowParticleSystem->AddParticle(Particle);
                 }
                 _ExhaustNextParticle -= SecondsForParticleExhaust;
             }

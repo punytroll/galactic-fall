@@ -21,8 +21,8 @@
 #define GALACTIC_FALL__LIBRARY__GRAPHICS__INCLUDE__GRAPHICS__PARTICLE_SYSTEM_H
 
 #include <list>
-#include <set>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 #include <algebra/vector3f.h>
@@ -71,7 +71,7 @@ namespace Graphics
 		std::list< Graphics::ParticleSystem::Particle > _Particles;
 		std::vector< std::string > _SystemScript;
 		std::vector< std::string > _ParticleScript;
-		std::set< Graphics::ParticleSystemNode * > _ParticleSystemNodes;
+		std::unordered_set<Graphics::ParticleSystemNode *> m_ParticleSystemNodes;
 	};
 	
 	inline bool ParticleSystem::IsDone(void) const
