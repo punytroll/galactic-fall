@@ -33,7 +33,7 @@ void UI::ListBoxItem::SetSelected(bool Selected)
 	_Selected = Selected;
 	if(_Selected == false)
 	{
-		UnsetBackgroundColor();
+		SetBackgroundColor(std::nullopt);
 	}
 	else
 	{
@@ -53,6 +53,6 @@ void UI::ListBoxItem::_OnMouseLeave(UI::Event & MouseLeaveEvent)
 {
 	if((MouseLeaveEvent.GetPhase() == UI::Event::Phase::Target) && (_Selected == false))
 	{
-		UnsetBackgroundColor();
+		SetBackgroundColor(std::nullopt);
 	}
 }

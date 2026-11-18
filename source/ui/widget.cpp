@@ -25,8 +25,6 @@ std::list< UI::Widget * > UI::Widget::_DestroyedWidgets;
 std::stack< std::tuple< float, float, float, float > > UI::Widget::_ClippingRectangles;
 
 UI::Widget::Widget(void) :
-    _BackgroundColor(nullptr),
-    _DisabledBackgroundColor(nullptr),
     _Enabled(true),
     _Height(this, UI::Dimension::Type::Height),
     _HoverWidget(nullptr),
@@ -46,21 +44,17 @@ UI::Widget::~Widget(void)
 {
     assert(_SupWidget == nullptr);
     assert(_SubWidgets.size() == 0);
-    delete _BackgroundColor;
-    _BackgroundColor = nullptr;
-    delete _DisabledBackgroundColor;
-    _DisabledBackgroundColor = nullptr;
 }
 
 void UI::Widget::Draw(Graphics::RenderContext * RenderContext)
 {
-    auto Color((_Enabled == true) ? (_BackgroundColor) : (_DisabledBackgroundColor));
+    auto const & Color = ((_Enabled == true) ? (m_BackgroundColor) : (m_DisabledBackgroundColor));
     auto GlobalPosition{GetGlobalPosition()};
     
-    if(Color != nullptr)
+    if(Color.has_value() == true)
     {
         assert(RenderContext != nullptr);
-        RenderContext->SetColorRGBO(*Color);
+        RenderContext->SetColorRGBO(Color.value());
         RenderContext->SetProgramIdentifier("widget");
         RenderContext->ActivateProgram();
         Graphics::Drawing::DrawBoxFromPositionAndSize(RenderContext, GlobalPosition, Vector2f(_Width.GetValue(), _Height.GetValue()));
@@ -113,28 +107,14 @@ std::string UI::Widget::GetPath(void) const
     return Result;
 }
 
-void UI::Widget::SetBackgroundColor(const Graphics::ColorRGBO & BackgroundColor)
+auto UI::Widget::SetBackgroundColor(std::optional<Graphics::ColorRGBO> const & BackgroundColor) -> void
 {
-    delete _BackgroundColor;
-    _BackgroundColor = new Graphics::ColorRGBO(BackgroundColor);
+    m_BackgroundColor = BackgroundColor;
 }
 
-void UI::Widget::SetDisabledBackgroundColor(const Graphics::ColorRGBO & DisabledBackgroundColor)
+auto UI::Widget::SetDisabledBackgroundColor(std::optional<Graphics::ColorRGBO> const & DisabledBackgroundColor) -> void
 {
-    delete _DisabledBackgroundColor;
-    _DisabledBackgroundColor = new Graphics::ColorRGBO(DisabledBackgroundColor);
-}
-
-void UI::Widget::UnsetBackgroundColor(void)
-{
-    delete _BackgroundColor;
-    _BackgroundColor = nullptr;
-}
-
-void UI::Widget::UnsetDisabledBackgroundColor(void)
-{
-    delete _DisabledBackgroundColor;
-    _DisabledBackgroundColor = nullptr;
+    m_DisabledBackgroundColor = DisabledBackgroundColor;
 }
 
 void UI::Widget::SetHeight(Expressions::Expression && Height)

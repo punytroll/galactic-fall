@@ -14,6 +14,8 @@
 
 #include <algebra/vector2f.h>
 
+#include <graphics/color_rgbo.h>
+
 #include <signals/signal.h>
 
 #include "dimension.h"
@@ -21,7 +23,6 @@
 
 namespace Graphics
 {
-    class ColorRGBO;
     class RenderContext;
 }
 
@@ -48,10 +49,8 @@ namespace UI
         Widget(void);
         virtual ~Widget(void);
         virtual void Draw(Graphics::RenderContext * RenderContext);
-        void SetBackgroundColor(const Graphics::ColorRGBO & BackgroundColor);
-        void SetDisabledBackgroundColor(const Graphics::ColorRGBO & DisabledBackgroundColor);
-        void UnsetBackgroundColor(void);
-        void UnsetDisabledBackgroundColor(void);
+        auto SetBackgroundColor(std::optional<Graphics::ColorRGBO> const & BackgroundColor) -> void;
+        auto SetDisabledBackgroundColor(std::optional<Graphics::ColorRGBO> const & DisabledBackgroundColor) -> void;
         void AddSubWidget(Widget * SubWidget);
         void RemoveSubWidget(Widget * SubWidget);
         void RaiseSubWidget(Widget * SubWidget);
@@ -60,7 +59,6 @@ namespace UI
         void GrabKeyboardFocus(void);
         void SetName(const std::string & Name);
         // getters
-        const Graphics::ColorRGBO * GetBackgroundColor(void) const;
         float GetBottom(void);
         bool GetEnabled(void) const;
         float GetHeight(void);
@@ -109,8 +107,8 @@ namespace UI
     private:
         void _UnsetHoverWidget(void);
         void _SetHoverWidget(UI::Widget * HoverWidget);
-        Graphics::ColorRGBO * _BackgroundColor;
-        Graphics::ColorRGBO * _DisabledBackgroundColor;
+        std::optional<Graphics::ColorRGBO> m_BackgroundColor;
+        std::optional<Graphics::ColorRGBO> m_DisabledBackgroundColor;
         bool _Enabled;
         UI::Dimension _Height;
         Widget * _HoverWidget;
