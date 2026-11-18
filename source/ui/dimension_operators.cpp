@@ -37,14 +37,14 @@ Expressions::Expression UI::height(UI::Widget * Widget)
 {
 	assert(Widget != nullptr);
 	
-	return Widget->_Height;
+	return Expressions::Expression{Widget->_Height};
 }
 
 Expressions::Expression UI::left(UI::Widget * Widget)
 {
 	assert(Widget != nullptr);
 	
-	return Widget->_Left;
+	return Expressions::Expression{Widget->_Left};
 }
 
 Expressions::Expression UI::right(UI::Widget * Widget)
@@ -58,12 +58,12 @@ Expressions::Expression UI::top(UI::Widget * Widget)
 {
 	assert(Widget != nullptr);
 	
-	return Widget->_Top;
+	return Expressions::Expression{Widget->_Top};
 }
 
 Expressions::Expression UI::width(UI::Widget * Widget)
 {
 	assert(Widget != nullptr);
 	
-	return Widget->_Width;
+	return Expressions::Expression{Widget->_Width};
 }

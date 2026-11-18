@@ -24,8 +24,15 @@ subproject(
 )
 algebra_dependency = dependency('algebra', version: '>=26.11.1')
 
-expressions_subproject = subproject('expressions', version: '>=0.7.1')
-expressions_dependency = expressions_subproject.get_variable('expressions_library_dependency')
+# dependency "expressions"
+subproject(
+  'expressions',
+  default_options: {
+    'tests': 'enabled',
+    'trace_logging': 'disabled',
+  }
+)
+expressions_dependency = dependency('expressions', version: '>=26.11.1')
 
 subproject('xml_parser')
 xml_parser_dependency = dependency('xml_parser', version: '>=26.10.2')

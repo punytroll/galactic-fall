@@ -1,8 +1,8 @@
 [wrap-file]
-directory = expressions-0.8.1
-source_url = https://github.com/punytroll/expressions/archive/refs/tags/0.8.1.tar.gz
-source_filename = expressions-0.8.1.tar.gz
-source_hash = 531a954783416a307fc31830e5e18a41bd9e188c0702942e06b7a9dccbeaaa13
+directory = expressions-26.11.1
+source_url = https://github.com/punytroll/expressions/archive/refs/tags/26.11.1.tar.gz
+source_filename = expressions-26.11.1.tar.gz
+source_hash = 467d3799464a87659f29eca2c9eab68ede35b5b9589141d0ffd83826c83bfc42
 
 [provide]
 dependency_names = expressions
