@@ -278,7 +278,6 @@ UI::TradeCenterWidget::TradeCenterWidget(Planet * Planet, Character * Character)
     _AssetClassListBox->SetHeight(top(BuyButton) - 10.0_c - top(_AssetClassListBox));
     _AssetClassListBox->SetHorizontalScrollBarVisible(false);
     _AssetClassListBox->ConnectSelectedItemChangedCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassListBoxSelectedItemChanged, this));
-    AddSubWidget(_AssetClassListBox);
     
     auto Hangar{_Planet->GetHangar(_Character)};
     
@@ -302,13 +301,14 @@ UI::TradeCenterWidget::TradeCenterWidget(Planet * Planet, Character * Character)
     AddSubWidget(AssetClassSizeCaptionLabel);
     AddSubWidget(AssetClassSizeLabel);
     AddSubWidget(_AssetClassViewDisplay);
+    AddSubWidget(_AssetClassListBox);
     AddSubWidget(BuyButton);
+    AddSubWidget(SellButton);
     AddSubWidget(HeaderRow);
     HeaderRow->AddSubWidget(CharacterAmountColumnHeader);
     HeaderRow->AddSubWidget(NameColumnHeader);
     HeaderRow->AddSubWidget(PriceColumnHeader);
     HeaderRow->AddSubWidget(SizeColumnHeader);
-    AddSubWidget(SellButton);
 }
 
 void UI::TradeCenterWidget::_Buy(const PlanetAssets * PlanetAssets)
