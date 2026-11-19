@@ -2,13 +2,22 @@ arx_types_h = custom_target(
   'arx_types_h',
   capture: true,
   command: [python3_program, generate_cpp_resource_constants_py, '--declarations', declarations_xml],
-  output: 'arx_types.h'
+  output: 'arx_types.h',
+)
+
+static_configuration = configuration_data()
+static_configuration.set('DATA_ARCHIVE_FILE_PATH', data_arx.full_path())
+static_configuration_h = configure_file(
+  input: 'static_configuration.h.in',
+  output: 'static_configuration.h',
+  configuration: static_configuration
 )
 
 galactic_fall_executable = executable(
   'galactic_fall',
   sources: [
     arx_types_h,
+    static_configuration_h,
     'ammunition.cpp',
     'battery.cpp',
     'blueprint.cpp',
@@ -114,10 +123,10 @@ galactic_fall_executable = executable(
     'visualization.cpp',
     'visualization_prototype.cpp',
     'visualizations.cpp',
-    'weapon.cpp'
+    'weapon.cpp',
   ],
   cpp_args: [
-    '-freflection'
+    '-freflection',
   ],
   dependencies: [
     algebra_dependency,
@@ -131,6 +140,6 @@ galactic_fall_executable = executable(
     x11_dependency,
     xml_parser_dependency,
     xml_puny_dom_dependency,
-    xml_stream_dependency
+    xml_stream_dependency,
   ]
 )

@@ -8,6 +8,7 @@
 
 #include <functional>
 #include <iostream>
+#include <print>
 #include <utility>
 
 #include <arx/archive.h>
@@ -157,7 +158,7 @@ auto ResourceReader::LoadArchive(std::filesystem::path const & Path) -> bool
     m_Archive = std::make_unique<ARX::Archive>();
     if(m_Archive->Load(Path) == false)
     {
-        std::cerr << "Could not find or open \"" << Path << "\"." << std::endl;
+        std::println(std::cout, "Could not find or open {:?}.", Path);
         
         return false;
     }

@@ -12,6 +12,7 @@
 #include <fstream>
 #include <iostream>
 #include <list>
+#include <print>
 #include <random>
 #include <ranges>
 #include <sstream>
@@ -54,6 +55,8 @@
 #include <xml_puny_dom/xml_puny_dom.h>
 
 #include <xml_stream/xml_stream.h>
+
+#include <static_configuration.h>
 
 #include "ammunition.h"
 #include "battery.h"
@@ -3365,7 +3368,7 @@ int main(int argc, char ** argv)
     
     std::vector< std::string > Arguments(argv, argv + argc);
     std::string LoadSavegameFileName;
-    auto DataFilePath = std::filesystem::path{"build/data/data.arx"};
+    auto DataArchiveFilePath = std::filesystem::path{GalacticFall::StaticConfiguration::DataArchiveFilePath};
     
     for(auto Argument : Arguments)
     {
@@ -3380,7 +3383,7 @@ int main(int argc, char ** argv)
         {
             if(Argument.length() > 7)
             {
-                DataFilePath = Argument.substr(7);
+                DataArchiveFilePath = Argument.substr(7);
             }
         }
         else if(Argument == "--echo-x11-events")
@@ -3390,9 +3393,9 @@ int main(int argc, char ** argv)
     }
     
     // try loading the game data archive
-    ON_DEBUG(std::cout << "Loading game archive \"" << DataFilePath.native() << "\"." << std::endl);
+    ON_DEBUG(std::println(std::cout, "Loading game archive {:?}.", DataArchiveFilePath));
     g_ResourceReader = new ResourceReader{};
-    if(g_ResourceReader->LoadArchive(DataFilePath) == false)
+    if(g_ResourceReader->LoadArchive(DataArchiveFilePath) == false)
     {
         return 1;
     }

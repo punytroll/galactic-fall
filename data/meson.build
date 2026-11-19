@@ -177,7 +177,7 @@ manifest_json = configure_file(
   output: 'manifest.json',
 )
 
-custom_target(
+data_arx = custom_target(
   'data.arx',
   build_by_default: true,
   output: 'data.arx',
