@@ -1,20 +1,7 @@
 /**
  * galactic-fall
- * Copyright (C) 2006-2019  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2006-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
 #include <graphics/color_rgbo.h>
@@ -24,49 +11,45 @@
 #include "mouse_button_event.h"
 #include "user_interface.h"
 
-UI::Button::Button(void)
+UI::Button::Button()
 {
-	SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
-	SetDisabledBackgroundColor(Graphics::ColorRGBO(0.23f, 0.23f, 0.23f, 1.0f));
-	ConnectMouseButtonCallback(std::bind(&UI::Button::_OnMouseButton, this, std::placeholders::_1));
-	ConnectMouseEnterCallback(std::bind(&UI::Button::_OnMouseEnter, this));
-	ConnectMouseLeaveCallback(std::bind(&UI::Button::_OnMouseLeave, this));
+    SetBackgroundColor(Graphics::ColorRGBO{0.3f, 0.3f, 0.3f, 1.0f});
+    SetDisabledBackgroundColor(Graphics::ColorRGBO{0.23f, 0.23f, 0.23f, 1.0f});
+    ConnectMouseButtonCallback(std::bind(&UI::Button::m_OnMouseButton, this, std::placeholders::_1));
+    ConnectMouseEnterCallback(std::bind(&UI::Button::m_OnMouseEnter, this));
+    ConnectMouseLeaveCallback(std::bind(&UI::Button::m_OnMouseLeave, this));
 }
 
-UI::Button::~Button(void)
+auto UI::Button::ConnectClickedCallback(std::function<auto () -> void> ClickedHandler) -> Signals::Connection
 {
+    return m_ClickedSignal.Connect(ClickedHandler);
 }
 
-auto UI::Button::ConnectClickedCallback(std::function<void()> ClickedHandler) -> Signals::Connection
+auto UI::Button::m_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent) -> void
 {
-	return m_ClickedSignal.Connect(ClickedHandler);
+    if((MouseButtonEvent.GetPhase() == UI::MouseButtonEvent::Phase::Capturing) && (MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left))
+    {
+        if(MouseButtonEvent.IsDown() == true)
+        {
+            g_UserInterface->SetCaptureWidget(this);
+        }
+        else if((MouseButtonEvent.IsUp() == true) && (g_UserInterface->GetCaptureWidget() == this))
+        {
+            g_UserInterface->ReleaseCaptureWidget();
+            if((MouseButtonEvent.GetPosition()[0] >= 0.0f) && (MouseButtonEvent.GetPosition()[0] <= GetWidth()) && (MouseButtonEvent.GetPosition()[1] >= 0.0f) && (MouseButtonEvent.GetPosition()[1] <= GetHeight()))
+            {
+                m_ClickedSignal.Emit();
+            }
+        }
+    }
 }
 
-void UI::Button::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
+auto UI::Button::m_OnMouseEnter() -> void
 {
-	if((MouseButtonEvent.GetPhase() == UI::MouseButtonEvent::Phase::Capturing) && (MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left))
-	{
-		if(MouseButtonEvent.IsDown() == true)
-		{
-			g_UserInterface->SetCaptureWidget(this);
-		}
-		else if((MouseButtonEvent.IsUp() == true) && (g_UserInterface->GetCaptureWidget() == this))
-		{
-			g_UserInterface->ReleaseCaptureWidget();
-			if((MouseButtonEvent.GetPosition()[0] >= 0) && (MouseButtonEvent.GetPosition()[0] <= GetWidth()) && (MouseButtonEvent.GetPosition()[1] >= 0) && (MouseButtonEvent.GetPosition()[1] <= GetHeight()))
-			{
-				m_ClickedSignal.Emit();
-			}
-		}
-	}
+    SetBackgroundColor(Graphics::ColorRGBO{0.4f, 0.4f, 0.4f, 1.0f});
 }
 
-void UI::Button::_OnMouseEnter(void)
+auto UI::Button::m_OnMouseLeave() -> void
 {
-	SetBackgroundColor(Graphics::ColorRGBO(0.4f, 0.4f, 0.4f, 1.0f));
-}
-
-void UI::Button::_OnMouseLeave(void)
-{
-	SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
+    SetBackgroundColor(Graphics::ColorRGBO{0.3f, 0.3f, 0.3f, 1.0f});
 }

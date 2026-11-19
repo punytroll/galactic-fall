@@ -1,20 +1,7 @@
 /**
  * galactic-fall
- * Copyright (C) 2018  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2018-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
 #include <cassert>
@@ -26,44 +13,44 @@
 
 using namespace Expressions::Operators;
 
-Expressions::Expression UI::bottom(UI::Widget * Widget)
+auto UI::bottom(UI::Widget * Widget) -> Expressions::Expression
 {
-	assert(Widget != nullptr);
-	
-	return Widget->_Top + Widget->_Height;
+    assert(Widget != nullptr);
+    
+    return Widget->m_Top + Widget->m_Height;
 }
 
-Expressions::Expression UI::height(UI::Widget * Widget)
+auto UI::height(UI::Widget * Widget) -> Expressions::Expression
 {
-	assert(Widget != nullptr);
-	
-	return Expressions::Expression{Widget->_Height};
+    assert(Widget != nullptr);
+    
+    return Expressions::Expression{Widget->m_Height};
 }
 
-Expressions::Expression UI::left(UI::Widget * Widget)
+auto UI::left(UI::Widget * Widget) -> Expressions::Expression
 {
-	assert(Widget != nullptr);
-	
-	return Expressions::Expression{Widget->_Left};
+    assert(Widget != nullptr);
+    
+    return Expressions::Expression{Widget->m_Left};
 }
 
-Expressions::Expression UI::right(UI::Widget * Widget)
+auto UI::right(UI::Widget * Widget) -> Expressions::Expression
 {
-	assert(Widget != nullptr);
-	
-	return Widget->_Left + Widget->_Width;
+    assert(Widget != nullptr);
+    
+    return Widget->m_Left + Widget->m_Width;
 }
 
-Expressions::Expression UI::top(UI::Widget * Widget)
+auto UI::top(UI::Widget * Widget) -> Expressions::Expression
 {
-	assert(Widget != nullptr);
-	
-	return Expressions::Expression{Widget->_Top};
+    assert(Widget != nullptr);
+    
+    return Expressions::Expression{Widget->m_Top};
 }
 
-Expressions::Expression UI::width(UI::Widget * Widget)
+auto UI::width(UI::Widget * Widget) -> Expressions::Expression
 {
-	assert(Widget != nullptr);
-	
-	return Expressions::Expression{Widget->_Width};
+    assert(Widget != nullptr);
+    
+    return Expressions::Expression{Widget->m_Width};
 }

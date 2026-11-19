@@ -59,32 +59,32 @@ namespace UI
         void GrabKeyboardFocus(void);
         void SetName(const std::string & Name);
         // getters
-        float GetBottom(void);
+        auto GetBottom() -> float;
         bool GetEnabled(void) const;
-        float GetHeight(void);
+        auto GetHeight() -> float;
         Widget * GetHoveredWidget(void);
         Vector2f GetGlobalPosition(void);
         auto GetKeyboardFocusWidget() const -> UI::Widget const *;
-        float GetLeft(void);
+        auto GetLeft() -> float;
         const std::string & GetName(void) const;
         std::string GetPath(void) const;
-        float GetRight(void);
+        auto GetRight() -> float;
         Widget * GetRootWidget(void);
         Widget * GetSupWidget(void);
         Widget * GetSubWidget(const std::string & Name);
         const std::list< Widget * > & GetSubWidgets(void) const;
-        float GetTop(void);
-        float GetWidth(void);
+        auto GetTop() -> float;
+        auto GetWidth() -> float;
         bool IsEnabled(void) const;
         bool IsHovered(void) const;
         bool IsVisible(void) const;
         // setters
         void SetEnabled(bool Enabled);
-        void SetHeight(Expressions::Expression && Height);
-        void SetLeft(Expressions::Expression && Left);
-        void SetTop(Expressions::Expression && Top);
+        auto SetHeight(Expressions::Expression && Height) -> void;
+        auto SetLeft(Expressions::Expression && Left) -> void;
+        auto SetTop(Expressions::Expression && Top) -> void;
         void SetVisible(bool Visible);
-        void SetWidth(Expressions::Expression && Width);
+        auto SetWidth(Expressions::Expression && Width) -> void;
         // connect events
         auto ConnectDestroyingCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection;
         auto ConnectHeightChangedCallback(std::function<void(UI::Event &)> Callback) -> Signals::Connection;
@@ -110,16 +110,16 @@ namespace UI
         std::optional<Graphics::ColorRGBO> m_BackgroundColor;
         std::optional<Graphics::ColorRGBO> m_DisabledBackgroundColor;
         bool _Enabled;
-        UI::Dimension _Height;
+        UI::Dimension m_Height;
         Widget * _HoverWidget;
         UI::Widget * m_KeyboardFocusWidget = nullptr;
-        UI::Dimension _Left;
+        UI::Dimension m_Left;
         std::string _Name;
         std::list< Widget * > _SubWidgets;
         Widget * _SupWidget;
-        UI::Dimension _Top;
+        UI::Dimension m_Top;
         bool _Visible;
-        UI::Dimension _Width;
+        UI::Dimension m_Width;
         // events
         Signals::Signal<auto (UI::Event &) -> void> m_DestroyingSignal;
         Signals::Signal<auto (UI::Event &) -> void> m_HeightChangedSignal;
@@ -139,9 +139,9 @@ namespace UI
         static std::stack< std::tuple< float, float, float, float > > _ClippingRectangles;
     };
     
-    inline float Widget::GetBottom(void)
+    inline auto Widget::GetBottom() -> float
     {
-        return _Top.GetValue() + _Height.GetValue();
+        return m_Top.GetValue() + m_Height.GetValue();
     }
     
     inline bool Widget::GetEnabled(void) const
@@ -149,9 +149,9 @@ namespace UI
         return _Enabled;
     }
     
-    inline float Widget::GetHeight(void)
+    inline auto Widget::GetHeight() -> float
     {
-        return _Height.GetValue();
+        return m_Height.GetValue();
     }
     
     inline Widget * Widget::GetHoveredWidget(void)
@@ -164,9 +164,9 @@ namespace UI
         return m_KeyboardFocusWidget;
     }
     
-    inline float Widget::GetLeft(void)
+    inline auto Widget::GetLeft() -> float
     {
-        return _Left.GetValue();
+        return m_Left.GetValue();
     }
 
     inline const std::string & Widget::GetName(void) const
@@ -179,9 +179,9 @@ namespace UI
         return _DestroyedWidgets;
     }
     
-    inline float Widget::GetRight(void)
+    inline auto Widget::GetRight() -> float
     {
-        return _Left.GetValue() + _Width.GetValue();
+        return m_Left.GetValue() + m_Width.GetValue();
     }
 
     inline Widget * Widget::GetRootWidget(void)
@@ -219,14 +219,14 @@ namespace UI
         return _SubWidgets;
     }
     
-    inline float Widget::GetTop(void)
+    inline auto Widget::GetTop() -> float
     {
-        return _Top.GetValue();
+        return m_Top.GetValue();
     }
     
-    inline float Widget::GetWidth(void)
+    inline auto Widget::GetWidth() -> float
     {
-        return _Width.GetValue();
+        return m_Width.GetValue();
     }
     
     inline bool Widget::IsEnabled(void) const

@@ -1,20 +1,7 @@
 /**
  * galactic-fall
- * Copyright (C) 2014-2018  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2014-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
 #include <cassert>
@@ -26,24 +13,20 @@
 
 using namespace Expressions::Operators;
 
-UI::TextButton::TextButton(void) :
-	_Label(nullptr)
+UI::TextButton::TextButton()
 {
-	// create components
-	_Label = new UI::Label{};
-	// initialize components
-	_Label->SetLeft(0.0_c);
-	_Label->SetTop(0.0_c);
-	_Label->SetWidth(width(this));
-	_Label->SetHeight(height(this));
-	_Label->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
-	_Label->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	// add components
-	AddSubWidget(_Label);
+    m_Label = new UI::Label{};
+    m_Label->SetLeft(0.0_c);
+    m_Label->SetTop(0.0_c);
+    m_Label->SetWidth(width(this));
+    m_Label->SetHeight(height(this));
+    m_Label->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
+    m_Label->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+    AddSubWidget(m_Label);
 }
 
-void UI::TextButton::SetText(const std::string & Text)
+auto UI::TextButton::SetText(std::string const & Text) -> void
 {
-	assert(_Label != nullptr);
-	_Label->SetText(Text);
+    assert(m_Label != nullptr);
+    m_Label->SetText(Text);
 }

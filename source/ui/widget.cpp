@@ -26,18 +26,18 @@ std::stack< std::tuple< float, float, float, float > > UI::Widget::_ClippingRect
 
 UI::Widget::Widget(void) :
     _Enabled(true),
-    _Height(this, UI::Dimension::Type::Height),
+    m_Height{*this, UI::Dimension::Type::Height},
     _HoverWidget(nullptr),
-    _Left(this, UI::Dimension::Type::Left),
+    m_Left{*this, UI::Dimension::Type::Left},
     _SupWidget(nullptr),
-    _Top(this, UI::Dimension::Type::Top),
+    m_Top{*this, UI::Dimension::Type::Top},
     _Visible(true),
-    _Width(this, UI::Dimension::Type::Width)
+    m_Width{*this, UI::Dimension::Type::Width}
 {
-    _Height = 0.0_c;
-    _Left = 0.0_c;
-    _Top = 0.0_c;
-    _Width = 0.0_c;
+    m_Height = 0.0_c;
+    m_Left = 0.0_c;
+    m_Top = 0.0_c;
+    m_Width = 0.0_c;
 }
 
 UI::Widget::~Widget(void)
@@ -57,7 +57,7 @@ void UI::Widget::Draw(Graphics::RenderContext * RenderContext)
         RenderContext->SetColorRGBO(Color.value());
         RenderContext->SetProgramIdentifier("widget");
         RenderContext->ActivateProgram();
-        Graphics::Drawing::DrawBoxFromPositionAndSize(RenderContext, GlobalPosition, Vector2f(_Width.GetValue(), _Height.GetValue()));
+        Graphics::Drawing::DrawBoxFromPositionAndSize(RenderContext, GlobalPosition, Vector2f(m_Width.GetValue(), m_Height.GetValue()));
         RenderContext->DeactivateProgram();
         RenderContext->UnsetProgramIdentifier();
         RenderContext->UnsetColorRGBO();
@@ -70,7 +70,7 @@ void UI::Widget::Draw(Graphics::RenderContext * RenderContext)
             
             if(SubWidget->_Visible == true)
             {
-                _PushClippingRectangle(RenderContext, GlobalPosition[0] + SubWidget->_Left.GetValue(), GlobalPosition[1] + SubWidget->_Top.GetValue(), GlobalPosition[1] + SubWidget->_Top.GetValue() + SubWidget->_Height.GetValue(), GlobalPosition[0] + SubWidget->_Left.GetValue() + SubWidget->_Width.GetValue());
+                _PushClippingRectangle(RenderContext, GlobalPosition[0] + SubWidget->m_Left.GetValue(), GlobalPosition[1] + SubWidget->m_Top.GetValue(), GlobalPosition[1] + SubWidget->m_Top.GetValue() + SubWidget->m_Height.GetValue(), GlobalPosition[0] + SubWidget->m_Left.GetValue() + SubWidget->m_Width.GetValue());
                 SubWidget->Draw(RenderContext);
                 _PopClippingRectangle(RenderContext);
             }
@@ -117,24 +117,24 @@ auto UI::Widget::SetDisabledBackgroundColor(std::optional<Graphics::ColorRGBO> c
     m_DisabledBackgroundColor = DisabledBackgroundColor;
 }
 
-void UI::Widget::SetHeight(Expressions::Expression && Height)
+auto UI::Widget::SetHeight(Expressions::Expression && Height) -> void
 {
-    _Height = std::move(Height);
+    m_Height = std::move(Height);
 }
 
-void UI::Widget::SetLeft(Expressions::Expression && Left)
+auto UI::Widget::SetLeft(Expressions::Expression && Left) -> void
 {
-    _Left = std::move(Left);
+    m_Left = std::move(Left);
 }
 
-void UI::Widget::SetTop(Expressions::Expression && Top)
+auto UI::Widget::SetTop(Expressions::Expression && Top) -> void
 {
-    _Top = std::move(Top);
+    m_Top = std::move(Top);
 }
 
-void UI::Widget::SetWidth(Expressions::Expression && Width)
+auto UI::Widget::SetWidth(Expressions::Expression && Width) -> void
 {
-    _Width = std::move(Width);
+    m_Width = std::move(Width);
 }
 
 void UI::Widget::GrabKeyboardFocus(void)
@@ -224,10 +224,10 @@ void UI::Widget::Destroy(void)
         _SupWidget->RemoveSubWidget(this);
     }
     // now reset our dimensions, so all dependencies are broken up
-    _Height.Reset();
-    _Left.Reset();
-    _Top.Reset();
-    _Width.Reset();
+    m_Height.Reset();
+    m_Left.Reset();
+    m_Top.Reset();
+    m_Width.Reset();
     // now append ourself to the list of destroyed widgets to be delete'd by the garbage collection
     _DestroyedWidgets.push_back(this);
 }

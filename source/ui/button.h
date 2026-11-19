@@ -1,24 +1,11 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2006-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
-#ifndef UI_BUTTON_H
-#define UI_BUTTON_H
+#ifndef GALACTIC_FALL__SOURCE__UI__BUTTON_H
+#define GALACTIC_FALL__SOURCE__UI__BUTTON_H
 
 #include <signals/signal.h>
 
@@ -26,25 +13,21 @@
 
 namespace UI
 {
-	class MouseButtonEvent;
-	
-	class Button : public UI::Widget
-	{
-	public:
-		// constructors and deconstructors
-		Button(void);
-		virtual ~Button(void);
-		// connect events
-		auto ConnectClickedCallback(std::function<void()> ClickedHandler) -> Signals::Connection;
-	private:
-		// callbacks
-		void _OnMouseButton(UI::MouseButtonEvent & MouseBUttonEvent);
-		void _OnMouseEnter(void);
-		void _OnMouseLeave(void);
-		// member variables
-		// events
-		Signals::Signal<auto () -> void> m_ClickedSignal;
-	};
+    class MouseButtonEvent;
+    
+    class Button : public UI::Widget
+    {
+    public:
+        Button();
+        auto ConnectClickedCallback(std::function<auto () -> void> ClickedHandler) -> Signals::Connection;
+        
+    private:
+        auto m_OnMouseButton(UI::MouseButtonEvent & MouseBUttonEvent) -> void;
+        auto m_OnMouseEnter() -> void;
+        auto m_OnMouseLeave() -> void;
+        
+        Signals::Signal<auto () -> void> m_ClickedSignal;
+    };
 }
 
 #endif
