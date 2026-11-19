@@ -97,7 +97,7 @@ void Object::AddAspectName(void)
 void Object::AddAspectObjectContainer(void)
 {
 	assert(_AspectObjectContainer == nullptr);
-	_AspectObjectContainer = new ObjectAspectObjectContainer(this);
+	_AspectObjectContainer = new ObjectAspectObjectContainer{*this};
 }
 
 void Object::AddAspectOutfitting(void)

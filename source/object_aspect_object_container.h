@@ -1,24 +1,11 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2008-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
-#ifndef OBJECT_ASPECT_OBJECT_CONTAINER_H
-#define OBJECT_ASPECT_OBJECT_CONTAINER_H
+#ifndef GALACTIC_FALL__SOURCE__OBJECT_ASPECT_OBJECT_CONTAINER_H
+#define GALACTIC_FALL__SOURCE__OBJECT_ASPECT_OBJECT_CONTAINER_H
 
 #include <cstdint>
 #include <functional>
@@ -32,41 +19,26 @@ class Object;
 class ObjectAspectObjectContainer
 {
 public:
-	// constructor & destructor
-	ObjectAspectObjectContainer(Object * Object);
-	~ObjectAspectObjectContainer(void);
-	// getters
-	const std::set< Object * > & GetContent(void) const;
-	Object * GetObject(void);
-	const Object * GetObject(void) const;
-	std::uint32_t GetAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
-	// modifiers
-	void AddContent(Object * Content);
-	void Destroy(void);
-	void RemoveContent(Object * Content);
-	// events
-	auto ConnectContentAddedCallback(std::function<void(Object *)> Callback) -> Signals::Connection;
-	auto ConnectContentRemovedCallback(std::function<void(Object *)> Callback) -> Signals::Connection;
+    ObjectAspectObjectContainer(Object & Object);
+    ~ObjectAspectObjectContainer();
+    auto AddContent(Object * Content) -> void;
+    auto ConnectContentAddedCallback(std::function<auto (Object *) -> void> Callback) -> Signals::Connection;
+    auto ConnectContentRemovedCallback(std::function<auto (Object *) -> void> Callback) -> Signals::Connection;
+    auto Destroy() -> void;
+    auto GetContent() const -> std::set<Object *> const &;
+    auto GetAmount(std::string const & TypeIdentifier, std::string const & ClassIdentifier) const -> std::uint32_t;
+    auto RemoveContent(Object * Content) -> void;
+    
 private:
-	std::set< Object * > _Content;
-	Object * _Object;
-	Signals::Signal<auto (Object *) -> void> m_ContentAddedSignal;
-	Signals::Signal<auto (Object *) -> void> m_ContentRemovedSignal;
+    std::set<Object *> m_Content;
+    Object & m_Object;
+    Signals::Signal<auto (Object *) -> void> m_ContentAddedSignal;
+    Signals::Signal<auto (Object *) -> void> m_ContentRemovedSignal;
 };
 
-inline const std::set< Object * > & ObjectAspectObjectContainer::GetContent(void) const
+inline auto ObjectAspectObjectContainer::GetContent() const -> std::set<Object *> const &
 {
-	return _Content;
-}
-
-inline Object * ObjectAspectObjectContainer::GetObject(void)
-{
-	return _Object;
-}
-
-inline const Object * ObjectAspectObjectContainer::GetObject(void) const
-{
-	return _Object;
+    return m_Content;
 }
 
 #endif
