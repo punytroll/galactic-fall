@@ -38,6 +38,37 @@ using namespace Expressions::Operators;
 
 namespace UI
 {
+    class ObjectInformationDialog::ViewedObject
+    {
+    public:
+        ViewedObject(Object & Object) :
+            m_Object{std::addressof(Object)}
+        {
+            m_ObjectDestroyingConnection = Object.ConnectDestroyingCallback(std::bind(&UI::ObjectInformationDialog::ViewedObject::m_OnObjectDestroying, this));
+        }
+        
+        ViewedObject(UI::ObjectInformationDialog::ViewedObject const & Other) = delete;
+        ViewedObject(UI::ObjectInformationDialog::ViewedObject && Other) = default;
+        
+        auto m_OnObjectDestroying() -> void
+        {
+            assert(m_Object != nullptr);
+            m_Object = nullptr;
+            assert(m_ObjectDestroyingConnection.IsConnected() == true);
+            m_ObjectDestroyingConnection.Disconnect();
+            assert(m_ObjectDestroyingConnection.IsConnected() == false);
+            if(m_ObjectDestroyingCallback != nullptr)
+            {
+                m_ObjectDestroyingCallback();
+            }
+        }
+        
+        Object * m_Object;
+        std::function<auto () -> void> m_ObjectDestroyingCallback;
+        Signals::ScopedConnection m_ObjectDestroyingConnection;
+        std::string m_Title;
+    };
+    
     class ObjectPropertyWidget : public UI::Widget
     {
     public:
@@ -75,8 +106,8 @@ namespace UI
                     m_Object = nullptr;
                     assert(m_ObjectDestroyingConnection.IsValid() == true);
                     m_ObjectDestroyingConnection.Disconnect();
-                    assert(m_ObjectDestroyingConnection.IsValid() == false);
                 }
+                assert(m_ObjectDestroyingConnection.IsValid() == false);
             }
         }
         
@@ -104,17 +135,25 @@ UI::ObjectInformationDialog::ObjectInformationDialog(Object & Object)
     ConnectKeyCallback(std::bind(&UI::ObjectInformationDialog::m_OnKey, this, std::placeholders::_1));
     
     // create components
+    auto BackButton = new UI::TextButton{};
     auto CloseButton = new UI::TextButton{};
     auto RefreshButton = new UI::TextButton{};
     
     m_PropertiesScrollBox = new UI::ScrollBox{};
     // initialize components
+    BackButton->SetLeft(10.0_c);
+    BackButton->SetTop(height(this) - 10.0_c - height(BackButton));
+    BackButton->SetWidth(100.0_c);
+    BackButton->SetHeight(20.0_c);
+    BackButton->SetText("Back");
+    BackButton->ConnectClickedCallback(std::bind(&UI::ObjectInformationDialog::m_OnBackButtonClicked, this));
+    BackButton->ConnectUpdatingCallback(std::bind(&UI::ObjectInformationDialog::m_OnBackButtonUpdating, this, BackButton, std::placeholders::_1, std::placeholders::_2));
     CloseButton->SetLeft(width(this) - 10.0_c - width(CloseButton));
     CloseButton->SetTop(height(this) - 10.0_c - height(CloseButton));
     CloseButton->SetWidth(100.0_c);
     CloseButton->SetHeight(20.0_c);
     CloseButton->SetText("Close");
-    CloseButton->ConnectClickedCallback(std::bind(&UI::ObjectInformationDialog::m_OnCloseClicked, this));
+    CloseButton->ConnectClickedCallback(std::bind(&UI::ObjectInformationDialog::m_OnCloseButtonClicked, this));
     m_PropertiesScrollBox->SetLeft(10.0_c);
     m_PropertiesScrollBox->SetTop(40.0_c);
     m_PropertiesScrollBox->SetWidth(width(this) - 2.0_c * left(m_PropertiesScrollBox));
@@ -126,12 +165,14 @@ UI::ObjectInformationDialog::ObjectInformationDialog(Object & Object)
     RefreshButton->SetWidth(100.0_c);
     RefreshButton->SetHeight(20.0_c);
     RefreshButton->SetText("Refresh");
-    RefreshButton->ConnectClickedCallback(std::bind(&UI::ObjectInformationDialog::m_OnRefreshClicked, this));
+    RefreshButton->ConnectClickedCallback(std::bind(&UI::ObjectInformationDialog::m_OnRefreshButtonClicked, this));
+    RefreshButton->ConnectUpdatingCallback(std::bind(&UI::ObjectInformationDialog::m_OnRefreshButtonUpdating, this, RefreshButton, std::placeholders::_1, std::placeholders::_2));
     // add components
+    AddSubWidget(BackButton);
     AddSubWidget(CloseButton);
     AddSubWidget(m_PropertiesScrollBox);
     AddSubWidget(RefreshButton);
-    m_ViewObject(std::addressof(Object));
+    m_ViewObject(Object);
 }
 
 auto UI::ObjectInformationDialog::m_AddObjectProperty(UI::Widget * PreviousWidget, float Indentation, Object * Object) -> UI::Widget *
@@ -269,16 +310,46 @@ auto UI::ObjectInformationDialog::m_GetOrientationString(Quaternion const & Orie
     return "w=" + to_string_cast(Orientation[0]) + "; x=" + to_string_cast(Orientation[1]) + "; y=" + to_string_cast(Orientation[2]) + "; z=" + to_string_cast(Orientation[3]);
 }
 
-auto UI::ObjectInformationDialog::m_OnCloseClicked() -> void
+auto UI::ObjectInformationDialog::m_NavigateBackwards() -> void
+{
+    assert(m_ViewedObjectStack.empty() == false);
+    m_ViewedObjectStack.pop_back();
+    if(m_ViewedObjectStack.empty() == false)
+    {
+        if(auto & TopViewedObject = m_ViewedObjectStack.back(); TopViewedObject.m_Object != nullptr)
+        {
+            TopViewedObject.m_ObjectDestroyingCallback = std::bind(&UI::ObjectInformationDialog::m_OnCurrentObjectDestroying, this);
+        }
+    }
+    m_Refresh();
+}
+
+auto UI::ObjectInformationDialog::m_OnBackButtonClicked() -> void
+{
+    m_NavigateBackwards();
+}
+
+auto UI::ObjectInformationDialog::m_OnBackButtonUpdating(UI::TextButton * BackButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds) -> void
+{
+    assert(BackButton != nullptr);
+    BackButton->SetEnabled(m_ViewedObjectStack.size() > 1);
+}
+
+auto UI::ObjectInformationDialog::m_OnCloseButtonClicked() -> void
 {
     Destroy();
 }
 
-auto UI::ObjectInformationDialog::m_OnDestroying(UI::Event & DestroyingEvent) -> void
+auto UI::ObjectInformationDialog::m_OnCurrentObjectDestroying() -> void
+{
+    m_Refresh();
+}
+
+auto UI::ObjectInformationDialog::m_OnDestroying([[maybe_unused]] UI::Event & DestroyingEvent) -> void
 {
     if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
     {
-        m_SetObject(nullptr);
+        m_ViewedObjectStack.clear();
     }
 }
 
@@ -286,13 +357,21 @@ auto UI::ObjectInformationDialog::m_OnKey(UI::KeyEvent & KeyEvent) -> void
 {
     if((KeyEvent.GetPhase() == UI::Event::Phase::Bubbling) && (KeyEvent.GetKeyCode() == 9 /* ESCAPE */) && (KeyEvent.IsDown() == true))
     {
-		Destroy();
+        Destroy();
         KeyEvent.StopPropagation();
+    }
+    if((KeyEvent.GetPhase() == UI::Event::Phase::Bubbling) && (KeyEvent.GetKeyCode() == 22 /* BACKSPACE */) && (KeyEvent.IsDown() == true))
+    {
+        if(m_ViewedObjectStack.size() > 1)
+        {
+            m_NavigateBackwards();
+        }
     }
 }
 
 auto UI::ObjectInformationDialog::m_OnObjectButtonClicked(Object * Object) -> void
 {
+    assert(Object != nullptr);
     if((g_UserInterface->IsKeyCodePressed(50) == true /* LEFT SHIFT */) || (g_UserInterface->IsKeyCodePressed(62) == true /* RIGHT SHIFT */))
     {
         auto ObjectInformationDialog = new UI::ObjectInformationDialog{*Object};
@@ -307,18 +386,20 @@ auto UI::ObjectInformationDialog::m_OnObjectButtonClicked(Object * Object) -> vo
     }
     else
     {
-        m_ViewObject(Object);
+        m_ViewObject(*Object);
     }
 }
 
-auto UI::ObjectInformationDialog::m_OnObjectDestroying() -> void
-{
-    m_ViewObject(nullptr);
-}
-
-auto UI::ObjectInformationDialog::m_OnRefreshClicked() -> void
+auto UI::ObjectInformationDialog::m_OnRefreshButtonClicked() -> void
 {
     m_Refresh();
+}
+
+auto UI::ObjectInformationDialog::m_OnRefreshButtonUpdating(UI::TextButton * RefreshButton, [[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds) -> void
+{
+    assert(RefreshButton != nullptr);
+    assert(m_ViewedObjectStack.empty() == false);
+    RefreshButton->SetEnabled(m_ViewedObjectStack.back().m_Object != nullptr);
 }
 
 auto UI::ObjectInformationDialog::m_Refresh() -> void
@@ -328,87 +409,94 @@ auto UI::ObjectInformationDialog::m_Refresh() -> void
     
     auto PreviousWidget = static_cast<UI::Widget *>(nullptr);
     
+    assert(m_ViewedObjectStack.empty() == false);
+    
+    auto & TopViewedObject = m_ViewedObjectStack.back();
+    
+    SetTitle(TopViewedObject.m_Title);
     // fill the properties view
-    if(m_Object != nullptr)
+    if(TopViewedObject.m_Object != nullptr)
     {
-        PreviousWidget = m_AddStringProperty(PreviousWidget, 0.0f, "Type", m_Object->GetTypeIdentifier());
-        PreviousWidget = m_AddStringProperty(PreviousWidget, 0.0f, "Sub-Type", m_Object->GetSubTypeIdentifier());
+        auto & Object = *(TopViewedObject.m_Object);
+        
+        PreviousWidget = m_AddStringProperty(PreviousWidget, 0.0f, "Type", Object.GetTypeIdentifier());
+        PreviousWidget = m_AddStringProperty(PreviousWidget, 0.0f, "Sub-Type", Object.GetSubTypeIdentifier());
         PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Container");
-        if(m_Object->GetContainer() != nullptr)
+        if(Object.GetContainer() != nullptr)
         {
-            PreviousWidget = m_AddObjectProperty(PreviousWidget, 20.0f, m_Object->GetContainer());
+            PreviousWidget = m_AddObjectProperty(PreviousWidget, 20.0f, Object.GetContainer());
         }
         else
         {
             PreviousWidget = m_AddString(PreviousWidget, 20.0f, "No container.");
         }
-        if(m_Object->GetAspectName() != nullptr)
+        if(Object.GetAspectName() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Name Aspect");
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Name", m_Object->GetAspectName()->GetName());
+            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Name", Object.GetAspectName()->GetName());
         }
-        if(m_Object->GetAspectObjectContainer() != nullptr)
+        if(Object.GetAspectObjectContainer() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Object Container Aspect");
-            for(auto Content : m_Object->GetAspectObjectContainer()->GetContent())
+            for(auto Content : Object.GetAspectObjectContainer()->GetContent())
             {
                 PreviousWidget = m_AddObjectProperty(PreviousWidget, 20.0f, Content);
             }
         }
-        if(m_Object->GetAspectPosition() != nullptr)
+        if(Object.GetAspectPosition() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Position");
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Position", m_GetPositionString(m_Object->GetAspectPosition()->GetPosition()));
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Orientation", m_GetOrientationString(m_Object->GetAspectPosition()->GetOrientation()));
+            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Position", m_GetPositionString(Object.GetAspectPosition()->GetPosition()));
+            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Orientation", m_GetOrientationString(Object.GetAspectPosition()->GetOrientation()));
         }
-        if(m_Object->GetAspectPhysical() != nullptr)
+        if(Object.GetAspectPhysical() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Physical");
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Radial Size", to_string_cast(m_Object->GetAspectPhysical()->GetRadialSize()));
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Space Requirement", to_string_cast(m_Object->GetAspectPhysical()->GetSpaceRequirement()));
+            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Radial Size", to_string_cast(Object.GetAspectPhysical()->GetRadialSize()));
+            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Space Requirement", to_string_cast(Object.GetAspectPhysical()->GetSpaceRequirement()));
         }
-        if(m_Object->GetAspectAccessory() != nullptr)
+        if(Object.GetAspectAccessory() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Accessory");
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Slot Class Identifier", m_Object->GetAspectAccessory()->GetSlotClassIdentifier());
-            if(m_Object->GetAspectAccessory()->GetSlot() != nullptr)
+            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Slot Class Identifier", Object.GetAspectAccessory()->GetSlotClassIdentifier());
+            if(Object.GetAspectAccessory()->GetSlot() != nullptr)
             {
                 PreviousWidget = m_AddString(PreviousWidget, 20.0f, "Mounted to:");
-                PreviousWidget = m_AddStringProperty(PreviousWidget, 40.0f, "Slot Identifier", m_Object->GetAspectAccessory()->GetSlot()->GetIdentifier());
-                PreviousWidget = m_AddStringProperty(PreviousWidget, 40.0f, "Slot Name", m_Object->GetAspectAccessory()->GetSlot()->GetName());
-                PreviousWidget = m_AddStringProperty(PreviousWidget, 40.0f, "Slot Class Identifier", m_Object->GetAspectAccessory()->GetSlot()->GetSlotClass()->GetIdentifier());
+                PreviousWidget = m_AddStringProperty(PreviousWidget, 40.0f, "Slot Identifier", Object.GetAspectAccessory()->GetSlot()->GetIdentifier());
+                PreviousWidget = m_AddStringProperty(PreviousWidget, 40.0f, "Slot Name", Object.GetAspectAccessory()->GetSlot()->GetName());
+                PreviousWidget = m_AddStringProperty(PreviousWidget, 40.0f, "Slot Class Identifier", Object.GetAspectAccessory()->GetSlot()->GetSlotClass()->GetIdentifier());
             }
             else
             {
                 PreviousWidget = m_AddString(PreviousWidget, 20.0f, "Not mounted.");
             }
         }
-        if(m_Object->GetAspectMessages() != nullptr)
+        if(Object.GetAspectMessages() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Messages");
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Number of messages", to_string_cast(m_Object->GetAspectMessages()->GetMessages().size()));
-            for(auto Message : m_Object->GetAspectMessages()->GetMessages())
+            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Number of messages", to_string_cast(Object.GetAspectMessages()->GetMessages().size()));
+            for(auto Message : Object.GetAspectMessages()->GetMessages())
             {
                 PreviousWidget = m_AddString(PreviousWidget, 40.0f, Message->GetTypeIdentifier());
             }
         }
-        if(m_Object->GetAspectOutfitting() != nullptr)
+        if(Object.GetAspectOutfitting() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Outfitting");
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Number of slots", to_string_cast(m_Object->GetAspectOutfitting()->GetSlots().size()));
-            for(auto SlotPair : m_Object->GetAspectOutfitting()->GetSlots())
+            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Number of slots", to_string_cast(Object.GetAspectOutfitting()->GetSlots().size()));
+            for(auto SlotPair : Object.GetAspectOutfitting()->GetSlots())
             {
                 PreviousWidget = m_AddStringProperty(PreviousWidget, 40.0f, SlotPair.second->GetName(), SlotPair.second->GetSlotClass()->GetIdentifier());
             }
         }
-        if(m_Object->GetAspectUpdate() != nullptr)
+        if(Object.GetAspectUpdate() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Update");
         }
-        if(m_Object->GetAspectVisualization() != nullptr)
+        if(Object.GetAspectVisualization() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Visualization");
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Number of visualizations", to_string_cast(m_Object->GetAspectVisualization()->GetVisualizations().size()));
+            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Number of visualizations", to_string_cast(Object.GetAspectVisualization()->GetVisualizations().size()));
         }
     }
     else
@@ -418,32 +506,38 @@ auto UI::ObjectInformationDialog::m_Refresh() -> void
     m_PropertiesScrollBox->GetContent()->SetHeight(bottom(PreviousWidget));
 }
 
-auto UI::ObjectInformationDialog::m_SetObject(Object * Object) -> void
+auto UI::ObjectInformationDialog::m_PushObject(Object & Object) -> void
 {
-    if(m_Object != nullptr)
+    if(m_ViewedObjectStack.empty() == false)
     {
-        m_Object = nullptr;
-        assert(m_ObjectDestroyingConnection.IsValid() == true);
-        m_ObjectDestroyingConnection.Disconnect();
-        assert(m_ObjectDestroyingConnection.IsValid() == false);
+        auto & TopViewedObject = m_ViewedObjectStack.back();
+        
+        if(TopViewedObject.m_Object != nullptr)
+        {
+            assert(TopViewedObject.m_ObjectDestroyingCallback != nullptr);
+            TopViewedObject.m_ObjectDestroyingCallback = nullptr;
+        }
+        else
+        {
+            assert(TopViewedObject.m_ObjectDestroyingCallback == nullptr);
+        }
     }
-    if(Object != nullptr)
+    
+    auto & NewViewedObject = m_ViewedObjectStack.emplace_back(Object);
+    
+    NewViewedObject.m_ObjectDestroyingCallback = std::bind(&UI::ObjectInformationDialog::m_OnCurrentObjectDestroying, this);
+    if(Object.GetAspectName() != nullptr)
     {
-        m_Object = Object;
-        m_ObjectDestroyingConnection = m_Object->ConnectDestroyingCallback(std::bind(&UI::ObjectInformationDialog::m_OnObjectDestroying, this));
-    }
-    if((m_Object != nullptr) && (m_Object->GetAspectName() != nullptr))
-    {
-        SetTitle("Object Information: " + m_Object->GetAspectName()->GetName());
+        NewViewedObject.m_Title = "Object Information: " + Object.GetAspectName()->GetName();
     }
     else
     {
-        SetTitle("Object Information");
+        NewViewedObject.m_Title = "Object Information";
     }
 }
 
-auto UI::ObjectInformationDialog::m_ViewObject(Object * Object) -> void
+auto UI::ObjectInformationDialog::m_ViewObject(Object & Object) -> void
 {
-    m_SetObject(Object);
+    m_PushObject(Object);
     m_Refresh();
 }

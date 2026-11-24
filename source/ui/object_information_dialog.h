@@ -16,10 +16,13 @@ class Vector3f;
 namespace UI
 {
     class ScrollBox;
+    class TextButton;
     
     class ObjectInformationDialog : public UI::Window
     {
     public:
+        class ViewedObject;
+        
         explicit ObjectInformationDialog(Object & Object);
         
     private:
@@ -29,18 +32,21 @@ namespace UI
         auto m_AddStringProperty(UI::Widget * PreviousWidget, float Indentation, std::string const & PropertyName, std::string const & PropertyValue) -> UI::Widget *;
         auto m_GetOrientationString(Quaternion const & Orientation) -> std::string;
         auto m_GetPositionString(Vector3f const & Position) -> std::string;
-        auto m_OnCloseClicked() -> void;
+        auto m_NavigateBackwards() -> void;
+        auto m_OnBackButtonClicked() -> void;
+        auto m_OnBackButtonUpdating(UI::TextButton * BackButton, float RealTimeSeconds, float GameTimeSeconds) -> void;
+        auto m_OnCloseButtonClicked() -> void;
+        auto m_OnCurrentObjectDestroying() -> void;
         auto m_OnDestroying(UI::Event & DestroyingEvent) -> void;
         auto m_OnKey(UI::KeyEvent & KeyEvent) -> void;
         auto m_OnObjectButtonClicked(Object * Object) -> void;
-        auto m_OnObjectDestroying() -> void;
-        auto m_OnRefreshClicked() -> void;
+        auto m_OnRefreshButtonClicked() -> void;
+        auto m_OnRefreshButtonUpdating(UI::TextButton * RefreshButton, float RealTimeSeconds, float GameTimeSeconds) -> void;
+        auto m_PushObject(Object & Object) -> void;
         auto m_Refresh() -> void;
-        auto m_SetObject(Object * Object) -> void;
-        auto m_ViewObject(Object * Object) -> void;
+        auto m_ViewObject(Object & Object) -> void;
         
-        Object * m_Object = nullptr;
-        Signals::Connection m_ObjectDestroyingConnection;
+        std::vector<UI::ObjectInformationDialog::ViewedObject> m_ViewedObjectStack;
         UI::ScrollBox * m_PropertiesScrollBox = nullptr;
     };
 }
