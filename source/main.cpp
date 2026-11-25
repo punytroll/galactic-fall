@@ -2027,18 +2027,6 @@ void LoadGameFromElement(const XML::Element * SaveElement)
                             }
                         }
                     }
-                    else if(SaveChild->GetAttribute("type-identifier") == "ship")
-                    {
-                        // the current system has been read in a previous pass
-                        // now we can place all the ships in the current system
-                        auto TheShip(dynamic_cast< Ship * >(TheObject));
-                        
-                        assert(TheShip != nullptr);
-                        if(TheShip->GetContainer() == nullptr)
-                        {
-                            g_CurrentSystem->GetAspectObjectContainer()->AddContent(TheShip);
-                        }
-                    }
                 }
             }
         }

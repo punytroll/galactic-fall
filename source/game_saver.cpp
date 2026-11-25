@@ -92,7 +92,14 @@ void GameSaver::Save(Galaxy * Galaxy, System * CurrentSystem, float TimeWarp, co
 			assert(CommandMind->GetCharacter()->GetMapKnowledge() != nullptr);
 			for(auto ExploredSystem : CommandMind->GetCharacter()->GetMapKnowledge()->GetExploredSystems())
 			{
-				_XMLStream << element << "object" << attribute << "type-identifier" << value << ExploredSystem->GetTypeIdentifier() << attribute << "sub-type-identifier" << value << ExploredSystem->GetSubTypeIdentifier() << attribute << "object-identifier" << value << _GetOrRegisterObjectIdentifier(ExploredSystem) << end;
+				_XMLStream << element << "object" << attribute << "type-identifier" << value << ExploredSystem->GetTypeIdentifier() << attribute << "sub-type-identifier" << value << ExploredSystem->GetSubTypeIdentifier() << attribute << "object-identifier" << value << _GetOrRegisterObjectIdentifier(ExploredSystem);
+				if((ExploredSystem == CurrentSystem) && (CommandMind->GetCharacter()->GetShip() != nullptr))
+				{
+					_XMLStream << element << "aspect-object-container";
+					_XMLStream << element << "content" << attribute << "object-identifier" << value << _GetOrRegisterObjectIdentifier(CommandMind->GetCharacter()->GetShip()) << end;
+					_XMLStream << end;
+				}
+				_XMLStream << end;
 			}
 			// if no ship is available
 			if(CommandMind->GetCharacter()->GetShip() == nullptr)
