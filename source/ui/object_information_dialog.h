@@ -27,7 +27,8 @@ namespace UI
         auto m_AddObjectProperty(UI::Widget * PreviousWidget, float Indentation, Object * Object) -> UI::Widget *;
         auto m_AddSeparator(UI::Widget * PreviousWidget, float Indentation, std::string const & Separator) -> UI::Widget *;
         auto m_AddString(UI::Widget * PreviousWidget, float Indentation, std::string const & String) -> UI::Widget *;
-        auto m_AddStringProperty(UI::Widget * PreviousWidget, float Indentation, std::string const & PropertyName, std::string const & PropertyValue) -> UI::Widget *;
+        auto m_AddDynamicStringProperty(UI::Widget * PreviousWidget, float Indentation, std::string const & PropertyName, std::function<auto () -> std::string> PropertyValueGetter) -> UI::Widget *;
+        auto m_AddStaticStringProperty(UI::Widget * PreviousWidget, float Indentation, std::string const & PropertyName, std::string const & PropertyValue) -> UI::Widget *;
         auto m_NavigateBackwards() -> void;
         auto m_OnBackButtonClicked() -> void;
         auto m_OnBackButtonUpdating(UI::TextButton * BackButton, float RealTimeSeconds, float GameTimeSeconds) -> void;

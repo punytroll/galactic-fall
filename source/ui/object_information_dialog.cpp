@@ -10,8 +10,6 @@
 
 #include <signals/signal.h>
 
-#include <string_cast/string_cast.h>
-
 #include "../globals.h"
 #include "../message.h"
 #include "../object.h"
@@ -130,14 +128,80 @@ namespace UI
             Signals::Connection m_ObjectDestroyingConnection;
         };
         
-        auto ToString(Vector3f const & Position) -> std::string
+        class TextPropertyWidget : public UI::Widget
         {
-            return "x=" + to_string_cast(Position[0]) + "; y=" + to_string_cast(Position[1]) + "; z=" + to_string_cast(Position[2]);
+        public:
+            TextPropertyWidget(float Indentation, std::string const & PropertyName)
+            {
+                m_NameLabel = new UI::Label{};
+                m_NameLabel->SetLeft(constant(Indentation));
+                m_NameLabel->SetTop(0.0_c);
+                m_NameLabel->SetWidth(constant(6.0f * (PropertyName.length() + 1)));
+                m_NameLabel->SetHeight(height(this));
+                m_NameLabel->SetText(PropertyName + ":");
+                m_NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+                m_ValueLabel = new UI::Label{};
+                /// @todo why not right()
+                m_ValueLabel->SetLeft(constant(m_NameLabel->GetRight()));
+                m_ValueLabel->SetTop(0.0_c);
+                m_ValueLabel->SetWidth(width(this) - right(m_NameLabel));
+                m_ValueLabel->SetHeight(height(this));
+                m_ValueLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
+                m_ValueLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+                AddSubWidget(m_NameLabel);
+                AddSubWidget(m_ValueLabel);
+            }
+            
+            auto GetValueLabel() -> UI::Label &
+            {
+                assert(m_ValueLabel != nullptr);
+                
+                return *m_ValueLabel;
+            }
+            
+        private:
+            UI::Label * m_NameLabel = nullptr;
+            UI::Label * m_ValueLabel = nullptr;
+        };
+        
+        auto AddTextPropertyWidget(UI::ScrollBox & ScrollBox, UI::Widget * PreviousWidget, float Indentation, std::string const & PropertyName) -> UI::TextPropertyWidget *
+        {
+            auto TextPropertyWidget = new UI::TextPropertyWidget{Indentation, PropertyName};
+            
+            TextPropertyWidget->SetLeft(10.0_c);
+            if(PreviousWidget != nullptr)
+            {
+                TextPropertyWidget->SetTop(bottom(PreviousWidget));
+            }
+            else
+            {
+                TextPropertyWidget->SetTop(0.0_c);
+            }
+            TextPropertyWidget->SetWidth(width(ScrollBox.GetContent()) - 2.0_c * 10.0_c);
+            TextPropertyWidget->SetHeight(20.0_c);
+            ScrollBox.GetContent()->AddSubWidget(TextPropertyWidget);
+            
+            return TextPropertyWidget;
         }
         
-        auto ToString(Quaternion const & Orientation) -> std::string
+        auto ToString(std::integral auto Value) -> std::string
         {
-            return "w=" + to_string_cast(Orientation[0]) + "; x=" + to_string_cast(Orientation[1]) + "; y=" + to_string_cast(Orientation[2]) + "; z=" + to_string_cast(Orientation[3]);
+            return std::to_string(Value);
+        }
+        
+        auto ToString(float Value) -> std::string
+        {
+            return std::to_string(Value);
+        }
+        
+        auto ToString(Vector3f const & Value) -> std::string
+        {
+            return "x=" + std::to_string(Value[0]) + "; y=" + std::to_string(Value[1]) + "; z=" + std::to_string(Value[2]);
+        }
+        
+        auto ToString(Quaternion const & Value) -> std::string
+        {
+            return "w=" + std::to_string(Value[0]) + "; x=" + std::to_string(Value[1]) + "; y=" + std::to_string(Value[2]) + "; z=" + std::to_string(Value[3]);
         }
     }
 }
@@ -274,43 +338,26 @@ auto UI::ObjectInformationDialog::m_AddString(UI::Widget * PreviousWidget, float
     return StringDisplay;
 }
 
-auto UI::ObjectInformationDialog::m_AddStringProperty(UI::Widget * PreviousWidget, float Indentation, std::string const & PropertyName, std::string const & PropertyValue) -> UI::Widget *
+auto UI::ObjectInformationDialog::m_AddDynamicStringProperty(UI::Widget * PreviousWidget, float Indentation, std::string const & PropertyName, std::function<auto () -> std::string> PropertyValueGetter) -> UI::Widget *
 {
-    // create components
-    auto PropertyDisplay = new UI::Widget{};
-    auto PropertyNameLabel = new UI::Label{};
-    auto PropertyValueLabel = new UI::Label{};
+    auto TextPropertyWidget = UI::AddTextPropertyWidget(*m_PropertiesScrollBox, PreviousWidget, Indentation, PropertyName);
     
-    PropertyDisplay->SetLeft(10.0_c);
-    if(PreviousWidget != nullptr)
-    {
-        PropertyDisplay->SetTop(bottom(PreviousWidget));
-    }
-    else
-    {
-        PropertyDisplay->SetTop(0.0_c);
-    }
-    PropertyDisplay->SetWidth(width(m_PropertiesScrollBox->GetContent()) - 2.0_c * 10.0_c);
-    PropertyDisplay->SetHeight(20.0_c);
-    PropertyNameLabel->SetLeft(constant(Indentation));
-    PropertyNameLabel->SetTop(0.0_c);
-    PropertyNameLabel->SetWidth(constant(6.0f * (PropertyName.length() + 1)));
-    PropertyNameLabel->SetHeight(height(PropertyDisplay));
-    PropertyNameLabel->SetText(PropertyName + ":");
-    PropertyNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-    PropertyValueLabel->SetLeft(constant(PropertyNameLabel->GetRight()));
-    PropertyValueLabel->SetTop(0.0_c);
-    PropertyValueLabel->SetWidth(width(PropertyDisplay) - right(PropertyNameLabel));
-    PropertyValueLabel->SetHeight(height(PropertyDisplay));
-    PropertyValueLabel->SetText(PropertyValue);
-    PropertyValueLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
-    PropertyValueLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-    // add components
-    m_PropertiesScrollBox->GetContent()->AddSubWidget(PropertyDisplay);
-    PropertyDisplay->AddSubWidget(PropertyNameLabel);
-    PropertyDisplay->AddSubWidget(PropertyValueLabel);
+    TextPropertyWidget->SetBackgroundColor(Graphics::ColorRGBO{0.0f, 0.3f, 0.0f, 0.3f});
+    TextPropertyWidget->GetValueLabel().ConnectUpdatingCallback([&PropertyValueLabel = TextPropertyWidget->GetValueLabel(), PropertyValueGetter = std::move(PropertyValueGetter)]([[maybe_unused]] float RealTimeSeconds, [[maybe_unused]] float GameTimeSeconds)
+                                                                {
+                                                                    PropertyValueLabel.SetText(PropertyValueGetter());
+                                                                });
     
-    return PropertyDisplay;
+    return TextPropertyWidget;
+}
+
+auto UI::ObjectInformationDialog::m_AddStaticStringProperty(UI::Widget * PreviousWidget, float Indentation, std::string const & PropertyName, std::string const & PropertyValue) -> UI::Widget *
+{
+    auto TextPropertyWidget = UI::AddTextPropertyWidget(*m_PropertiesScrollBox, PreviousWidget, Indentation, PropertyName);
+    
+    TextPropertyWidget->GetValueLabel().SetText(PropertyValue);
+    
+    return TextPropertyWidget;
 }
 
 auto UI::ObjectInformationDialog::m_NavigateBackwards() -> void
@@ -422,8 +469,8 @@ auto UI::ObjectInformationDialog::m_Refresh() -> void
     {
         auto & Object = *(TopViewedObject.m_Object);
         
-        PreviousWidget = m_AddStringProperty(PreviousWidget, 0.0f, "Type", Object.GetTypeIdentifier());
-        PreviousWidget = m_AddStringProperty(PreviousWidget, 0.0f, "Sub-Type", Object.GetSubTypeIdentifier());
+        PreviousWidget = m_AddStaticStringProperty(PreviousWidget, 0.0f, "Type", Object.GetTypeIdentifier());
+        PreviousWidget = m_AddStaticStringProperty(PreviousWidget, 0.0f, "Sub-Type", Object.GetSubTypeIdentifier());
         PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Container");
         if(Object.GetContainer() != nullptr)
         {
@@ -435,12 +482,12 @@ auto UI::ObjectInformationDialog::m_Refresh() -> void
         }
         if(Object.GetAspectName() != nullptr)
         {
-            PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Name Aspect");
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Name", Object.GetAspectName()->GetName());
+            PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Name");
+            PreviousWidget = m_AddStaticStringProperty(PreviousWidget, 20.0f, "Name", Object.GetAspectName()->GetName());
         }
         if(Object.GetAspectObjectContainer() != nullptr)
         {
-            PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Object Container Aspect");
+            PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Object Container");
             for(auto Content : Object.GetAspectObjectContainer()->GetContent())
             {
                 PreviousWidget = m_AddObjectProperty(PreviousWidget, 20.0f, Content);
@@ -449,25 +496,31 @@ auto UI::ObjectInformationDialog::m_Refresh() -> void
         if(Object.GetAspectPosition() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Position");
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Position", UI::ToString(Object.GetAspectPosition()->GetPosition()));
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Orientation", UI::ToString(Object.GetAspectPosition()->GetOrientation()));
+            PreviousWidget = m_AddDynamicStringProperty(PreviousWidget, 20.0f, "Position", [&Object]()
+                                                                                           {
+                                                                                               return UI::ToString(Object.GetAspectPosition()->GetPosition());
+                                                                                           });
+            PreviousWidget = m_AddDynamicStringProperty(PreviousWidget, 20.0f, "Orientation", [&Object]()
+                                                                                              {
+                                                                                                  return UI::ToString(Object.GetAspectPosition()->GetOrientation());
+                                                                                              });
         }
         if(Object.GetAspectPhysical() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Physical");
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Radial Size", to_string_cast(Object.GetAspectPhysical()->GetRadialSize()));
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Space Requirement", to_string_cast(Object.GetAspectPhysical()->GetSpaceRequirement()));
+            PreviousWidget = m_AddStaticStringProperty(PreviousWidget, 20.0f, "Radial Size", UI::ToString(Object.GetAspectPhysical()->GetRadialSize()));
+            PreviousWidget = m_AddStaticStringProperty(PreviousWidget, 20.0f, "Space Requirement", UI::ToString(Object.GetAspectPhysical()->GetSpaceRequirement()));
         }
         if(Object.GetAspectAccessory() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Accessory");
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Slot Class Identifier", Object.GetAspectAccessory()->GetSlotClassIdentifier());
+            PreviousWidget = m_AddStaticStringProperty(PreviousWidget, 20.0f, "Slot Class Identifier", Object.GetAspectAccessory()->GetSlotClassIdentifier());
             if(Object.GetAspectAccessory()->GetSlot() != nullptr)
             {
                 PreviousWidget = m_AddString(PreviousWidget, 20.0f, "Mounted to:");
-                PreviousWidget = m_AddStringProperty(PreviousWidget, 40.0f, "Slot Identifier", Object.GetAspectAccessory()->GetSlot()->GetIdentifier());
-                PreviousWidget = m_AddStringProperty(PreviousWidget, 40.0f, "Slot Name", Object.GetAspectAccessory()->GetSlot()->GetName());
-                PreviousWidget = m_AddStringProperty(PreviousWidget, 40.0f, "Slot Class Identifier", Object.GetAspectAccessory()->GetSlot()->GetSlotClass()->GetIdentifier());
+                PreviousWidget = m_AddStaticStringProperty(PreviousWidget, 40.0f, "Slot Identifier", Object.GetAspectAccessory()->GetSlot()->GetIdentifier());
+                PreviousWidget = m_AddStaticStringProperty(PreviousWidget, 40.0f, "Slot Name", Object.GetAspectAccessory()->GetSlot()->GetName());
+                PreviousWidget = m_AddStaticStringProperty(PreviousWidget, 40.0f, "Slot Class Identifier", Object.GetAspectAccessory()->GetSlot()->GetSlotClass()->GetIdentifier());
             }
             else
             {
@@ -477,7 +530,10 @@ auto UI::ObjectInformationDialog::m_Refresh() -> void
         if(Object.GetAspectMessages() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Messages");
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Number of messages", to_string_cast(Object.GetAspectMessages()->GetMessages().size()));
+            PreviousWidget = m_AddDynamicStringProperty(PreviousWidget, 20.0f, "Number of messages", [&Object]()
+                                                                                                     {
+                                                                                                         return UI::ToString(Object.GetAspectMessages()->GetMessages().size());
+                                                                                                     });
             for(auto Message : Object.GetAspectMessages()->GetMessages())
             {
                 PreviousWidget = m_AddString(PreviousWidget, 40.0f, Message->GetTypeIdentifier());
@@ -486,10 +542,10 @@ auto UI::ObjectInformationDialog::m_Refresh() -> void
         if(Object.GetAspectOutfitting() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Outfitting");
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Number of slots", to_string_cast(Object.GetAspectOutfitting()->GetSlots().size()));
-            for(auto SlotPair : Object.GetAspectOutfitting()->GetSlots())
+            PreviousWidget = m_AddStaticStringProperty(PreviousWidget, 20.0f, "Number of slots", UI::ToString(Object.GetAspectOutfitting()->GetSlots().size()));
+            for(auto const & [SlotIdentifier, Slot] : Object.GetAspectOutfitting()->GetSlots())
             {
-                PreviousWidget = m_AddStringProperty(PreviousWidget, 40.0f, SlotPair.second->GetName(), SlotPair.second->GetSlotClass()->GetIdentifier());
+                PreviousWidget = m_AddStaticStringProperty(PreviousWidget, 40.0f, Slot->GetName(), Slot->GetSlotClass()->GetIdentifier());
             }
         }
         if(Object.GetAspectUpdate() != nullptr)
@@ -499,7 +555,10 @@ auto UI::ObjectInformationDialog::m_Refresh() -> void
         if(Object.GetAspectVisualization() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Visualization");
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Number of visualizations", to_string_cast(Object.GetAspectVisualization()->GetVisualizations().size()));
+            PreviousWidget = m_AddDynamicStringProperty(PreviousWidget, 20.0f, "Number of visualizations", [&Object]()
+                                                                                                           {
+                                                                                                               return UI::ToString(Object.GetAspectVisualization()->GetVisualizations().size());
+                                                                                                           });
         }
     }
     else
