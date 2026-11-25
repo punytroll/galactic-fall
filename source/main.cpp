@@ -1805,6 +1805,11 @@ void LoadGameFromElement(const XML::Element * SaveElement)
                                 assert(TypeSpecificChild->HasAttribute("value") == true);
                                 NewShip->SetMaximumTurnSpeed(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
                             }
+                            else if(TypeSpecificChild->GetName() == "target")
+                            {
+                                assert(TypeSpecificChild->HasAttribute("object-identifier") == true);
+                                // read in later pass
+                            }
                             else if(TypeSpecificChild->GetName() == "velocity")
                             {
                                 assert(TypeSpecificChild->HasAttribute("x") == true);
@@ -2019,6 +2024,21 @@ void LoadGameFromElement(const XML::Element * SaveElement)
                                 assert(TheCharacter != nullptr);
                                 assert(dynamic_cast< Character * >(TheCharacter) != nullptr);
                                 TheMind->SetCharacter(dynamic_cast< Character * >(TheCharacter));
+                            }
+                        }
+                    }
+                    else if(SaveChild->GetAttribute("type-identifier") == "ship")
+                    {
+                        auto TheShip = dynamic_cast<Ship *>(TheObject);
+                        
+                        assert(TheShip != nullptr);
+                        for(auto TypeSpecificChild : ObjectChild->GetChildElements())
+                        {
+                            if(TypeSpecificChild->GetName() == "target")
+                            {
+                                auto TheTarget = ObjectsByIdentifier.at(TypeSpecificChild->GetAttribute("object-identifier"));
+                                
+                                TheShip->SetTarget(TheTarget);
                             }
                         }
                     }

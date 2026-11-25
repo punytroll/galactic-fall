@@ -54,6 +54,7 @@
 			<faction identifier="neutral"/>
 			<fuel value="1"/>
 			<hull value="100"/>
+			<target object-identifier="::planet(earth)::in_system(sol)"/>
 			<velocity x="0" y="0" z="0"/>
 		</type-specific>
 	</object>
@@ -97,4 +98,5 @@
 			<character object-identifier="::character::player_character"/>
 		</type-specific>
 	</object>
+	<object type-identifier="planet" sub-type-identifier="earth" object-identifier="::planet(earth)::in_system(sol)"/>
 </save>
