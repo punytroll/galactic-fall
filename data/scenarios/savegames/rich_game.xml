@@ -17,6 +17,8 @@
 	<object type-identifier="system" sub-type-identifier="rigel" object-identifier="::system(rigel)"/>
 	<object type-identifier="system" sub-type-identifier="tichel" object-identifier="::system(tichel)"/>
 	<object type-identifier="system" sub-type-identifier="alpha_centauri" object-identifier="::system(alpha_centauri)"/>
+	<object type-identifier="faction" sub-type-identifier="earth" object-identifier="::faction(earth)"/>
+	<object type-identifier="faction" sub-type-identifier="neutral" object-identifier="::faction(neutral)"/>
 	<object type-identifier="ship" sub-type-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
 		<aspect-name>
 			<name value="Stargazer Alpha 1-0"/>
@@ -58,7 +60,7 @@
 			<maximum-forward-thrust value="10"/>
 			<maximum-speed value="12"/>
 			<maximum-turn-speed value="1"/>
-			<faction identifier="neutral"/>
+			<faction object-identifier="::faction(neutral)"/>
 			<fuel value="1"/>
 			<hull value="100"/>
 			<velocity x="0" y="0" z="0"/>
@@ -399,7 +401,7 @@
 			<maximum-forward-thrust value="4"/>
 			<maximum-speed value="8.5"/>
 			<maximum-turn-speed value="0.8"/>
-			<faction identifier="earth"/>
+			<faction object-identifier="::faction(earth)"/>
 			<fuel value="4"/>
 			<hull value="236"/>
 			<velocity x="0" y="0" z="0"/>

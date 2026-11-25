@@ -1398,6 +1398,10 @@ void LoadGameFromElement(const XML::Element * SaveElement)
             {
                 NewObject = GetPlanetFromSubTypeIdentifier(SaveChild->GetAttribute("sub-type-identifier"));
             }
+            else if(SaveChild->GetAttribute("type-identifier") == "faction")
+            {
+                NewObject = g_Galaxy->GetFaction(SaveChild->GetAttribute("sub-type-identifier"));
+            }
             else
             {
                 NewObject = g_ObjectFactory->Create(SaveChild->GetAttribute("type-identifier"), SaveChild->GetAttribute("sub-type-identifier"), false);
@@ -1762,8 +1766,8 @@ void LoadGameFromElement(const XML::Element * SaveElement)
                         {
                             if(TypeSpecificChild->GetName() == "faction")
                             {
-                                assert(TypeSpecificChild->HasAttribute("identifier") == true);
-                                NewShip->SetFaction(g_Galaxy->GetFaction(TypeSpecificChild->GetAttribute("identifier")));
+                                assert(TypeSpecificChild->HasAttribute("object-identifier") == true);
+                                // read in later pass
                             }
                             else if(TypeSpecificChild->GetName() == "fuel")
                             {
@@ -2039,6 +2043,20 @@ void LoadGameFromElement(const XML::Element * SaveElement)
                                 auto TheTarget = ObjectsByIdentifier.at(TypeSpecificChild->GetAttribute("object-identifier"));
                                 
                                 TheShip->SetTarget(TheTarget);
+                            }
+                            else if(TypeSpecificChild->GetName() == "faction")
+                            {
+                                auto TheFaction = dynamic_cast<Faction *>(ObjectsByIdentifier.at(TypeSpecificChild->GetAttribute("object-identifier")));
+                                
+                                TheShip->SetFaction(TheFaction);
+                                assert(TheShip->GetAspectVisualization() != nullptr);
+                                
+                                auto & PartStyles = TheShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartStyles();
+                                
+                                if(PartStyles.find("faction") != PartStyles.end())
+                                {
+                                    PartStyles["faction"]->SetDiffuseColor(TheFaction->GetColor());
+                                }
                             }
                         }
                     }

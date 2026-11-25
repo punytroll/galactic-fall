@@ -14,6 +14,7 @@
 			<content object-identifier="::ship(shuttle)::player_ship"/>
 		</aspect-object-container>
 	</object>
+	<object type-identifier="faction" sub-type-identifier="neutral" object-identifier="::faction(neutral)"/>
 	<object type-identifier="ship" sub-type-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
 		<aspect-name>
 			<name value="Stargazer Alpha 1-0"/>
@@ -51,7 +52,7 @@
 			<maximum-forward-thrust value="10"/>
 			<maximum-speed value="12"/>
 			<maximum-turn-speed value="1"/>
-			<faction identifier="neutral"/>
+			<faction object-identifier="::faction(neutral)"/>
 			<fuel value="1"/>
 			<hull value="100"/>
 			<target object-identifier="::planet(earth)::in_system(sol)"/>

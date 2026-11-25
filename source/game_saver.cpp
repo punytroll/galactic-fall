@@ -88,16 +88,18 @@ auto GameSaver::Save(Galaxy * Galaxy, System * CurrentSystem, float TimeWarp, Ve
                 }
                 m_XMLStream << end;
             }
-            // if no ship is available
-            if(CommandMind->GetCharacter()->GetShip() == nullptr)
+            // if ship is available
+            if(auto Ship = CommandMind->GetCharacter()->GetShip(); Ship != nullptr)
             {
-                // only save the character
-                m_WriteObjectRecursive(CommandMind->GetCharacter());
+                // save the complete ship
+                assert(Ship->GetFaction() != nullptr);
+                m_XMLStream << element << "object" << attribute << "type-identifier" << value << Ship->GetFaction()->GetTypeIdentifier() << attribute << "sub-type-identifier" << value << Ship->GetFaction()->GetSubTypeIdentifier() << attribute << "object-identifier" << value << m_GetOrRegisterObjectIdentifier(Ship->GetFaction()) << end;
+                m_WriteObjectRecursive(CommandMind->GetCharacter()->GetShip());
             }
             else
             {
-                // save the complete ship
-                m_WriteObjectRecursive(CommandMind->GetCharacter()->GetShip());
+                // only save the character
+                m_WriteObjectRecursive(CommandMind->GetCharacter());
             }
             // save hangars
             for(auto const & [SystemIdentifier, System] : Galaxy->GetSystems())
@@ -348,7 +350,7 @@ auto GameSaver::m_WriteShip(Ship * Ship) -> void
     m_XMLStream << element << "maximum-turn-speed" << attribute << "value" << value << Ship->GetMaximumTurnSpeed() << end;
     // save current values
     assert(Ship->GetFaction() != nullptr);
-    m_XMLStream << element << "faction" << attribute << "identifier" << value << Ship->GetFaction()->GetSubTypeIdentifier() << end;
+    m_XMLStream << element << "faction" << attribute << "object-identifier" << value << m_GetOrRegisterObjectIdentifier(Ship->GetFaction()) << end;
     m_XMLStream << element << "fuel" << attribute << "value" << value << Ship->GetFuel() << end;
     m_XMLStream << element << "hull" << attribute << "value" << value << Ship->GetHull() << end;
     m_XMLStream << element << "velocity" << attribute << "x" << value << Ship->GetVelocity()[0] << attribute << "y" << value << Ship->GetVelocity()[1] << attribute << "z" << value << Ship->GetVelocity()[2] << end;
