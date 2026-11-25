@@ -1376,20 +1376,10 @@ void LoadGameFromElement(const XML::Element * SaveElement)
         }
     }
     assert(g_Galaxy != nullptr);
-    // second pass: only read the current system and set it, now that the galaxy is loaded
-    for(auto SaveChild : SaveElement->GetChildElements())
-    {
-        if(SaveChild->GetName() == "current-system")
-        {
-            assert(SaveChild->HasAttribute("identifier") == true);
-            g_CurrentSystem = g_Galaxy->GetSystem(SaveChild->GetAttribute("identifier"));
-        }
-    }
-    assert(g_CurrentSystem != nullptr);
     
     std::unordered_map< std::string, Object * > ObjectsByIdentifier;
     
-    // third pass: read objects
+    // second pass: read objects
     for(auto SaveChild : SaveElement->GetChildElements())
     {
         if(SaveChild->GetName() == "object")
@@ -1924,7 +1914,7 @@ void LoadGameFromElement(const XML::Element * SaveElement)
             }
         }
     }
-    // fourth pass: resolve any object references
+    // third pass: resolve any object references
     // no errors except resolving errors will be displayed
     // at the moment this also resolves back references/containments
     for(auto SaveChild : SaveElement->GetChildElements())
@@ -1935,6 +1925,11 @@ void LoadGameFromElement(const XML::Element * SaveElement)
             g_CommandMind = dynamic_cast< CommandMind * >(ObjectsByIdentifier.at(SaveChild->GetAttribute("object-identifier")));
             assert(g_CommandMind != nullptr);
             g_CommandMind->ConnectDestroyingCallback(OnInputMindDestroying);
+        }
+        else if(SaveChild->GetName() == "current-system")
+        {
+            assert(SaveChild->HasAttribute("object-identifier") == true);
+            g_CurrentSystem = dynamic_cast<System *>(ObjectsByIdentifier.at(SaveChild->GetAttribute("object-identifier")));
         }
         else if(SaveChild->GetName() == "observed-character")
         {
@@ -2031,7 +2026,8 @@ void LoadGameFromElement(const XML::Element * SaveElement)
             }
         }
     }
-    // fifth pass: mount objects that have an accessory aspect and are mounted
+    assert(g_CurrentSystem != nullptr);
+    // fourth pass: mount objects that have an accessory aspect and are mounted
     for(auto SaveChild : SaveElement->GetChildElements())
     {
         if(SaveChild->GetName() == "object")

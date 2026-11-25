@@ -65,7 +65,7 @@ void GameSaver::Save(Galaxy * Galaxy, System * CurrentSystem, float TimeWarp, co
 	_XMLStream << element << "game-time" << attribute << "value" << value << to_string_cast(GameTime::Get(), 4) << end;
 	if(CurrentSystem != nullptr)
 	{
-		_XMLStream << element << "current-system" << attribute << "identifier" << value << CurrentSystem->GetSubTypeIdentifier() << end;
+		_XMLStream << element << "current-system" << attribute << "object-identifier" << value << _GetOrRegisterObjectIdentifier(CurrentSystem) << end;
 	}
 	_XMLStream << element << "time-warp" << attribute << "value" << value << TimeWarp << end;
 	// save main camera properties

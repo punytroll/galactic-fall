@@ -1,6 +1,6 @@
 <save version="0.1">
 	<galaxy identifier="milky_way"/>
-	<current-system identifier="sol"/>
+	<current-system object-identifier="::system(sol)"/>
 	<time-warp value="1"/>
 	<game-time value="103330376.8001"/>
 	<command-mind object-identifier="::player_mind"/>

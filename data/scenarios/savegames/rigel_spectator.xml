@@ -1,10 +1,11 @@
 <save version="0.1">
 	<galaxy identifier="milky_way"/>
-	<current-system identifier="rigel"/>
+	<current-system object-identifier="::system(rigel)"/>
 	<time-warp value="4"/>
 	<game-time value="303430376.8001"/>
 	<main-camera>
 		<offset x="0" y="0" z="440"/>
 		<field-of-view-y radians="0.8"/>
 	</main-camera>
+	<object type-identifier="system" sub-type-identifier="rigel" object-identifier="::system(rigel)"/>
 </save>
