@@ -10,8 +10,6 @@
 #include "window.h"
 
 class Object;
-class Quaternion;
-class Vector3f;
 
 namespace UI
 {
@@ -30,8 +28,6 @@ namespace UI
         auto m_AddSeparator(UI::Widget * PreviousWidget, float Indentation, std::string const & Separator) -> UI::Widget *;
         auto m_AddString(UI::Widget * PreviousWidget, float Indentation, std::string const & String) -> UI::Widget *;
         auto m_AddStringProperty(UI::Widget * PreviousWidget, float Indentation, std::string const & PropertyName, std::string const & PropertyValue) -> UI::Widget *;
-        auto m_GetOrientationString(Quaternion const & Orientation) -> std::string;
-        auto m_GetPositionString(Vector3f const & Position) -> std::string;
         auto m_NavigateBackwards() -> void;
         auto m_OnBackButtonClicked() -> void;
         auto m_OnBackButtonUpdating(UI::TextButton * BackButton, float RealTimeSeconds, float GameTimeSeconds) -> void;

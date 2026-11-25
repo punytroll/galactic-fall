@@ -69,64 +69,77 @@ namespace UI
         std::string m_Title;
     };
     
-    class ObjectPropertyWidget : public UI::Widget
+    namespace
     {
-    public:
-        ObjectPropertyWidget(float Indentation, Object & Object) :
-            m_Object{std::addressof(Object)}
+        class ObjectPropertyWidget : public UI::Widget
         {
-            assert(m_Object != nullptr);
-            m_ObjectDestroyingConnection = m_Object->ConnectDestroyingCallback(std::bind(&UI::ObjectPropertyWidget::m_OnObjectDestroying, this));
-            ConnectDestroyingCallback(std::bind(&UI::ObjectPropertyWidget::m_OnDestroying, this, std::placeholders::_1));
-            // create components
-            m_Button = new UI::TextButton{};
-            // initialize components
-            m_Button->SetLeft(constant(Indentation));
-            m_Button->SetTop(5.0_c);
-            m_Button->SetWidth(width(this) - constant(Indentation));
-            m_Button->SetHeight(height(this) - 2.0_c * 5.0_c);
-            m_Button->SetText(m_Object->GetTypeIdentifier() + " / " + m_Object->GetSubTypeIdentifier());
-            m_Button->ConnectClickedCallback(std::bind(&Signals::Signal<auto () -> void>::Emit, std::addressof(m_ObjectButtonClickedSignal)));
-            // add components
-            AddSubWidget(m_Button);
-        }
-        
-        auto ConnectObjectButtonClickedCallback(std::function<void()> ClickedHandler) -> Signals::Connection
-        {
-            return m_ObjectButtonClickedSignal.Connect(ClickedHandler);
-        }
-        
-    private:
-        auto m_OnDestroying(UI::Event & DestroyingEvent) -> void
-        {
-            if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+        public:
+            ObjectPropertyWidget(float Indentation, Object & Object) :
+                m_Object{std::addressof(Object)}
             {
-                if(m_Object != nullptr)
-                {
-                    m_Object = nullptr;
-                    assert(m_ObjectDestroyingConnection.IsValid() == true);
-                    m_ObjectDestroyingConnection.Disconnect();
-                }
-                assert(m_ObjectDestroyingConnection.IsValid() == false);
+                assert(m_Object != nullptr);
+                m_ObjectDestroyingConnection = m_Object->ConnectDestroyingCallback(std::bind(&UI::ObjectPropertyWidget::m_OnObjectDestroying, this));
+                ConnectDestroyingCallback(std::bind(&UI::ObjectPropertyWidget::m_OnDestroying, this, std::placeholders::_1));
+                // create components
+                m_Button = new UI::TextButton{};
+                // initialize components
+                m_Button->SetLeft(constant(Indentation));
+                m_Button->SetTop(5.0_c);
+                m_Button->SetWidth(width(this) - constant(Indentation));
+                m_Button->SetHeight(height(this) - 2.0_c * 5.0_c);
+                m_Button->SetText(m_Object->GetTypeIdentifier() + " / " + m_Object->GetSubTypeIdentifier());
+                m_Button->ConnectClickedCallback(std::bind(&Signals::Signal<auto () -> void>::Emit, std::addressof(m_ObjectButtonClickedSignal)));
+                // add components
+                AddSubWidget(m_Button);
             }
-        }
+            
+            auto ConnectObjectButtonClickedCallback(std::function<void()> ClickedHandler) -> Signals::Connection
+            {
+                return m_ObjectButtonClickedSignal.Connect(ClickedHandler);
+            }
+            
+        private:
+            auto m_OnDestroying(UI::Event & DestroyingEvent) -> void
+            {
+                if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+                {
+                    if(m_Object != nullptr)
+                    {
+                        m_Object = nullptr;
+                        assert(m_ObjectDestroyingConnection.IsValid() == true);
+                        m_ObjectDestroyingConnection.Disconnect();
+                    }
+                    assert(m_ObjectDestroyingConnection.IsValid() == false);
+                }
+            }
+            
+            void m_OnObjectDestroying(void)
+            {
+                assert(m_Object != nullptr);
+                m_Object = nullptr;
+                assert(m_ObjectDestroyingConnection.IsValid() == true);
+                m_ObjectDestroyingConnection.Disconnect();
+                assert(m_ObjectDestroyingConnection.IsValid() == false);
+                m_Button->SetText("<destroyed>");
+                m_Button->SetEnabled(false);
+            }
+            
+            UI::TextButton * m_Button;
+            Signals::Signal<auto () -> void> m_ObjectButtonClickedSignal;
+            Object * m_Object;
+            Signals::Connection m_ObjectDestroyingConnection;
+        };
         
-        void m_OnObjectDestroying(void)
+        auto ToString(Vector3f const & Position) -> std::string
         {
-            assert(m_Object != nullptr);
-            m_Object = nullptr;
-            assert(m_ObjectDestroyingConnection.IsValid() == true);
-            m_ObjectDestroyingConnection.Disconnect();
-            assert(m_ObjectDestroyingConnection.IsValid() == false);
-            m_Button->SetText("<destroyed>");
-            m_Button->SetEnabled(false);
+            return "x=" + to_string_cast(Position[0]) + "; y=" + to_string_cast(Position[1]) + "; z=" + to_string_cast(Position[2]);
         }
         
-        UI::TextButton * m_Button;
-        Signals::Signal<auto () -> void> m_ObjectButtonClickedSignal;
-        Object * m_Object;
-        Signals::Connection m_ObjectDestroyingConnection;
-    };
+        auto ToString(Quaternion const & Orientation) -> std::string
+        {
+            return "w=" + to_string_cast(Orientation[0]) + "; x=" + to_string_cast(Orientation[1]) + "; y=" + to_string_cast(Orientation[2]) + "; z=" + to_string_cast(Orientation[3]);
+        }
+    }
 }
 
 UI::ObjectInformationDialog::ObjectInformationDialog(Object & Object)
@@ -300,16 +313,6 @@ auto UI::ObjectInformationDialog::m_AddStringProperty(UI::Widget * PreviousWidge
     return PropertyDisplay;
 }
 
-auto UI::ObjectInformationDialog::m_GetPositionString(Vector3f const & Position) -> std::string
-{
-    return "x=" + to_string_cast(Position[0]) + "; y=" + to_string_cast(Position[1]) + "; z=" + to_string_cast(Position[2]);
-}
-
-auto UI::ObjectInformationDialog::m_GetOrientationString(Quaternion const & Orientation) -> std::string
-{
-    return "w=" + to_string_cast(Orientation[0]) + "; x=" + to_string_cast(Orientation[1]) + "; y=" + to_string_cast(Orientation[2]) + "; z=" + to_string_cast(Orientation[3]);
-}
-
 auto UI::ObjectInformationDialog::m_NavigateBackwards() -> void
 {
     assert(m_ViewedObjectStack.empty() == false);
@@ -446,8 +449,8 @@ auto UI::ObjectInformationDialog::m_Refresh() -> void
         if(Object.GetAspectPosition() != nullptr)
         {
             PreviousWidget = m_AddSeparator(PreviousWidget, 0.0f, "Position");
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Position", m_GetPositionString(Object.GetAspectPosition()->GetPosition()));
-            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Orientation", m_GetOrientationString(Object.GetAspectPosition()->GetOrientation()));
+            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Position", UI::ToString(Object.GetAspectPosition()->GetPosition()));
+            PreviousWidget = m_AddStringProperty(PreviousWidget, 20.0f, "Orientation", UI::ToString(Object.GetAspectPosition()->GetOrientation()));
         }
         if(Object.GetAspectPhysical() != nullptr)
         {
