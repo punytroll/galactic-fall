@@ -672,6 +672,7 @@ void CollisionDetection(System * System)
                         
                         auto CargoHold = Ship->GetCargoHold();
                         
+                        assert(CargoHold != nullptr);
                         assert(CargoHold->GetAspectObjectContainer() != nullptr);
                         
                         auto ContentIterator = CargoHold->GetAspectObjectContainer()->GetContent().begin();
