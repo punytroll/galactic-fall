@@ -1,24 +1,11 @@
 /**
  * galactic-fall
- * Copyright (C) 2018  Hagen Möbius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2018-2026  Hagen Möbius
+ * SPDX-License-Identifier: MIT
 **/
 
-#ifndef GAME_SAVER_H
-#define GAME_SAVER_H
+#ifndef GALACTIC_FALL__SOURCE__GAME_SAVER_H
+#define GALACTIC_FALL__SOURCE__GAME_SAVER_H
 
 #include <unordered_map>
 
@@ -47,26 +34,28 @@ class Turret;
 class GameSaver
 {
 public:
-	GameSaver(std::ostream & OStream);
-	void Save(Galaxy * Galaxy, System * CurrentSystem, float TimeWarp, const Vector3f & CameraOffset, float FieldOfViewY, CommandMind * CommandMind, Character * ObservedCharacter);
+    GameSaver(std::ostream & OStream);
+    auto Save(Galaxy * Galaxy, System * CurrentSystem, float TimeWarp, Vector3f const & CameraOffset, float FieldOfViewY, CommandMind * CommandMind, Character * ObservedCharacter) -> void;
+    
 private:
-	std::string _GetOrRegisterObjectIdentifier(Object * Object);
-	void _WriteAmmunition(Ammunition * Ammunition);
-	void _WriteBattery(Battery * Battery);
-	void _WriteCharacter(Character * Character);
-	void _WriteCommodity(Commodity * Commodity);
-	void _WriteGenerator(Generator * Generator);
-	void _WriteHangar(Hangar * Hangar);
-	void _WriteMind(Mind * Mind);
-	void _WriteObject(Object * Object);
-	void _WriteObjectRecursive(Object * Object);
-	void _WriteProjectileWeapon(ProjectileWeapon * ProjectileWeapon);
-	void _WriteShip(Ship * Ship);
-	void _WriteStorage(Storage * Storage);
-	void _WriteTurret(Turret * Turret);
-	std::unordered_map< Object *, std::string > _IdentifiersByObject;
-	std::ostream & _OStream;
-	XMLStream _XMLStream;
+    auto m_GetOrRegisterObjectIdentifier(Object * Object) -> std::string const &;
+    auto m_WriteAmmunition(Ammunition * Ammunition) -> void;
+    auto m_WriteBattery(Battery * Battery) -> void;
+    auto m_WriteCharacter(Character * Character) -> void;
+    auto m_WriteCommodity(Commodity * Commodity) -> void;
+    auto m_WriteGenerator(Generator * Generator) -> void;
+    auto m_WriteHangar(Hangar * Hangar) -> void;
+    auto m_WriteMind(Mind * Mind) -> void;
+    auto m_WriteObject(Object * Object) -> void;
+    auto m_WriteObjectRecursive(Object * Object) -> void;
+    auto m_WriteProjectileWeapon(ProjectileWeapon * ProjectileWeapon) -> void;
+    auto m_WriteShip(Ship * Ship) -> void;
+    auto m_WriteStorage(Storage * Storage) -> void;
+    auto m_WriteTurret(Turret * Turret) -> void;
+    
+    std::unordered_map<Object *, std::string> m_IdentifiersByObject;
+    std::ostream & m_OStream;
+    XMLStream m_XMLStream;
 };
 
 #endif
