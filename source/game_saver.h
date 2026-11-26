@@ -35,7 +35,7 @@ class GameSaver
 {
 public:
     GameSaver(std::ostream & OStream);
-    auto Save(Galaxy * Galaxy, System * CurrentSystem, float TimeWarp, Vector3f const & CameraOffset, float FieldOfViewY, CommandMind * CommandMind, Character * ObservedCharacter) -> void;
+    auto Save(Galaxy & Galaxy, System & CurrentSystem, float TimeWarp, Vector3f const & CameraOffset, float FieldOfViewY, CommandMind * CommandMind, Character * ObservedCharacter) -> void;
     
 private:
     auto m_GetOrRegisterObjectIdentifier(Object * Object) -> std::string const &;

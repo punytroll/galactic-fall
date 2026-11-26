@@ -2172,12 +2172,14 @@ bool LoadScenarioFromScenarioIdentifier(const std::string & ScenarioIdentifier)
 
 void SaveGame(std::ostream & OStream)
 {
+    assert(g_Galaxy != nullptr);
+    assert(g_CurrentSystem != nullptr);
     assert(g_MainProjection != nullptr);
     assert(g_CharacterObserver != nullptr);
     
-    GameSaver GameSaver{OStream};
+    auto TheGameSaver = GameSaver{OStream};
     
-    GameSaver.Save(g_Galaxy, g_CurrentSystem, g_TimeWarp, g_CameraOffset, g_MainProjection->GetFieldOfViewY(), g_CommandMind, g_CharacterObserver->GetObservedCharacter());
+    TheGameSaver.Save(*g_Galaxy, *g_CurrentSystem, g_TimeWarp, g_CameraOffset, g_MainProjection->GetFieldOfViewY(), g_CommandMind, g_CharacterObserver->GetObservedCharacter());
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

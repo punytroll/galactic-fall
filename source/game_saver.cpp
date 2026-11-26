@@ -44,30 +44,28 @@ GameSaver::GameSaver(std::ostream & OStream) :
 {
 }
 
-auto GameSaver::Save(Galaxy * Galaxy, System * CurrentSystem, float TimeWarp, Vector3f const & CameraOffset, float FieldOfViewY, CommandMind * CommandMind, Character * ObservedCharacter) -> void
+auto GameSaver::Save(Galaxy & Galaxy, System & CurrentSystem, float TimeWarp, Vector3f const & CameraOffset, float FieldOfViewY, CommandMind * CommandMind, Character * ObservedCharacter) -> void
 {
-    assert(Galaxy != nullptr);
     m_XMLStream << element << "save" << attribute << "version" << value << "0.1";
-    m_XMLStream << element << "galaxy" << attribute << "identifier" << value << Galaxy->GetSubTypeIdentifier() << end;
+    m_XMLStream << element << "galaxy" << attribute << "identifier" << value << Galaxy.GetSubTypeIdentifier() << end;
     m_XMLStream << element << "game-time" << attribute << "value" << value << to_string_cast(GameTime::Get(), 4) << end;
-    if(CurrentSystem != nullptr)
-    {
-        m_XMLStream << element << "current-system" << attribute << "object-identifier" << value << m_GetOrRegisterObjectIdentifier(CurrentSystem) << end;
-    }
     m_XMLStream << element << "time-warp" << attribute << "value" << value << TimeWarp << end;
-    // save main camera properties
     m_XMLStream << element << "main-camera";
     m_XMLStream << element << "offset" << attribute << "x" << value << CameraOffset[0] << attribute << "y" << value << CameraOffset[1] << attribute << "z" << value << CameraOffset[2] << end;
     m_XMLStream << element << "field-of-view-y" << attribute << "radians" << value << FieldOfViewY << end;
-    m_XMLStream << end; // camera
+    m_XMLStream << end;
+    m_XMLStream << element << "current-system" << attribute << "object-identifier" << value << m_GetOrRegisterObjectIdentifier(std::addressof(CurrentSystem)) << end;
     if(ObservedCharacter != nullptr)
     {
         m_XMLStream << element << "observed-character" << attribute << "object-identifier" << value << m_GetOrRegisterObjectIdentifier(ObservedCharacter) << end;
     }
-    // now save the important objects
     if(CommandMind != nullptr)
     {
         m_XMLStream << element << "command-mind" << attribute << "object-identifier" << value << m_GetOrRegisterObjectIdentifier(CommandMind) << end;
+    }
+    // after this point, only objects are written
+    if(CommandMind != nullptr)
+    {
         // if no character is available
         if(CommandMind->GetCharacter() == nullptr)
         {
@@ -80,7 +78,7 @@ auto GameSaver::Save(Galaxy * Galaxy, System * CurrentSystem, float TimeWarp, Ve
             for(auto ExploredSystem : CommandMind->GetCharacter()->GetMapKnowledge()->GetExploredSystems())
             {
                 m_XMLStream << element << "object" << attribute << "type-identifier" << value << ExploredSystem->GetTypeIdentifier() << attribute << "sub-type-identifier" << value << ExploredSystem->GetSubTypeIdentifier() << attribute << "object-identifier" << value << m_GetOrRegisterObjectIdentifier(ExploredSystem);
-                if((ExploredSystem == CurrentSystem) && (CommandMind->GetCharacter()->GetShip() != nullptr))
+                if((ExploredSystem == std::addressof(CurrentSystem)) && (CommandMind->GetCharacter()->GetShip() != nullptr))
                 {
                     m_XMLStream << element << "aspect-object-container";
                     m_XMLStream << element << "content" << attribute << "object-identifier" << value << m_GetOrRegisterObjectIdentifier(CommandMind->GetCharacter()->GetShip()) << end;
@@ -102,7 +100,7 @@ auto GameSaver::Save(Galaxy * Galaxy, System * CurrentSystem, float TimeWarp, Ve
                 m_WriteObjectRecursive(CommandMind->GetCharacter());
             }
             // save hangars
-            for(auto const & [SystemIdentifier, System] : Galaxy->GetSystems())
+            for(auto const & [SystemIdentifier, System] : Galaxy.GetSystems())
             {
                 for(auto Planet : System->GetPlanets())
                 {
@@ -121,6 +119,10 @@ auto GameSaver::Save(Galaxy * Galaxy, System * CurrentSystem, float TimeWarp, Ve
                 }
             }
         }
+    }
+    else
+    {
+        m_XMLStream << element << "object" << attribute << "type-identifier" << value << CurrentSystem.GetTypeIdentifier() << attribute << "sub-type-identifier" << value << CurrentSystem.GetSubTypeIdentifier() << attribute << "object-identifier" << value << m_GetOrRegisterObjectIdentifier(std::addressof(CurrentSystem)) << end;
     }
     m_XMLStream << end; // save
     m_OStream << std::endl;
